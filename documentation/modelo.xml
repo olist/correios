@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<correioslog>
+	<tipo_arquivo>Postagem</tipo_arquivo>
+	<versao_arquivo>2.3</versao_arquivo>
+	<plp>
+		<id_plp />
+		<valor_global />
+		<mcu_unidade_postagem/>
+		<nome_unidade_postagem/>
+		<cartao_postagem>0063526786</cartao_postagem>
+	</plp>
+	<remetente>
+		<numero_contrato>9912293958</numero_contrato>
+		<numero_diretoria>36</numero_diretoria>
+		<codigo_administrativo>12105872</codigo_administrativo>
+		<nome_remetente>
+			<![CDATA[Tatical Imports Com. Importação Ltda EPP]]>
+		</nome_remetente>
+		<logradouro_remetente>
+			<![CDATA[Avenida Winston Churchill]]>
+		</logradouro_remetente>
+		<numero_remetente>
+			<![CDATA[2370]]>
+		</numero_remetente>
+		<complemento_remetente>
+			<![CDATA[sala 1205,12° andar]]>
+		</complemento_remetente>
+		<bairro_remetente>
+			<![CDATA[Capão Raso]]>
+		</bairro_remetente>
+		<cep_remetente>
+			<![CDATA[81150050]]>
+		</cep_remetente>
+		<cidade_remetente>
+			<![CDATA[Curitiba]]>
+		</cidade_remetente>
+		<uf_remetente>PR</uf_remetente>
+		<telefone_remetente>
+			<![CDATA[4130795008]]>
+		</telefone_remetente>
+		<fax_remetente>
+			<![CDATA[]]>
+		</fax_remetente>
+		<email_remetente>
+			<![CDATA[logistica01@brasilequipamentos.com.br]]>
+		</email_remetente>
+	</remetente>
+	<forma_pagamento />
+	<objeto_postal>
+		<numero_etiqueta>PH185560916BR</numero_etiqueta>
+		<codigo_objeto_cliente/>
+		<codigo_servico_postagem>41068</codigo_servico_postagem>
+		<cubagem>0,0000</cubagem>
+		<peso>200</peso>
+		<rt1/>
+		<rt2/>
+		<destinatario>
+			<nome_destinatario>
+				<![CDATA[Caça e Pesca Guarany Ltda]]>
+			</nome_destinatario>
+			<telefone_destinatario>
+				<![CDATA[6232339644]]>
+			</telefone_destinatario>
+			<celular_destinatario>
+				<![CDATA[]]>
+			</celular_destinatario>
+			<email_destinatario>
+				<![CDATA[]]>
+			</email_destinatario>
+			<logradouro_destinatario>
+				<![CDATA[Avenida Anhangüera]]>
+			</logradouro_destinatario>
+			<complemento_destinatario>
+				<![CDATA[Qd: 102 A Lt: 04]]>
+			</complemento_destinatario>
+			<numero_end_destinatario>
+				<![CDATA[8065]]>
+			</numero_end_destinatario>
+		</destinatario>
+		<nacional>
+			<bairro_destinatario>
+				<![CDATA[Setor Campinas]]>
+			</bairro_destinatario>
+			<cidade_destinatario>
+				<![CDATA[Goiânia]]>
+			</cidade_destinatario>
+			<uf_destinatario>GO</uf_destinatario>
+			<cep_destinatario>
+				<![CDATA[74503100]]>
+			</cep_destinatario>
+			<codigo_usuario_postal/>
+			<centro_custo_cliente/>
+			<numero_nota_fiscal>1424</numero_nota_fiscal>
+			<serie_nota_fiscal/>
+			<valor_nota_fiscal/>
+			<natureza_nota_fiscal/>
+			<descricao_objeto>
+				<![CDATA[]]>
+			</descricao_objeto>
+			<valor_a_cobrar>0,0</valor_a_cobrar>
+		</nacional>
+		<servico_adicional>
+			<codigo_servico_adicional>025</codigo_servico_adicional>
+			<codigo_servico_adicional>001</codigo_servico_adicional>
+			<codigo_servico_adicional>019</codigo_servico_adicional>
+			<valor_declarado>99,00</valor_declarado>
+		</servico_adicional>
+		<dimensao_objeto>
+			<tipo_objeto>002</tipo_objeto>
+			<dimensao_altura>9</dimensao_altura>
+			<dimensao_largura>13</dimensao_largura>
+			<dimensao_comprimento>18</dimensao_comprimento>
+			<dimensao_diametro>0</dimensao_diametro>
+		</dimensao_objeto>
+		<data_postagem_sara/>
+		<status_processamento>0</status_processamento>
+		<numero_comprovante_postagem/>
+		<valor_cobrado/>
+	</objeto_postal>
+</correioslog>
