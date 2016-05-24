@@ -13,7 +13,21 @@
 # limitations under the License.
 
 
-import os
+class BaseCorreiosException(Exception):
+    pass
 
 
-DATADIR = os.path.join(os.path.dirname(__file__), "data")
+class ModelException(BaseCorreiosException):
+    pass
+
+
+class InvalidZipCode(ModelException):
+    pass
+
+
+class InvalidFederalTaxNumber(ModelException):
+    pass
+
+
+class InvalidStateTaxNumber(ModelException):
+    pass

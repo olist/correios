@@ -13,5 +13,37 @@
 # limitations under the License.
 
 
-def test_model():
-    assert True
+import pytest
+
+from correios.exceptions import InvalidZipCode
+from correios.models import Zip
+
+
+def test_basic_zip():
+    zip_code = Zip("82940150")
+    assert zip_code.code == "82940150"
+
+
+def test_sanitize_zip():
+    zip_code = Zip("82940-150")
+    assert zip_code.code == "82940150"
+
+
+def test_fail_invalid_zip():
+    with pytest.raises(InvalidZipCode):
+        Zip("12345")
+
+    with pytest.raises(InvalidZipCode):
+        Zip("123456789")
+
+
+def test_convert_zip_to_str():
+    assert str(Zip("82940-150")) == "82940150"
+
+
+def test_zip_repr():
+    assert repr(Zip("82940-150")) == "<Zip code: 82940150>"
+
+
+def test_zip_display():
+    assert Zip("82940150").display() == "82940-150"
