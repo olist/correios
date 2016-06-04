@@ -13,37 +13,30 @@
 # limitations under the License.
 
 
-import pytest
-
 from correios.exceptions import InvalidZipCode
-from correios.models import Zip
 
 
-def test_basic_zip():
-    zip_code = Zip("82940150")
-    assert zip_code.code == "82940150"
+class Zip(object):
+    def __init__(self, code: str):
+        self._code = None
+        self.set_code(code)
 
+    def get_code(self) -> str:
+        return self._code
 
-def test_sanitize_zip():
-    zip_code = Zip("82940-150")
-    assert zip_code.code == "82940150"
+    def set_code(self, code: str):
+        code = "".join(d for d in code if d.isdigit())
+        if len(code) != 8:
+            raise InvalidZipCode("Zip code must have 8 digits")
+        self._code = code
 
+    code = property(get_code, set_code)
 
-def test_fail_invalid_zip():
-    with pytest.raises(InvalidZipCode):
-        Zip("12345")
+    def display(self) -> str:
+        return "{}-{}".format(self.code[:5], self.code[-3:])
 
-    with pytest.raises(InvalidZipCode):
-        Zip("123456789")
+    def __str__(self):
+        return self.code
 
-
-def test_convert_zip_to_str():
-    assert str(Zip("82940-150")) == "82940150"
-
-
-def test_zip_repr():
-    assert repr(Zip("82940-150")) == "<Zip code: 82940150>"
-
-
-def test_zip_display():
-    assert Zip("82940150").display() == "82940-150"
+    def __repr__(self):
+        return "<Zip code: {}>".format(self.code)

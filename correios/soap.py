@@ -13,21 +13,19 @@
 # limitations under the License.
 
 
-import os
-from io import StringIO
+from io import BytesIO
 
 import requests
 from suds.client import Client
 from suds.transport import Reply
 from suds.transport.http import HttpAuthenticated
 
-from . import DATADIR
-
 
 class RequestsTransport(HttpAuthenticated):
     def __init__(self, **kwargs):
         self._requests_session = requests.Session()
         self.cert = kwargs.pop('cert', None)
+        self.verify = kwargs.pop('verify', True)
         HttpAuthenticated.__init__(self, **kwargs)
 
     def open(self, request):
@@ -37,8 +35,8 @@ class RequestsTransport(HttpAuthenticated):
             data=request.message,
             headers=request.headers,
             cert=self.cert,
-            verify=True)
-        result = StringIO(resp.content.decode('utf-8'))
+            verify=self.verify)
+        result = BytesIO(resp.content)
         return result
 
     def send(self, request):
@@ -48,16 +46,13 @@ class RequestsTransport(HttpAuthenticated):
             data=request.message,
             headers=request.headers,
             cert=self.cert,
-            verify=True
-        )
+            verify=self.verify)
         result = Reply(resp.status_code, resp.headers, resp.content)
         return result
 
 
 class SoapClient(Client):
-    def __init__(self, url, *args, **kwargs):
-        cert = os.path.join(DATADIR, "correios.cert.pem")
-        key = os.path.join(DATADIR, "correios.pub.pem")
-        transport = RequestsTransport(cert=(cert, key))
+    def __init__(self, url, cert=None, verify=True, *args, **kwargs):
+        transport = RequestsTransport(cert=cert, verify=verify)
         headers = {"Content-Type": "text/xml;charset=UTF-8", "SOAPAction": ""}
         super().__init__(url, transport=transport, headers=headers, **kwargs)
