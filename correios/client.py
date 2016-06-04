@@ -17,6 +17,54 @@ from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, Posti
 from .soap import SoapClient
 
 
+class ModelBuilder(object):
+    def build_posting_card(self, posting_card_data):
+        posting_card = PostingCard(
+            number=posting_card_data.numero,
+            administrative_code=posting_card_data.codigoAdministrativo,
+            start_date=posting_card_data.dataVigenciaInicio,
+            end_date=posting_card_data.dataVigenciaFim,
+            status=posting_card_data.statusCartaoPostagem,
+            status_code=posting_card_data.statusCodigo,
+            unit=posting_card_data.unidadeGenerica,
+            services=[]  # TODO: implement this (last one?)
+        )
+        return posting_card
+
+    def build_contract(self, contract_data):
+        posting_cards = []
+        for posting_card_data in contract_data.cartoesPostagem:
+            posting_card = self.build_posting_card(posting_card_data)
+            posting_cards.append(posting_card)
+
+        contract = Contract(
+            number=contract_data.contratoPK.numero,
+            customer_code=contract_data.codigoCliente,
+            management_code=contract_data.codigoDiretoria,
+            management_name=contract_data.descricaoDiretoriaRegional,
+            status_code=contract_data.statusCodigo,
+            start_date=contract_data.dataVigenciaInicio,
+            end_date=contract_data.dataVigenciaFim,
+            posting_cards=posting_cards,
+        )
+        return contract
+
+    def build_user(self, user_data):
+        contracts = []
+        for contract_data in user_data.contratos:
+            contract = self.build_contract(contract_data)
+            contracts.append(contract)
+
+        user = User(
+            name=user_data.nome,
+            federal_tax_number=FederalTaxNumber(user_data.cnpj),
+            state_tax_number=StateTaxNumber(user_data.inscricaoEstadual),
+            status_number=user_data.statusCodigo,
+            contracts=contracts,
+        )
+        return user
+
+
 class Correios(object):
     # 'environment': ('url', 'ssl_verification')
     environments = {
@@ -34,6 +82,7 @@ class Correios(object):
 
         self._soap_client = SoapClient(self.url, verify=self.verify)
         self.service = self._soap_client.service
+        self.model_builder = ModelBuilder()
 
     def _call(self, method_name, *args, **kwargs):
         method = getattr(self.service, method_name)
@@ -46,6 +95,7 @@ class Correios(object):
         # TODO: handle errors
         return method(*args, **kwargs)
 
+    # TODO
     # def verify_service_availability(self,
     #                                 administrative_code: str,
     #                                 service_number: str,
@@ -61,38 +111,9 @@ class Correios(object):
     #
     #     return response
 
-    def _build_contract(self, contract_data):
-        posting_cards = []
-        for posting_card_data in contract_data.cartoesPostagem:
-            posting_cards.append(PostingCard())
-
-        contract = Contract(
-            number=contract_data.contratoPK.numero,
-            customer_code=contract_data.codigoCliente,
-            management_code=contract_data.codigoDiretoria,
-            management_name=contract_data.descricaoDiretoriaRegional,
-            status_code=contract_data.statusCodigo,
-            start_date=contract_data.dataVigenciaInicio,
-            end_date=contract_data.dataVigenciaFim,
-            posting_cards=posting_cards)
-        return contract
-
-    def _build_contracts(self, response):
-        contracts = []
-        for contract_data in response.contratos:
-            contract = self._build_contract(contract_data)
-            contracts.append(contract)
-        return contracts
-
     def get_user(self, contract_data: str, card: str):
-        response = self._call("buscaCliente", contract_data, card)
-        contracts = self._build_contracts(response)
-        user = User(name=response.nome,
-                    federal_tax_number=FederalTaxNumber(response.cnpj),
-                    state_tax_number=StateTaxNumber(response.inscricaoEstadual),
-                    status_number=response.statusCodigo,
-                    contracts=contracts)
-        return user
+        user_data = self._call("buscaCliente", contract_data, card)
+        return self.model_builder.build_user(user_data)
 
 
 """
