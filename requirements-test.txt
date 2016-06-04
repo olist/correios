@@ -2,3 +2,4 @@
 pytest
 pytest-cov
 tox
+-e git+https://github.com/kevin1024/vcrpy.git#egg=vcrpy
