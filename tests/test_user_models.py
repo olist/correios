@@ -11,12 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from datetime import timedelta
+
+
+from datetime import timedelta, datetime, timezone
 
 import pytest
 
 from correios.exceptions import InvalidFederalTaxNumber
-from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract
+from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard
 
 
 def test_basic_federal_tax_number_tax_number():
@@ -126,17 +128,61 @@ def test_basic_contract(datetime_object):
     assert contract.posting_cards == []
 
 
-def test_sanitize_contract_data(datetime_object):
+def test_sanitize_contract_data():
     contract = Contract(
         number="9912208555  ",
         customer_code=279311,
         management_code="    10",
         management_name="DR - BRASÍLIA                 ",
         status_code="A",
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
+        start_date="2014-05-09 00:00:00-03:00",
+        end_date="2018-05-16 00:00:00-03:00",
         posting_cards=[]
     )
     assert contract.number == 9912208555
     assert contract.management_code == 10
     assert contract.management_name == "DR - BRASÍLIA"
+    assert contract.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
+    assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+
+
+def test_basic_posting_card(datetime_object):
+    posting_card = PostingCard(
+        number=57018901,
+        administrative_code=8082650,
+        start_date=datetime_object,
+        end_date=datetime_object + timedelta(days=5),
+        status=1,
+        status_code="I",
+        unit=8,
+        services=[],
+    )
+
+    assert posting_card.number == 57018901
+    assert posting_card.administrative_code == 8082650
+    assert posting_card.start_date == datetime_object
+    assert posting_card.end_date == datetime_object + timedelta(days=5)
+    assert posting_card.status == 1
+    assert posting_card.status_code == "I"
+    assert posting_card.unit == 8
+
+
+def test_sanitize_posting_card_data():
+    posting_card = PostingCard(
+        number="0057018901",
+        administrative_code="08082650  ",
+        start_date="2014-05-09 00:00:00-03:00",
+        end_date="2018-05-16 00:00:00-03:00",
+        status="01",
+        status_code="I",
+        unit="08        ",
+        services=[],
+    )
+
+    assert posting_card.number == 57018901
+    assert posting_card.administrative_code == 8082650
+    assert posting_card.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
+    assert posting_card.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+    assert posting_card.status == 1
+    assert posting_card.status_code == "I"
+    assert posting_card.unit == 8

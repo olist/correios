@@ -23,6 +23,21 @@ N = TypeVar("N", int, str)
 D = TypeVar("D", datetime, str)
 
 
+def _to_integer(number: N) -> int:
+    try:
+        return int(number.strip())
+    except AttributeError:
+        return int(number)
+
+
+def _to_datetime(date: D, fmt="%Y-%m-%d %H:%M:%S%z"):
+    if isinstance(date, str):
+        last_colon_pos = date.rindex(":")
+        date = date[:last_colon_pos] + date[last_colon_pos + 1:]
+        return datetime.strptime(date, fmt)
+    return date
+
+
 class AbstractTaxNumber(object):
     def __init__(self, number: str):
         self._number = None
@@ -99,8 +114,28 @@ class StateTaxNumber(AbstractTaxNumber):
         return self.number
 
 
-class PostingCard(object):
+class Service(object):
     pass
+
+
+class PostingCard(object):
+    def __init__(self,
+                 number: N,  # 10 digits
+                 administrative_code: N,  # 8 digits
+                 start_date: D,
+                 end_date: D,
+                 status: N,  # 2 digits
+                 status_code: str,
+                 unit: N,  # 2 digits
+                 services: List[Service]):
+        self.number = _to_integer(number)
+        self.administrative_code = _to_integer(administrative_code)
+        self.start_date = _to_datetime(start_date)
+        self.end_date = _to_datetime(end_date)
+        self.status = _to_integer(status)
+        self.status_code = status_code
+        self.unit = _to_integer(unit)
+        self.services = services
 
 
 class Contract(object):
@@ -110,25 +145,17 @@ class Contract(object):
                  management_code: N,
                  management_name: str,
                  status_code: str,
-                 start_date: datetime,
-                 end_date: datetime,
+                 start_date: D,
+                 end_date: D,
                  posting_cards: List[PostingCard]):
-        try:
-            self.number = int(number.strip())
-        except AttributeError:
-            self.number = number
 
+        self.number = _to_integer(number)
         self.customer_code = customer_code
-
-        try:
-            self.management_code = int(management_code.strip())
-        except AttributeError:
-            self.management_code = management_code
-
+        self.management_code = _to_integer(management_code)
         self.management_name = management_name.strip()
         self.status_code = status_code
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = _to_datetime(start_date)
+        self.end_date = _to_datetime(end_date)
         self.posting_cards = posting_cards
 
 
@@ -142,10 +169,6 @@ class User(object):
         self.name = name.strip()
         self.federal_tax_number = federal_tax_number
         self.state_tax_number = state_tax_number
-
-        try:
-            self.status_number = int(status_number.strip())
-        except AttributeError:
-            self.status_number = status_number
+        self.status_number = _to_integer(status_number)
 
         self.contracts = contracts

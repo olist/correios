@@ -26,6 +26,7 @@ def test_basic_client():
     assert client.password == "bar"
 
 
+# TODO
 # def test_verify_service_availability():
 #     client = Correios(username="sigep", password="n5f9t8", environment="test")
 #     status = client.verify_service_availability(user)
