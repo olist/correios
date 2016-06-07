@@ -15,27 +15,22 @@
 
 from correios.client import Correios
 from correios.models.address import ZipCode
+from correios.models.services import SERVICES
 from .vcr import vcr
 
 
 @vcr.use_cassette
 def test_basic_client():
-    client = Correios(username="foo", password="bar", environment='test')
+    client = Correios(username="sigep", password="n5f9t8", environment='test')
     assert client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
     assert not client.verify
-    assert client.username == "foo"
-    assert client.password == "bar"
-
-
-# TODO
-# def test_verify_service_availability():
-#     client = Correios(username="sigep", password="n5f9t8", environment="test")
-#     status = client.verify_service_availability(user)
+    assert client.username == "sigep"
+    assert client.password == "n5f9t8"
 
 
 @vcr.use_cassette
-def test_get_info():
-    client = Correios(username="foo", password="bar", environment="test")
+def test_get_user():
+    client = Correios(username="sigep", password="n5f9t8", environment="test")
     user = client.get_user(contract="9912208555", card="0057018901")
 
     assert user.name == "ECT"
@@ -60,3 +55,22 @@ def test_find_zip_code():
     assert zip_address.district == "Asa Norte"
     assert zip_address.address == "SBN Quadra 1 Bloco A"
     assert zip_address.complements == []
+
+
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('suds.client').setLevel(logging.DEBUG)
+logging.getLogger('suds.transport').setLevel(logging.DEBUG)
+logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
+logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
+
+
+@vcr.use_cassette
+def test_verify_service_availability(default_posting_card):
+    client = Correios(username="sigep", password="n5f9t8", environment="test")
+    services = SERVICES[40215], SERVICES[40169]  # sedex10 and sedex12
+    status = client.verify_service_availability(default_posting_card, services, "70002900", "81350120")
+
+    assert status[services[0]]
+    assert status[services[1]]
