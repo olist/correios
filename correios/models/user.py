@@ -115,7 +115,29 @@ class StateTaxNumber(AbstractTaxNumber):
 
 
 class Service(object):
-    pass
+    def __init__(self,
+                 id: int,
+                 code: N,
+                 description: str,
+                 category: str,
+                 requires_dimensions: bool,
+                 requires_payment: bool,
+                 postal_code: N,
+                 code_type1: str,
+                 code_type2: str,
+                 start_date: D,
+                 end_date: D):
+        self.id = id
+        self.code = _to_integer(code)
+        self.description = description.strip()
+        self.category = category
+        self.requires_dimensions = requires_dimensions
+        self.requires_payment = requires_payment
+        self.postal_code = _to_integer(postal_code)
+        self.code_type1 = code_type1
+        self.code_type2 = code_type2
+        self.start_date = _to_datetime(start_date)
+        self.end_date = _to_datetime(end_date)
 
 
 class PostingCard(object):
