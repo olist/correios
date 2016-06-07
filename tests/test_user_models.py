@@ -17,7 +17,7 @@ from datetime import timedelta, datetime, timezone
 
 import pytest
 
-from correios.exceptions import InvalidFederalTaxNumber
+from correios.exceptions import InvalidFederalTaxNumberException
 from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service
 
 
@@ -38,13 +38,13 @@ def test_compare_federal_tax_number_with_string():
 
 
 def test_fail_invalid_federal_tax_number():
-    with pytest.raises(InvalidFederalTaxNumber):
+    with pytest.raises(InvalidFederalTaxNumberException):
         FederalTaxNumber("1234567890123")
 
-    with pytest.raises(InvalidFederalTaxNumber):
+    with pytest.raises(InvalidFederalTaxNumberException):
         FederalTaxNumber("123456789012345")
 
-    with pytest.raises(InvalidFederalTaxNumber):
+    with pytest.raises(InvalidFederalTaxNumberException):
         FederalTaxNumber("73119555000199")  # invalid verification digit
 
 

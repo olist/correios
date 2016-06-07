@@ -21,13 +21,17 @@ class ModelException(BaseCorreiosException):
     pass
 
 
-class InvalidZipCode(ModelException):
+class InvalidZipCodeException(ModelException):
     pass
 
 
-class InvalidFederalTaxNumber(ModelException):
+class InvalidStateException(ModelException):
     pass
 
 
-class InvalidStateTaxNumber(ModelException):
+class InvalidFederalTaxNumberException(ModelException):
+    pass
+
+
+class InvalidStateTaxNumberException(ModelException):
     pass

@@ -14,6 +14,7 @@
 
 
 from correios.client import Correios
+from correios.models.address import ZipCode
 from .vcr import vcr
 
 
@@ -35,7 +36,7 @@ def test_basic_client():
 @vcr.use_cassette
 def test_get_info():
     client = Correios(username="foo", password="bar", environment="test")
-    user = client.get_user(contract_data="9912208555", card="0057018901")
+    user = client.get_user(contract="9912208555", card="0057018901")
 
     assert user.name == "ECT"
     assert user.federal_tax_number == "34028316000103"
@@ -45,3 +46,17 @@ def test_get_info():
 
     contract = user.contracts[0]
     assert len(contract.posting_cards) == 1
+
+
+@vcr.use_cassette
+def test_find_zip_code():
+    client = Correios(username="sigep", password="n5f9t8", environment="test")
+    zip_address = client.find_zipcode(ZipCode("70002-900"))
+
+    assert zip_address.id == 0
+    assert zip_address.zip_code == "70002900"
+    assert zip_address.state == "DF"
+    assert zip_address.city == "Brasília"
+    assert zip_address.district == "Asa Norte"
+    assert zip_address.address == "SBN Quadra 1 Bloco A"
+    assert zip_address.complements == []
