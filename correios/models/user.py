@@ -86,7 +86,8 @@ class FederalTaxNumber(AbstractTaxNumber):
         raw_number = self._sanitize(raw_number)
 
         if len(raw_number) != FederalTaxNumber.FEDERAL_TAX_NUMBER_SIZE:
-            raise InvalidFederalTaxNumberException("Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
+            raise InvalidFederalTaxNumberException(
+                "Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
 
         if not self._check_verification_digits(raw_number):
             raise InvalidFederalTaxNumberException("Invalid Federal Tax Number verification digits")
@@ -110,6 +111,7 @@ class StateTaxNumber(AbstractTaxNumber):
 
 
 class Service(object):
+    # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
                  code: N,
