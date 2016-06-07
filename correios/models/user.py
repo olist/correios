@@ -16,7 +16,7 @@
 from datetime import datetime
 from typing import List, TypeVar
 
-from correios.exceptions import InvalidFederalTaxNumber
+from correios.exceptions import InvalidFederalTaxNumberException
 
 
 N = TypeVar("N", int, str)
@@ -40,16 +40,11 @@ def _to_datetime(date: D, fmt="%Y-%m-%d %H:%M:%S%z"):
 
 class AbstractTaxNumber(object):
     def __init__(self, number: str):
-        self._number = None
-        self.set_number(number)
-
-    def get_number(self) -> str:
-        return self._number
-
-    def set_number(self, number: str):
         self._number = self._validate(number)
 
-    number = property(get_number, set_number)
+    @property
+    def number(self) -> str:
+        return self._number
 
     def _sanitize(self, raw_number: str) -> str:
         return "".join(d for d in raw_number if d.isdigit())
@@ -91,10 +86,10 @@ class FederalTaxNumber(AbstractTaxNumber):
         raw_number = self._sanitize(raw_number)
 
         if len(raw_number) != FederalTaxNumber.FEDERAL_TAX_NUMBER_SIZE:
-            raise InvalidFederalTaxNumber("Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
+            raise InvalidFederalTaxNumberException("Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
 
         if not self._check_verification_digits(raw_number):
-            raise InvalidFederalTaxNumber("Invalid Federal Tax Number verification digits")
+            raise InvalidFederalTaxNumberException("Invalid Federal Tax Number verification digits")
 
         return raw_number
 

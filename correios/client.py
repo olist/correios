@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+from .models.address import ZipCodeType, ZipAddress
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -85,6 +86,18 @@ class ModelBuilder(object):
         )
         return user
 
+    def build_zip_address(self, zip_address_data):
+        zip_address = ZipAddress(
+            id=zip_address_data.id,
+            zip_code=zip_address_data.cep,
+            state=zip_address_data.uf,
+            city=zip_address_data.cidade,
+            district=zip_address_data.bairro,
+            address=zip_address_data.end,
+            complements=[zip_address_data.complemento, zip_address_data.complemento2]
+        )
+        return zip_address
+
 
 class Correios(object):
     # 'environment': ('url', 'ssl_verification')
@@ -105,33 +118,21 @@ class Correios(object):
         self.service = self._soap_client.service
         self.model_builder = ModelBuilder()
 
-    def _call(self, method_name, *args, **kwargs):
-        method = getattr(self.service, method_name)
-
+    def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
             "usuario": self.username,
             "senha": self.password,
         })
+        return self._call(method_name, *args, **kwargs)
 
-        # TODO: handle errors
-        return method(*args, **kwargs)
+    def _call(self, method_name, *args, **kwargs):
+        method = getattr(self.service, method_name)
+        return method(*args, **kwargs)  # TODO: handle errors
 
-    # TODO
-    # def verify_service_availability(self,
-    #                                 administrative_code: str,
-    #                                 service_number: str,
-    #                                 from_zip: Zip,
-    #                                 to_zip: Zip):
-    #     response = self._call("verificaDisponibilidadeServico",
-    #                           int(administrative_code),
-    #                           service_number,
-    #                           str(from_zip),
-    #                           str(to_zip),
-    #                           self.username,
-    #                           self.password)
-    #
-    #     return response
-
-    def get_user(self, contract_data: str, card: str):
-        user_data = self._call("buscaCliente", contract_data, card)
+    def get_user(self, contract: str, card: str):
+        user_data = self._auth_call("buscaCliente", contract, card)
         return self.model_builder.build_user(user_data)
+
+    def find_zipcode(self, zip_code: ZipCodeType):
+        zip_address_data = self._call("consultaCEP", str(zip_code))
+        return self.model_builder.build_zip_address(zip_address_data)
