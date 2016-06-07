@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+from typing import Sequence
+
 from .models.address import ZipCodeType, ZipAddress
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
@@ -25,11 +27,7 @@ class ModelBuilder(object):
             code=service_data.codigo,
             description=service_data.descricao,
             category=service_data.servicoSigep.categoriaServico,
-            requires_dimensions=service_data.servicoSigep.exigeDimensoes,
-            requires_payment=service_data.servicoSigep.exigeValorCobrar,
             postal_code=service_data.servicoSigep.ssiCoCodigoPostal,
-            code_type1=service_data.tipo1Codigo,
-            code_type2=service_data.tipo2Codigo,
             start_date=service_data.vigencia.dataInicial,
             end_date=service_data.vigencia.dataFinal,
         )
@@ -62,7 +60,7 @@ class ModelBuilder(object):
         contract = Contract(
             number=contract_data.contratoPK.numero,
             customer_code=contract_data.codigoCliente,
-            management_code=contract_data.codigoDiretoria,
+            administrative_code=contract_data.codigoDiretoria,
             management_name=contract_data.descricaoDiretoriaRegional,
             status_code=contract_data.statusCodigo,
             start_date=contract_data.dataVigenciaInicio,
@@ -136,3 +134,12 @@ class Correios(object):
     def find_zipcode(self, zip_code: ZipCodeType):
         zip_address_data = self._call("consultaCEP", str(zip_code))
         return self.model_builder.build_zip_address(zip_address_data)
+
+    def verify_service_availability(self, posting_card: PostingCard, services: Sequence[Service], from_zip_code: ZipCodeType, to_zip_code: ZipCodeType):
+        availability = {}
+        services = str(services[0].code)  # ",".join(str(s.code) for s in services)
+
+        result = self._auth_call("verificaDisponibilidadeServico",
+                                 posting_card.administrative_code, services,
+                                 str(from_zip_code), str(to_zip_code))
+        return availability

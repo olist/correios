@@ -31,6 +31,9 @@ def _to_integer(number: N) -> int:
 
 
 def _to_datetime(date: D, fmt="%Y-%m-%d %H:%M:%S%z"):
+    if date is None:
+        return date
+
     if isinstance(date, str):
         last_colon_pos = date.rindex(":")
         date = date[:last_colon_pos] + date[last_colon_pos + 1:]
@@ -117,24 +120,20 @@ class Service(object):
                  code: N,
                  description: str,
                  category: str,
-                 requires_dimensions: bool,
-                 requires_payment: bool,
                  postal_code: N,
-                 code_type1: str,
-                 code_type2: str,
-                 start_date: D,
-                 end_date: D):
+                 start_date: D=None,
+                 end_date: D=None):
         self.id = id
         self.code = _to_integer(code)
         self.description = description.strip()
-        self.category = category
-        self.requires_dimensions = requires_dimensions
-        self.requires_payment = requires_payment
+        self.category = category.strip()
         self.postal_code = _to_integer(postal_code)
-        self.code_type1 = code_type1
-        self.code_type2 = code_type2
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
+
+    def __repr__(self):
+        return "Service(id={0.id!r}, code={0.code!r}, description={0.description!r}, category={0.category!r}, " \
+               "postal_code={0.postal_code!r}, start_date={0.start_date!r}, end_date={0.end_date!r})".format(self)
 
 
 class PostingCard(object):
@@ -161,7 +160,7 @@ class Contract(object):
     def __init__(self,
                  number: N,
                  customer_code: int,
-                 management_code: N,
+                 administrative_code: N,
                  management_name: str,
                  status_code: str,
                  start_date: D,
@@ -170,7 +169,7 @@ class Contract(object):
 
         self.number = _to_integer(number)
         self.customer_code = customer_code
-        self.management_code = _to_integer(management_code)
+        self.administrative_code = _to_integer(administrative_code)
         self.management_name = management_name.strip()
         self.status_code = status_code
         self.start_date = _to_datetime(start_date)
