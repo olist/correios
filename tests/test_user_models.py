@@ -18,7 +18,7 @@ from datetime import timedelta, datetime, timezone
 import pytest
 
 from correios.exceptions import InvalidFederalTaxNumber
-from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard
+from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service
 
 
 def test_basic_federal_tax_number_tax_number():
@@ -186,3 +186,59 @@ def test_sanitize_posting_card_data():
     assert posting_card.status == 1
     assert posting_card.status_code == "I"
     assert posting_card.unit == 8
+
+
+def test_basic_service(datetime_object):
+    service = Service(
+        id=104707,
+        code=40215,
+        description="SEDEX 10",
+        category="SERVICO_COM_RESTRICAO",
+        requires_dimensions=False,
+        requires_payment=False,
+        postal_code=244,
+        code_type1="CNV",
+        code_type2="A",
+        start_date=datetime_object,
+        end_date=datetime_object + timedelta(days=5),
+    )
+
+    assert service.id == 104707
+    assert service.code == 40215
+    assert service.description == "SEDEX 10"
+    assert service.category == "SERVICO_COM_RESTRICAO"
+    assert not service.requires_dimensions
+    assert not service.requires_payment
+    assert service.postal_code == 244
+    assert service.code_type1 == "CNV"
+    assert service.code_type2 == "A"
+    assert service.start_date == datetime_object
+    assert service.end_date == datetime_object + timedelta(days=5)
+
+
+def test_sanitize_service():
+    service = Service(
+        id=104707,
+        code="40215                    ",
+        description="SEDEX 10                      ",
+        category="SERVICO_COM_RESTRICAO",
+        requires_dimensions=False,
+        requires_payment=False,
+        postal_code="244",
+        code_type1="CNV",
+        code_type2="A",
+        start_date="2014-05-09 00:00:00-03:00",
+        end_date="2018-05-16 00:00:00-03:00",
+    )
+
+    assert service.id == 104707
+    assert service.code == 40215
+    assert service.description == "SEDEX 10"
+    assert service.category == "SERVICO_COM_RESTRICAO"
+    assert not service.requires_dimensions
+    assert not service.requires_payment
+    assert service.postal_code == 244
+    assert service.code_type1 == "CNV"
+    assert service.code_type2 == "A"
+    assert service.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
+    assert service.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
