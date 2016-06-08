@@ -37,6 +37,7 @@ class ModelBuilder(object):
         posting_card = PostingCard(
             contract=contract,
             number=posting_card_data.numero,
+            administrative_code=posting_card_data.codigoAdministrativo,
             start_date=posting_card_data.dataVigenciaInicio,
             end_date=posting_card_data.dataVigenciaFim,
             status=posting_card_data.statusCartaoPostagem,
@@ -54,7 +55,7 @@ class ModelBuilder(object):
         contract = Contract(
             number=contract_data.contratoPK.numero,
             customer_code=contract_data.codigoCliente,
-            administrative_code=contract_data.codigoDiretoria,
+            direction_code=contract_data.codigoDiretoria,
             direction=contract_data.descricaoDiretoriaRegional,
             status_code=contract_data.statusCodigo,
             start_date=contract_data.dataVigenciaInicio,

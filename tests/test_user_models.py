@@ -110,7 +110,7 @@ def test_basic_contract(datetime_object):
     contract = Contract(
         number=9912208555,
         customer_code=279311,
-        administrative_code=8082650,
+        direction_code=10,
         direction="DR - BRASÍLIA",
         status_code="A",
         start_date=datetime_object,
@@ -119,7 +119,7 @@ def test_basic_contract(datetime_object):
 
     assert contract.number == 9912208555
     assert contract.customer_code == 279311
-    assert contract.administrative_code == "08082650"
+    assert contract.direction_code == 10
     assert contract.direction == "DR - BRASÍLIA"
     assert contract.status_code == "A"
     assert contract.start_date == datetime_object
@@ -131,14 +131,14 @@ def test_sanitize_contract_data():
     contract = Contract(
         number="9912208555  ",
         customer_code=279311,
-        administrative_code="08082650",
+        direction_code="   10",
         direction="DR - BRASÍLIA                 ",
         status_code="A",
         start_date="2014-05-09 00:00:00-03:00",
         end_date="2018-05-16 00:00:00-03:00",
     )
     assert contract.number == 9912208555
-    assert contract.administrative_code == "08082650"
+    assert contract.direction_code == 10
     assert contract.direction == "DR - BRASÍLIA"
     assert contract.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
     assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
@@ -148,6 +148,7 @@ def test_basic_posting_card(default_contract, datetime_object):
     posting_card = PostingCard(
         contract=default_contract,
         number=57018901,
+        administrative_code=8082650,
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
         status=1,
@@ -168,6 +169,7 @@ def test_sanitize_posting_card_data(default_contract):
     posting_card = PostingCard(
         contract=default_contract,
         number="0057018901",
+        administrative_code=8082650,
         start_date="2014-05-09 00:00:00-03:00",
         end_date="2018-05-16 00:00:00-03:00",
         status="01",

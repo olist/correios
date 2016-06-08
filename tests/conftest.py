@@ -48,7 +48,7 @@ def default_contract(datetime_object):
     contract = Contract(
         number=9912208555,
         customer_code=279311,
-        administrative_code=8082650,
+        direction_code=10,
         direction="DR - BRASÍLIA",
         status_code="A",
         start_date=datetime_object,
@@ -64,6 +64,7 @@ def default_posting_card(default_contract, datetime_object):
     posting_card = PostingCard(
         contract=default_contract,
         number=57018901,
+        administrative_code=8082650,
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
         status=1,

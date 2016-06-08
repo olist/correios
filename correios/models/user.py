@@ -143,7 +143,7 @@ class Contract(object):
     def __init__(self,
                  number: Union[int, str],
                  customer_code: int,
-                 administrative_code: Union[int, str],
+                 direction_code: Union[int, str],
                  direction: str,
                  status_code: str,
                  start_date: Union[datetime, str],
@@ -154,7 +154,7 @@ class Contract(object):
         self.customer_code = customer_code
         self.direction = direction.strip()
         self.status_code = status_code
-        self._administrative_code = _to_integer(administrative_code)
+        self.direction_code = _to_integer(direction_code)
 
         if start_date is not None:
             start_date = _to_datetime(start_date)
@@ -168,10 +168,6 @@ class Contract(object):
             posting_cards = []
         self.posting_cards = posting_cards
 
-    @property
-    def administrative_code(self):
-        return "{:08}".format(self._administrative_code)
-
     def add_posting_card(self, posting_card: 'PostingCard'):
         self.posting_cards.append(posting_card)
 
@@ -183,6 +179,7 @@ class PostingCard(object):
     def __init__(self,
                  contract: Contract,
                  number: Union[int, str],  # 10 digits
+                 administrative_code: Union[int, str],  # 8 digits
                  start_date: Union[datetime, str],
                  end_date: Union[datetime, str],
                  status: Union[int, str],  # 2 digits
@@ -191,6 +188,7 @@ class PostingCard(object):
                  services: Optional[List[Service]]=None):
         self.contract = contract
         self._number = _to_integer(number)
+        self._administrative_code = _to_integer(administrative_code)
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
         self.status = _to_integer(status)
@@ -210,7 +208,7 @@ class PostingCard(object):
 
     @property
     def administrative_code(self):
-        return self.contract.administrative_code
+        return "{:08}".format(self._administrative_code)
 
     def add_service(self, service: Service):
         self.services.append(service)
