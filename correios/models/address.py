@@ -135,3 +135,8 @@ class ZipAddress(object):
         self.district = district
         self.address = address
         self.complements = [c for c in complements if c]
+
+
+class TrackingCode(object):
+    def __init__(self, code: str):
+        self.code = code

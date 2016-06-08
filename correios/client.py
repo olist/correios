@@ -15,7 +15,7 @@
 
 from typing import Sequence
 
-from .models.address import ZipCodeType, ZipAddress
+from .models.address import ZipCodeType, ZipAddress, TrackingCode
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -33,40 +33,37 @@ class ModelBuilder(object):
         )
         return service
 
-    def build_posting_card(self, posting_card_data):
-        services = []
-        for service_data in posting_card_data.servicos:
-            service = self.build_service(service_data)
-            services.append(service)
-
+    def build_posting_card(self, contract: Contract, posting_card_data):
         posting_card = PostingCard(
+            contract=contract,
             number=posting_card_data.numero,
-            administrative_code=posting_card_data.codigoAdministrativo,
             start_date=posting_card_data.dataVigenciaInicio,
             end_date=posting_card_data.dataVigenciaFim,
             status=posting_card_data.statusCartaoPostagem,
             status_code=posting_card_data.statusCodigo,
             unit=posting_card_data.unidadeGenerica,
-            services=services
         )
+
+        for service_data in posting_card_data.servicos:
+            service = self.build_service(service_data)
+            posting_card.add_service(service)
+
         return posting_card
 
     def build_contract(self, contract_data):
-        posting_cards = []
-        for posting_card_data in contract_data.cartoesPostagem:
-            posting_card = self.build_posting_card(posting_card_data)
-            posting_cards.append(posting_card)
-
         contract = Contract(
             number=contract_data.contratoPK.numero,
             customer_code=contract_data.codigoCliente,
             administrative_code=contract_data.codigoDiretoria,
-            management_name=contract_data.descricaoDiretoriaRegional,
+            direction=contract_data.descricaoDiretoriaRegional,
             status_code=contract_data.statusCodigo,
             start_date=contract_data.dataVigenciaInicio,
             end_date=contract_data.dataVigenciaFim,
-            posting_cards=posting_cards,
         )
+
+        for posting_card_data in contract_data.cartoesPostagem:
+            self.build_posting_card(contract, posting_card_data)
+
         return contract
 
     def build_user(self, user_data):
@@ -95,6 +92,15 @@ class ModelBuilder(object):
             complements=[zip_address_data.complemento, zip_address_data.complemento2]
         )
         return zip_address
+
+    def build_posting_card_status(self, response):
+        if response.lower() != "normal":
+            return PostingCard.CANCELLED
+        return PostingCard.ACTIVE
+
+    def build_tracking_codes_list(self, response):
+        codes = response.split(",")
+        return [TrackingCode(c) for c in codes]
 
 
 class Correios(object):
@@ -136,10 +142,19 @@ class Correios(object):
         return self.model_builder.build_zip_address(zip_address_data)
 
     def verify_service_availability(self, posting_card: PostingCard, services: Sequence[Service], from_zip_code: ZipCodeType, to_zip_code: ZipCodeType):
-        availability = {}
         services = str(services[0].code)  # ",".join(str(s.code) for s in services)
 
         result = self._auth_call("verificaDisponibilidadeServico",
                                  posting_card.administrative_code, services,
                                  str(from_zip_code), str(to_zip_code))
-        return availability
+        return result
+
+    def get_posting_card_status(self, posting_card: PostingCard):
+        result = self._auth_call("getStatusCartaoPostagem", posting_card.number)
+        return self.model_builder.build_posting_card_status(result)
+
+    def request_tracking_codes(self, user: User, service: Service, quantity: int = 1, receiver_type="C"):
+        result = self._auth_call("solicitaEtiquetas",
+                                 receiver_type, str(user.federal_tax_number),
+                                 service.id, quantity)
+        return self.model_builder.build_tracking_codes_list(result)
