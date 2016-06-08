@@ -14,31 +14,38 @@
 
 
 from datetime import datetime
-from typing import List, TypeVar
+from typing import List, Union, Optional
 
 from correios.exceptions import InvalidFederalTaxNumberException
 
 
-N = TypeVar("N", int, str)
-D = TypeVar("D", datetime, str)
-
-
-def _to_integer(number: N) -> int:
+def _to_integer(number: Union[int, str]) -> int:
     try:
         return int(number.strip())
     except AttributeError:
         return int(number)
 
 
-def _to_datetime(date: D, fmt="%Y-%m-%d %H:%M:%S%z"):
-    if date is None:
-        return date
-
+def _to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
     if isinstance(date, str):
         last_colon_pos = date.rindex(":")
         date = date[:last_colon_pos] + date[last_colon_pos + 1:]
         return datetime.strptime(date, fmt)
     return date
+
+
+def _to_federal_tax_number(federal_tax_number) -> "FederalTaxNumber":
+    if isinstance(federal_tax_number, FederalTaxNumber):
+        return federal_tax_number
+
+    return FederalTaxNumber(federal_tax_number)
+
+
+def _to_state_tax_number(state_tax_number) -> "StateTaxNumber":
+    if isinstance(state_tax_number, StateTaxNumber):
+        return state_tax_number
+
+    return StateTaxNumber(state_tax_number)
 
 
 class AbstractTaxNumber(object):
@@ -117,12 +124,12 @@ class Service(object):
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
-                 code: N,
+                 code: Union[int, str],
                  description: str,
                  category: str,
-                 postal_code: N,
-                 start_date: D=None,
-                 end_date: D=None):
+                 postal_code: Union[int, str],
+                 start_date: Union[datetime, str, type(None)]=None,
+                 end_date: Union[datetime, str, type(None)]=None):
         self.id = id
         self.code = _to_integer(code)
         self.description = description.strip()
@@ -131,62 +138,102 @@ class Service(object):
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
 
-    def __repr__(self):
-        return "Service(id={0.id!r}, code={0.code!r}, description={0.description!r}, category={0.category!r}, " \
-               "postal_code={0.postal_code!r}, start_date={0.start_date!r}, end_date={0.end_date!r})".format(self)
+
+class Contract(object):
+    def __init__(self,
+                 number: Union[int, str],
+                 customer_code: int,
+                 administrative_code: Union[int, str],
+                 direction: str,
+                 status_code: str,
+                 start_date: Union[datetime, str],
+                 end_date: Union[datetime, str],
+                 posting_cards: Optional[List['PostingCard']]=None):
+
+        self.number = _to_integer(number)
+        self.customer_code = customer_code
+        self.direction = direction.strip()
+        self.status_code = status_code
+        self._administrative_code = _to_integer(administrative_code)
+
+        if start_date is not None:
+            start_date = _to_datetime(start_date)
+        self.start_date = start_date
+
+        if end_date is not None:
+            end_date = _to_datetime(end_date)
+        self.end_date = end_date
+
+        if posting_cards is None:
+            posting_cards = []
+        self.posting_cards = posting_cards
+
+    @property
+    def administrative_code(self):
+        return "{:08}".format(self._administrative_code)
+
+    def add_posting_card(self, posting_card: 'PostingCard'):
+        self.posting_cards.append(posting_card)
 
 
 class PostingCard(object):
+    ACTIVE = True
+    CANCELLED = False
+
     def __init__(self,
-                 number: N,  # 10 digits
-                 administrative_code: N,  # 8 digits
-                 start_date: D,
-                 end_date: D,
-                 status: N,  # 2 digits
+                 contract: Contract,
+                 number: Union[int, str],  # 10 digits
+                 start_date: Union[datetime, str],
+                 end_date: Union[datetime, str],
+                 status: Union[int, str],  # 2 digits
                  status_code: str,
-                 unit: N,  # 2 digits
-                 services: List[Service]):
-        self.number = _to_integer(number)
-        self.administrative_code = _to_integer(administrative_code)
+                 unit: Union[int, str],  # 2 digits
+                 services: Optional[List[Service]]=None):
+        self.contract = contract
+        self._number = _to_integer(number)
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
         self.status = _to_integer(status)
         self.status_code = status_code
         self.unit = _to_integer(unit)
+
+        if services is None:
+            services = []
         self.services = services
 
+        if self not in self.contract.posting_cards:
+            self.contract.add_posting_card(self)
 
-class Contract(object):
-    def __init__(self,
-                 number: N,
-                 customer_code: int,
-                 administrative_code: N,
-                 management_name: str,
-                 status_code: str,
-                 start_date: D,
-                 end_date: D,
-                 posting_cards: List[PostingCard]):
+    @property
+    def number(self):
+        return "{:010}".format(self._number)
 
-        self.number = _to_integer(number)
-        self.customer_code = customer_code
-        self.administrative_code = _to_integer(administrative_code)
-        self.management_name = management_name.strip()
-        self.status_code = status_code
-        self.start_date = _to_datetime(start_date)
-        self.end_date = _to_datetime(end_date)
-        self.posting_cards = posting_cards
+    @property
+    def administrative_code(self):
+        return self.contract.administrative_code
+
+    def add_service(self, service: Service):
+        self.services.append(service)
 
 
 class User(object):
     def __init__(self,
                  name: str,
-                 federal_tax_number: FederalTaxNumber,
-                 state_tax_number: StateTaxNumber,
-                 status_number: N,
-                 contracts: List[Contract]):
+                 federal_tax_number: Union[str, FederalTaxNumber],
+                 state_tax_number: Optional[Union[str, StateTaxNumber]]=None,
+                 status_number: Optional[Union[int, str]]=None,
+                 contracts: Optional[List[Contract]]=None):
         self.name = name.strip()
-        self.federal_tax_number = federal_tax_number
-        self.state_tax_number = state_tax_number
-        self.status_number = _to_integer(status_number)
+        self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
 
+        if status_number is not None:
+            status_number = _to_integer(status_number)
+        self.status_number = status_number
+
+        if state_tax_number is not None:
+            state_tax_number = _to_state_tax_number(state_tax_number)
+        self.state_tax_number = state_tax_number
+
+        if contracts is None:
+            contracts = []
         self.contracts = contracts

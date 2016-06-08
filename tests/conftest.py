@@ -17,7 +17,9 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard
+from correios.client import Correios
+from correios.models.services import SERVICES, SERVICE_SEDEX10
+from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
 @pytest.fixture
@@ -36,12 +38,18 @@ def datetime_object():
 
 
 @pytest.fixture
+def default_user():
+    return User(name="ECT", federal_tax_number="34028316000103", state_tax_number="0733382100116", status_number=1)
+
+
+# noinspection PyShadowingNames
+@pytest.fixture
 def default_contract(datetime_object):
     contract = Contract(
         number=9912208555,
         customer_code=279311,
-        administrative_code=10,
-        management_name="DR - BRASÍLIA",
+        administrative_code=8082650,
+        direction="DR - BRASÍLIA",
         status_code="A",
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
@@ -50,17 +58,27 @@ def default_contract(datetime_object):
     return contract
 
 
+# noinspection PyShadowingNames
 @pytest.fixture
-def default_posting_card(datetime_object):
+def default_posting_card(default_contract, datetime_object):
     posting_card = PostingCard(
+        contract=default_contract,
         number=57018901,
-        administrative_code=8082650,
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
         status=1,
         status_code="I",
         unit=8,
-        services=[],
     )
 
     return posting_card
+
+
+@pytest.fixture
+def test_client():
+    return Correios(username="sigep", password="n5f9t8", environment="test")
+
+
+@pytest.fixture
+def sedex10_service():
+    return SERVICES[SERVICE_SEDEX10]

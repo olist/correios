@@ -13,25 +13,26 @@
 # limitations under the License.
 
 
-from correios.client import Correios
+import pytest
+
+from correios.client import Correios, ModelBuilder
 from correios.models.address import ZipCode
 from correios.models.services import SERVICES
+from correios.models.user import PostingCard
 from .vcr import vcr
 
 
 @vcr.use_cassette
-def test_basic_client():
-    client = Correios(username="sigep", password="n5f9t8", environment='test')
-    assert client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
-    assert not client.verify
-    assert client.username == "sigep"
-    assert client.password == "n5f9t8"
+def test_basic_client(test_client):
+    assert test_client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    assert not test_client.verify
+    assert test_client.username == "sigep"
+    assert test_client.password == "n5f9t8"
 
 
 @vcr.use_cassette
-def test_get_user():
-    client = Correios(username="sigep", password="n5f9t8", environment="test")
-    user = client.get_user(contract="9912208555", card="0057018901")
+def test_get_user(test_client):
+    user = test_client.get_user(contract="9912208555", card="0057018901")
 
     assert user.name == "ECT"
     assert user.federal_tax_number == "34028316000103"
@@ -44,9 +45,8 @@ def test_get_user():
 
 
 @vcr.use_cassette
-def test_find_zip_code():
-    client = Correios(username="sigep", password="n5f9t8", environment="test")
-    zip_address = client.find_zipcode(ZipCode("70002-900"))
+def test_find_zip_code(test_client):
+    zip_address = test_client.find_zipcode(ZipCode("70002-900"))
 
     assert zip_address.id == 0
     assert zip_address.zip_code == "70002900"
@@ -57,20 +57,32 @@ def test_find_zip_code():
     assert zip_address.complements == []
 
 
-import logging
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('suds.client').setLevel(logging.DEBUG)
-logging.getLogger('suds.transport').setLevel(logging.DEBUG)
-logging.getLogger('suds.xsd.schema').setLevel(logging.DEBUG)
-logging.getLogger('suds.wsdl').setLevel(logging.DEBUG)
-
-
+@pytest.mark.skip(reason="correios' service is returning a 500 error")
 @vcr.use_cassette
 def test_verify_service_availability(default_posting_card):
     client = Correios(username="sigep", password="n5f9t8", environment="test")
-    services = SERVICES[40215], SERVICES[40169]  # sedex10 and sedex12
+    services = [SERVICES[40215], SERVICES[40169]]  # sedex10 and sedex12
     status = client.verify_service_availability(default_posting_card, services, "70002900", "81350120")
 
     assert status[services[0]]
     assert status[services[1]]
+
+
+@vcr.use_cassette
+def test_get_posting_card_status(default_posting_card):
+    client = Correios(username="sigep", password="n5f9t8", environment="test")
+    status = client.get_posting_card_status(default_posting_card)
+    assert status == PostingCard.ACTIVE
+
+
+def test_builder_posting_card_status():
+    builder = ModelBuilder()
+    assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE
+    assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
+
+
+@vcr.use_cassette
+def test_request_tracking_codes(test_client, default_user, sedex10_service):
+    result = test_client.request_tracking_codes(default_user, sedex10_service)
+    assert result
+
