@@ -22,11 +22,11 @@ from .vcr import vcr
 
 @vcr.use_cassette
 def test_basic_client():
-    default_test_client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    assert default_test_client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
-    assert not default_test_client.verify
-    assert default_test_client.username == "sigep"
-    assert default_test_client.password == "n5f9t8"
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
+    assert client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    assert not client.verify
+    assert client.username == "sigep"
+    assert client.password == "n5f9t8"
 
 
 @vcr.use_cassette

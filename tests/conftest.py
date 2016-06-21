@@ -72,8 +72,3 @@ def default_posting_card(default_contract, datetime_object):
     )
 
     return posting_card
-
-
-@pytest.fixture
-def default_test_client():
-    return Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
