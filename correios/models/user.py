@@ -138,6 +138,9 @@ class Service(object):
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
 
+    def __str__(self):
+        return str(self.code)
+
 
 class Contract(object):
     def __init__(self,
