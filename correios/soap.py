@@ -13,12 +13,16 @@
 # limitations under the License.
 
 
+import logging
 from io import BytesIO
 
 import requests
 from suds.client import Client
 from suds.transport import Reply
 from suds.transport.http import HttpAuthenticated
+
+
+logger = logging.getLogger(__name__)
 
 
 class RequestsTransport(HttpAuthenticated):
@@ -30,6 +34,7 @@ class RequestsTransport(HttpAuthenticated):
 
     def open(self, request):
         self.addcredentials(request)
+        logger.debug("REQUEST: %s", request)
         resp = self._requests_session.get(
             request.url,
             data=request.message,
@@ -41,6 +46,7 @@ class RequestsTransport(HttpAuthenticated):
 
     def send(self, request):
         self.addcredentials(request)
+        logger.debug("REQUEST: %s", request)
         resp = self._requests_session.post(
             request.url,
             data=request.message,
