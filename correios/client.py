@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-from typing import Sequence
+from typing import Union
 
-from .models.address import ZipCodeType, ZipAddress, TrackingCode
+from .models.address import ZipAddress, TrackingCode, ZipCode
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -105,6 +105,9 @@ class ModelBuilder(object):
 
 
 class Correios(object):
+    PRODUCTION = "production"
+    TEST = "test"
+
     # 'environment': ('url', 'ssl_verification')
     environments = {
         'production': ("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", True),
@@ -134,19 +137,23 @@ class Correios(object):
         method = getattr(self.service, method_name)
         return method(*args, **kwargs)  # TODO: handle errors
 
-    def get_user(self, contract: str, card: str):
-        user_data = self._auth_call("buscaCliente", contract, card)
+    def get_user(self, contract: str, posting_card: str):
+        user_data = self._auth_call("buscaCliente", contract, posting_card)
         return self.model_builder.build_user(user_data)
 
-    def find_zipcode(self, zip_code: ZipCodeType):
+    def find_zipcode(self, zip_code: Union[ZipCode, str]) -> ZipAddress:
         zip_address_data = self._call("consultaCEP", str(zip_code))
         return self.model_builder.build_zip_address(zip_address_data)
 
-    def verify_service_availability(self, posting_card: PostingCard, services: Sequence[Service], from_zip_code: ZipCodeType, to_zip_code: ZipCodeType):
-        services = str(services[0].code)  # ",".join(str(s.code) for s in services)
-
+    def verify_service_availability(self,
+                                    posting_card: PostingCard,
+                                    service: Service,
+                                    from_zip_code: Union[ZipCode, str],
+                                    to_zip_code: Union[ZipCode, str]):
+        from_zip_code = ZipCode(from_zip_code)
+        to_zip_code = ZipCode(to_zip_code)
         result = self._auth_call("verificaDisponibilidadeServico",
-                                 posting_card.administrative_code, services,
+                                 posting_card.administrative_code, str(service),
                                  str(from_zip_code), str(to_zip_code))
         return result
 

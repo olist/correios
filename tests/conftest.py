@@ -18,7 +18,6 @@ from datetime import datetime, timedelta
 import pytest
 
 from correios.client import Correios
-from correios.models.services import SERVICES, SERVICE_SEDEX10
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -76,10 +75,5 @@ def default_posting_card(default_contract, datetime_object):
 
 
 @pytest.fixture
-def test_client():
-    return Correios(username="sigep", password="n5f9t8", environment="test")
-
-
-@pytest.fixture
-def sedex10_service():
-    return SERVICES[SERVICE_SEDEX10]
+def default_test_client():
+    return Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)

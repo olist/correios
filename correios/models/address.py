@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from typing import List, TypeVar
+from typing import List, TypeVar, Union
 
 from correios.exceptions import InvalidZipCodeException, InvalidStateException
 
@@ -49,9 +49,6 @@ class ZipCode(object):
 
     def __repr__(self):
         return "<ZipCode code: {}>".format(self.code)
-
-
-ZipCodeType = TypeVar("ZipCodeType", ZipCode, str)
 
 
 class State(object):
@@ -122,7 +119,7 @@ class ZipAddress(object):
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
-                 zip_code: ZipCodeType,
+                 zip_code: Union[ZipCode, str],
                  state: StateType,
                  city: str,
                  district: str,
