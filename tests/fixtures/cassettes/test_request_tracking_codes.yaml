@@ -1,8 +1,8 @@
 interactions:
 - request:
-    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:ns1="http://cliente.bean.master.sigep.bsb.correios.com.br/"><SOAP-ENV:Header/><ns0:Body><ns1:solicitaEtiquetas><tipoDestinatario>C</tipoDestinatario><identificador>34028316000103</identificador><idServico>104707</idServico><qtdEtiquetas>1</qtdEtiquetas><usuario>sigep</usuario><senha>n5f9t8</senha></ns1:solicitaEtiquetas></ns0:Body></SOAP-ENV:Envelope>
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:ns1="http://cliente.bean.master.sigep.bsb.correios.com.br/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:solicitaEtiquetas><tipoDestinatario>C</tipoDestinatario><identificador>34028316000103</identificador><idServico>104707</idServico><qtdEtiquetas>1</qtdEtiquetas><usuario>sigep</usuario><senha>n5f9t8</senha></ns1:solicitaEtiquetas></ns0:Body></SOAP-ENV:Envelope>
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
@@ -18,18 +18,18 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA31Qyw7CIBD8laZnAz6jNsihSX+gXrwCbloSCshSo38vmGrsxdvszOzMZhk64avG
-        3sE4D8VjMBarzJ3KPkZfUYqqh0EgSVLmiQsdzYDCtERLzt4ptbs+ObO4TgFGKx1FE/VthCiwBfTO
-        4qcgeb75ymiwEYgEYUkqihAI6g48kSiJciGAdpjAQGTIXQHiGCw/X5bb1W6zPx6Kul3MJkYnD6N/
-        r0n6z+F09gr+AutA+dcaAQAA
+        H4sIAAAAAAAAA31Qyw7CIBD8laZnAz5j0yCHJv2BevEKuGlJKCBLjf69YKqxF2+zM7Mzm2XohK9b
+        ewfjPBSP0VisM3cqhxh9TSmqAUaBJEmZJy70NAMK8xItOXunNO765MziNgUYrXQUbdS3CaLADtA7
+        i5+C5PnmK6PBRiAShCWpKEIgqHvwRKIkyoUA2mECI5EhdwWIU7D8fFnvN4ddVR2LplstJkZnD6N/
+        r0n6z+F08Qr+AlrYcOEaAQAA
     headers:
       Connection: [Keep-Alive]
       Content-Encoding: [gzip]
       Content-Length: ['189']
       Content-Type: [text/xml;charset=UTF-8]
-      Date: ['Wed, 08 Jun 2016 04:02:55 GMT']
+      Date: ['Tue, 21 Jun 2016 04:17:51 GMT']
       Keep-Alive: ['timeout=5, max=100']
-      Set-Cookie: [JSESSIONID=JZ4ziN6c1bsJuYpgi3kdZIhR.87ce37da-a934-3ec7-b3ca-869e2306cbff;
+      Set-Cookie: [JSESSIONID=8LEfSznFSdvJFdMuWKk5sPf8.39987725-7faa-3e86-8a45-e6c0e8576534;
           Path=/SigepMasterJPA; Secure]
       Vary: ['Accept-Encoding,User-Agent']
     status: {code: 200, message: OK}

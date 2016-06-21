@@ -1,8 +1,8 @@
 interactions:
 - request:
-    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://cliente.bean.master.sigep.bsb.correios.com.br/"
-      xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns1:Body><ns0:verificaDisponibilidadeServico><codAdministrativo>08082650</codAdministrativo><numeroServico>40215</numeroServico><cepOrigem>70002900</cepOrigem><cepDestino>81350120</cepDestino><usuario>sigep</usuario><senha>n5f9t8</senha></ns0:verificaDisponibilidadeServico></ns1:Body></SOAP-ENV:Envelope>
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:ns1="http://cliente.bean.master.sigep.bsb.correios.com.br/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:verificaDisponibilidadeServico><codAdministrativo>08082650</codAdministrativo><numeroServico>40215</numeroServico><cepOrigem>82940150</cepOrigem><cepDestino>01310000</cepDestino><usuario>sigep</usuario><senha>n5f9t8</senha></ns1:verificaDisponibilidadeServico></ns0:Body></SOAP-ENV:Envelope>
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
@@ -18,19 +18,19 @@ interactions:
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA7VRMW7DMAz8ipAHiEBHQ9WQIl075AWyRNsCZFGQ5CB9T4c8xB+r5ChuOnTsRPJI
-        HsmjSKRCd/IXdBSQXWfnU1ex18OUc+gAkp5wVomXVMU5xRGqA9ia4CDFxnIk89ncd7W4LMVQjSaD
-        ckPPGC8YBfzA94qUo/Wj/NAUIy5smRUblJsU84ppmhdvtVpv6xfViBFLhccaiswgK4R22PMFiFjp
-        9nCrXW+UeJvbhgmDWVknhU8v3dmOGN6cRZ/xdNUYsiXfxCj5XQt9L+E9Ks+LKBkjT7WX96nn2/q2
-        TCpb8j4WXf79oj+XlwIeB8LzR+DpU/Dr9/IbBB1JmwsCAAA=
+        H4sIAAAAAAAAA42QwQ3CMAxFV0EdwJE4ViEHBAvABElqWktpEtlpBduToILgxs3+9vf7spZkc3+O
+        K4aUcXefQ5S+aYduKiX3SomfcLYCddR0SDyqVijcTKoz+nXlmIaH0VH2/YpMN/L2RJJTJEeBBjvg
+        FXklny7YVHnTquED84EwFgSHNkKlFmQQGjGDEwc+MSMlqcUMjhuYsSwcTeEFtdoarf7PUJe/squf
+        b5gnqSsoBh0BAAA=
     headers:
-      Connection: [close]
+      Connection: [Keep-Alive]
       Content-Encoding: [gzip]
-      Content-Length: ['263']
+      Content-Length: ['182']
       Content-Type: [text/xml;charset=UTF-8]
-      Date: ['Wed, 08 Jun 2016 03:14:44 GMT']
-      Set-Cookie: [JSESSIONID=SxEKgoRpiw+HCC+t-71keG17.39987725-7faa-3e86-8a45-e6c0e8576534;
+      Date: ['Tue, 21 Jun 2016 04:17:47 GMT']
+      Keep-Alive: ['timeout=5, max=100']
+      Set-Cookie: [JSESSIONID=nauZRmha+14H2YZDHzO3VTje.87ce37da-a934-3ec7-b3ca-869e2306cbff;
           Path=/SigepMasterJPA; Secure]
       Vary: ['Accept-Encoding,User-Agent']
-    status: {code: 500, message: Internal Server Error}
+    status: {code: 200, message: OK}
 version: 1
