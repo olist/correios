@@ -34,7 +34,7 @@ class RequestsTransport(HttpAuthenticated):
 
     def open(self, request):
         self.addcredentials(request)
-        logger.debug("REQUEST: %s", request)
+        logger.debug("request.open: %s", request)
         resp = self._requests_session.get(
             request.url,
             data=request.message,
@@ -46,7 +46,7 @@ class RequestsTransport(HttpAuthenticated):
 
     def send(self, request):
         self.addcredentials(request)
-        logger.debug("REQUEST: %s", request)
+        logger.debug("request.send: %s", request)
         resp = self._requests_session.post(
             request.url,
             data=request.message,
