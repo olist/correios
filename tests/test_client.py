@@ -15,7 +15,7 @@
 
 from correios.client import ModelBuilder, Correios
 from correios.models.address import ZipCode
-from correios.models.services import SERVICE_SEDEX10
+from correios.models.services import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.user import PostingCard
 from .vcr import vcr
 
@@ -79,6 +79,9 @@ def test_builder_posting_card_status():
 
 
 @vcr.use_cassette
-def test_request_tracking_codes(default_test_client, default_user):
-    result = default_test_client.request_tracking_codes(default_user, SERVICE_SEDEX10)
-    assert result
+def test_request_tracking_codes(default_user):
+    client = Correios(username="sigep", password="n4f9t8", environment=Correios.TEST)
+    result = client.request_tracking_codes(default_user, SERVICE_SEDEX)
+    assert len(result) == 2
+    assert len(result[0].code) == 13
+    assert len(result[1].code) == 13

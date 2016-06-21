@@ -20,6 +20,9 @@ from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, Posti
 from .soap import SoapClient
 
 
+DEFAULT_TRACKING_CODE_QUANTITY = 2  # I tried 1, 2, N... and Correios always return 2 codes :/
+
+
 class ModelBuilder(object):
     def build_service(self, service_data):
         service = Service(
@@ -161,8 +164,8 @@ class Correios(object):
         result = self._auth_call("getStatusCartaoPostagem", posting_card.number)
         return self.model_builder.build_posting_card_status(result)
 
-    def request_tracking_codes(self, user: User, service: Service, quantity: int=1, receiver_type="C"):
+    def request_tracking_codes(self, user: User, service: Service, receiver_type="C"):
         result = self._auth_call("solicitaEtiquetas",
                                  receiver_type, str(user.federal_tax_number),
-                                 service.id, quantity)
+                                 service.id, DEFAULT_TRACKING_CODE_QUANTITY)
         return self.model_builder.build_tracking_codes_list(result)
