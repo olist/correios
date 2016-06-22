@@ -35,3 +35,7 @@ class InvalidFederalTaxNumberException(ModelException):
 
 class InvalidStateTaxNumberException(ModelException):
     pass
+
+
+class InvalidTrackingCode(ModelException):
+    pass
