@@ -81,6 +81,13 @@ def test_request_tracking_codes(default_user):
     assert len(result[1].code) == 13
 
 
+@vcr.use_cassette
+def test_generate_verification_digit(default_user):
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
+    result = client.generate_verification_digit(["DL74668653 BR"])
+    assert result[0] == 6
+
+
 def test_builder_posting_card_status():
     builder = ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE

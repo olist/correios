@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from typing import Union
+from typing import Union, Sequence
 
 from .models.address import ZipAddress, TrackingCode, ZipCode
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
@@ -169,3 +169,10 @@ class Correios(object):
                                  receiver_type, str(user.federal_tax_number),
                                  service.id, DEFAULT_TRACKING_CODE_QUANTITY)
         return self.model_builder.build_tracking_codes_list(result)
+
+    def generate_verification_digit(self, tracking_codes: Sequence[str]):
+        tracking_codes = [TrackingCode(tc).nodigit for tc in tracking_codes]
+        result = self._auth_call("geraDigitoVerificadorEtiquetas",
+                                 tracking_codes)
+
+        return result
