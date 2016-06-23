@@ -15,8 +15,9 @@
 
 from typing import List, TypeVar, Union
 
-from correios.exceptions import InvalidZipCodeException, InvalidStateException, InvalidTrackingCode
+from phonenumbers import PhoneNumberFormat, parse, format_number
 
+from correios.exceptions import InvalidZipCodeException, InvalidStateException, InvalidTrackingCode
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -201,3 +202,69 @@ class TrackingCode(object):
 
     def __str__(self):
         return self.code
+
+
+class Phone(object):
+    def __init__(self, number: str, country="BR"):
+        self.parsed = self._parse(number, country)
+        self.country = country
+        self.number = "".join(d for d in number if d.isdigit())
+
+    def _parse(self, number: str, country: str):
+        if number.startswith("+"):
+            return parse(number)
+        return parse(number, country)
+
+    def display(self) -> str:
+        return format_number(self.parsed, PhoneNumberFormat.INTERNATIONAL)
+
+    def __eq__(self, other: Union["Phone", str]):
+        if isinstance(other, Phone):
+            return self.parsed == other.parsed
+        other = self._parse(other, self.country)
+        return self.parsed == other
+
+    def __str__(self):
+        return "{}{}".format(self.parsed.country_code, self.parsed.national_number)
+
+    def __repr__(self):
+        return "<Phone {!s}>".format(self)
+
+
+class Address(object):
+    def __init__(self,
+                 name: str,
+                 street: str,
+                 number: str,
+                 city: str,
+                 state: Union[State, str],
+                 zip_code: Union[ZipCode, str],
+                 complement: str = "",
+                 neighborhood: str = "",
+                 phone: Union[Phone, str] = "",
+                 cellphone: Union[Phone, str] = "",
+                 email: str = "",
+                 ):
+        self.name = name
+        self.street = street
+        self.number = number
+        self.city = city
+        self.complement = complement
+        self.neighborhood = neighborhood
+        self.email = email
+
+        if not isinstance(state, State):
+            state = State(state)
+        self.state = state
+
+        if not isinstance(zip_code, ZipCode):
+            zip_code = ZipCode(zip_code)
+        self.zip_code = zip_code
+
+        if not isinstance(phone, Phone):
+            phone = Phone(phone)
+        self.phone = phone
+
+        if not isinstance(cellphone, Phone):
+            cellphone = Phone(cellphone)
+        self.cellphone = cellphone

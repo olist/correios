@@ -16,7 +16,7 @@
 import pytest
 
 from correios.exceptions import InvalidZipCodeException, InvalidStateException, InvalidTrackingCode
-from correios.models.address import ZipCode, State, TrackingCode
+from correios.models.address import ZipCode, State, TrackingCode, Address, Phone
 
 
 def test_basic_zip():
@@ -49,34 +49,42 @@ def test_zip_display():
     assert ZipCode("82940150").display() == "82940-150"
 
 
+def test_basic_phone():
+    phone = Phone("+1 (212) 555-1234")
+    assert phone == "+12125551234"
+    assert phone == Phone("12125551234", "US")
+    assert phone.display() == "+1 212-555-1234"
+    assert str(phone) == "12125551234"
+    assert repr(phone) == "<Phone 12125551234>"
+
 @pytest.mark.parametrize("code,name", (
-    ('AC', 'Acre'),
-    ('AL', 'Alagoas'),
-    ('AP', 'Amapá'),
-    ('AM', 'Amazonas'),
-    ('BA', 'Bahia'),
-    ('CE', 'Ceará'),
-    ('DF', 'Distrito Federal'),
-    ('ES', 'Espírito Santo'),
-    ('GO', 'Goiás'),
-    ('MA', 'Maranhão'),
-    ('MT', 'Mato Grosso'),
-    ('MS', 'Mato Grosso do Sul'),
-    ('MG', 'Minas Gerais'),
-    ('PA', 'Pará'),
-    ('PB', 'Paraíba'),
-    ('PR', 'Paraná'),
-    ('PE', 'Pernambuco'),
-    ('PI', 'Piauí'),
-    ('RJ', 'Rio de Janeiro'),
-    ('RN', 'Rio Grande do Norte'),
-    ('RS', 'Rio Grande do Sul'),
-    ('RO', 'Rondônia'),
-    ('RR', 'Roraima'),
-    ('SC', 'Santa Catarina'),
-    ('SP', 'São Paulo'),
-    ('SE', 'Sergipe'),
-    ('TO', 'Tocantins'),
+        ('AC', 'Acre'),
+        ('AL', 'Alagoas'),
+        ('AP', 'Amapá'),
+        ('AM', 'Amazonas'),
+        ('BA', 'Bahia'),
+        ('CE', 'Ceará'),
+        ('DF', 'Distrito Federal'),
+        ('ES', 'Espírito Santo'),
+        ('GO', 'Goiás'),
+        ('MA', 'Maranhão'),
+        ('MT', 'Mato Grosso'),
+        ('MS', 'Mato Grosso do Sul'),
+        ('MG', 'Minas Gerais'),
+        ('PA', 'Pará'),
+        ('PB', 'Paraíba'),
+        ('PR', 'Paraná'),
+        ('PE', 'Pernambuco'),
+        ('PI', 'Piauí'),
+        ('RJ', 'Rio de Janeiro'),
+        ('RN', 'Rio Grande do Norte'),
+        ('RS', 'Rio Grande do Sul'),
+        ('RO', 'Rondônia'),
+        ('RR', 'Roraima'),
+        ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'),
+        ('SE', 'Sergipe'),
+        ('TO', 'Tocantins'),
 ))
 def test_states(code, name):
     state = State(code)
@@ -149,3 +157,31 @@ def test_fail_invalid_tracking_code(tracking_code):
 def test_tracking_code_digit_calculator(tracking_code, digit):
     tracking = TrackingCode(tracking_code)
     assert tracking.digit == digit
+
+
+def test_basic_address():
+    address = Address(
+        name="John Doe",
+        phone="+111555-12345",
+        cellphone="+11155-54321",
+        email="john.doe@example.com",
+        street="Rua dos Bobos",
+        number="0",
+        complement="apto. 3",
+        neighborhood="Centro",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+    )
+
+    assert address.name == "John Doe"
+    assert address.phone == "+111555-12345"
+    assert address.cellphone == "+11155-54321"
+    assert address.email == "john.doe@example.com"
+    assert address.street == "Rua dos Bobos"
+    assert address.number == "0"
+    assert address.complement == "apto. 3"
+    assert address.neighborhood == "Centro"
+    assert address.city == "Vinicius de Moraes"
+    assert address.state == "RJ"
+    assert address.zip_code == "12345-678"
