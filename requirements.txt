@@ -2,3 +2,4 @@ requests
 suds-jurko
 reportlab
 phonenumbers
+hubarcode
