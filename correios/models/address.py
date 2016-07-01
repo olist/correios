@@ -264,11 +264,11 @@ class Address(object):
             zip_code = ZipCode(zip_code)
         self.zip_code = zip_code
 
-        if not isinstance(phone, Phone):
+        if phone and not isinstance(phone, Phone):
             phone = Phone(phone)
         self.phone = phone
 
-        if not isinstance(cellphone, Phone):
+        if cellphone and not isinstance(cellphone, Phone):
             cellphone = Phone(cellphone)
         self.cellphone = cellphone
 
