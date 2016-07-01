@@ -1,5 +1,6 @@
 -r requirements.txt
 pytest
 pytest-cov
+pytest-factoryboy
 tox
 -e git+https://github.com/kevin1024/vcrpy.git#egg=vcrpy

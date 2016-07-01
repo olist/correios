@@ -39,3 +39,7 @@ class InvalidStateTaxNumberException(ModelException):
 
 class InvalidTrackingCode(ModelException):
     pass
+
+
+class InvalidAddressesException(ModelException):
+    pass
