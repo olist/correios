@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+from decimal import Decimal
+
 import pytest
 
 from correios.exceptions import InvalidZipCodeException, InvalidStateException, InvalidTrackingCode
@@ -56,6 +58,7 @@ def test_basic_phone():
     assert phone.display() == "+1 212-555-1234"
     assert str(phone) == "12125551234"
     assert repr(phone) == "<Phone 12125551234>"
+
 
 @pytest.mark.parametrize("code,name", (
         ('AC', 'Acre'),
@@ -172,6 +175,8 @@ def test_basic_address():
         city="Vinicius de Moraes",
         state="RJ",
         zip_code="12345-678",
+        latitude="10.0",
+        longitude="-10.0",
     )
 
     assert address.name == "John Doe"
@@ -185,3 +190,28 @@ def test_basic_address():
     assert address.city == "Vinicius de Moraes"
     assert address.state == "RJ"
     assert address.zip_code == "12345-678"
+
+
+def test_basic_address_only_mandatory_args():
+    address = Address(
+        name="John Doe",
+        street="Rua dos Bobos",
+        number="0",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+    )
+
+    assert address.name == "John Doe"
+    assert address.street == "Rua dos Bobos"
+    assert address.number == "0"
+    assert address.city == "Vinicius de Moraes"
+    assert address.state == "RJ"
+    assert address.zip_code == "12345-678"
+    assert address.email == ""
+    assert address.complement == ""
+    assert address.neighborhood == ""
+    assert address.phone == ""
+    assert address.cellphone == ""
+    assert address.latitude == Decimal("0.0")
+    assert address.longitude == Decimal("0.0")

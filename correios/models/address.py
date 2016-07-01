@@ -15,6 +15,7 @@
 
 from typing import List, TypeVar, Union
 
+from decimal import Decimal
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeException, InvalidStateException, InvalidTrackingCode
@@ -244,6 +245,8 @@ class Address(object):
                  phone: Union[Phone, str] = "",
                  cellphone: Union[Phone, str] = "",
                  email: str = "",
+                 latitude: Union[Decimal, str] = "0.0",
+                 longitude: Union[Decimal, str] = "0.0",
                  ):
         self.name = name
         self.street = street
@@ -268,3 +271,11 @@ class Address(object):
         if not isinstance(cellphone, Phone):
             cellphone = Phone(cellphone)
         self.cellphone = cellphone
+
+        if not isinstance(latitude, Decimal):
+            latitude = Decimal(latitude)
+        self.latitude = latitude
+
+        if not isinstance(longitude, Decimal):
+            longitude = Decimal(longitude)
+        self.longitude = longitude
