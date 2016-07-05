@@ -13,28 +13,61 @@
 # limitations under the License.
 
 
-from typing import Optional
+from typing import Optional, Union
 
-from correios.exceptions import InvalidAddressesException
-from .address import Address
+from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation
+from .data import SERVICES
+from .user import Service
+from .address import Address, TrackingCode
 
 
 class ShippingLabel(object):
     def __init__(self,
                  sender: Address,
                  receiver: Address,
+                 service: Union[Service, int],
+                 tracking_code: Union[TrackingCode, str],
                  order: Optional[str] = "",
                  invoice: Optional[str] = "",
-                 ):
+                 volume: tuple = (0, 0),
+                 weight: int = 0,
+                 text: Optional[str] = ""):
+
         if sender == receiver:
             raise InvalidAddressesException("Sender and receiver cannot be the same")
+
         self.sender = sender
         self.receiver = receiver
+
+        if isinstance(service, int):
+            service = SERVICES[service]
+        self.service = service
+
+        if isinstance(tracking_code, str):
+            tracking_code = TrackingCode(tracking_code)
+        self.tracking_code = tracking_code
+
         self.order = order
         self.invoice = invoice
+
+        if volume is None:
+            volume = (1, 1)
+
+        if len(volume) != 2:
+            raise InvalidVolumeInformation("Volume must be a tuple with 2 elements: (number, total)")
+
+        self.volume = volume
+        self.weight = weight
+        self.text = text
 
     def get_order(self, template="{!s}"):
         return template.format(self.order)
 
     def get_invoice(self, template="{!s}"):
         return template.format(self.invoice)
+
+    def get_volume(self, template="{}/{}"):
+        return template.format(*self.volume)
+
+    def get_symbol_filename(self, extension="gif"):
+        return self.service.get_symbol_filename(extension)
