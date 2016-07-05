@@ -43,3 +43,7 @@ class InvalidTrackingCode(ModelException):
 
 class InvalidAddressesException(ModelException):
     pass
+
+
+class InvalidVolumeInformation(ModelException):
+    pass

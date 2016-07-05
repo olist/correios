@@ -13,10 +13,12 @@
 # limitations under the License.
 
 
+import os
 from datetime import timedelta, datetime, timezone
 
 import pytest
 
+from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberException
 from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service
 
@@ -190,20 +192,25 @@ def test_basic_service(datetime_object):
     service = Service(
         id=104707,
         code=40215,
+        display_name="SEDEX 10",
         description="SEDEX 10",
         category="SERVICO_COM_RESTRICAO",
         postal_code=244,
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
+        symbol="premium",
     )
 
     assert service.id == 104707
     assert service.code == 40215
+    assert service.display_name == "SEDEX 10"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
     assert service.postal_code == 244
     assert service.start_date == datetime_object
     assert service.end_date == datetime_object + timedelta(days=5)
+    assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
+    assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
 
 
 def test_sanitize_service():

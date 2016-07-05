@@ -19,7 +19,7 @@ import factory
 import pytest
 from pytest_factoryboy import register
 
-from correios.models.address import Address
+from correios.models.address import Address, TrackingCode
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -74,6 +74,11 @@ def default_posting_card(default_contract, datetime_object):
     )
 
     return posting_card
+
+
+@pytest.fixture
+def tracking_code():
+    return TrackingCode(code="PD325270157BR")
 
 
 class AddressFactory(factory.Factory):

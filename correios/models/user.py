@@ -13,9 +13,11 @@
 # limitations under the License.
 
 
+import os
 from datetime import datetime
 from typing import List, Union, Optional
 
+from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberException
 
 
@@ -128,18 +130,26 @@ class Service(object):
                  description: str,
                  category: str,
                  postal_code: Union[int, str],
+                 display_name: Optional[str]="",
                  start_date: Union[datetime, str, type(None)]=None,
-                 end_date: Union[datetime, str, type(None)]=None):
+                 end_date: Union[datetime, str, type(None)]=None,
+                 symbol: Optional[str]=None):
         self.id = id
         self.code = _to_integer(code)
         self.description = description.strip()
+        self.display_name = display_name or self.description
         self.category = category.strip()
         self.postal_code = _to_integer(postal_code)
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
+        self.symbol = symbol or "economic"
 
     def __str__(self):
         return str(self.code)
+
+    def get_symbol_filename(self, extension='gif'):
+        filename = "{}.{}".format(self.symbol, extension)
+        return os.path.join(DATADIR, filename)
 
 
 class Contract(object):

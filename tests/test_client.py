@@ -15,7 +15,7 @@
 
 from correios.client import ModelBuilder, Correios
 from correios.models.address import ZipCode
-from correios.models.services import SERVICE_SEDEX10, SERVICE_SEDEX
+from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.user import PostingCard
 from .vcr import vcr
 

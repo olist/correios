@@ -13,18 +13,26 @@
 # limitations under the License.
 
 
+import os
+
 import pytest
 
+from correios import DATADIR
 from correios.exceptions import InvalidAddressesException
 from correios.models.posting import ShippingLabel
+from correios.models.data import SERVICE_SEDEX
 
 
-def test_basic_shipping_label(sender_address, receiver_address):
+def test_basic_shipping_label(sender_address, receiver_address, tracking_code):
     shipping_label = ShippingLabel(
         sender=sender_address,
         receiver=receiver_address,
+        service=SERVICE_SEDEX,
+        tracking_code=tracking_code,
         order="123",
         invoice="321",
+        volume=(1, 1),
+        weight=100,
     )
 
     assert shipping_label.sender == sender_address
@@ -33,8 +41,13 @@ def test_basic_shipping_label(sender_address, receiver_address):
     assert shipping_label.get_order("Order: {}") == "Order: 123"
     assert shipping_label.get_invoice() == "321"
     assert shipping_label.get_invoice("Invoice #{}") == "Invoice #321"
+    assert shipping_label.get_volume() == "1/1"
+    assert shipping_label.get_volume("Volume: {}/{}") == "Volume: 1/1"
+    assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
+    assert shipping_label.tracking_code == tracking_code
 
 
-def test_fail_shipping_label_same_addresses(sender_address):
+def test_fail_shipping_label_same_addresses(sender_address, tracking_code):
     with pytest.raises(InvalidAddressesException):
-        ShippingLabel(sender_address, sender_address)
+        ShippingLabel(sender_address, sender_address, SERVICE_SEDEX, tracking_code=tracking_code)
