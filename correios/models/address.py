@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
+from decimal import Decimal
 from typing import List, TypeVar, Union
 
-from decimal import Decimal
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeException, InvalidStateException
