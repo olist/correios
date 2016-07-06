@@ -13,8 +13,12 @@
 # limitations under the License.
 
 
+import os
 from typing import Optional, Union
 
+from PIL import Image
+
+from correios import DATADIR
 from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode
 from .address import Address
 from .data import SERVICES
@@ -98,9 +102,10 @@ class ShippingLabel(object):
                  receiver: Address,
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
+                 logo: Optional[str] = None,
                  order: Optional[str] = "",
                  invoice: Optional[str] = "",
-                 volume: tuple = (0, 0),
+                 volume: tuple = (1, 1),
                  weight: int = 0,
                  text: Optional[str] = ""):
 
@@ -118,11 +123,12 @@ class ShippingLabel(object):
             tracking_code = TrackingCode(tracking_code)
         self.tracking_code = tracking_code
 
+        if logo is None:
+            logo = os.path.join(DATADIR, "default_logo.png")
+        self.logo = Image.open(logo)
+
         self.order = order
         self.invoice = invoice
-
-        if volume is None:
-            volume = (1, 1)
 
         if len(volume) != 2:
             raise InvalidVolumeInformation("Volume must be a tuple with 2 elements: (number, total)")
@@ -137,8 +143,11 @@ class ShippingLabel(object):
     def get_invoice(self, template="{!s}"):
         return template.format(self.invoice)
 
-    def get_volume(self, template="{}/{}"):
+    def get_volume(self, template="{!s}/{!s}"):
         return template.format(*self.volume)
+
+    def get_weight(self, template="{!s}"):
+        return template.format(self.weight)
 
     def get_symbol_filename(self, extension="gif"):
         return self.service.get_symbol_filename(extension)
