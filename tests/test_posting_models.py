@@ -18,9 +18,12 @@ import os
 import pytest
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesException, InvalidTrackingCode
+from correios.exceptions import InvalidAddressesException, InvalidTrackingCode, InvalidVolumeInformation
 from correios.models.posting import ShippingLabel, TrackingCode
 from correios.models.data import SERVICE_SEDEX
+
+FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
+
 
 @pytest.mark.parametrize("tracking_code", [
     "DL74668653 BR",
@@ -68,25 +71,59 @@ def test_basic_shipping_label(sender_address, receiver_address, tracking_code):
         receiver=receiver_address,
         service=SERVICE_SEDEX,
         tracking_code=tracking_code,
+        logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
         order="123",
         invoice="321",
-        volume=(1, 1),
+        volume=(1, 2),
         weight=100,
+        text="Hello World!",
     )
 
     assert shipping_label.sender == sender_address
     assert shipping_label.receiver == receiver_address
+    assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.tracking_code == tracking_code
+    assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
+
+    assert shipping_label.order == "123"
     assert shipping_label.get_order() == "123"
     assert shipping_label.get_order("Order: {}") == "Order: 123"
+
+    assert shipping_label.invoice == "321"
     assert shipping_label.get_invoice() == "321"
     assert shipping_label.get_invoice("Invoice #{}") == "Invoice #321"
-    assert shipping_label.get_volume() == "1/1"
-    assert shipping_label.get_volume("Volume: {}/{}") == "Volume: 1/1"
-    assert shipping_label.service == SERVICE_SEDEX
+
+    assert shipping_label.volume == (1, 2)
+    assert shipping_label.get_volume() == "1/2"
+    assert shipping_label.get_volume("Volume: {}/{}") == "Volume: 1/2"
+
+    assert shipping_label.weight == 100
+    assert shipping_label.get_weight() == "100"
+    assert shipping_label.get_weight("Weight: {!s}g") == "Weight: 100g"
+
+    assert shipping_label.text == "Hello World!"
+
     assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
-    assert shipping_label.tracking_code == tracking_code
+
+
+def test_basic_default_shipping_label(sender_address, receiver_address):
+    shipping_label = ShippingLabel(
+        sender=sender_address,
+        receiver=receiver_address,
+        service=40096,  # SERVICE_SEDEX_CODE
+        tracking_code="PD12345678 BR",
+    )
+
+    assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.tracking_code.code == "PD123456785BR"
 
 
 def test_fail_shipping_label_same_addresses(sender_address, tracking_code):
     with pytest.raises(InvalidAddressesException):
         ShippingLabel(sender_address, sender_address, SERVICE_SEDEX, tracking_code=tracking_code)
+
+
+def test_fail_invalid_volumes_argument(sender_address, receiver_address, tracking_code):
+    with pytest.raises(InvalidVolumeInformation):
+        # noinspection PyTypeChecker
+        ShippingLabel(sender_address, receiver_address, SERVICE_SEDEX, tracking_code, volume=(1,))  # invalid tuple
