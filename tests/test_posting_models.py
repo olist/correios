@@ -18,9 +18,48 @@ import os
 import pytest
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesException
-from correios.models.posting import ShippingLabel
+from correios.exceptions import InvalidAddressesException, InvalidTrackingCode
+from correios.models.posting import ShippingLabel, TrackingCode
 from correios.models.data import SERVICE_SEDEX
+
+@pytest.mark.parametrize("tracking_code", [
+    "DL74668653 BR",
+    "DL746686536BR",
+    "DL74668653BR",
+    "dl74668653br",
+])
+def test_tracking_code_constructor(tracking_code):
+    tracking = TrackingCode(tracking_code)
+    assert str(tracking) == "DL746686536BR"
+    assert tracking.code == "DL746686536BR"
+    assert tracking.prefix == "DL"
+    assert tracking.number == "74668653"
+    assert tracking.digit == 6
+    assert tracking.nodigit == "DL74668653 BR"
+    assert tracking.short == "DL74668653BR"
+
+
+@pytest.mark.parametrize("tracking_code", [
+    "DL7466865BR",
+    "DL746686530BR",  # invalid digit (0)
+    "DL7466X653 BR",
+    "DL74668653B",
+    "D746686530 BR",
+    "DL46686530 B1",
+])
+def test_fail_invalid_tracking_code(tracking_code):
+    with pytest.raises(InvalidTrackingCode):
+        TrackingCode(tracking_code)
+
+
+@pytest.mark.parametrize("tracking_code,digit", [
+    ("DL74668653 BR", 6),
+    ("DL02000000 BR", 0),
+    ("DL00000000 BR", 5),
+])
+def test_tracking_code_digit_calculator(tracking_code, digit):
+    tracking = TrackingCode(tracking_code)
+    assert tracking.digit == digit
 
 
 def test_basic_shipping_label(sender_address, receiver_address, tracking_code):

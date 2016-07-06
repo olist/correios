@@ -15,7 +15,8 @@
 
 from typing import Union, Sequence
 
-from .models.address import ZipAddress, TrackingCode, ZipCode
+from .models.address import ZipAddress, ZipCode
+from .models.posting import TrackingCode
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
