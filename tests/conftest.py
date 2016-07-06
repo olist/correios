@@ -19,7 +19,8 @@ import factory
 import pytest
 from pytest_factoryboy import register
 
-from correios.models.address import Address, TrackingCode
+from correios.models.address import Address
+from correios.models.posting import TrackingCode
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
