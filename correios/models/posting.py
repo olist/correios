@@ -16,9 +16,10 @@
 from typing import Optional, Union
 
 from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode
+from .address import Address
 from .data import SERVICES
 from .user import Service
-from .address import Address
+
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
