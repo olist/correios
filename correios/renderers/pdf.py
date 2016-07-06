@@ -29,7 +29,7 @@ class ShippingLabelRenderer(object):
             label_canvas.save()
             ret = pdffile.getvalue()
 
-        with open("/Users/osantana/foo.pdf", "wb") as f:
+        with open("foo.pdf", "wb") as f:
             f.write(ret)
 
         return ret
