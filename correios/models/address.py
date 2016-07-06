@@ -114,15 +114,12 @@ class State(object):
         return "<State code: {} name: {}>".format(self.code, self.display())
 
 
-StateType = TypeVar("StateType", State, str)
-
-
 class ZipAddress(object):
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
                  zip_code: Union[ZipCode, str],
-                 state: StateType,
+                 state: Union[State, str],
                  city: str,
                  district: str,
                  address: str,
