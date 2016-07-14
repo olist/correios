@@ -16,14 +16,14 @@
 import os
 from typing import Optional, Union
 
-from PIL import Image
+# noinspection PyPep8Naming
+from PIL import Image as image
 
 from correios import DATADIR
 from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode
 from .address import Address
 from .data import SERVICES
 from .user import Service
-
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
@@ -102,7 +102,7 @@ class ShippingLabel(object):
                  receiver: Address,
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
-                 logo: Optional[str] = None,
+                 logo: Optional[Union[str, image.Image]] = None,
                  order: Optional[str] = "",
                  invoice: Optional[str] = "",
                  volume: tuple = (1, 1),
@@ -125,7 +125,11 @@ class ShippingLabel(object):
 
         if logo is None:
             logo = os.path.join(DATADIR, "default_logo.png")
-        self.logo = Image.open(logo)
+
+        if isinstance(logo, str):
+            logo = image.open(logo)
+
+        self.logo = logo
 
         self.order = order
         self.invoice = invoice

@@ -13,9 +13,14 @@
 # limitations under the License.
 
 
+import os
+
 from correios.models.data import SERVICE_SEDEX
 from correios.models.posting import ShippingLabel
-from correios.renderers.pdf import ShippingLabelRenderer
+from correios.renderers.pdf import Document
+
+
+TESTDIR = os.path.dirname(__file__)
 
 
 def test_render_basic_shipping_label(sender_address, receiver_address, tracking_code):
@@ -30,7 +35,14 @@ def test_render_basic_shipping_label(sender_address, receiver_address, tracking_
         weight=100,
     )
 
-    renderer = ShippingLabelRenderer()
+    document = Document()
+    # document.add_posting_list(plp)
+    document.add_shipping_label(shipping_label)
 
-    pdf = renderer.render(shipping_label)
-    assert pdf == pdf  # TODO
+    pdf = document.render()
+    filename = os.path.join(TESTDIR, "test.pdf")
+    with open(filename, "wb") as fp:
+        fp.write(pdf)
+
+    # from subprocess import run
+    # run("open -a Preview {}".format(filename), shell=True)

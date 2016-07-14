@@ -15,21 +15,35 @@
 
 from io import BytesIO
 
-from reportlab.pdfgen import canvas
+from reportlab.lib.units import mm
+from reportlab.pdfgen.canvas import Canvas
 
 from correios.models.posting import ShippingLabel
+from .base import AbstractDocument
 
 
 class ShippingLabelRenderer(object):
-    def render(self, shipping_label: ShippingLabel):
-        with BytesIO() as pdffile:
-            label_canvas = canvas.Canvas(pdffile)
-            label_canvas.drawString(100, 100, "teste")
-            label_canvas.showPage()
-            label_canvas.save()
-            ret = pdffile.getvalue()
+    def __init__(self, shipping_label: ShippingLabel):
+        self.shipping_label = shipping_label
 
-        with open("foo.pdf", "wb") as f:
-            f.write(ret)
+    def render(self, canvas, x, y):
+        canvas.rect(0, 0, 106 * mm, 138 * mm)
+        # label = Drawing(106 * mm, 138 * mm)
+        # label.add(Rect(0, 0, 106 * mm, 138 * mm))
+        # canvas = Canvas("{}.pdf".format(shipping_label.tracking_code.code))
+        # canvas.drawString(100, 100, "teste")
+        # canvas.showPage()
+        # return label
 
-        return ret
+
+class Document(AbstractDocument):
+    def render(self):
+        pdf = BytesIO()
+        canvas = Canvas(pdf)
+        for shipping_label in self.shipping_labels:
+            shipping_label_renderer = ShippingLabelRenderer(shipping_label)
+            shipping_label_renderer.render(canvas, 0, 0)
+
+        canvas.showPage()
+        canvas.save()
+        return pdf.getvalue()
