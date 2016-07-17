@@ -23,8 +23,9 @@ from correios.renderers.pdf import Document
 TESTDIR = os.path.dirname(__file__)
 
 
-def test_render_basic_shipping_label(sender_address, receiver_address, tracking_code):
+def test_render_basic_shipping_label(default_posting_card, sender_address, receiver_address, tracking_code):
     shipping_label = ShippingLabel(
+        posting_card=default_posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=SERVICE_SEDEX,
