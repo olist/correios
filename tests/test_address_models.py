@@ -51,6 +51,15 @@ def test_zip_display():
     assert ZipCode("82940150").display() == "82940-150"
 
 
+@pytest.mark.parametrize("zip_code,digit", [
+    ("71010050", 6),
+    ("82940150", 1),
+])
+def test_zip_code_check_digit(zip_code, digit):
+    zip_code = ZipCode(zip_code)
+    assert zip_code.digit == digit
+
+
 def test_basic_phone():
     phone = Phone("+1 (212) 555-1234")
     assert phone == "+12125551234"
@@ -129,7 +138,7 @@ def test_basic_address():
         cellphone="+11155-54321",
         email="john.doe@example.com",
         street="Rua dos Bobos",
-        number="0",
+        number="5",
         complement="apto. 3",
         neighborhood="Centro",
         city="Vinicius de Moraes",
@@ -144,12 +153,13 @@ def test_basic_address():
     assert address.cellphone == "+11155-54321"
     assert address.email == "john.doe@example.com"
     assert address.street == "Rua dos Bobos"
-    assert address.number == "0"
+    assert address.number == "5"
     assert address.complement == "apto. 3"
     assert address.neighborhood == "Centro"
     assert address.city == "Vinicius de Moraes"
     assert address.state == "RJ"
     assert address.zip_code == "12345-678"
+    assert address.zip_code_complement == "5"
 
 
 def test_basic_address_only_mandatory_args():
@@ -175,3 +185,13 @@ def test_basic_address_only_mandatory_args():
     assert address.cellphone == ""
     assert address.latitude == Decimal("0.0")
     assert address.longitude == Decimal("0.0")
+
+
+def test_address_zip_code_complement():
+    address = Address(name="John Doe", street="Rua dos Bobos", city="Vinicius de Moraes",
+                      state="RJ", zip_code="12345-678", number="5")
+    assert address.zip_code_complement == "5"
+
+    address = Address(name="John Doe", street="Rua dos Bobos", city="Vinicius de Moraes",
+                      state="RJ", zip_code="12345-678", number="KM 5")
+    assert address.zip_code_complement == ""
