@@ -20,7 +20,7 @@ import pytest
 from correios import DATADIR
 from correios.exceptions import InvalidAddressesException, InvalidTrackingCode, InvalidVolumeInformation
 from correios.models.posting import ShippingLabel, TrackingCode
-from correios.models.data import SERVICE_SEDEX
+from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 
 FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -65,11 +65,13 @@ def test_tracking_code_digit_calculator(tracking_code, digit):
     assert tracking.digit == digit
 
 
-def test_basic_shipping_label(sender_address, receiver_address, tracking_code):
+def test_basic_shipping_label(default_posting_card, sender_address, receiver_address, tracking_code):
     shipping_label = ShippingLabel(
+        posting_card=default_posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=SERVICE_SEDEX,
+        extra_services=[EXTRA_SERVICE_AR],
         tracking_code=tracking_code,
         logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
         order="123",
@@ -79,9 +81,11 @@ def test_basic_shipping_label(sender_address, receiver_address, tracking_code):
         text="Hello World!",
     )
 
+    assert shipping_label.posting_card == default_posting_card
     assert shipping_label.sender == sender_address
     assert shipping_label.receiver == receiver_address
     assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.extra_services == [EXTRA_SERVICE_RN, EXTRA_SERVICE_AR]
     assert shipping_label.tracking_code == tracking_code
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
 
@@ -104,10 +108,12 @@ def test_basic_shipping_label(sender_address, receiver_address, tracking_code):
     assert shipping_label.text == "Hello World!"
 
     assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
+    assert len(shipping_label.get_datamatrix_info()) == 164  # datamatrix info size accordingly with documentation
 
 
-def test_basic_default_shipping_label(sender_address, receiver_address):
+def test_basic_default_shipping_label(default_posting_card, sender_address, receiver_address):
     shipping_label = ShippingLabel(
+        posting_card=default_posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=40096,  # SERVICE_SEDEX_CODE
@@ -116,14 +122,17 @@ def test_basic_default_shipping_label(sender_address, receiver_address):
 
     assert shipping_label.service == SERVICE_SEDEX
     assert shipping_label.tracking_code.code == "PD123456785BR"
+    assert len(shipping_label.extra_services) == 1
 
 
-def test_fail_shipping_label_same_addresses(sender_address, tracking_code):
+def test_fail_shipping_label_same_addresses(default_posting_card, sender_address, tracking_code):
     with pytest.raises(InvalidAddressesException):
-        ShippingLabel(sender_address, sender_address, SERVICE_SEDEX, tracking_code=tracking_code)
+        ShippingLabel(default_posting_card, sender_address, sender_address, SERVICE_SEDEX,
+                      tracking_code=tracking_code)
 
 
-def test_fail_invalid_volumes_argument(sender_address, receiver_address, tracking_code):
+def test_fail_invalid_volumes_argument(default_posting_card, sender_address, receiver_address, tracking_code):
     with pytest.raises(InvalidVolumeInformation):
         # noinspection PyTypeChecker
-        ShippingLabel(sender_address, receiver_address, SERVICE_SEDEX, tracking_code, volume=(1,))  # invalid tuple
+        ShippingLabel(default_posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
+                      volume=(1,))  # invalid tuple
