@@ -47,3 +47,7 @@ class InvalidAddressesException(ModelException):
 
 class InvalidVolumeInformation(ModelException):
     pass
+
+
+class InvalidExtraServiceException(ModelException):
+    pass
