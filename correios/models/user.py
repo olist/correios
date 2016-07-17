@@ -199,7 +199,7 @@ class Contract(object):
                  status_code: str,
                  start_date: Union[datetime, str],
                  end_date: Union[datetime, str],
-                 posting_cards: Optional[List['PostingCard']]=None):
+                 posting_cards: Optional[List['PostingCard']] = None):
 
         self.number = _to_integer(number)
         self.customer_code = customer_code
@@ -236,7 +236,7 @@ class PostingCard(object):
                  status: Union[int, str],  # 2 digits
                  status_code: str,
                  unit: Union[int, str],  # 2 digits
-                 services: Optional[List[Service]]=None):
+                 services: Optional[List[Service]] = None):
         self.contract = contract
         self._number = _to_integer(number)
         self._administrative_code = _to_integer(administrative_code)
@@ -269,9 +269,9 @@ class User(object):
     def __init__(self,
                  name: str,
                  federal_tax_number: Union[str, FederalTaxNumber],
-                 state_tax_number: Optional[Union[str, StateTaxNumber]]=None,
-                 status_number: Optional[Union[int, str]]=None,
-                 contracts: Optional[List[Contract]]=None):
+                 state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
+                 status_number: Optional[Union[int, str]] = None,
+                 contracts: Optional[List[Contract]] = None):
         self.name = name.strip()
         self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
 
