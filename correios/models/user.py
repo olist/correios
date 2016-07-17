@@ -15,10 +15,13 @@
 
 import os
 from datetime import datetime
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Sequence
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberException
+from correios.exceptions import InvalidFederalTaxNumberException, InvalidExtraServiceException
+
+
+EXTRA_SERVICE_CODE_SIZE = 2
 
 
 def _to_integer(number: Union[int, str]) -> int:
@@ -130,10 +133,11 @@ class Service(object):
                  description: str,
                  category: str,
                  postal_code: Union[int, str],
-                 display_name: Optional[str]="",
-                 start_date: Union[datetime, str, type(None)]=None,
-                 end_date: Union[datetime, str, type(None)]=None,
-                 symbol: Optional[str]=None):
+                 display_name: Optional[str] = "",
+                 start_date: Union[datetime, str, type(None)] = None,
+                 end_date: Union[datetime, str, type(None)] = None,
+                 symbol: Optional[str] = None,
+                 default_extra_services: Optional[Sequence[Union["ExtraService", str, int]]] = None):
         self.id = id
         self.code = _to_integer(code)
         self.description = description.strip()
@@ -144,12 +148,46 @@ class Service(object):
         self.end_date = _to_datetime(end_date)
         self.symbol = symbol or "economic"
 
+        if default_extra_services is None:
+            default_extra_services = []
+        self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
+
     def __str__(self):
         return str(self.code)
 
     def get_symbol_filename(self, extension='gif'):
         filename = "{}.{}".format(self.symbol, extension)
         return os.path.join(DATADIR, filename)
+
+
+class ExtraService(object):
+    def __init__(self, number: int, code: str, name: str):
+        if not number:
+            raise InvalidExtraServiceException("Invalid Extra Service Number {!r}".format(number))
+        self.number = number
+
+        if not code or len(code) != EXTRA_SERVICE_CODE_SIZE:
+            raise InvalidExtraServiceException("Invalid Extra Service Code {!r}".format(code))
+        self.code = code.upper()
+
+        if not name:
+            raise InvalidExtraServiceException("Invalid Extra Service Name {!r}".format(name))
+        self.name = name
+
+    @classmethod
+    def get(cls, service: Union[str, int]):
+        if isinstance(service, cls):
+            return service
+
+        from .data import EXTRA_SERVICES_LIST
+        for extra_service in EXTRA_SERVICES_LIST:
+            if extra_service.number == service or extra_service.code == service:
+                return extra_service
+        else:
+            raise InvalidExtraServiceException("Unknown Service {!r}".format(service))
+
+    def __repr__(self):
+        return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
 
 
 class Contract(object):

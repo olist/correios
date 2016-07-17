@@ -13,8 +13,7 @@
 # limitations under the License.
 
 
-from .user import Service
-
+from .user import Service, ExtraService
 
 TRACKING_PREFIX = {
     "AL": "Agentes de leitura",
@@ -251,38 +250,70 @@ TRACKING_PREFIX = {
     "XX": "Encomenda SUR Postal 24 horas",
 }
 
+EXTRA_SERVICES_LIST = [
+    ExtraService(1, "AR", "Aviso de Recebimento"),
+    ExtraService(2, "MP", "Mão Própria Nacional"),
+    ExtraService(19, "VD", "Valor Declarado (Encomendas)"),
+    ExtraService(25, "RN", "Registro Nacional"),
+    ExtraService(37, "??", "Aviso de Recebimento Digital"),
+    ExtraService(49, "??", "Devolução de Nota Fiscal - SEDEX"),
+    ExtraService(57, "??", "Taxa de Entrega de Encomenda Despadronizada"),
+    ExtraService(67, "??", "Logística Reversa Simultânea Domiciliária"),
+    ExtraService(69, "??", "Logística Reversa Simultânea em Agência"),
+]
+
+EXTRA_SERVICES = {s.number: s for s in EXTRA_SERVICES_LIST}
+EXTRA_SERVICE_AR = EXTRA_SERVICES[1]
+EXTRA_SERVICE_MP = EXTRA_SERVICES[2]
+EXTRA_SERVICE_VD = EXTRA_SERVICES[19]
+EXTRA_SERVICE_RN = EXTRA_SERVICES[25]
 
 SERVICE_LIST = [
     Service(id=104707, code=40215, display_name='SEDEX 10',
-            description='SEDEX 10', category='SERVICO_COM_RESTRICAO', postal_code=244, symbol="premium"),
+            description='SEDEX 10', category='SERVICO_COM_RESTRICAO', postal_code=244, symbol="premium",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=104672, code=81019, display_name='E-SEDEX',
-            description='E-SEDEX STANDARD', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="express"),
+            description='E-SEDEX STANDARD', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=109819, code=41068, display_name='PAC',
-            description='PAC', category='PAC', postal_code=201, symbol="standard"),
+            description='PAC', category='PAC', postal_code=201, symbol="standard",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=109811, code=40444, display_name='SEDEX',
-            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express"),
+            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=109810, code=40436, display_name='SEDEX',
-            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express"),
+            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=104625, code=40096, display_name='SEDEX',
-            description='SEDEX (CONTRATO)', category='SEDEX', postal_code=263, symbol="express"),
+            description='SEDEX (CONTRATO)', category='SEDEX', postal_code=263, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=109806, code=40380, display_name='SEDEX',
-            description='SEDEX REVERSO 40096', category='REVERSO', postal_code=740, symbol="express"),
+            description='SEDEX REVERSO 40096', category='REVERSO', postal_code=740, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=104295, code=40010, display_name='SEDEX',
-            description='SEDEX A VISTA', category='SEDEX', postal_code=275, symbol="express"),
+            description='SEDEX A VISTA', category='SEDEX', postal_code=275, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=113546, code=41211, display_name='PAC',
-            description='PAC - CONTRATO', category='PAC', postal_code=201, symbol="standard"),
+            description='PAC - CONTRATO', category='PAC', postal_code=201, symbol="standard",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=114976, code=40630, display_name='SEDEX',
-            description='SEDEX PAGAMENTO NA ENTREGA -', category='SEDEX', postal_code=641, symbol="express"),
+            description='SEDEX PAGAMENTO NA ENTREGA -', category='SEDEX', postal_code=641, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=118568, code=40916, display_name='SEDEX',
-            description='SEDEX AGRUPADO II', category='SEDEX', postal_code=275, symbol="express"),
+            description='SEDEX AGRUPADO II', category='SEDEX', postal_code=275, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=118567, code=40908, display_name='SEDEX',
-            description='SEDEX AGRUPADO I', category='SEDEX', postal_code=275, symbol="express"),
+            description='SEDEX AGRUPADO I', category='SEDEX', postal_code=275, symbol="express",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=120366, code=41300, display_name='PAC',
-            description='PAC GRANDES FORMATOS', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="standard"),
+            description='PAC GRANDES FORMATOS', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="standard",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=115218, code=40169, display_name='SEDEX 12',
-            description='SEDEX 12', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium"),
+            description='SEDEX 12', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=108934, code=40290, display_name='SEDEX Hoje',
-            description='SEDEX HOJE', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium"),
+            description='SEDEX HOJE', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium",
+            default_extra_services=[EXTRA_SERVICE_RN]),
     Service(id=118424, code=10154, display_name='Carta Registrada',
             description='CARTA COMERCIAL  REGISTRADA', category='CARTA_REGISTRADA', postal_code=275),
     Service(id=115487, code=41246, display_name='Papai Noel dos Correios',

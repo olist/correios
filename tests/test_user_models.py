@@ -19,8 +19,9 @@ from datetime import timedelta, datetime, timezone
 import pytest
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberException
-from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service
+from correios.exceptions import InvalidFederalTaxNumberException, InvalidExtraServiceException
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN
+from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService
 
 
 def test_basic_federal_tax_number_tax_number():
@@ -231,3 +232,46 @@ def test_sanitize_service():
     assert service.postal_code == 244
     assert service.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
     assert service.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+
+
+def test_basic_extra_service():
+    extra_service = ExtraService(1, "AR", "Aviso de Recebimento")
+    assert extra_service.number == 1
+    assert extra_service.code == "AR"
+    assert extra_service.name == "Aviso de Recebimento"
+    assert repr(extra_service) == "<ExtraService number=1, code='AR'>"
+
+
+def test_extra_service_sanitize_code():
+    extra_service = ExtraService(1, "ar", "Aviso de Recebimento")
+    assert extra_service.code == "AR"
+
+
+@pytest.mark.parametrize("number,code,name", (
+        (0, "XY", "Invalid Number"),
+        (1, "XYZ", "Invalid Code"),
+        (1, "XY", ""),  # Invalid Name
+))
+def test_fail_extra_service_invalid_data(number, code, name):
+    with pytest.raises(InvalidExtraServiceException):
+        ExtraService(number, code, name)
+
+
+def test_fail_get_unknown_service():
+    with pytest.raises(InvalidExtraServiceException):
+        ExtraService.get("00")
+
+
+@pytest.mark.parametrize("number_or_code,extra_service", (
+        (1, EXTRA_SERVICE_AR),
+        (2, EXTRA_SERVICE_MP),
+        (19, EXTRA_SERVICE_VD),
+        (25, EXTRA_SERVICE_RN),
+        ("AR", EXTRA_SERVICE_AR),
+        ("MP", EXTRA_SERVICE_MP),
+        ("VD", EXTRA_SERVICE_VD),
+        ("RN", EXTRA_SERVICE_RN),
+        (EXTRA_SERVICE_AR, EXTRA_SERVICE_AR),
+))
+def test_extra_service_getter(number_or_code, extra_service):
+    assert ExtraService.get(number_or_code) == extra_service
