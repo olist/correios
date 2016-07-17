@@ -134,8 +134,8 @@ class Service(object):
                  category: str,
                  postal_code: Union[int, str],
                  display_name: Optional[str] = "",
-                 start_date: Union[datetime, str, type(None)] = None,
-                 end_date: Union[datetime, str, type(None)] = None,
+                 start_date: Optional[Union[datetime, str]] = None,
+                 end_date: Optional[Union[datetime, str]] = None,
                  symbol: Optional[str] = None,
                  default_extra_services: Optional[Sequence[Union["ExtraService", str, int]]] = None):
         self.id = id
