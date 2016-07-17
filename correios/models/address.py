@@ -52,6 +52,12 @@ class ZipCode(object):
     def __repr__(self):
         return "<ZipCode code: {}>".format(self.code)
 
+    @property
+    def digit(self):
+        next_multiple = lambda n: n + (n % 10 and (10 - (n % 10)))
+        validator = sum(int(d) for d in self.code)
+        return next_multiple(validator) - validator
+
 
 class State(object):
     STATES = {
@@ -207,3 +213,9 @@ class Address(object):
         if not isinstance(longitude, Decimal):
             longitude = Decimal(longitude)
         self.longitude = longitude
+
+    @property
+    def zip_code_complement(self):
+        if not self.number.isdigit():
+            return ""
+        return self.number
