@@ -14,8 +14,8 @@
 
 
 import os
-from typing import Optional, Union, Sequence
 from decimal import Decimal
+from typing import Optional, Union, Sequence
 
 # noinspection PyPep8Naming
 from PIL import Image as image
@@ -93,12 +93,36 @@ class TrackingCode(object):
     def short(self):
         return "{}{}{}".format(self.prefix, self.number, self.suffix)
 
+    @property
+    def splitted(self):
+        code = self.code
+        return "{!s} {!s} {!s} {!s} {!s}".format(code[:2], code[2:5], code[5:8], code[8:11], code[11:])
+
     def __str__(self):
         return self.code
 
 
 class ShippingLabel(object):
     variable_data_identifier = 51  # Variable data identifier for package
+    invoice_template = "{!s}"
+    contract_number_template = "{!s}"
+    order_template = "{!s}"
+    service_name_template = "{!s}"
+    volume_template = "{!s}/{!s}"
+    weight_template = "{!s}"
+    receipt_template = ("Recebedor: ___________________________________________<br/>"
+                        "Assinatura: __________________ Documento: _______________")
+    sender_header = "DESTINATÁRIO"
+    carrier_logo = os.path.join(DATADIR, "carrier_logo.png")
+    receiver_data_template = ("{receiver.name}<br/>"
+                              "{receiver.street}, {receiver.number}<br/>"
+                              "{receiver.complement} {receiver.neighborhood}<br/>"
+                              "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
+
+    sender_data_template = ("<b>Remetente:</b> {sender.name}<br/>"
+                            "{sender.street}, {sender.number}<br/>"
+                            "{sender.complement} - {sender.neighborhood}<br/>"
+                            "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
     def __init__(self,
                  posting_card: PostingCard,
@@ -157,23 +181,43 @@ class ShippingLabel(object):
         self.volume = volume
         self.weight = weight
         self.text = text
+        self.carrier_logo = image.open(self.carrier_logo)
 
         self.posting_list = None  # TODO
 
-    def get_order(self, template="{!s}"):
-        return template.format(self.order)
+    @property
+    def symbol(self):
+        return self.service.symbol_image
 
-    def get_invoice(self, template="{!s}"):
-        return template.format(self.invoice)
+    def get_order(self):
+        return self.order_template.format(self.order)
 
-    def get_volume(self, template="{!s}/{!s}"):
-        return template.format(*self.volume)
+    def get_invoice(self):
+        return self.invoice_template.format(self.invoice)
 
-    def get_weight(self, template="{!s}"):
-        return template.format(self.weight)
+    def get_contract_number(self):
+        return self.contract_number_template.format(self.posting_card.get_contract_number())
+
+    def get_service_name(self):
+        return self.service_name_template.format(self.service.display_name)
+
+    def get_volume(self):
+        return self.volume_template.format(*self.volume)
+
+    def get_weight(self):
+        return self.weight_template.format(self.weight)
 
     def get_symbol_filename(self, extension="gif"):
         return self.service.get_symbol_filename(extension)
+
+    def get_tracking_code(self):
+        return self.tracking_code.splitted
+
+    def get_receiver_data(self):
+        return self.receiver_data_template.format(receiver=self.receiver)
+
+    def get_sender_data(self):
+        return self.sender_data_template.format(sender=self.sender)
 
     def _get_extra_service_info(self) -> str:
         extra_services_numbers = ["00" for _ in range(6)]
@@ -185,8 +229,8 @@ class ShippingLabel(object):
         parts = [
             "{!s:>08}".format(self.receiver.zip_code),
             "{!s:>05}".format(self.receiver.zip_code_complement),
-            "{!s:>08}".format(self.sender.zip_code),
-            "{!s:>05}".format(self.sender.zip_code_complement),
+            "{!s:>08}".format(self.receiver.zip_code),
+            "{!s:>05}".format(self.receiver.zip_code_complement),
             "{!s:>01}".format(self.receiver.zip_code.digit),
             "{!s:>02}".format(self.variable_data_identifier),
             "{!s:>13}".format(self.tracking_code),

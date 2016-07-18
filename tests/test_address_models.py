@@ -159,6 +159,7 @@ def test_basic_address():
     assert address.city == "Vinicius de Moraes"
     assert address.state == "RJ"
     assert address.zip_code == "12345-678"
+    assert address.zip_code_display == "12345-678"
     assert address.zip_code_complement == "5"
 
 

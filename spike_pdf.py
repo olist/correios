@@ -3,11 +3,15 @@ from datetime import datetime, timedelta
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
+from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
+from reportlab.platypus import Paragraph
 from reportlab.platypus.flowables import Flowable
 
+from correios.models.data import SERVICE_SEDEX, SERVICE_SEDEX10
 from correios.models.posting import ShippingLabel
 from correios.models.user import PostingCard, Contract
 from tests.conftest import AddressFactory
@@ -40,11 +44,9 @@ class ShippingLabelRenderer(Flowable):
         canvas = self.canv
         canvas.setLineWidth(0.1)
 
-        canvas.rect(self.x1, self.y1, self.width, self.height)
-
         # logo
         logo = ImageReader(self.shipping_label.logo)
-        canvas.drawImage(logo, self.x1 + 8 * mm, self.y2 - (27 * mm), width=25 * mm,
+        canvas.drawImage(logo, self.x1 + 5 * mm, self.y2 - (27 * mm), width=25 * mm,
                          preserveAspectRatio=True, anchor="sw", mask="auto")
 
         # datagrid
@@ -53,16 +55,93 @@ class ShippingLabelRenderer(Flowable):
                                         width=25 * mm, height=25 * mm)
         datagrid.drawOn(canvas, self.x1 + 40 * mm, self.y2 - (27 * mm))
 
-        # canvas.rect(self.x1 + 8*mm, self.y2 - (25*mm), 1*mm, 1*mm, fill=1)
-        # codes = ['Codabar', 'Code11', 'Code128', 'Code128Auto', 'EAN13', 'EAN5', 'EAN8', 'ECC200DataMatrix',
-        #          'Extended39', 'Extended93', 'FIM', 'I2of5', 'ISBN', 'MSI', 'POSTNET', 'QR', 'Standard39',
-        #          'Standard93', 'UPCA', 'USPS_4State']
-        # canvas.setStrokeColor(colors.red)
-        # canvas.rect(50, 50, 80 * mm, 18 * mm)
-        # code = Code128("DL746686536BR", barWidth=0.5 * mm, barHeight=18 * mm)
-        # code.drawOn(canvas, 50, 50)
+        # symbol
+        symbol = ImageReader(self.shipping_label.symbol)
+        canvas.drawImage(symbol, self.x1 + 70 * mm, self.y2 - (27 * mm), width=25 * mm,
+                         preserveAspectRatio=True, anchor="sw", mask="auto")
 
-        canvas.drawString(self.hmargin, self.vmargin, str(self.shipping_label.tracking_code))
+        # header labels
+        label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=7, leading=8)
+        text = Paragraph("{}<br/>{}".format(self.shipping_label.get_invoice(),
+                                            self.shipping_label.get_order()),
+                         style=label_style)
+        text.wrap(25 * mm, 14)
+        text.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (28 * mm) - 14)
+
+        text = Paragraph("{}<br/>{}".format(self.shipping_label.get_contract_number(),
+                                            self.shipping_label.get_service_name()),
+                         style=label_style)
+        text.wrap(25 * mm, 14)
+        text.drawOn(canvas, self.x1 + 40 * mm, self.y2 - (28 * mm) - 14)
+
+        text = Paragraph("{}<br/>{}".format(self.shipping_label.get_volume(),
+                                            self.shipping_label.get_weight()),
+                         style=label_style)
+        text.wrap(25 * mm, 14)
+        text.drawOn(canvas, self.x1 + 70 * mm, self.y2 - (28 * mm) - 14)
+
+        # tracking
+        canvas.setFont("Helvetica-Bold", 10)
+        canvas.drawCentredString(self.x1 + 42.5 * mm, self.y2 - 40 * mm,
+                                 self.shipping_label.get_tracking_code())
+        code = createBarcodeDrawing("Code128", value=self.shipping_label.get_tracking_code(),
+                                    width=95 * mm, height=18 * mm)
+        code.drawOn(canvas, 0, self.y2 - (59 * mm))  # Code 128 already include horizontal margins
+
+        # extra services (first three)
+        first_row = self.y2 - (40 * mm) - 10  # font-size=10pt
+        for extra_service in self.shipping_label.extra_services:
+            canvas.drawString(self.x2 - (10 * mm), first_row, extra_service.code)
+            first_row -= 14
+
+        # receipt
+        receipt_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=8, leading=14)
+        text = Paragraph(self.shipping_label.receipt_template, style=receipt_style)
+        text.wrap(self.width - (10 * mm), 28)
+        text.drawOn(canvas, self.x1 + (5 * mm), self.y2 - (60 * mm) - 28)
+
+        # sender header
+        canvas.setFillColor(colors.black)
+        canvas.line(self.x1, self.y2 - (70 * mm), self.x2, self.y2 - (70 * mm))
+        width = stringWidth(self.shipping_label.sender_header, "Helvetica", 10) + 2
+        canvas.rect(self.x1, self.y2 - (70 * mm) - 14, width, 14, fill=True)
+
+        canvas.setFont("Helvetica", 9)
+        canvas.setFillColor(colors.white)
+        canvas.drawString(self.x1 + 4, self.y2 - (70 * mm) - 10, self.shipping_label.sender_header)
+
+        carrier_logo = ImageReader(self.shipping_label.carrier_logo)
+        canvas.drawImage(carrier_logo, self.x2 - 20 * mm, self.y2 - (70 * mm) - 12, height=10,
+                         preserveAspectRatio=True, anchor="sw", mask="auto")
+
+        # receiver
+        receiver_style = ParagraphStyle("receiver", fontName="Helvetica", fontSize=10, leading=15)
+        text = Paragraph(self.shipping_label.get_receiver_data(), style=receiver_style)
+        text.wrap(self.width, 22 * mm)
+        text.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (98 * mm))
+
+        # receiver zip barcode
+        code = createBarcodeDrawing("Code128", value=str(self.shipping_label.receiver.zip_code),
+                                    width=50 * mm, height=18 * mm)
+        code.drawOn(canvas, 0, self.y2 - (117 * mm))
+
+        # text
+        text_style = ParagraphStyle("text", fontName="Helvetica", fontSize=10)
+        text = Paragraph(self.shipping_label.text, style=text_style)
+        width = self.x2 - (self.x1 + (45 * mm))
+        text.wrap(width, 18 * mm)
+        text.breakLines(width)
+        text.drawOn(canvas, self.x1 + (45 * mm), self.y2 - (98 * mm))
+
+        # sender
+        canvas.line(self.x1, self.y2 - (118 * mm), self.x2, self.y2 - (118 * mm))
+        sender_style = ParagraphStyle("sender", fontName="Helvetica", fontSize=9)
+        text = Paragraph(self.shipping_label.get_sender_data(), style=sender_style)
+        text.wrap(self.width, 22 * mm)
+        text.drawOn(canvas, self.x1 + 5 * mm, self.y1 + 2 * mm)
+
+        # border
+        canvas.rect(self.x1, self.y1, self.width, self.height)
 
 
 class ShippingLabelPages:
@@ -103,39 +182,22 @@ class ShippingLabelPages:
                          self.height + self.vmargin, )
 
     def render(self):
-        self.labels[0].drawOn(self.canvas, *self._label_position[0])
-        # self.labels[1].drawOn(self.canvas, *self._label_position[1])
-        # self.labels[2].drawOn(self.canvas, *self._label_position[2])
-        # self.labels[3].drawOn(self.canvas, *self._label_position[3])
-        self.draw_grid()
+        pos = len(self._label_position) - 1
+        for i, label in enumerate(self.labels):
+            pos = i % len(self._label_position)
+            self.labels[i].drawOn(self.canvas, *self._label_position[pos])
+            if pos == len(self._label_position) - 1:
+                self.draw_grid()
+                self.canvas.showPage()
 
-        self.canvas.showPage()
+        if pos != len(self._label_position) - 1:
+            self.draw_grid()
+            self.canvas.showPage()
+
         self.canvas.save()
-        # pages = []
-        # for group_start in range(0, len(self.labels), self.labels_per_page):
-        #     group = self.labels[group_start:group_start + self.labels_per_page]
-        #     group = (group + [None] * self.labels_per_page)[:self.labels_per_page]
-        #     pages.append(group)
-        #
-        # tables = []
-        # for page in pages:
-        #     matrix = [(page[0], page[1]),
-        #               (page[2], page[3])]
-        #     table = Table(matrix, colWidths=self.label_width, rowHeights=self.label_height, style=[
-        #         ('LINEBEFORE', (-1, 0), (-1, -1), 0.1, colors.gray),
-        #         ('LINEABOVE', (0, -1), (-1, -1), 0.1, colors.gray),
-        #         ('LEFTPADDING', (0, 0), (-1, -1), 0),
-        #         ('RIGHTPADDING', (0, 0), (-1, -1), 0),
-        #         ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-        #         ('TOPPADDING', (0, 0), (-1, -1), 0),
-        #     ])
-        #     tables.append(table)
-        # self.document.build(tables)
         return self.file
 
 
-sender_address = AddressFactory()
-receiver_address = AddressFactory()
 contract = Contract(
     number=9912208555,
     customer_code=279311,
@@ -158,22 +220,40 @@ posting_card = PostingCard(
     unit=8,
 )
 
+ShippingLabel.weight_template = "Peso (g): <b>{!s}</b>"
+ShippingLabel.invoice_template = "NF: {!s}"
+ShippingLabel.order_template = "Ped.: <font size=6>{!s}</font>"
+ShippingLabel.contract_number_template = "Contrato: <b>{!s}</b>"
+ShippingLabel.service_name_template = "<b>{!s}</b>"
+ShippingLabel.volume_template = "Volume: {!s}/{!s}"
+
 shipping_label1 = ShippingLabel(
     posting_card=posting_card,
-    sender=sender_address,
-    receiver=receiver_address,
-    service=40096,  # SERVICE_SEDEX_CODE
+    sender=AddressFactory(),
+    receiver=AddressFactory(),
+    service=SERVICE_SEDEX,
     tracking_code="PD12345678 BR",
+    invoice="123",
+    order="OLT123ABCDEF",
+    weight=50,
+    text="Obs: Este texto é opcional e pode ser usado como quiser."
+)
+
+shipping_label2 = ShippingLabel(
+    posting_card=posting_card,
+    sender=AddressFactory(),
+    receiver=AddressFactory(),
+    service=SERVICE_SEDEX10,
+    tracking_code="PD12345555 BR",
+    invoice="654",
+    order="OLT123XXXXX",
+    weight=150,
 )
 
 ss = ShippingLabelPages()
 ss.add_shipping_label(shipping_label1)
-# ss.add_shipping_label("teste2")
-# ss.add_shipping_label("teste3")
-# ss.add_shipping_label("teste4")
-# ss.add_shipping_label("teste5")
-# ss.add_shipping_label("teste6")
-# ss.add_shipping_label("teste7")
-# ss.add_shipping_label("teste8")
-# ss.add_shipping_label("teste9")
+ss.add_shipping_label(shipping_label2)
+ss.add_shipping_label(shipping_label2)
+ss.add_shipping_label(shipping_label1)
+ss.add_shipping_label(shipping_label1)
 ss.render()
