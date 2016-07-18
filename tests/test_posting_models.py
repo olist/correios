@@ -17,6 +17,9 @@ import os
 
 import pytest
 
+# noinspection PyPep8Naming
+from PIL import Image as image
+
 from correios import DATADIR
 from correios.exceptions import InvalidAddressesException, InvalidTrackingCode, InvalidVolumeInformation
 from correios.models.posting import ShippingLabel, TrackingCode
@@ -40,6 +43,7 @@ def test_tracking_code_constructor(tracking_code):
     assert tracking.digit == 6
     assert tracking.nodigit == "DL74668653 BR"
     assert tracking.short == "DL74668653BR"
+    assert tracking.splitted == "DL 746 686 536 BR"
 
 
 @pytest.mark.parametrize("tracking_code", [
@@ -84,31 +88,40 @@ def test_basic_shipping_label(default_posting_card, sender_address, receiver_add
     assert shipping_label.posting_card == default_posting_card
     assert shipping_label.sender == sender_address
     assert shipping_label.receiver == receiver_address
+
     assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.get_service_name() == "SEDEX"
+
     assert shipping_label.extra_services == [EXTRA_SERVICE_RN, EXTRA_SERVICE_AR]
+
     assert shipping_label.tracking_code == tracking_code
+    assert shipping_label.get_tracking_code() == "PD 325 270 157 BR"
+
+    assert isinstance(shipping_label.logo, image.Image)
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
 
     assert shipping_label.order == "123"
     assert shipping_label.get_order() == "123"
-    assert shipping_label.get_order("Order: {}") == "Order: 123"
 
     assert shipping_label.invoice == "321"
     assert shipping_label.get_invoice() == "321"
-    assert shipping_label.get_invoice("Invoice #{}") == "Invoice #321"
+
+    assert shipping_label.get_contract_number() == "9912208555"
 
     assert shipping_label.volume == (1, 2)
     assert shipping_label.get_volume() == "1/2"
-    assert shipping_label.get_volume("Volume: {}/{}") == "Volume: 1/2"
 
     assert shipping_label.weight == 100
     assert shipping_label.get_weight() == "100"
-    assert shipping_label.get_weight("Weight: {!s}g") == "Weight: 100g"
 
     assert shipping_label.text == "Hello World!"
 
     assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
+    assert isinstance(shipping_label.symbol, image.Image)
+
     assert len(shipping_label.get_datamatrix_info()) == 164  # datamatrix info size accordingly with documentation
+    assert shipping_label.get_sender_data().count("<br/>") == 3
+    assert shipping_label.get_receiver_data().count("<br/>") == 3
 
 
 def test_basic_default_shipping_label(default_posting_card, sender_address, receiver_address):

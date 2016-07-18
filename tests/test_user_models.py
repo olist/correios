@@ -16,6 +16,9 @@
 import os
 from datetime import timedelta, datetime, timezone
 
+# noinspection PyPep8Naming
+from PIL import Image as image
+
 import pytest
 
 from correios import DATADIR
@@ -166,6 +169,7 @@ def test_basic_posting_card(default_contract, datetime_object):
     assert posting_card.status == 1
     assert posting_card.status_code == "I"
     assert posting_card.unit == 8
+    assert posting_card.get_contract_number() == 9912208555
 
 
 def test_sanitize_posting_card_data(default_contract):
@@ -212,7 +216,7 @@ def test_basic_service(datetime_object):
     assert service.end_date == datetime_object + timedelta(days=5)
     assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
-
+    assert isinstance(service.symbol_image, image.Image)
 
 def test_sanitize_service():
     service = Service(

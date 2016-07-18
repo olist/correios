@@ -93,7 +93,7 @@ class AddressFactory(factory.Factory):
     state = factory.Faker("estado_sigla", locale="pt_BR")
     zip_code = factory.Faker("postcode", locale="pt_BR")
     complement = factory.Faker("secondary_address")
-    neighborhood = factory.LazyAttribute(lambda n: "Neighborhood #{}".format(n))
+    neighborhood = factory.Sequence(lambda n: "Neighborhood #{}".format(n))
     phone = factory.Faker("phone_number", locale="pt_BR")
     cellphone = factory.Faker("phone_number", locale="pt_BR")
     email = factory.Faker("email")

@@ -17,9 +17,11 @@ import os
 from datetime import datetime
 from typing import List, Union, Optional, Sequence
 
+# noinspection PyPep8Naming
+from PIL import Image as image
+
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberException, InvalidExtraServiceException
-
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -147,6 +149,7 @@ class Service(object):
         self.start_date = _to_datetime(start_date)
         self.end_date = _to_datetime(end_date)
         self.symbol = symbol or "economic"
+        self._symbol_image = None
 
         if default_extra_services is None:
             default_extra_services = []
@@ -158,6 +161,12 @@ class Service(object):
     def get_symbol_filename(self, extension='gif'):
         filename = "{}.{}".format(self.symbol, extension)
         return os.path.join(DATADIR, filename)
+
+    @property
+    def symbol_image(self):
+        if not self._symbol_image:
+            self._symbol_image = image.open(self.get_symbol_filename())
+        return self._symbol_image
 
 
 class ExtraService(object):
@@ -263,6 +272,9 @@ class PostingCard(object):
 
     def add_service(self, service: Service):
         self.services.append(service)
+
+    def get_contract_number(self):
+        return self.contract.number
 
 
 class User(object):

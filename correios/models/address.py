@@ -52,11 +52,13 @@ class ZipCode(object):
     def __repr__(self):
         return "<ZipCode code: {}>".format(self.code)
 
+    def _next_multiple(self, n: int) -> int:
+        return n + (n % 10 and (10 - (n % 10)))
+
     @property
     def digit(self):
-        next_multiple = lambda n: n + (n % 10 and (10 - (n % 10)))
         validator = sum(int(d) for d in self.code)
-        return next_multiple(validator) - validator
+        return self._next_multiple(validator) - validator
 
 
 class State(object):
@@ -219,3 +221,7 @@ class Address(object):
         if not self.number.isdigit():
             return ""
         return self.number
+
+    @property
+    def zip_code_display(self):
+        return self.zip_code.display()
