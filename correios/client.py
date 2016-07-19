@@ -15,8 +15,9 @@
 
 from typing import Union, Sequence
 
+from correios.exceptions import PostingListClosingError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode
+from .models.posting import TrackingCode, PostingList
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -177,3 +178,16 @@ class Correios(object):
                                  tracking_codes)
 
         return result
+
+    def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
+        label_list = posting_list.get_tracking_codes()
+        customer_id = self._auth_call("fechaPlpVariosServicos",
+                                      posting_list.get_xml(),
+                                      posting_list.customer_id, posting_card.number,
+                                      label_list)
+        if customer_id != posting_list.customer_id:
+            raise PostingListClosingError("Returned customer id ({!r}) does not match "
+                                          "requested ({!r})".format(customer_id, posting_list.customer_id))
+
+        posting_list.close()
+        return posting_list

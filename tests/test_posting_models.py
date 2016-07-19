@@ -22,8 +22,8 @@ from PIL import Image as image
 
 from correios import DATADIR
 from correios.exceptions import InvalidAddressesException, InvalidTrackingCode, InvalidVolumeInformation
-from correios.models.posting import ShippingLabel, TrackingCode
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
+from correios.models.posting import ShippingLabel, TrackingCode, PostingList
 
 FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -123,6 +123,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_sender_data().count("<br/>") == 3
     assert shipping_label.get_receiver_data().count("<br/>") == 3
 
+    assert repr(shipping_label) == "<ShippingLabel tracking='{!s}'>".format(shipping_label.tracking_code)
 
 
 def test_basic_default_shipping_label(posting_card, sender_address, receiver_address):
