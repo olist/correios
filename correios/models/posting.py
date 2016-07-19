@@ -21,7 +21,8 @@ from typing import Optional, Union, Sequence
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode
+from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode, \
+    PostingListError
 from .address import Address
 from .data import SERVICES
 from .user import Service, ExtraService, PostingCard
@@ -100,6 +101,9 @@ class TrackingCode(object):
 
     def __str__(self):
         return self.code
+
+    def __repr__(self):
+        return "<TrackingCode code={!r}>".format(self.code)
 
 
 class ShippingLabel(object):
@@ -185,6 +189,9 @@ class ShippingLabel(object):
 
         self.posting_list = None  # TODO
 
+    def __repr__(self):
+        return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
+
     @property
     def symbol(self):
         return self.service.symbol_image
@@ -248,3 +255,26 @@ class ShippingLabel(object):
             "{!s:<30}".format(self.text[:30]),
         ]
         return "".join(parts)
+
+
+class PostingList(object):
+    def __init__(self,
+                 customer_id: int):
+        self.customer_id = customer_id
+        self.closed = False
+        self.shipping_labels = {}
+
+    def add_shipping_label(self, shipping_label: ShippingLabel):
+        if shipping_label.tracking_code in self.shipping_labels:
+            raise PostingListError("Shipping label {!r} alread in posting list".format(shipping_label))
+
+        self.shipping_labels[shipping_label.tracking_code] = shipping_label
+
+    def get_xml(self):
+        return ""
+
+    def get_tracking_codes(self):
+        return []  # TODO
+
+    def close(self):
+        self.closed = True

@@ -21,6 +21,10 @@ class ModelException(BaseCorreiosException):
     pass
 
 
+class ClientException(BaseCorreiosException):
+    pass
+
+
 class InvalidZipCodeException(ModelException):
     pass
 
@@ -50,4 +54,12 @@ class InvalidVolumeInformation(ModelException):
 
 
 class InvalidExtraServiceException(ModelException):
+    pass
+
+
+class PostingListError(ModelException):
+    pass
+
+
+class PostingListClosingError(ClientException):
     pass
