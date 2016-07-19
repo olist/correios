@@ -12,25 +12,5 @@ correios
 .. image:: https://coveralls.io/repos/github/solidarium/correios/badge.svg?branch=master
    :target: https://coveralls.io/github/solidarium/correios?branch=master
    :alt: Latest Coveralls coverage status
-   
+
 A client library for Brazilian Correios APIs and services.
-
-Usage
------
-
-Installation
-------------
-
-Requirements
-^^^^^^^^^^^^
-
-Compatibility
--------------
-
-Licence
--------
-
-Authors
--------
-
-`correios` was written by `Osvaldo Santana Neto <correiospy@osantana.me>`_.
