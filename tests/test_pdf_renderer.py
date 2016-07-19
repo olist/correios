@@ -15,35 +15,40 @@
 
 import os
 
-from correios.models.data import SERVICE_SEDEX
+from correios.models.data import SERVICE_SEDEX, SERVICE_SEDEX10
 from correios.models.posting import ShippingLabel
-from correios.renderers.pdf import Document
-
+from correios.renderers.pdf import ShippingLabelsPDFRenderer
+from tests.conftest import AddressFactory
 
 TESTDIR = os.path.dirname(__file__)
 
 
-def test_render_basic_shipping_label(default_posting_card, sender_address, receiver_address, tracking_code):
-    shipping_label = ShippingLabel(
+def test_render_basic_shipping_label(default_posting_card):
+    shipping_label1 = ShippingLabel(
         posting_card=default_posting_card,
-        sender=sender_address,
-        receiver=receiver_address,
+        sender=AddressFactory(),
+        receiver=AddressFactory(),
         service=SERVICE_SEDEX,
-        tracking_code=tracking_code,
-        order="123",
-        invoice="321",
-        volume=(1, 1),
-        weight=100,
+        tracking_code="PD12345678BR",
+        invoice="123",
+        order="OLT123ABCDEF",
+        weight=50,
+        text="Obs: Este texto é opcional e pode ser usado como quiser."
     )
 
-    document = Document()
-    # document.add_posting_list(plp)
-    document.add_shipping_label(shipping_label)
+    shipping_label2 = ShippingLabel(
+        posting_card=default_posting_card,
+        sender=AddressFactory(),
+        receiver=AddressFactory(),
+        service=SERVICE_SEDEX10,
+        tracking_code="PD12345555BR",
+        invoice="654",
+        order="OLT123XXXXX",
+        weight=150,
+    )
 
-    pdf = document.render()
-    filename = os.path.join(TESTDIR, "test.pdf")
-    with open(filename, "wb") as fp:
-        fp.write(pdf)
-
-    # from subprocess import run
-    # run("open -a Preview {}".format(filename), shell=True)
+    shipping_labels = ShippingLabelsPDFRenderer()
+    shipping_labels.add_shipping_label(shipping_label1)
+    shipping_labels.add_shipping_label(shipping_label2)
+    pdf = shipping_labels.render()
+    assert pdf.getvalue().startswith(b"%PDF-1.4")
