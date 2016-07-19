@@ -23,9 +23,9 @@ from tests.conftest import AddressFactory
 TESTDIR = os.path.dirname(__file__)
 
 
-def test_render_basic_shipping_label(default_posting_card):
+def test_render_basic_shipping_label(posting_card):
     shipping_label1 = ShippingLabel(
-        posting_card=default_posting_card,
+        posting_card=posting_card,
         sender=AddressFactory(),
         receiver=AddressFactory(),
         service=SERVICE_SEDEX,
@@ -37,7 +37,7 @@ def test_render_basic_shipping_label(default_posting_card):
     )
 
     shipping_label2 = ShippingLabel(
-        posting_card=default_posting_card,
+        posting_card=posting_card,
         sender=AddressFactory(),
         receiver=AddressFactory(),
         service=SERVICE_SEDEX10,

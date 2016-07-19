@@ -69,9 +69,9 @@ def test_tracking_code_digit_calculator(tracking_code, digit):
     assert tracking.digit == digit
 
 
-def test_basic_shipping_label(default_posting_card, sender_address, receiver_address, tracking_code):
+def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code):
     shipping_label = ShippingLabel(
-        posting_card=default_posting_card,
+        posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=SERVICE_SEDEX,
@@ -85,7 +85,7 @@ def test_basic_shipping_label(default_posting_card, sender_address, receiver_add
         text="Hello World!",
     )
 
-    assert shipping_label.posting_card == default_posting_card
+    assert shipping_label.posting_card == posting_card
     assert shipping_label.sender == sender_address
     assert shipping_label.receiver == receiver_address
 
@@ -95,7 +95,7 @@ def test_basic_shipping_label(default_posting_card, sender_address, receiver_add
     assert shipping_label.extra_services == [EXTRA_SERVICE_RN, EXTRA_SERVICE_AR]
 
     assert shipping_label.tracking_code == tracking_code
-    assert shipping_label.get_tracking_code() == "PD 325 270 157 BR"
+    assert shipping_label.get_tracking_code().replace(" ", "") == str(shipping_label.tracking_code)
 
     assert isinstance(shipping_label.logo, image.Image)
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
@@ -124,9 +124,10 @@ def test_basic_shipping_label(default_posting_card, sender_address, receiver_add
     assert shipping_label.get_receiver_data().count("<br/>") == 3
 
 
-def test_basic_default_shipping_label(default_posting_card, sender_address, receiver_address):
+
+def test_basic_default_shipping_label(posting_card, sender_address, receiver_address):
     shipping_label = ShippingLabel(
-        posting_card=default_posting_card,
+        posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=40096,  # SERVICE_SEDEX_CODE
@@ -138,14 +139,27 @@ def test_basic_default_shipping_label(default_posting_card, sender_address, rece
     assert len(shipping_label.extra_services) == 1
 
 
-def test_fail_shipping_label_same_addresses(default_posting_card, sender_address, tracking_code):
+def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code):
     with pytest.raises(InvalidAddressesException):
-        ShippingLabel(default_posting_card, sender_address, sender_address, SERVICE_SEDEX,
+        ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
                       tracking_code=tracking_code)
 
 
-def test_fail_invalid_volumes_argument(default_posting_card, sender_address, receiver_address, tracking_code):
+def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_address, tracking_code):
     with pytest.raises(InvalidVolumeInformation):
         # noinspection PyTypeChecker
-        ShippingLabel(default_posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
+        ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
                       volume=(1,))  # invalid tuple
+
+
+def test_basic_posting_list(shipping_label1):
+    posting_list = PostingList(
+        customer_id=12345,
+    )
+    posting_list.add_shipping_label(shipping_label1)
+
+    assert posting_list.customer_id == 12345
+    assert not posting_list.closed
+    assert posting_list.get_tracking_codes() == []
+    # TODO
+    
