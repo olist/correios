@@ -59,16 +59,16 @@ def test_find_zip_code():
 
 
 @vcr.use_cassette
-def test_verify_service_availability(default_posting_card):
+def test_verify_service_availability(posting_card):
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    status = client.verify_service_availability(default_posting_card, SERVICE_SEDEX10, "82940150", "01310000")
+    status = client.verify_service_availability(posting_card, SERVICE_SEDEX10, "82940150", "01310000")
     assert status
 
 
 @vcr.use_cassette
-def test_get_posting_card_status(default_posting_card):
+def test_get_posting_card_status(posting_card):
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    status = client.get_posting_card_status(default_posting_card)
+    status = client.get_posting_card_status(posting_card)
     assert status == PostingCard.ACTIVE
 
 

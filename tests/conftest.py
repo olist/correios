@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
+import random
 from datetime import datetime, timedelta
 
 import factory
@@ -20,7 +19,8 @@ import pytest
 from pytest_factoryboy import register
 
 from correios.models.address import Address
-from correios.models.posting import TrackingCode
+from correios.models.data import SERVICE_SEDEX, TRACKING_PREFIX
+from correios.models.posting import TrackingCode, ShippingLabel
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -44,42 +44,54 @@ def default_user():
     return User(name="ECT", federal_tax_number="34028316000103", state_tax_number="0733382100116", status_number=1)
 
 
-# noinspection PyShadowingNames
-@pytest.fixture
-def default_contract(datetime_object):
-    contract = Contract(
-        number=9912208555,
-        customer_code=279311,
-        direction_code=10,
-        direction="DR - BRASÍLIA",
-        status_code="A",
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
-        posting_cards=[]
-    )
-    return contract
+class ContractFactory(factory.Factory):
+    class Meta:
+        model = Contract
+
+    number = 9912208555
+    customer_code = 279311
+    direction_code = 10
+    direction = "DR - BRASÍLIA"
+    status_code = "A"
+    start_date = factory.LazyFunction(datetime.utcnow)
+    end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))
+    posting_cards = []
 
 
-# noinspection PyShadowingNames
-@pytest.fixture
-def default_posting_card(default_contract, datetime_object):
-    posting_card = PostingCard(
-        contract=default_contract,
-        number=57018901,
-        administrative_code=8082650,
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
-        status=1,
-        status_code="I",
-        unit=8,
-    )
-
-    return posting_card
+register(ContractFactory, "contract")
 
 
-@pytest.fixture
-def tracking_code():
-    return TrackingCode(code="PD325270157BR")
+class PostingCardFactory(factory.Factory):
+    class Meta:
+        model = PostingCard
+
+    contract = factory.SubFactory(ContractFactory)
+    number = 57018901
+    administrative_code = 8082650
+    start_date = factory.LazyFunction(datetime.utcnow)
+    end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))
+    status = 1
+    status_code = "I"
+    unit = 8
+
+
+register(PostingCardFactory, "posting_card")
+
+
+def _random_tracking_code():
+    prefix = random.choice(list(TRACKING_PREFIX.keys()))
+    number = "".join(str(random.randrange(0, 10)) for _ in range(8))
+    return "{}{} BR".format(prefix, number)
+
+
+class TrackingCodeFactory(factory.Factory):
+    class Meta:
+        model = TrackingCode
+
+    code = factory.LazyFunction(_random_tracking_code)
+
+
+register(TrackingCodeFactory, "tracking_code")
 
 
 class AddressFactory(factory.Factory):
@@ -101,5 +113,21 @@ class AddressFactory(factory.Factory):
     longitude = factory.Faker("longitude", locale="pt_BR")
 
 
+register(AddressFactory, "address")
 register(AddressFactory, "sender_address")
 register(AddressFactory, "receiver_address")
+
+
+class ShippingLabelFactory(factory.Factory):
+    class Meta:
+        model = ShippingLabel
+
+    posting_card = factory.SubFactory(PostingCardFactory)
+    sender = factory.LazyFunction(AddressFactory.build)
+    receiver = factory.LazyFunction(AddressFactory.build)
+    service = SERVICE_SEDEX
+    tracking_code = factory.SubFactory(TrackingCodeFactory)
+
+
+register(ShippingLabelFactory, "shipping_label1")
+register(ShippingLabelFactory, "shipping_label2")

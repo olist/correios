@@ -150,9 +150,9 @@ def test_sanitize_contract_data():
     assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
 
 
-def test_basic_posting_card(default_contract, datetime_object):
+def test_basic_posting_card(contract, datetime_object):
     posting_card = PostingCard(
-        contract=default_contract,
+        contract=contract,
         number=57018901,
         administrative_code=8082650,
         start_date=datetime_object,
@@ -172,9 +172,9 @@ def test_basic_posting_card(default_contract, datetime_object):
     assert posting_card.get_contract_number() == 9912208555
 
 
-def test_sanitize_posting_card_data(default_contract):
+def test_sanitize_posting_card_data(contract):
     posting_card = PostingCard(
-        contract=default_contract,
+        contract=contract,
         number="0057018901",
         administrative_code=8082650,
         start_date="2014-05-09 00:00:00-03:00",
