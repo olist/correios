@@ -14,7 +14,7 @@
 import os
 from typing import Union, Sequence
 
-from correios import xml, DATADIR
+from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListClosingError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import TrackingCode, PostingList
@@ -114,18 +114,18 @@ class PostingListSerializer:
 
     def validate(self):
         with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
-            document = xml.parse(xsd)
-        schema = xml.XMLSchema(document)
+            document = xml_utils.parse(xsd)
+        schema = xml_utils.XMLSchema(document)
         return schema.validate(self.posting_list)
 
     def get_document(self):
-        root = xml.Element("correioslog")
-        root.append(xml.Element("tipo_arquivo", text="Postagem"))
-        root.append(xml.Element("versao_arquivo", text="2.3"))
+        root = xml_utils.Element("correioslog")
+        root.append(xml_utils.Element("tipo_arquivo", text="Postagem"))
+        root.append(xml_utils.Element("versao_arquivo", text="2.3"))
         return root
 
     def get_xml(self) -> bytes:
-        return xml.tostring(self.get_document())
+        return xml_utils.tostring(self.get_document())
 
 
 class Correios:
