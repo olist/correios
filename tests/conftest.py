@@ -127,10 +127,17 @@ class ShippingLabelFactory(factory.Factory):
     receiver = factory.LazyFunction(AddressFactory.build)
     service = SERVICE_SEDEX
     tracking_code = factory.SubFactory(TrackingCodeFactory)
+    invoice = factory.Sequence(lambda n: "1234{!s}".format(n + 1))
+    order = factory.Sequence(lambda n: "OLT123ABC{!s}".format(n + 5))
+    weight = 500  # g
+    text = factory.Faker("text", max_nb_chars=20)
 
 
 register(ShippingLabelFactory, "shipping_label1")
 register(ShippingLabelFactory, "shipping_label2")
+register(ShippingLabelFactory, "shipping_label3")
+register(ShippingLabelFactory, "shipping_label4")
+register(ShippingLabelFactory, "shipping_label5")
 
 
 class PostingListFactory(factory.Factory):
