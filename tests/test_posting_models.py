@@ -162,5 +162,3 @@ def test_basic_posting_list(shipping_label1):
     assert posting_list.customer_id == 12345
     assert not posting_list.closed
     assert posting_list.get_tracking_codes() == []
-    # TODO
-    

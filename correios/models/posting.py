@@ -270,9 +270,6 @@ class PostingList:
 
         self.shipping_labels[shipping_label.tracking_code] = shipping_label
 
-    def get_xml(self):
-        return ""
-
     def get_tracking_codes(self):
         return []  # TODO
 

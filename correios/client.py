@@ -108,6 +108,26 @@ class ModelBuilder:
         return [TrackingCode(c) for c in codes]
 
 
+class PostingListSerializer:
+    def __init__(self, posting_list: PostingList):
+        self.posting_list = posting_list
+
+    def validate(self):
+        with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
+            document = xml.parse(xsd)
+        schema = xml.XMLSchema(document)
+        return schema.validate(self.posting_list)
+
+    def get_document(self):
+        root = xml.Element("correioslog")
+        root.append(xml.Element("tipo_arquivo", text="Postagem"))
+        root.append(xml.Element("versao_arquivo", text="2.3"))
+        return root
+
+    def get_xml(self) -> bytes:
+        return xml.tostring(self.get_document())
+
+
 class Correios:
     PRODUCTION = "production"
     TEST = "test"
@@ -179,9 +199,10 @@ class Correios:
         return result
 
     def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
+        posting_list_serializer = PostingListSerializer(posting_list)
         label_list = posting_list.get_tracking_codes()
         customer_id = self._auth_call("fechaPlpVariosServicos",
-                                      posting_list.get_xml(),
+                                      posting_list_serializer.get_xml(),
                                       posting_list.customer_id, posting_card.number,
                                       label_list)
         if customer_id != posting_list.customer_id:
