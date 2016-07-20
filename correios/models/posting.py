@@ -236,8 +236,8 @@ class ShippingLabel:
         parts = [
             "{!s:>08}".format(self.receiver.zip_code),
             "{!s:>05}".format(self.receiver.zip_code_complement),
-            "{!s:>08}".format(self.receiver.zip_code),
-            "{!s:>05}".format(self.receiver.zip_code_complement),
+            "{!s:>08}".format(self.sender.zip_code),
+            "{!s:>05}".format(self.sender.zip_code_complement),
             "{!s:>01}".format(self.receiver.zip_code.digit),
             "{!s:>02}".format(self.variable_data_identifier),
             "{!s:>13}".format(self.tracking_code),
