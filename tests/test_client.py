@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from correios.client import ModelBuilder, Correios
+from correios.client import ModelBuilder, Correios, PostingListSerializer
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.user import PostingCard
@@ -92,3 +92,9 @@ def test_builder_posting_card_status():
     builder = ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE
     assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
+
+
+def test_posting_list_xml_serializer(posting_list):
+    serializer = PostingListSerializer(posting_list)
+    document = serializer.get_document()
+    assert document

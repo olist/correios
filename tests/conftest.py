@@ -20,7 +20,7 @@ from pytest_factoryboy import register
 
 from correios.models.address import Address
 from correios.models.data import SERVICE_SEDEX, TRACKING_PREFIX
-from correios.models.posting import TrackingCode, ShippingLabel
+from correios.models.posting import TrackingCode, ShippingLabel, PostingList
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -131,3 +131,13 @@ class ShippingLabelFactory(factory.Factory):
 
 register(ShippingLabelFactory, "shipping_label1")
 register(ShippingLabelFactory, "shipping_label2")
+
+
+class PostingListFactory(factory.Factory):
+    class Meta:
+        model = PostingList
+
+    customer_id = factory.Sequence(lambda n: n)
+
+
+register(PostingCardFactory, "posting_list")
