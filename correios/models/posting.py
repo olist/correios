@@ -21,8 +21,8 @@ from typing import Optional, Union, Sequence
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesException, InvalidVolumeInformation, InvalidTrackingCode, \
-    PostingListError
+from correios.exceptions import (InvalidAddressesException, InvalidVolumeInformation,
+                                 InvalidTrackingCode, PostingListError)
 from .address import Address
 from .data import SERVICES
 from .user import Service, ExtraService, PostingCard
@@ -33,7 +33,7 @@ TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
 
 
-class TrackingCode(object):
+class TrackingCode:
     def __init__(self, code: str):
         self.prefix = code[:2].upper()
         self.number = "".join(d for d in code[2:10] if d.isdigit())
@@ -106,7 +106,7 @@ class TrackingCode(object):
         return "<TrackingCode code={!r}>".format(self.code)
 
 
-class ShippingLabel(object):
+class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"
     contract_number_template = "{!s}"
@@ -257,7 +257,7 @@ class ShippingLabel(object):
         return "".join(parts)
 
 
-class PostingList(object):
+class PostingList:
     def __init__(self,
                  customer_id: int):
         self.customer_id = customer_id

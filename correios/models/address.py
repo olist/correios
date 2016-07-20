@@ -24,7 +24,7 @@ ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
 
 
-class ZipCode(object):
+class ZipCode:
     def __init__(self, code: str):
         self._code = self._validate(code)
 
@@ -61,7 +61,7 @@ class ZipCode(object):
         return self._next_multiple(validator) - validator
 
 
-class State(object):
+class State:
     STATES = {
         'AC': 'Acre',
         'AL': 'Alagoas',
@@ -122,7 +122,7 @@ class State(object):
         return "<State code: {} name: {}>".format(self.code, self.display())
 
 
-class ZipAddress(object):
+class ZipAddress:
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
@@ -141,7 +141,7 @@ class ZipAddress(object):
         self.complements = [c for c in complements if c]
 
 
-class Phone(object):
+class Phone:
     def __init__(self, number: str, country="BR"):
         self.parsed = self._parse(number, country)
         self.country = country
@@ -168,7 +168,7 @@ class Phone(object):
         return "<Phone {!s}>".format(self)
 
 
-class Address(object):
+class Address:
     def __init__(self,
                  name: str,
                  street: str,
