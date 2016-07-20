@@ -11,21 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
+import os
 from typing import Union, Sequence
 
+from correios import xml, DATADIR
 from correios.exceptions import PostingListClosingError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import TrackingCode, PostingList
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
-
 DEFAULT_TRACKING_CODE_QUANTITY = 2  # I tried 1, 2, N... and Correios always return 2 codes :/
 
 
-class ModelBuilder(object):
+class ModelBuilder:
     def build_service(self, service_data):
         service = Service(
             id=service_data.id,
@@ -109,7 +108,7 @@ class ModelBuilder(object):
         return [TrackingCode(c) for c in codes]
 
 
-class Correios(object):
+class Correios:
     PRODUCTION = "production"
     TEST = "test"
 

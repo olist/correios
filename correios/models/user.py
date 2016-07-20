@@ -55,7 +55,7 @@ def _to_state_tax_number(state_tax_number) -> "StateTaxNumber":
     return StateTaxNumber(state_tax_number)
 
 
-class AbstractTaxNumber(object):
+class AbstractTaxNumber:
     def __init__(self, number: str):
         self._number = self._validate(number)
 
@@ -127,7 +127,7 @@ class StateTaxNumber(AbstractTaxNumber):
         return self.number
 
 
-class Service(object):
+class Service:
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  id: int,
@@ -169,7 +169,7 @@ class Service(object):
         return self._symbol_image
 
 
-class ExtraService(object):
+class ExtraService:
     def __init__(self, number: int, code: str, name: str):
         if not number:
             raise InvalidExtraServiceException("Invalid Extra Service Number {!r}".format(number))
@@ -199,7 +199,7 @@ class ExtraService(object):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
 
 
-class Contract(object):
+class Contract:
     def __init__(self,
                  number: Union[int, str],
                  customer_code: int,
@@ -232,7 +232,7 @@ class Contract(object):
         self.posting_cards.append(posting_card)
 
 
-class PostingCard(object):
+class PostingCard:
     ACTIVE = True
     CANCELLED = False
 
@@ -277,7 +277,7 @@ class PostingCard(object):
         return self.contract.number
 
 
-class User(object):
+class User:
     def __init__(self,
                  name: str,
                  federal_tax_number: Union[str, FederalTaxNumber],

@@ -218,6 +218,7 @@ def test_basic_service(datetime_object):
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
     assert isinstance(service.symbol_image, image.Image)
 
+
 def test_sanitize_service():
     service = Service(
         id=104707,
