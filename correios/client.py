@@ -61,7 +61,7 @@ class ModelBuilder:
         contract = Contract(
             number=contract_data.contratoPK.numero,
             customer_code=contract_data.codigoCliente,
-            direction=contract_data.codigoDiretoria,
+            regional_direction=contract_data.codigoDiretoria,
             status_code=contract_data.statusCodigo,
             start_date=contract_data.dataVigenciaInicio,
             end_date=contract_data.dataVigenciaFim,
@@ -135,7 +135,7 @@ class PostingListSerializer:
 
         sender_info = xml_utils.Element("remetente")
         xml_utils.SubElement(sender_info, "numero_contrato", text=str(contract.number))
-        xml_utils.SubElement(sender_info, "diretoria", text=str(contract.direction_number))
+        xml_utils.SubElement(sender_info, "diretoria", text=str(contract.regional_direction_number))
         xml_utils.SubElement(sender_info, "codigo_administrativo", text=str(posting_card.administrative_code))
         xml_utils.SubElement(sender_info, "nome_remetente", cdata=sender.name)
         xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=sender.street)

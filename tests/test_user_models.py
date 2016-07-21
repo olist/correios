@@ -22,9 +22,10 @@ from PIL import Image as image
 import pytest
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError
-from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN
-from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService
+from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN, DIRECTIONS
+from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract,
+                                  PostingCard, Service, ExtraService, RegionalDirection)
 
 
 def test_basic_federal_tax_number_tax_number():
@@ -116,7 +117,7 @@ def test_basic_contract(datetime_object):
     contract = Contract(
         number=9912208555,
         customer_code=279311,
-        direction=10,
+        regional_direction=10,
         status_code="A",
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
@@ -124,7 +125,7 @@ def test_basic_contract(datetime_object):
 
     assert contract.number == 9912208555
     assert contract.customer_code == 279311
-    assert contract.direction.number == 10
+    assert contract.regional_direction.number == 10
     assert contract.status_code == "A"
     assert contract.start_date == datetime_object
     assert contract.end_date == datetime_object + timedelta(days=5)
@@ -135,13 +136,13 @@ def test_sanitize_contract_data():
     contract = Contract(
         number="9912208555  ",
         customer_code=279311,
-        direction="   10",
+        regional_direction="   10",
         status_code="A",
         start_date="2014-05-09 00:00:00-03:00",
         end_date="2018-05-16 00:00:00-03:00",
     )
     assert contract.number == 9912208555
-    assert contract.direction.number == 10
+    assert contract.regional_direction.number == 10
     assert contract.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
     assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
 
@@ -168,7 +169,6 @@ def test_basic_posting_card(contract, datetime_object):
     assert posting_card.get_contract_number() == 9912208555
     assert str(posting_card) == "0057018901"
     assert repr(posting_card) == "<PostingCard number='0057018901', contract=9912208555>"
-
 
 
 def test_sanitize_posting_card_data(contract):
@@ -254,6 +254,7 @@ def test_extra_service_sanitize_code():
 @pytest.mark.parametrize("number,code,name", (
         (0, "XY", "Invalid Number"),
         (1, "XYZ", "Invalid Code"),
+        (1, "", "Invalid Code"),
         (1, "XY", ""),  # Invalid Name
 ))
 def test_fail_extra_service_invalid_data(number, code, name):
@@ -279,3 +280,41 @@ def test_fail_get_unknown_service():
 ))
 def test_extra_service_getter(number_or_code, extra_service):
     assert ExtraService.get(number_or_code) == extra_service
+
+
+def test_basic_regional_direction():
+    regional_direction = RegionalDirection(1, "AC", "AC - ADMINISTRAÇAO CENTRAL")
+    assert regional_direction.number == 1
+    assert regional_direction.code == "AC"
+    assert regional_direction.name == "AC - ADMINISTRAÇAO CENTRAL"
+    assert repr(regional_direction) == "<RegionalDirection number=1, code='AC'>"
+
+
+def test_regional_direction_sanitize_code():
+    regional_direction = RegionalDirection(1, "ac", "AC - ADMINISTRAÇAO CENTRAL")
+    assert regional_direction.code == "AC"
+
+
+@pytest.mark.parametrize("number,code,name", (
+        (0, "XY", "Invalid Number"),
+        (1, "", "Invalid Code"),
+        (1, "XY", ""),  # Invalid Name
+))
+def test_fail_regional_direction_invalid_data(number, code, name):
+    with pytest.raises(InvalidRegionalDirectionError):
+        RegionalDirection(number, code, name)
+
+
+def test_fail_get_unknown_regional_direction():
+    with pytest.raises(InvalidRegionalDirectionError):
+        RegionalDirection.get("00")
+
+
+@pytest.mark.parametrize("number_or_code,regional_direction", (
+        ("AC", DIRECTIONS[1]),
+        ("ACR", DIRECTIONS[3]),
+        ("al", DIRECTIONS[4]),
+        (DIRECTIONS[1], DIRECTIONS[1]),
+))
+def test_regional_direction_getter(number_or_code, regional_direction):
+    assert RegionalDirection.get(number_or_code) == regional_direction

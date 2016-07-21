@@ -61,7 +61,7 @@ class PostingListError(ModelError):
     pass
 
 
-class InvalidDirectionError(ModelError):
+class InvalidRegionalDirectionError(ModelError):
     pass
 
 

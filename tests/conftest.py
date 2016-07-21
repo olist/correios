@@ -53,7 +53,7 @@ class ContractFactory(factory.Factory):
 
     number = 9912208555
     customer_code = 279311
-    direction = 10
+    regional_direction = 10
     status_code = "A"
     start_date = factory.LazyFunction(datetime.utcnow)
     end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))

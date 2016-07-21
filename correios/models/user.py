@@ -20,7 +20,7 @@ from typing import List, Union, Optional, Sequence
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidDirectionError
+from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -202,7 +202,7 @@ class Contract:
     def __init__(self,
                  number: Union[int, str],
                  customer_code: int,
-                 direction: Union[str, int, 'Direction'],
+                 regional_direction: Union[str, int, 'RegionalDirection'],
                  status_code: str,
                  start_date: Union[datetime, str],
                  end_date: Union[datetime, str],
@@ -211,13 +211,13 @@ class Contract:
         self.number = _to_integer(number)
         self.customer_code = customer_code
 
-        if isinstance(direction, str):
-            direction = int(direction)
+        if isinstance(regional_direction, str):
+            regional_direction = int(regional_direction)
 
-        if isinstance(direction, int):
-            direction = Direction.get(direction)
+        if isinstance(regional_direction, int):
+            regional_direction = RegionalDirection.get(regional_direction)
 
-        self.direction = direction
+        self.regional_direction = regional_direction
 
         self.status_code = status_code
 
@@ -237,8 +237,8 @@ class Contract:
         self.posting_cards.append(posting_card)
 
     @property
-    def direction_number(self):
-        return self.direction.number
+    def regional_direction_number(self):
+        return self.regional_direction.number
 
     def __str__(self):
         return str(self.number)
@@ -318,32 +318,34 @@ class User:
         self.contracts = contracts
 
 
-class Direction:
+class RegionalDirection:
     def __init__(self, number: int, code: str, name: str):
         if not number:
-            raise InvalidDirectionError("Invalid direction number {!r}".format(number))
+            raise InvalidRegionalDirectionError("Invalid regional direction number {!r}".format(number))
 
         if not code:
-            raise InvalidDirectionError("Invalid direction code {!r}".format(code))
+            raise InvalidRegionalDirectionError("Invalid regional direction code {!r}".format(code))
 
         if not name:
-            raise InvalidDirectionError("Invalid direction name {!r}".format(name))
+            raise InvalidRegionalDirectionError("Invalid regional direction name {!r}".format(name))
 
         self.number = _to_integer(number)
         self.code = code.upper()
         self.name = name
 
     @classmethod
-    def get(cls, search_direction: Union[str, int]):
-        if isinstance(search_direction, cls):
-            return search_direction
+    def get(cls, search_regional_direction: Union[str, int]):
+        if isinstance(search_regional_direction, cls):
+            return search_regional_direction
 
         from .data import DIRECTIONS_LIST
-        for direction in DIRECTIONS_LIST:
-            if direction.number == search_direction or direction.code == search_direction:
-                return direction
+        for regional_direction in DIRECTIONS_LIST:
+            if isinstance(search_regional_direction, str) and regional_direction.code == search_regional_direction.upper():
+                return regional_direction
+            if regional_direction.number == search_regional_direction:
+                return regional_direction
         else:
-            raise InvalidDirectionError("Unknown direction {!r}".format(search_direction))
+            raise InvalidRegionalDirectionError("Unknown direction {!r}".format(search_regional_direction))
 
     def __repr__(self):
-        return "<Direction number={!r}, code={!r}>".format(self.number, self.code)
+        return "<RegionalDirection number={!r}, code={!r}>".format(self.number, self.code)
