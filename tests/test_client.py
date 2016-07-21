@@ -100,7 +100,8 @@ def test_posting_list_xml_serializer(posting_list, shipping_label):
     serializer = PostingListSerializer(posting_list)
     xml = serializer.get_xml(validate=False)
 
-    with open("/Users/osantana/plp.xml", "wb") as f:
-        f.write(xml)
+    # TODO
+    # with open("/Users/osantana/plp.xml", "wb") as f:
+    #     f.write(xml)
 
     assert len(xml)
