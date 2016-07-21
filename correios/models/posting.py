@@ -17,12 +17,11 @@ import os
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
-# noinspection PyPep8Naming
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesException, InvalidVolumeInformation,
-                                 InvalidTrackingCode, PostingListError)
+from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
+                                 InvalidTrackingCodeError, PostingListError)
 from .address import Address
 from .data import SERVICES
 from .user import Service, ExtraService, PostingCard
@@ -47,16 +46,16 @@ class TrackingCode:
 
     def _validate(self):
         if len(self.prefix) != TRACKING_CODE_PREFIX_SIZE or not self.prefix.isalpha():
-            raise InvalidTrackingCode("Invalid tracking code prefix {}".format(self.prefix))
+            raise InvalidTrackingCodeError("Invalid tracking code prefix {}".format(self.prefix))
 
         if len(self.suffix) != TRACKING_CODE_SUFFIX_SIZE or not self.suffix.isalpha():
-            raise InvalidTrackingCode("Invalid tracking code suffix {}".format(self.suffix))
+            raise InvalidTrackingCodeError("Invalid tracking code suffix {}".format(self.suffix))
 
         if len(self.number) != TRACKING_CODE_NUMBER_SIZE or not self.number.isnumeric():
-            raise InvalidTrackingCode("Invalid tracking code number {}".format(self.number))
+            raise InvalidTrackingCodeError("Invalid tracking code number {}".format(self.number))
 
         if self._digit is not None and self._digit != self.calculate_digit(self.number):
-            raise InvalidTrackingCode("Invalid tracking code number {} or digit {} (must be {})".format(
+            raise InvalidTrackingCodeError("Invalid tracking code number {} or digit {} (must be {})".format(
                 self.number,
                 self._digit,
                 self.calculate_digit(self.number))
@@ -146,7 +145,7 @@ class ShippingLabel:
         self.posting_card = posting_card
 
         if sender == receiver:
-            raise InvalidAddressesException("Sender and receiver cannot be the same")
+            raise InvalidAddressesError("Sender and receiver cannot be the same")
 
         self.sender = sender
         self.receiver = receiver
@@ -180,7 +179,7 @@ class ShippingLabel:
         self.value = value
 
         if len(volume) != 2:
-            raise InvalidVolumeInformation("Volume must be a tuple with 2 elements: (number, total)")
+            raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
 
         self.volume = volume
         self.weight = weight
@@ -195,6 +194,10 @@ class ShippingLabel:
     @property
     def symbol(self):
         return self.service.symbol_image
+
+    @property
+    def contract(self):
+        return self.posting_card.contract
 
     def get_order(self):
         return self.order_template.format(self.order)
@@ -259,19 +262,35 @@ class ShippingLabel:
 
 class PostingList:
     def __init__(self,
-                 customer_id: int):
-        self.customer_id = customer_id
-        self.closed = False
+                 id_: int):
+        self.id = id_
+        self.initial_shipping_label = None
         self.shipping_labels = {}
 
+        # filled by the first shipping label
+        self.closed = False
+        self.posting_card = None
+        self.contract = None
+        self.sender = None
+
     def add_shipping_label(self, shipping_label: ShippingLabel):
+        if not self.initial_shipping_label:
+            self.initial_shipping_label = shipping_label
+            self.posting_card = shipping_label.posting_card
+            self.contract = shipping_label.contract
+            self.sender = shipping_label.sender
+
         if shipping_label.tracking_code in self.shipping_labels:
             raise PostingListError("Shipping label {!r} alread in posting list".format(shipping_label))
+
+        if shipping_label.posting_card != self.posting_card:
+            raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,
+                                                                           self.posting_card))
 
         self.shipping_labels[shipping_label.tracking_code] = shipping_label
 
     def get_tracking_codes(self):
-        return []  # TODO
+        return list(self.shipping_labels.keys())
 
     def close(self):
         self.closed = True

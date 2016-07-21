@@ -15,19 +15,27 @@
 from functools import wraps
 
 from lxml import etree
-# noinspection PyUnresolvedReferences
-from lxml.etree import tostring, parse, XMLSchema
 
 
 def add_text_argument(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         text = kwargs.pop("text", None)
+        cdata = kwargs.pop("cdata", None)
         element = f(*args, **kwargs)
-        element.text = text
+        if cdata:
+            element.text = etree.CDATA(cdata)
+        elif text:
+            element.text = text
+        else:
+            element.text = None
         return element
 
     return wrapper
 
+
 Element = add_text_argument(etree.Element)
 SubElement = add_text_argument(etree.SubElement)
+tostring = etree.tostring
+parse = etree.parse
+XMLSchema = etree.XMLSchema

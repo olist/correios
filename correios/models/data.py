@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from .user import Service, ExtraService
+from .user import Service, ExtraService, Direction
 
 TRACKING_PREFIX = {
     "AL": "Agentes de leitura",
@@ -250,7 +250,7 @@ TRACKING_PREFIX = {
     "XX": "Encomenda SUR Postal 24 horas",
 }
 
-EXTRA_SERVICES_LIST = [
+EXTRA_SERVICES_LIST = {
     ExtraService(1, "AR", "Aviso de Recebimento"),
     ExtraService(2, "MP", "Mão Própria Nacional"),
     ExtraService(19, "VD", "Valor Declarado (Encomendas)"),
@@ -260,7 +260,7 @@ EXTRA_SERVICES_LIST = [
     ExtraService(57, "??", "Taxa de Entrega de Encomenda Despadronizada"),
     ExtraService(67, "??", "Logística Reversa Simultânea Domiciliária"),
     ExtraService(69, "??", "Logística Reversa Simultânea em Agência"),
-]
+}
 
 EXTRA_SERVICES = {s.number: s for s in EXTRA_SERVICES_LIST}
 EXTRA_SERVICE_AR = EXTRA_SERVICES[1]
@@ -268,7 +268,7 @@ EXTRA_SERVICE_MP = EXTRA_SERVICES[2]
 EXTRA_SERVICE_VD = EXTRA_SERVICES[19]
 EXTRA_SERVICE_RN = EXTRA_SERVICES[25]
 
-SERVICE_LIST = [
+SERVICE_LIST = (
     Service(id=104707, code=40215, display_name='SEDEX 10',
             description='SEDEX 10', category='SERVICO_COM_RESTRICAO', postal_code=244, symbol="premium",
             default_extra_services=[EXTRA_SERVICE_RN]),
@@ -322,7 +322,7 @@ SERVICE_LIST = [
             description='SERVICO DE PROTOCOLO POSTAL -', category='SEDEX', postal_code=263),
     Service(id=109480, code=10065, display_name='Carta Comercial',
             description='CARTA COMERCIAL A FATURAR', category='CARTA_REGISTRADA', postal_code=275)
-]
+)
 
 SERVICES = {s.code: s for s in SERVICE_LIST}
 SERVICE_PAC = SERVICES[41068]
@@ -330,3 +330,38 @@ SERVICE_SEDEX = SERVICES[40096]
 SERVICE_SEDEX10 = SERVICES[40215]
 SERVICE_SEDEX12 = SERVICES[40169]
 SERVICE_E_SEDEX = SERVICES[81019]
+
+
+DIRECTIONS_LIST = (
+    Direction(1, "AC", "AC - ADMINISTRAÇAO CENTRAL"),
+    Direction(3, "ACR", "DR – ACRE"),
+    Direction(4, "AL", "DR – ALAGOAS"),
+    Direction(6, "AM", "DR – AMAZONAS"),
+    Direction(5, "AP", "DR – AMAPÁ"),
+    Direction(8, "BA", "DR – BAHIA"),
+    Direction(10, "BSB", "DR – BRASÍLIA"),
+    Direction(12, "CE", "DR – CEARÁ"),
+    Direction(14, "ES", "DR - ESPIRITO SANTO"),
+    Direction(16, "GO", "DR – GOIÁS"),
+    Direction(18, "MA", "DR – MARANHÃO"),
+    Direction(20, "MG", "DR - MINAS GERAIS"),
+    Direction(22, "MS", "DR - MATO GROSSO DO SUL"),
+    Direction(24, "MT", "DR - MATO GROSSO"),
+    Direction(28, "PA", "DR – PARÁ"),
+    Direction(30, "PB", "DR – PARAÍBA"),
+    Direction(32, "PE", "DR – PERNAMBUCO"),
+    Direction(34, "PI", "DR – PIAUÍ"),
+    Direction(36, "PR", "DR – PARANÁ"),
+    Direction(50, "RJ", "DR - RIO DE JANEIRO"),
+    Direction(60, "RN", "DR - RIO GRANDE DO NORTE"),
+    Direction(26, "RO", "DR – RONDONIA"),
+    Direction(65, "RR", "DR – RORAIMA"),
+    Direction(64, "RS", "DR - RIO GRANDE DO SUL"),
+    Direction(68, "SC", "DR - SANTA CATARINA"),
+    Direction(70, "SE", "DR – SERGIPE"),
+    Direction(74, "SPI", "DR - SÃO PAULO INTERIOR"),
+    Direction(72, "SPM", "DR - SÃO PAULO"),
+    Direction(75, "TO", "DR - TOCANTINS"),
+)
+
+DIRECTIONS = {d.number: d for d in DIRECTIONS_LIST}

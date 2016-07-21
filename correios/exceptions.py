@@ -13,53 +13,61 @@
 # limitations under the License.
 
 
-class BaseCorreiosException(Exception):
+class BaseCorreiosError(Exception):
     pass
 
 
-class ModelException(BaseCorreiosException):
+class ModelError(BaseCorreiosError):
     pass
 
 
-class ClientException(BaseCorreiosException):
+class ClientError(BaseCorreiosError):
     pass
 
 
-class InvalidZipCodeException(ModelException):
+class InvalidZipCodeError(ModelError):
     pass
 
 
-class InvalidStateException(ModelException):
+class InvalidStateError(ModelError):
     pass
 
 
-class InvalidFederalTaxNumberException(ModelException):
+class InvalidFederalTaxNumberError(ModelError):
     pass
 
 
-class InvalidStateTaxNumberException(ModelException):
+class InvalidStateTaxNumberError(ModelError):
     pass
 
 
-class InvalidTrackingCode(ModelException):
+class InvalidTrackingCodeError(ModelError):
     pass
 
 
-class InvalidAddressesException(ModelException):
+class InvalidAddressesError(ModelError):
     pass
 
 
-class InvalidVolumeInformation(ModelException):
+class InvalidVolumeInformationError(ModelError):
     pass
 
 
-class InvalidExtraServiceException(ModelException):
+class InvalidExtraServiceError(ModelError):
     pass
 
 
-class PostingListError(ModelException):
+class PostingListError(ModelError):
     pass
 
 
-class PostingListClosingError(ClientException):
+class InvalidDirectionError(ModelError):
+    pass
+
+
+class PostingListClosingError(ClientError):
+    pass
+
+
+class PostingListSerializerError(ClientError):
     pass
