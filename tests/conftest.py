@@ -18,8 +18,9 @@ import factory
 import pytest
 from pytest_factoryboy import register
 
+from correios.models import data
 from correios.models.address import Address
-from correios.models.data import SERVICE_SEDEX, TRACKING_PREFIX
+from correios.models.data import TRACKING_PREFIX
 from correios.models.posting import TrackingCode, ShippingLabel, PostingList
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
@@ -117,6 +118,13 @@ register(AddressFactory, "address")
 register(AddressFactory, "sender_address")
 register(AddressFactory, "receiver_address")
 
+_services = [
+    data.SERVICE_PAC,
+    data.SERVICE_SEDEX,
+    data.SERVICE_SEDEX10,
+    data.SERVICE_SEDEX12,
+]
+
 
 class ShippingLabelFactory(factory.Factory):
     class Meta:
@@ -125,19 +133,15 @@ class ShippingLabelFactory(factory.Factory):
     posting_card = factory.SubFactory(PostingCardFactory)
     sender = factory.LazyFunction(AddressFactory.build)
     receiver = factory.LazyFunction(AddressFactory.build)
-    service = SERVICE_SEDEX
+    service = factory.LazyFunction(lambda: random.choice(_services))
     tracking_code = factory.SubFactory(TrackingCodeFactory)
-    invoice = factory.Sequence(lambda n: "1234{!s}".format(n + 1))
-    order = factory.Sequence(lambda n: "OLT123ABC{!s}".format(n + 5))
-    weight = 500  # g
-    text = factory.Faker("text", max_nb_chars=20)
+    invoice = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
+    order = factory.LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
+    weight = factory.LazyFunction(lambda: random.randint(1, 15) * 100)
+    text = factory.Faker("text", max_nb_chars=100)
 
 
-register(ShippingLabelFactory, "shipping_label1")
-register(ShippingLabelFactory, "shipping_label2")
-register(ShippingLabelFactory, "shipping_label3")
-register(ShippingLabelFactory, "shipping_label4")
-register(ShippingLabelFactory, "shipping_label5")
+register(ShippingLabelFactory, "shipping_label")
 
 
 class PostingListFactory(factory.Factory):

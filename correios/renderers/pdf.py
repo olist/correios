@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-from typing import BinaryIO
 from io import BytesIO
+from typing import BinaryIO
 
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib import colors, pagesizes
@@ -26,7 +26,6 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Paragraph
 
 from correios.models.posting import ShippingLabel
-
 
 VERTICAL_SECURITY_MARGIN = 6  # pt
 
@@ -96,9 +95,9 @@ class ShippingLabelFlowable(Flowable):
         canvas.setFont("Helvetica-Bold", 10)
         canvas.drawCentredString(self.x1 + 42.5 * mm, self.y2 - 40 * mm,
                                  self.shipping_label.get_tracking_code())
-        code = createBarcodeDrawing("Code128", value=self.shipping_label.get_tracking_code(),
-                                    width=95 * mm, height=18 * mm)
-        code.drawOn(canvas, 0, self.y2 - (59 * mm))  # Code 128 already include horizontal margins
+        code = createBarcodeDrawing("Code128", value=str(self.shipping_label.tracking_code),
+                                    width=75 * mm, height=18 * mm, quiet=0)
+        code.drawOn(canvas, 10 * mm, self.y2 - (59 * mm))  # Code 128 already include horizontal margins
 
         # extra services (first three)
         first_row = self.y2 - (40 * mm) - 10  # font-size=10pt
@@ -206,4 +205,5 @@ class ShippingLabelsPDFRenderer:
             self.canvas.showPage()
 
         self.canvas.save()
+        self.file.seek(0)
         return self.file

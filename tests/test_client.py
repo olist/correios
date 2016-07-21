@@ -82,7 +82,7 @@ def test_request_tracking_codes(default_user):
 
 
 @vcr.use_cassette
-def test_generate_verification_digit(default_user):
+def test_generate_verification_digit():
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     result = client.generate_verification_digit(["DL74668653 BR"])
     assert result[0] == 6
@@ -97,4 +97,5 @@ def test_builder_posting_card_status():
 def test_posting_list_xml_serializer(posting_list):
     serializer = PostingListSerializer(posting_list)
     document = serializer.get_document()
-    assert document
+    # TODO
+    assert len(document)

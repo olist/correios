@@ -153,11 +153,11 @@ def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_ad
                       volume=(1,))  # invalid tuple
 
 
-def test_basic_posting_list(shipping_label1):
+def test_basic_posting_list(shipping_label):
     posting_list = PostingList(
         customer_id=12345,
     )
-    posting_list.add_shipping_label(shipping_label1)
+    posting_list.add_shipping_label(shipping_label)
 
     assert posting_list.customer_id == 12345
     assert not posting_list.closed
