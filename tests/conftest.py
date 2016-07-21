@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
 import random
 from datetime import datetime, timedelta
 
@@ -51,8 +53,7 @@ class ContractFactory(factory.Factory):
 
     number = 9912208555
     customer_code = 279311
-    direction_code = 10
-    direction = "DR - BRASÍLIA"
+    direction = 10
     status_code = "A"
     start_date = factory.LazyFunction(datetime.utcnow)
     end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))
@@ -148,7 +149,7 @@ class PostingListFactory(factory.Factory):
     class Meta:
         model = PostingList
 
-    customer_id = factory.Sequence(lambda n: n)
+    id_ = factory.Sequence(lambda n: n)
 
 
-register(PostingCardFactory, "posting_list")
+register(PostingListFactory, "posting_list")

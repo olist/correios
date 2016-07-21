@@ -11,11 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+
 import os
 from typing import Union, Sequence
 
 from correios import xml_utils, DATADIR
-from correios.exceptions import PostingListClosingError
+from correios.exceptions import PostingListClosingError, PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import TrackingCode, PostingList
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
@@ -59,8 +61,7 @@ class ModelBuilder:
         contract = Contract(
             number=contract_data.contratoPK.numero,
             customer_code=contract_data.codigoCliente,
-            direction_code=contract_data.codigoDiretoria,
-            direction=contract_data.descricaoDiretoriaRegional,
+            direction=contract_data.codigoDiretoria,
             status_code=contract_data.statusCodigo,
             start_date=contract_data.dataVigenciaInicio,
             end_date=contract_data.dataVigenciaFim,
@@ -112,20 +113,73 @@ class PostingListSerializer:
     def __init__(self, posting_list: PostingList):
         self.posting_list = posting_list
 
-    def validate(self):
+    def _validate(self, xml):
         with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
             document = xml_utils.parse(xsd)
         schema = xml_utils.XMLSchema(document)
-        return schema.validate(self.posting_list)
+        return schema.validate(xml)
 
-    def get_document(self):
+    def _get_posting_list_element(self):
+        posting_list = xml_utils.Element("plp")
+        xml_utils.SubElement(posting_list, "id_plp")
+        xml_utils.SubElement(posting_list, "valor_global")
+        xml_utils.SubElement(posting_list, "mcu_unidade_postagem")
+        xml_utils.SubElement(posting_list, "nome_unidade_postagem")
+        xml_utils.SubElement(posting_list, "cartao_postagem", text=str(self.posting_list.posting_card))
+        return posting_list
+
+    def _get_sender_info_element(self):
+        sender = self.posting_list.sender
+        posting_card = self.posting_list.posting_card
+        contract = self.posting_list.contract
+
+        sender_info = xml_utils.Element("remetente")
+        xml_utils.SubElement(sender_info, "numero_contrato", text=str(contract.number))
+        xml_utils.SubElement(sender_info, "diretoria", text=str(contract.direction_number))
+        xml_utils.SubElement(sender_info, "codigo_administrativo", text=str(posting_card.administrative_code))
+        xml_utils.SubElement(sender_info, "nome_remetente", cdata=sender.name)
+        xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=sender.street)
+        xml_utils.SubElement(sender_info, "numero_remetente", cdata=sender.number)
+        xml_utils.SubElement(sender_info, "complemento_remetente", cdata=sender.complement)
+        xml_utils.SubElement(sender_info, "bairro_remetente", cdata=sender.neighborhood)
+        xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
+        xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city))
+        xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
+        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=str(sender.phone))
+        xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
+        xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
+        return sender_info
+
+    def _get_shipping_label_element(self, shipping_label):
+        item = xml_utils.Element("objeto_postal")
+        xml_utils.SubElement(item, "numero_etiqueta", text=str(shipping_label.tracking_code))
+        xml_utils.SubElement(item, "codigo_objeto_cliente")
+        return item
+
+    def get_document(self, validate=True):
+        if not self.posting_list.shipping_labels:
+            raise PostingListSerializerError("Cannot serialize an empty posting list")
+
+        if self.posting_list.closed:
+            raise PostingListSerializerError("Cannot serialize a closed posting list")
+
         root = xml_utils.Element("correioslog")
         root.append(xml_utils.Element("tipo_arquivo", text="Postagem"))
         root.append(xml_utils.Element("versao_arquivo", text="2.3"))
+        root.append(self._get_posting_list_element())
+        root.append(self._get_sender_info_element())
+        root.append(xml_utils.Element("forma_pagamento"))
+
+        for shipping_label in self.posting_list.shipping_labels.values():
+            root.append(self._get_shipping_label_element(shipping_label))
+
+        if validate and not self._validate(root):
+            raise PostingListSerializerError("Invalid posting list XML object")
+
         return root
 
-    def get_xml(self) -> bytes:
-        return xml_utils.tostring(self.get_document())
+    def get_xml(self, validate=True) -> bytes:
+        return xml_utils.tostring(self.get_document(validate=validate))
 
 
 class Correios:
@@ -203,11 +257,11 @@ class Correios:
         label_list = posting_list.get_tracking_codes()
         customer_id = self._auth_call("fechaPlpVariosServicos",
                                       posting_list_serializer.get_xml(),
-                                      posting_list.customer_id, posting_card.number,
+                                      posting_list.id, posting_card.number,
                                       label_list)
-        if customer_id != posting_list.customer_id:
+        if customer_id != posting_list.id:
             raise PostingListClosingError("Returned customer id ({!r}) does not match "
-                                          "requested ({!r})".format(customer_id, posting_list.customer_id))
+                                          "requested ({!r})".format(customer_id, posting_list.id))
 
         posting_list.close()
         return posting_list

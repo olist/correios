@@ -17,7 +17,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.exceptions import InvalidZipCodeException, InvalidStateException
+from correios.exceptions import InvalidZipCodeError, InvalidStateError
 from correios.models.address import ZipCode, State, Address, Phone
 
 
@@ -32,10 +32,10 @@ def test_sanitize_zip():
 
 
 def test_fail_invalid_zip():
-    with pytest.raises(InvalidZipCodeException):
+    with pytest.raises(InvalidZipCodeError):
         ZipCode("12345")
 
-    with pytest.raises(InvalidZipCodeException):
+    with pytest.raises(InvalidZipCodeError):
         ZipCode("123456789")
 
 
@@ -116,10 +116,10 @@ def test_lowercase_state_name(state):
 
 
 def test_fail_invalid_state():
-    with pytest.raises(InvalidStateException):
+    with pytest.raises(InvalidStateError):
         State("XY")
 
-    with pytest.raises(InvalidStateException):
+    with pytest.raises(InvalidStateError):
         State("Unknown State")
 
 

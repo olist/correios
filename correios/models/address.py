@@ -18,7 +18,7 @@ from typing import List, Union
 
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
-from correios.exceptions import InvalidZipCodeException, InvalidStateException
+from correios.exceptions import InvalidZipCodeError, InvalidStateError
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -36,7 +36,7 @@ class ZipCode:
         code = "".join(d for d in code if d.isdigit())
 
         if len(code) != ZIP_CODE_LENGTH:
-            raise InvalidZipCodeException("ZipCode code must have 8 digits")
+            raise InvalidZipCodeError("ZipCode code must have 8 digits")
 
         return code
 
@@ -105,7 +105,7 @@ class State:
         state = state.upper()
 
         if len(state) != STATE_LENGTH or state not in self.STATES:
-            raise InvalidStateException("State code {} is invalid".format(state))
+            raise InvalidStateError("State code {} is invalid".format(state))
 
         return state
 

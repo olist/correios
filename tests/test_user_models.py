@@ -22,7 +22,7 @@ from PIL import Image as image
 import pytest
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberException, InvalidExtraServiceException
+from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN
 from correios.models.user import FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService
 
@@ -44,13 +44,13 @@ def test_compare_federal_tax_number_with_string():
 
 
 def test_fail_invalid_federal_tax_number():
-    with pytest.raises(InvalidFederalTaxNumberException):
+    with pytest.raises(InvalidFederalTaxNumberError):
         FederalTaxNumber("1234567890123")
 
-    with pytest.raises(InvalidFederalTaxNumberException):
+    with pytest.raises(InvalidFederalTaxNumberError):
         FederalTaxNumber("123456789012345")
 
-    with pytest.raises(InvalidFederalTaxNumberException):
+    with pytest.raises(InvalidFederalTaxNumberError):
         FederalTaxNumber("73119555000199")  # invalid verification digit
 
 
@@ -116,8 +116,7 @@ def test_basic_contract(datetime_object):
     contract = Contract(
         number=9912208555,
         customer_code=279311,
-        direction_code=10,
-        direction="DR - BRASÍLIA",
+        direction=10,
         status_code="A",
         start_date=datetime_object,
         end_date=datetime_object + timedelta(days=5),
@@ -125,8 +124,7 @@ def test_basic_contract(datetime_object):
 
     assert contract.number == 9912208555
     assert contract.customer_code == 279311
-    assert contract.direction_code == 10
-    assert contract.direction == "DR - BRASÍLIA"
+    assert contract.direction.number == 10
     assert contract.status_code == "A"
     assert contract.start_date == datetime_object
     assert contract.end_date == datetime_object + timedelta(days=5)
@@ -137,15 +135,13 @@ def test_sanitize_contract_data():
     contract = Contract(
         number="9912208555  ",
         customer_code=279311,
-        direction_code="   10",
-        direction="DR - BRASÍLIA                 ",
+        direction="   10",
         status_code="A",
         start_date="2014-05-09 00:00:00-03:00",
         end_date="2018-05-16 00:00:00-03:00",
     )
     assert contract.number == 9912208555
-    assert contract.direction_code == 10
-    assert contract.direction == "DR - BRASÍLIA"
+    assert contract.direction.number == 10
     assert contract.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
     assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
 
@@ -170,6 +166,9 @@ def test_basic_posting_card(contract, datetime_object):
     assert posting_card.status_code == "I"
     assert posting_card.unit == 8
     assert posting_card.get_contract_number() == 9912208555
+    assert str(posting_card) == "0057018901"
+    assert repr(posting_card) == "<PostingCard number='0057018901', contract=9912208555>"
+
 
 
 def test_sanitize_posting_card_data(contract):
@@ -258,12 +257,12 @@ def test_extra_service_sanitize_code():
         (1, "XY", ""),  # Invalid Name
 ))
 def test_fail_extra_service_invalid_data(number, code, name):
-    with pytest.raises(InvalidExtraServiceException):
+    with pytest.raises(InvalidExtraServiceError):
         ExtraService(number, code, name)
 
 
 def test_fail_get_unknown_service():
-    with pytest.raises(InvalidExtraServiceException):
+    with pytest.raises(InvalidExtraServiceError):
         ExtraService.get("00")
 
 

@@ -179,7 +179,7 @@ class ShippingLabelsPDFRenderer:
             (self.hmargin + self.col_size, self.vmargin),
         )
 
-    def add_shipping_label(self, shipping_label):
+    def add_shipping_label(self, shipping_label: ShippingLabel):
         label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
         self.labels.append(label)
 

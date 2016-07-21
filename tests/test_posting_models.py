@@ -21,7 +21,7 @@ import pytest
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesException, InvalidTrackingCode, InvalidVolumeInformation
+from correios.exceptions import InvalidAddressesError, InvalidTrackingCodeError, InvalidVolumeInformationError
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList
 
@@ -55,7 +55,7 @@ def test_tracking_code_constructor(tracking_code):
     "DL46686530 B1",
 ])
 def test_fail_invalid_tracking_code(tracking_code):
-    with pytest.raises(InvalidTrackingCode):
+    with pytest.raises(InvalidTrackingCodeError):
         TrackingCode(tracking_code)
 
 
@@ -141,13 +141,13 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
 
 
 def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code):
-    with pytest.raises(InvalidAddressesException):
+    with pytest.raises(InvalidAddressesError):
         ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
                       tracking_code=tracking_code)
 
 
 def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_address, tracking_code):
-    with pytest.raises(InvalidVolumeInformation):
+    with pytest.raises(InvalidVolumeInformationError):
         # noinspection PyTypeChecker
         ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
                       volume=(1,))  # invalid tuple
@@ -155,10 +155,11 @@ def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_ad
 
 def test_basic_posting_list(shipping_label):
     posting_list = PostingList(
-        customer_id=12345,
+        id_=12345,
     )
     posting_list.add_shipping_label(shipping_label)
 
-    assert posting_list.customer_id == 12345
+    # TODO
+    assert posting_list.id == 12345
     assert not posting_list.closed
-    assert posting_list.get_tracking_codes() == []
+    assert posting_list.get_tracking_codes()

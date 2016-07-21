@@ -17,11 +17,10 @@ import os
 from datetime import datetime
 from typing import List, Union, Optional, Sequence
 
-# noinspection PyPep8Naming
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberException, InvalidExtraServiceException
+from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidDirectionError
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -103,11 +102,11 @@ class FederalTaxNumber(AbstractTaxNumber):
         raw_number = self._sanitize(raw_number)
 
         if len(raw_number) != FederalTaxNumber.FEDERAL_TAX_NUMBER_SIZE:
-            raise InvalidFederalTaxNumberException(
+            raise InvalidFederalTaxNumberError(
                 "Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
 
         if not self._check_verification_digits(raw_number):
-            raise InvalidFederalTaxNumberException("Invalid Federal Tax Number verification digits")
+            raise InvalidFederalTaxNumberError("Invalid Federal Tax Number verification digits")
 
         return raw_number
 
@@ -172,15 +171,15 @@ class Service:
 class ExtraService:
     def __init__(self, number: int, code: str, name: str):
         if not number:
-            raise InvalidExtraServiceException("Invalid Extra Service Number {!r}".format(number))
+            raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
         self.number = number
 
         if not code or len(code) != EXTRA_SERVICE_CODE_SIZE:
-            raise InvalidExtraServiceException("Invalid Extra Service Code {!r}".format(code))
+            raise InvalidExtraServiceError("Invalid Extra Service Code {!r}".format(code))
         self.code = code.upper()
 
         if not name:
-            raise InvalidExtraServiceException("Invalid Extra Service Name {!r}".format(name))
+            raise InvalidExtraServiceError("Invalid Extra Service Name {!r}".format(name))
         self.name = name
 
     @classmethod
@@ -193,7 +192,7 @@ class ExtraService:
             if extra_service.number == service or extra_service.code == service:
                 return extra_service
         else:
-            raise InvalidExtraServiceException("Unknown Service {!r}".format(service))
+            raise InvalidExtraServiceError("Unknown Service {!r}".format(service))
 
     def __repr__(self):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
@@ -203,8 +202,7 @@ class Contract:
     def __init__(self,
                  number: Union[int, str],
                  customer_code: int,
-                 direction_code: Union[int, str],
-                 direction: str,
+                 direction: Union[str, int, 'Direction'],
                  status_code: str,
                  start_date: Union[datetime, str],
                  end_date: Union[datetime, str],
@@ -212,9 +210,16 @@ class Contract:
 
         self.number = _to_integer(number)
         self.customer_code = customer_code
-        self.direction = direction.strip()
+
+        if isinstance(direction, str):
+            direction = int(direction)
+
+        if isinstance(direction, int):
+            direction = Direction.get(direction)
+
+        self.direction = direction
+
         self.status_code = status_code
-        self.direction_code = _to_integer(direction_code)
 
         if start_date is not None:
             start_date = _to_datetime(start_date)
@@ -230,6 +235,13 @@ class Contract:
 
     def add_posting_card(self, posting_card: 'PostingCard'):
         self.posting_cards.append(posting_card)
+
+    @property
+    def direction_number(self):
+        return self.direction.number
+
+    def __str__(self):
+        return str(self.number)
 
 
 class PostingCard:
@@ -276,6 +288,12 @@ class PostingCard:
     def get_contract_number(self):
         return self.contract.number
 
+    def __repr__(self):
+        return "<PostingCard number={!r}, contract={!r}>".format(self.number, self.get_contract_number())
+
+    def __str__(self):
+        return self.number
+
 
 class User:
     def __init__(self,
@@ -298,3 +316,34 @@ class User:
         if contracts is None:
             contracts = []
         self.contracts = contracts
+
+
+class Direction:
+    def __init__(self, number: int, code: str, name: str):
+        if not number:
+            raise InvalidDirectionError("Invalid direction number {!r}".format(number))
+
+        if not code:
+            raise InvalidDirectionError("Invalid direction code {!r}".format(code))
+
+        if not name:
+            raise InvalidDirectionError("Invalid direction name {!r}".format(name))
+
+        self.number = _to_integer(number)
+        self.code = code.upper()
+        self.name = name
+
+    @classmethod
+    def get(cls, search_direction: Union[str, int]):
+        if isinstance(search_direction, cls):
+            return search_direction
+
+        from .data import DIRECTIONS_LIST
+        for direction in DIRECTIONS_LIST:
+            if direction.number == search_direction or direction.code == search_direction:
+                return direction
+        else:
+            raise InvalidDirectionError("Unknown direction {!r}".format(search_direction))
+
+    def __repr__(self):
+        return "<Direction number={!r}, code={!r}>".format(self.number, self.code)

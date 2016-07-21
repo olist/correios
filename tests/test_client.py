@@ -94,8 +94,13 @@ def test_builder_posting_card_status():
     assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
 
 
-def test_posting_list_xml_serializer(posting_list):
+def test_posting_list_xml_serializer(posting_list, shipping_label):
+    posting_list.add_shipping_label(shipping_label)
+
     serializer = PostingListSerializer(posting_list)
-    document = serializer.get_document()
-    # TODO
-    assert len(document)
+    xml = serializer.get_xml(validate=False)
+
+    with open("/Users/osantana/plp.xml", "wb") as f:
+        f.write(xml)
+
+    assert len(xml)
