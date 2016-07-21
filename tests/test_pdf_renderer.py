@@ -15,40 +15,18 @@
 
 import os
 
-from correios.models.data import SERVICE_SEDEX, SERVICE_SEDEX10
-from correios.models.posting import ShippingLabel
 from correios.renderers.pdf import ShippingLabelsPDFRenderer
-from tests.conftest import AddressFactory
+from tests.conftest import ShippingLabelFactory
 
 TESTDIR = os.path.dirname(__file__)
 
 
-def test_render_basic_shipping_label(posting_card):
-    shipping_label1 = ShippingLabel(
-        posting_card=posting_card,
-        sender=AddressFactory(),
-        receiver=AddressFactory(),
-        service=SERVICE_SEDEX,
-        tracking_code="PD12345678BR",
-        invoice="123",
-        order="OLT123ABCDEF",
-        weight=50,
-        text="Obs: Este texto é opcional e pode ser usado como quiser."
-    )
-
-    shipping_label2 = ShippingLabel(
-        posting_card=posting_card,
-        sender=AddressFactory(),
-        receiver=AddressFactory(),
-        service=SERVICE_SEDEX10,
-        tracking_code="PD12345555BR",
-        invoice="654",
-        order="OLT123XXXXX",
-        weight=150,
-    )
-
+def test_render_basic_shipping_label():
     shipping_labels = ShippingLabelsPDFRenderer()
-    shipping_labels.add_shipping_label(shipping_label1)
-    shipping_labels.add_shipping_label(shipping_label2)
+    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
+    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
+    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
+    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
+    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
     pdf = shipping_labels.render()
     assert pdf.getvalue().startswith(b"%PDF-1.4")
