@@ -22,11 +22,22 @@ TESTDIR = os.path.dirname(__file__)
 
 
 def test_render_basic_shipping_label():
-    shipping_labels = ShippingLabelsPDFRenderer()
-    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
-    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
-    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
-    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
-    shipping_labels.add_shipping_label(ShippingLabelFactory.build())
-    pdf = shipping_labels.render()
+    shipping_labels_renderer = ShippingLabelsPDFRenderer()
+    shipping_labels = [ShippingLabelFactory.build() for _ in range(5)]
+
+    for sl in shipping_labels:
+        sl.weight_template = "Peso (g): <b>{!s}</b>"
+        sl.invoice_template = "NF: {!s}"
+        sl.order_template = "Ped.: <font size=6>{!s}</font>"
+        sl.contract_number_template = "Contrato: <b>{!s}</b>"
+        sl.service_name_template = "<b>{!s}</b>"
+        sl.volume_template = "Volume: {!s}/{!s}"
+        shipping_labels_renderer.add_shipping_label(sl)
+
+    pdf = shipping_labels_renderer.render()
+
+    with open("/home/osantana/correios.pdf", "wb") as f:
+        pdf.seek(0)
+        f.write(pdf.read())
+
     assert pdf.getvalue().startswith(b"%PDF-1.4")

@@ -17,6 +17,7 @@ import os
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
+# noinspection PyPep8Naming
 from PIL import Image as image
 
 from correios import DATADIR
@@ -281,7 +282,7 @@ class PostingList:
             self.sender = shipping_label.sender
 
         if shipping_label.tracking_code in self.shipping_labels:
-            raise PostingListError("Shipping label {!r} alread in posting list".format(shipping_label))
+            raise PostingListError("Shipping label {!r} already in posting list".format(shipping_label))
 
         if shipping_label.posting_card != self.posting_card:
             raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,

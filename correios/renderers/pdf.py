@@ -14,7 +14,6 @@
 
 
 from io import BytesIO
-from typing import BinaryIO
 
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib import colors, pagesizes
@@ -184,14 +183,14 @@ class ShippingLabelsPDFRenderer:
         self.labels.append(label)
 
     def draw_grid(self):
-        self.canvas.setLineWidth(0.1)
+        self.canvas.setLineWidth(0.2)
         self.canvas.setStrokeColor(colors.gray)
         self.canvas.line(self.hmargin, self.page_height / 2, self.width + self.hmargin,
                          self.page_height / 2)
         self.canvas.line(self.page_width / 2, self.vmargin, self.page_width / 2,
                          self.height + self.vmargin, )
 
-    def render(self) -> BinaryIO:
+    def render(self) -> BytesIO:
         pos = len(self._label_position) - 1
         for i, label in enumerate(self.labels):
             pos = i % len(self._label_position)

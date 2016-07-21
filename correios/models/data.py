@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from .user import Service, ExtraService, Direction
+from .user import Service, ExtraService, RegionalDirection
 
 TRACKING_PREFIX = {
     "AL": "Agentes de leitura",
@@ -333,35 +333,35 @@ SERVICE_E_SEDEX = SERVICES[81019]
 
 
 DIRECTIONS_LIST = (
-    Direction(1, "AC", "AC - ADMINISTRAÇAO CENTRAL"),
-    Direction(3, "ACR", "DR – ACRE"),
-    Direction(4, "AL", "DR – ALAGOAS"),
-    Direction(6, "AM", "DR – AMAZONAS"),
-    Direction(5, "AP", "DR – AMAPÁ"),
-    Direction(8, "BA", "DR – BAHIA"),
-    Direction(10, "BSB", "DR – BRASÍLIA"),
-    Direction(12, "CE", "DR – CEARÁ"),
-    Direction(14, "ES", "DR - ESPIRITO SANTO"),
-    Direction(16, "GO", "DR – GOIÁS"),
-    Direction(18, "MA", "DR – MARANHÃO"),
-    Direction(20, "MG", "DR - MINAS GERAIS"),
-    Direction(22, "MS", "DR - MATO GROSSO DO SUL"),
-    Direction(24, "MT", "DR - MATO GROSSO"),
-    Direction(28, "PA", "DR – PARÁ"),
-    Direction(30, "PB", "DR – PARAÍBA"),
-    Direction(32, "PE", "DR – PERNAMBUCO"),
-    Direction(34, "PI", "DR – PIAUÍ"),
-    Direction(36, "PR", "DR – PARANÁ"),
-    Direction(50, "RJ", "DR - RIO DE JANEIRO"),
-    Direction(60, "RN", "DR - RIO GRANDE DO NORTE"),
-    Direction(26, "RO", "DR – RONDONIA"),
-    Direction(65, "RR", "DR – RORAIMA"),
-    Direction(64, "RS", "DR - RIO GRANDE DO SUL"),
-    Direction(68, "SC", "DR - SANTA CATARINA"),
-    Direction(70, "SE", "DR – SERGIPE"),
-    Direction(74, "SPI", "DR - SÃO PAULO INTERIOR"),
-    Direction(72, "SPM", "DR - SÃO PAULO"),
-    Direction(75, "TO", "DR - TOCANTINS"),
+    RegionalDirection(1, "AC", "AC - ADMINISTRAÇAO CENTRAL"),
+    RegionalDirection(3, "ACR", "DR – ACRE"),
+    RegionalDirection(4, "AL", "DR – ALAGOAS"),
+    RegionalDirection(6, "AM", "DR – AMAZONAS"),
+    RegionalDirection(5, "AP", "DR – AMAPÁ"),
+    RegionalDirection(8, "BA", "DR – BAHIA"),
+    RegionalDirection(10, "BSB", "DR – BRASÍLIA"),
+    RegionalDirection(12, "CE", "DR – CEARÁ"),
+    RegionalDirection(14, "ES", "DR - ESPIRITO SANTO"),
+    RegionalDirection(16, "GO", "DR – GOIÁS"),
+    RegionalDirection(18, "MA", "DR – MARANHÃO"),
+    RegionalDirection(20, "MG", "DR - MINAS GERAIS"),
+    RegionalDirection(22, "MS", "DR - MATO GROSSO DO SUL"),
+    RegionalDirection(24, "MT", "DR - MATO GROSSO"),
+    RegionalDirection(28, "PA", "DR – PARÁ"),
+    RegionalDirection(30, "PB", "DR – PARAÍBA"),
+    RegionalDirection(32, "PE", "DR – PERNAMBUCO"),
+    RegionalDirection(34, "PI", "DR – PIAUÍ"),
+    RegionalDirection(36, "PR", "DR – PARANÁ"),
+    RegionalDirection(50, "RJ", "DR - RIO DE JANEIRO"),
+    RegionalDirection(60, "RN", "DR - RIO GRANDE DO NORTE"),
+    RegionalDirection(26, "RO", "DR – RONDONIA"),
+    RegionalDirection(65, "RR", "DR – RORAIMA"),
+    RegionalDirection(64, "RS", "DR - RIO GRANDE DO SUL"),
+    RegionalDirection(68, "SC", "DR - SANTA CATARINA"),
+    RegionalDirection(70, "SE", "DR – SERGIPE"),
+    RegionalDirection(74, "SPI", "DR - SÃO PAULO INTERIOR"),
+    RegionalDirection(72, "SPM", "DR - SÃO PAULO"),
+    RegionalDirection(75, "TO", "DR - TOCANTINS"),
 )
 
 DIRECTIONS = {d.number: d for d in DIRECTIONS_LIST}
