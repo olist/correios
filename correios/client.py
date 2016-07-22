@@ -19,7 +19,7 @@ from typing import Union, Sequence
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListClosingError, PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList
+from .models.posting import TrackingCode, PostingList, ShippingLabel
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -150,10 +150,15 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
         return sender_info
 
-    def _get_shipping_label_element(self, shipping_label):
+    def _get_shipping_label_element(self, shipping_label: ShippingLabel):
         item = xml_utils.Element("objeto_postal")
         xml_utils.SubElement(item, "numero_etiqueta", text=str(shipping_label.tracking_code))
         xml_utils.SubElement(item, "codigo_objeto_cliente")
+        xml_utils.SubElement(item, "codigo_servico_postagem", text=str(shipping_label.service))
+        xml_utils.SubElement(item, "cubagem", text=str(shipping_label.volumetric_weight).replace(".", ","))
+        xml_utils.SubElement(item, "peso", text=str(shipping_label.weight))
+        xml_utils.SubElement(item, "rt1")
+        xml_utils.SubElement(item, "rt2")
         return item
 
     def get_document(self, validate=True):
