@@ -23,7 +23,7 @@ import pytest
 
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
-from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN, DIRECTIONS
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN, REGIONAL_DIRECTIONS
 from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract,
                                   PostingCard, Service, ExtraService, RegionalDirection)
 
@@ -130,6 +130,7 @@ def test_basic_contract(datetime_object):
     assert contract.start_date == datetime_object
     assert contract.end_date == datetime_object + timedelta(days=5)
     assert contract.posting_cards == []
+    assert str(contract) == "9912208555"
 
 
 def test_sanitize_contract_data():
@@ -311,10 +312,10 @@ def test_fail_get_unknown_regional_direction():
 
 
 @pytest.mark.parametrize("number_or_code,regional_direction", (
-        ("AC", DIRECTIONS[1]),
-        ("ACR", DIRECTIONS[3]),
-        ("al", DIRECTIONS[4]),
-        (DIRECTIONS[1], DIRECTIONS[1]),
+        ("AC", REGIONAL_DIRECTIONS[1]),
+        ("ACR", REGIONAL_DIRECTIONS[3]),
+        ("al", REGIONAL_DIRECTIONS[4]),
+        (REGIONAL_DIRECTIONS[1], REGIONAL_DIRECTIONS[1]),
 ))
 def test_regional_direction_getter(number_or_code, regional_direction):
     assert RegionalDirection.get(number_or_code) == regional_direction

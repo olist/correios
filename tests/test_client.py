@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+import os
+
 from correios.client import ModelBuilder, Correios, PostingListSerializer
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
@@ -97,11 +99,11 @@ def test_builder_posting_card_status():
 def test_posting_list_xml_serializer(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
 
-    serializer = PostingListSerializer(posting_list)
-    xml = serializer.get_xml(validate=False)
+    serializer = PostingListSerializer()
+    document = serializer.get_document(posting_list)
 
-    # TODO
-    # with open("/Users/osantana/plp.xml", "wb") as f:
-    #     f.write(xml)
+    with open(os.path.expanduser("~/plp.xml"), "wb") as f:
+        f.write(serializer.get_xml(document))
 
-    assert len(xml)
+    serializer.validate(document)
+    assert len(document)

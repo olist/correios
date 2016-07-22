@@ -428,7 +428,7 @@
 	<xs:element name="dimensao_diametro">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
-				<xs:minInclusive value="5"/>
+				<xs:minInclusive value="0"/>
 				<xs:maxInclusive value="105"/>
 			</xs:restriction>
 		</xs:simpleType>

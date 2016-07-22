@@ -17,12 +17,11 @@ import os
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
-# noinspection PyPep8Naming
 from PIL import Image as image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
-                                 InvalidTrackingCodeError, PostingListError)
+                                 InvalidTrackingCodeError, PostingListError, InvalidShippingLabelError)
 from .address import Address
 from .data import SERVICES
 from .user import Service, ExtraService, PostingCard
@@ -130,18 +129,26 @@ class ShippingLabel:
                             "{sender.complement} - {sender.neighborhood}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
+    TYPE_ENVELOPE = 1
+    TYPE_PACKAGE = 2
+    TYPE_CYLINDER = 3
+
     def __init__(self,
                  posting_card: PostingCard,
                  sender: Address,
                  receiver: Address,
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
-                 width: int, height: int, length: int, weight: int,
+                 volume_type: int = TYPE_PACKAGE,
+                 width: int = 0, height: int = 0, length: int = 0, weight: int = 0, diameter: int = 0,
                  extra_services: Optional[Sequence[Union[ExtraService, str, int]]] = None,
                  logo: Optional[Union[str, image.Image]] = None,
                  order: Optional[str] = "",
-                 invoice: Optional[str] = "",
-                 value: Optional[Decimal] = None,
+                 invoice_number: Optional[str] = "",
+                 invoice_series: Optional[str] = "",
+                 invoice_type: Optional[str] = "",
+                 value: Optional[Decimal] = Decimal("0.00"),
+                 billing: Optional[Decimal] = Decimal("0.00"),
                  volume_sequence: tuple = (1, 1),
                  text: Optional[str] = ""):
 
@@ -150,11 +157,6 @@ class ShippingLabel:
 
         if len(volume_sequence) != 2:
             raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
-
-        self.extra_services = []
-        self.extra_services += self.service.default_extra_services
-        if extra_services:
-            self.extra_services += [ExtraService.get(es) for es in extra_services]
 
         if isinstance(service, int):
             service = SERVICES[service]
@@ -168,8 +170,24 @@ class ShippingLabel:
         if isinstance(logo, str):
             logo = image.open(logo)
 
-        if value is None:
-            value = Decimal("0.00")
+        if volume_type == ShippingLabel.TYPE_ENVELOPE:
+            width, height, length, diameter = (0, 0, 0, 0)
+        elif volume_type == ShippingLabel.TYPE_PACKAGE:
+            diameter = 0
+            width = min(105, max(11, width))
+            height = min(105, max(2, height))
+            length = min(105, max(16, length))
+            if not all([width, height, length]):
+                raise InvalidShippingLabelError("Incorrect package dimensions {}x{}x{}".format(width, height, length))
+            if 200 < (width + height + length) < 29:
+                raise InvalidShippingLabelError("Incorrect package dimensions {}x{}x{}".format(width, height, length))
+
+        else:  # ShippingLabel.TYPE_CYLINDER
+            width, height = (0, 0)
+            if not all([length, diameter]):
+                raise InvalidShippingLabelError("Incorrect cylinder dimensions {}x{}".format(length, diameter))
+            if (length + 2 * diameter) > 28:
+                raise InvalidShippingLabelError("Incorrect cylinder dimensions {}x{}".format(length, diameter))
 
         self.posting_card = posting_card
         self.sender = sender
@@ -180,13 +198,24 @@ class ShippingLabel:
         self.height = height  # cm
         self.length = length  # cm
         self.weight = weight  # in grams
+        self.diameter = diameter  # in cm
+        self.volume_type = volume_type
         self.logo = logo
         self.order = order
-        self.invoice = invoice
+        self.invoice_number = invoice_number
+        self.invoice_series = invoice_series
+        self.invoice_type = invoice_type
         self.value = value
+        self.billing = billing
         self.volume_sequence = volume_sequence
         self.text = text
         self.carrier_logo = image.open(self.carrier_logo)
+
+        self.extra_services = []
+        self.extra_services += service.default_extra_services
+        if extra_services:
+            self.extra_services += [ExtraService.get(es) for es in extra_services]
+
         self.posting_list = None
 
     def __repr__(self):
@@ -211,7 +240,7 @@ class ShippingLabel:
         return self.order_template.format(self.order)
 
     def get_invoice(self):
-        return self.invoice_template.format(self.invoice)
+        return self.invoice_template.format(self.invoice_number)
 
     def get_contract_number(self):
         return self.contract_number_template.format(self.posting_card.get_contract_number())

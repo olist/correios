@@ -45,6 +45,10 @@ class InvalidTrackingCodeError(ModelError):
     pass
 
 
+class InvalidShippingLabelError(ModelError):
+    pass
+
+
 class InvalidAddressesError(ModelError):
     pass
 

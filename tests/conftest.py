@@ -136,9 +136,13 @@ class ShippingLabelFactory(factory.Factory):
     receiver = factory.LazyFunction(AddressFactory.build)
     service = factory.LazyFunction(lambda: random.choice(_services))
     tracking_code = factory.SubFactory(TrackingCodeFactory)
-    invoice = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
+    volume_type = ShippingLabel.TYPE_PACKAGE
+    width = factory.LazyFunction(lambda: random.randint(11, 30))
+    height = factory.LazyFunction(lambda: random.randint(2, 30))
+    length = factory.LazyFunction(lambda: random.randint(16, 30))
+    weight = factory.LazyFunction(lambda: random.randint(1, 150) * 100)
+    invoice_number = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
     order = factory.LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
-    weight = factory.LazyFunction(lambda: random.randint(1, 15) * 100)
     text = factory.Faker("text", max_nb_chars=100)
 
 

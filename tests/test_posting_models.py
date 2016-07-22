@@ -79,8 +79,11 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
         tracking_code=tracking_code,
         logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
         order="123",
-        invoice="321",
+        invoice_number="321",
+        invoice_series="A1",
+        invoice_type="",
         volume_sequence=(1, 2),
+        width=10, height=10, length=10,
         weight=100,
         text="Hello World!",
     )
@@ -103,7 +106,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.order == "123"
     assert shipping_label.get_order() == "123"
 
-    assert shipping_label.invoice == "321"
+    assert shipping_label.invoice_number == "321"
     assert shipping_label.get_invoice() == "321"
 
     assert shipping_label.get_contract_number() == "9912208555"
@@ -132,6 +135,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
         sender=sender_address,
         receiver=receiver_address,
         service=40096,  # SERVICE_SEDEX_CODE
+        width=10, height=10, length=10, weight=10000,
         tracking_code="PD12345678 BR",
     )
 
@@ -143,14 +147,16 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
 def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code):
     with pytest.raises(InvalidAddressesError):
         ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
+                      width=10, height=10, length=10, weight=10000,
                       tracking_code=tracking_code)
 
 
 def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_address, tracking_code):
     with pytest.raises(InvalidVolumeInformationError):
         # noinspection PyTypeChecker
-        ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
-                      volume_sequence=(1,))  # invalid tuple
+        ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX,
+                      width=10, height=10, length=10, weight=10000,
+                      tracking_code=tracking_code, volume_sequence=(1,))  # invalid tuple
 
 
 def test_basic_posting_list(shipping_label):

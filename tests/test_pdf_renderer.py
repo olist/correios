@@ -36,7 +36,7 @@ def test_render_basic_shipping_label():
 
     pdf = shipping_labels_renderer.render()
 
-    with open("/home/osantana/correios.pdf", "wb") as f:
+    with open(os.path.expanduser("~/correios.pdf"), "wb") as f:
         pdf.seek(0)
         f.write(pdf.read())
 

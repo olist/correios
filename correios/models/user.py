@@ -183,16 +183,16 @@ class ExtraService:
         self.name = name
 
     @classmethod
-    def get(cls, service: Union[str, int]):
-        if isinstance(service, cls):
-            return service
+    def get(cls, number_or_code: Union[str, int]):
+        if isinstance(number_or_code, cls):
+            return number_or_code
 
         from .data import EXTRA_SERVICES_LIST
         for extra_service in EXTRA_SERVICES_LIST:
-            if extra_service.number == service or extra_service.code == service:
+            if extra_service.number == number_or_code or extra_service.code == number_or_code:
                 return extra_service
         else:
-            raise InvalidExtraServiceError("Unknown Service {!r}".format(service))
+            raise InvalidExtraServiceError("Unknown Service {!r}".format(number_or_code))
 
     def __repr__(self):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
@@ -334,18 +334,18 @@ class RegionalDirection:
         self.name = name
 
     @classmethod
-    def get(cls, search_regional_direction: Union[str, int]):
-        if isinstance(search_regional_direction, cls):
-            return search_regional_direction
+    def get(cls, number_or_code: Union[str, int]):
+        if isinstance(number_or_code, cls):
+            return number_or_code
 
-        from .data import DIRECTIONS_LIST
-        for regional_direction in DIRECTIONS_LIST:
-            if isinstance(search_regional_direction, str) and regional_direction.code == search_regional_direction.upper():
+        from .data import REGIONAL_DIRECTIONS_LIST
+        for regional_direction in REGIONAL_DIRECTIONS_LIST:
+            if isinstance(number_or_code, str) and regional_direction.code == number_or_code.upper():
                 return regional_direction
-            if regional_direction.number == search_regional_direction:
+            if regional_direction.number == number_or_code:
                 return regional_direction
         else:
-            raise InvalidRegionalDirectionError("Unknown direction {!r}".format(search_regional_direction))
+            raise InvalidRegionalDirectionError("Unknown direction {!r}".format(number_or_code))
 
     def __repr__(self):
         return "<RegionalDirection number={!r}, code={!r}>".format(self.number, self.code)
