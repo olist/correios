@@ -332,7 +332,7 @@ SERVICE_SEDEX12 = SERVICES[40169]
 SERVICE_E_SEDEX = SERVICES[81019]
 
 
-DIRECTIONS_LIST = (
+REGIONAL_DIRECTIONS_LIST = (
     RegionalDirection(1, "AC", "AC - ADMINISTRAÇAO CENTRAL"),
     RegionalDirection(3, "ACR", "DR – ACRE"),
     RegionalDirection(4, "AL", "DR – ALAGOAS"),
@@ -364,4 +364,4 @@ DIRECTIONS_LIST = (
     RegionalDirection(75, "TO", "DR - TOCANTINS"),
 )
 
-DIRECTIONS = {d.number: d for d in DIRECTIONS_LIST}
+REGIONAL_DIRECTIONS = {d.number: d for d in REGIONAL_DIRECTIONS_LIST}

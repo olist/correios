@@ -110,32 +110,23 @@ class ModelBuilder:
 
 
 class PostingListSerializer:
-    def __init__(self, posting_list: PostingList):
-        self.posting_list = posting_list
+    def _get_posting_list_element(self, posting_list):
+        element = xml_utils.Element("plp")
+        xml_utils.SubElement(element, "id_plp")
+        xml_utils.SubElement(element, "valor_global")
+        xml_utils.SubElement(element, "mcu_unidade_postagem")
+        xml_utils.SubElement(element, "nome_unidade_postagem")
+        xml_utils.SubElement(element, "cartao_postagem", text=str(posting_list.posting_card))
+        return element
 
-    def _validate(self, xml):
-        with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
-            document = xml_utils.parse(xsd)
-        schema = xml_utils.XMLSchema(document)
-        return schema.validate(xml)
-
-    def _get_posting_list_element(self):
-        posting_list = xml_utils.Element("plp")
-        xml_utils.SubElement(posting_list, "id_plp")
-        xml_utils.SubElement(posting_list, "valor_global")
-        xml_utils.SubElement(posting_list, "mcu_unidade_postagem")
-        xml_utils.SubElement(posting_list, "nome_unidade_postagem")
-        xml_utils.SubElement(posting_list, "cartao_postagem", text=str(self.posting_list.posting_card))
-        return posting_list
-
-    def _get_sender_info_element(self):
-        sender = self.posting_list.sender
-        posting_card = self.posting_list.posting_card
-        contract = self.posting_list.contract
+    def _get_sender_info_element(self, posting_list):
+        sender = posting_list.sender
+        posting_card = posting_list.posting_card
+        contract = posting_list.contract
 
         sender_info = xml_utils.Element("remetente")
         xml_utils.SubElement(sender_info, "numero_contrato", text=str(contract.number))
-        xml_utils.SubElement(sender_info, "diretoria", text=str(contract.regional_direction_number))
+        xml_utils.SubElement(sender_info, "numero_diretoria", text=str(contract.regional_direction_number))
         xml_utils.SubElement(sender_info, "codigo_administrativo", text=str(posting_card.administrative_code))
         xml_utils.SubElement(sender_info, "nome_remetente", cdata=sender.name)
         xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=sender.street)
@@ -159,32 +150,78 @@ class PostingListSerializer:
         xml_utils.SubElement(item, "peso", text=str(shipping_label.weight))
         xml_utils.SubElement(item, "rt1")
         xml_utils.SubElement(item, "rt2")
+
+        receiver = shipping_label.receiver
+        address = xml_utils.SubElement(item, "destinatario")
+        xml_utils.SubElement(address, "nome_destinatario", cdata=str(receiver.name))
+        xml_utils.SubElement(address, "telefone_destinatario", cdata=str(receiver.phone))
+        xml_utils.SubElement(address, "celular_destinatario", cdata=str(receiver.cellphone))
+        xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
+        xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
+        xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
+        xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number))
+
+        national = xml_utils.SubElement(item, "nacional")
+        xml_utils.SubElement(national, "bairro_destinatario", cdata=str(receiver.neighborhood))
+        xml_utils.SubElement(national, "cidade_destinatario", cdata=str(receiver.city))
+        xml_utils.SubElement(national, "uf_destinatario", text=str(receiver.state))
+        xml_utils.SubElement(national, "cep_destinatario", cdata=str(receiver.zip_code))
+        xml_utils.SubElement(national, "codigo_usuario_postal")
+        xml_utils.SubElement(national, "centro_custo_cliente")
+        xml_utils.SubElement(national, "numero_nota_fiscal", text=str(shipping_label.invoice_number))
+        xml_utils.SubElement(national, "serie_nota_fiscal", text=str(shipping_label.invoice_series))
+        xml_utils.SubElement(national, "valor_nota_fiscal", text=str(shipping_label.value).replace(".", ","))
+        xml_utils.SubElement(national, "natureza_nota_fiscal", text=str(shipping_label.invoice_type))
+        xml_utils.SubElement(national, "descricao_objeto", cdata=str(shipping_label.text)[:20])
+        xml_utils.SubElement(national, "valor_a_cobrar", text=str(shipping_label.billing).replace(".", ","))
+
+        extra_services = xml_utils.SubElement(item, "servico_adicional")
+        for extra_service in shipping_label.extra_services:
+            xml_utils.SubElement(extra_services, "codigo_servico_adicional",
+                                 text="{!s:>03}".format(extra_service.number))
+        xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
+
+        dimensions = xml_utils.SubElement(item, "dimensao_objeto")
+        xml_utils.SubElement(dimensions, "tipo_objeto", text="{!s:>03}".format(shipping_label.volume_type))
+        xml_utils.SubElement(dimensions, "dimensao_altura", text=str(shipping_label.height))
+        xml_utils.SubElement(dimensions, "dimensao_largura", text=str(shipping_label.width))
+        xml_utils.SubElement(dimensions, "dimensao_comprimento", text=str(shipping_label.length))
+        xml_utils.SubElement(dimensions, "dimensao_diametro", text=str(shipping_label.diameter))
+
+        xml_utils.SubElement(item, "data_postagem_sara")
+        xml_utils.SubElement(item, "status_processamento", text="0")
+        xml_utils.SubElement(item, "numero_comprovante_postagem")
+        xml_utils.SubElement(item, "valor_cobrado")
+
         return item
 
-    def get_document(self, validate=True):
-        if not self.posting_list.shipping_labels:
+    def get_document(self, posting_list: PostingList):
+        if not posting_list.shipping_labels:
             raise PostingListSerializerError("Cannot serialize an empty posting list")
 
-        if self.posting_list.closed:
+        if posting_list.closed:
             raise PostingListSerializerError("Cannot serialize a closed posting list")
 
         root = xml_utils.Element("correioslog")
         root.append(xml_utils.Element("tipo_arquivo", text="Postagem"))
         root.append(xml_utils.Element("versao_arquivo", text="2.3"))
-        root.append(self._get_posting_list_element())
-        root.append(self._get_sender_info_element())
+        root.append(self._get_posting_list_element(posting_list))
+        root.append(self._get_sender_info_element(posting_list))
         root.append(xml_utils.Element("forma_pagamento"))
 
-        for shipping_label in self.posting_list.shipping_labels.values():
+        for shipping_label in posting_list.shipping_labels.values():
             root.append(self._get_shipping_label_element(shipping_label))
-
-        if validate and not self._validate(root):
-            raise PostingListSerializerError("Invalid posting list XML object")
 
         return root
 
-    def get_xml(self, validate=True) -> bytes:
-        return xml_utils.tostring(self.get_document(validate=validate))
+    def validate(self, document):
+        with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
+            xsd_document = xml_utils.parse(xsd)
+        schema = xml_utils.XMLSchema(xsd_document)
+        return schema.assert_(document)
+
+    def get_xml(self, document) -> bytes:
+        return xml_utils.tostring(document, encoding="ISO-8859-1")
 
 
 class Correios:
@@ -258,10 +295,10 @@ class Correios:
         return result
 
     def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
-        posting_list_serializer = PostingListSerializer(posting_list)
+        posting_list_serializer = PostingListSerializer()
         label_list = posting_list.get_tracking_codes()
         customer_id = self._auth_call("fechaPlpVariosServicos",
-                                      posting_list_serializer.get_xml(),
+                                      posting_list_serializer.get_xml(posting_list),
                                       posting_list.id, posting_card.number,
                                       label_list)
         if customer_id != posting_list.id:
