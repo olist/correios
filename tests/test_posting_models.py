@@ -80,7 +80,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
         logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
         order="123",
         invoice="321",
-        volume=(1, 2),
+        volume_sequence=(1, 2),
         weight=100,
         text="Hello World!",
     )
@@ -108,8 +108,8 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
 
     assert shipping_label.get_contract_number() == "9912208555"
 
-    assert shipping_label.volume == (1, 2)
-    assert shipping_label.get_volume() == "1/2"
+    assert shipping_label.volume_sequence == (1, 2)
+    assert shipping_label.get_volume_sequence() == "1/2"
 
     assert shipping_label.weight == 100
     assert shipping_label.get_weight() == "100"
@@ -150,7 +150,7 @@ def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_ad
     with pytest.raises(InvalidVolumeInformationError):
         # noinspection PyTypeChecker
         ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX, tracking_code,
-                      volume=(1,))  # invalid tuple
+                      volume_sequence=(1,))  # invalid tuple
 
 
 def test_basic_posting_list(shipping_label):

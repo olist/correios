@@ -31,6 +31,8 @@ TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
 TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
+IATA_COEFICIENT = 6.0
+VOLUMETRIC_WEIGHT_THRESHOLD = 10000  # g
 
 
 class TrackingCode:
@@ -134,35 +136,31 @@ class ShippingLabel:
                  receiver: Address,
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
+                 width: int, height: int, length: int, weight: int,
                  extra_services: Optional[Sequence[Union[ExtraService, str, int]]] = None,
                  logo: Optional[Union[str, image.Image]] = None,
                  order: Optional[str] = "",
                  invoice: Optional[str] = "",
                  value: Optional[Decimal] = None,
-                 volume: tuple = (1, 1),
-                 weight: int = 0,
+                 volume_sequence: tuple = (1, 1),
                  text: Optional[str] = ""):
-
-        self.posting_card = posting_card
 
         if sender == receiver:
             raise InvalidAddressesError("Sender and receiver cannot be the same")
 
-        self.sender = sender
-        self.receiver = receiver
-
-        if isinstance(service, int):
-            service = SERVICES[service]
-        self.service = service
+        if len(volume_sequence) != 2:
+            raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
 
         self.extra_services = []
         self.extra_services += self.service.default_extra_services
         if extra_services:
             self.extra_services += [ExtraService.get(es) for es in extra_services]
 
+        if isinstance(service, int):
+            service = SERVICES[service]
+
         if isinstance(tracking_code, str):
             tracking_code = TrackingCode(tracking_code)
-        self.tracking_code = tracking_code
 
         if logo is None:
             logo = os.path.join(DATADIR, "default_logo.png")
@@ -170,24 +168,26 @@ class ShippingLabel:
         if isinstance(logo, str):
             logo = image.open(logo)
 
-        self.logo = logo
-
-        self.order = order
-        self.invoice = invoice
-
         if value is None:
             value = Decimal("0.00")
+
+        self.posting_card = posting_card
+        self.sender = sender
+        self.receiver = receiver
+        self.service = service
+        self.tracking_code = tracking_code
+        self.width = width  # cm
+        self.height = height  # cm
+        self.length = length  # cm
+        self.weight = weight  # in grams
+        self.logo = logo
+        self.order = order
+        self.invoice = invoice
         self.value = value
-
-        if len(volume) != 2:
-            raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
-
-        self.volume = volume
-        self.weight = weight
+        self.volume_sequence = volume_sequence
         self.text = text
         self.carrier_logo = image.open(self.carrier_logo)
-
-        self.posting_list = None  # TODO
+        self.posting_list = None
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
@@ -199,6 +199,13 @@ class ShippingLabel:
     @property
     def contract(self):
         return self.posting_card.contract
+
+    @property
+    def volumetric_weight(self):
+        volumetric_weight = (self.width * self.height * self.length) / IATA_COEFICIENT
+        if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
+            return self.weight
+        return max(volumetric_weight, self.weight)
 
     def get_order(self):
         return self.order_template.format(self.order)
@@ -212,8 +219,8 @@ class ShippingLabel:
     def get_service_name(self):
         return self.service_name_template.format(self.service.display_name)
 
-    def get_volume(self):
-        return self.volume_template.format(*self.volume)
+    def get_volume_sequence(self):
+        return self.volume_template.format(*self.volume_sequence)
 
     def get_weight(self):
         return self.weight_template.format(self.weight)
@@ -289,6 +296,7 @@ class PostingList:
                                                                            self.posting_card))
 
         self.shipping_labels[shipping_label.tracking_code] = shipping_label
+        shipping_label.posting_list = self
 
     def get_tracking_codes(self):
         return list(self.shipping_labels.keys())
