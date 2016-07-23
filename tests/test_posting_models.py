@@ -124,6 +124,8 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.latitude == -25.4131980
     assert shipping_label.longitude == -49.2584896
 
+    assert shipping_label.posting_list_group == 0
+
     assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
     assert isinstance(shipping_label.symbol, image.Image)
 

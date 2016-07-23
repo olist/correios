@@ -221,6 +221,7 @@ class ShippingLabel:
             self.extra_services += [ExtraService.get(es) for es in extra_services]
 
         self.posting_list = None
+        self.posting_list_group = 0
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
@@ -288,7 +289,7 @@ class ShippingLabel:
             "{!s:>12}".format(self._get_extra_service_info()),
             "{!s:>010}".format(self.posting_card.number),
             "{!s:>05}".format(self.service.code),
-            "00",  # TODO: Posting listing group
+            "{!s:>02}".format(self.posting_list_group),
             "{!s:>05}".format(self.receiver.number),
             "{!s:<20}".format(self.receiver.complement[:20]),
             "{!s:>05}".format(str(int(self.value * 100))),
