@@ -329,7 +329,7 @@ class PostingList:
             raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,
                                                                            self.posting_card))
 
-        self.shipping_labels[shipping_label.tracking_code] = shipping_label
+        self.shipping_labels[shipping_label.tracking_code.nodigit] = shipping_label
         shipping_label.posting_list = self
 
     def get_tracking_codes(self):
