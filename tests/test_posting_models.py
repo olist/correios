@@ -44,6 +44,7 @@ def test_tracking_code_constructor(tracking_code):
     assert tracking.nodigit == "DL74668653 BR"
     assert tracking.short == "DL74668653BR"
     assert tracking.splitted == "DL 746 686 536 BR"
+    assert repr(tracking) == "<TrackingCode code='DL746686536BR'>"
 
 
 @pytest.mark.parametrize("tracking_code", [
