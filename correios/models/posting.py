@@ -21,7 +21,7 @@ from PIL import Image as image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
-                                 InvalidTrackingCodeError, PostingListError, InvalidShippingLabelError)
+                                 InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
 from .address import Address
 from .data import SERVICES
 from .user import Service, ExtraService, PostingCard
@@ -32,6 +32,13 @@ TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
 IATA_COEFICIENT = 6.0
 VOLUMETRIC_WEIGHT_THRESHOLD = 10000  # g
+MIN_WIDTH, MAX_WIDTH = 11, 105  # cm
+MIN_HEIGHT, MAX_HEIGHT = 2, 105  # cm
+MIN_LENGTH, MAX_LENGTH = 16, 105  # cm
+MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
+MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
+MIN_SIZE, MAX_SIZE = 29, 200  # cm
+MAX_CYLINDER_SIZE = 28
 
 
 class TrackingCode:
@@ -172,24 +179,7 @@ class ShippingLabel:
         if isinstance(logo, str):
             logo = image.open(logo)
 
-        if volume_type == ShippingLabel.TYPE_ENVELOPE:
-            width, height, length, diameter = (0, 0, 0, 0)
-        elif volume_type == ShippingLabel.TYPE_PACKAGE:
-            diameter = 0
-            width = min(105, max(11, width))
-            height = min(105, max(2, height))
-            length = min(105, max(16, length))
-            if not all([width, height, length]):
-                raise InvalidShippingLabelError("Incorrect package dimensions {}x{}x{}".format(width, height, length))
-            if 200 < (width + height + length) < 29:
-                raise InvalidShippingLabelError("Incorrect package dimensions {}x{}x{}".format(width, height, length))
-
-        else:  # ShippingLabel.TYPE_CYLINDER
-            width, height = (0, 0)
-            if not all([length, diameter]):
-                raise InvalidShippingLabelError("Incorrect cylinder dimensions {}x{}".format(length, diameter))
-            if (length + 2 * diameter) > 28:
-                raise InvalidShippingLabelError("Incorrect cylinder dimensions {}x{}".format(length, diameter))
+        self.validate_dimensions(volume_type, width, height, length, diameter)
 
         self.posting_card = posting_card
         self.sender = sender
@@ -233,6 +223,45 @@ class ShippingLabel:
         if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
             return weight
         return max(volumetric_weight, weight)
+
+    @classmethod
+    def validate_dimensions(cls, volume_type, width, height, length, diameter):
+        if volume_type == ShippingLabel.TYPE_ENVELOPE:
+            if any([width, height, length, diameter]):
+                raise InvalidDimensionsError("Invalid envelope dimensions: {}x{}x{}".format(width, height, length))
+            return
+
+        if volume_type == ShippingLabel.TYPE_PACKAGE:
+            if diameter:
+                raise InvalidDimensionsError("Package does not use diameter: {}".format(diameter))
+
+            if not MIN_WIDTH <= width <= MAX_WIDTH:
+                raise InvalidDimensionsError("Invalid package width (range 11~105): {}".format(width))
+
+            if not MIN_HEIGHT <= height <= MAX_HEIGHT:
+                raise InvalidDimensionsError("Invalid package height (range 2~105): {}".format(height))
+
+            if not MIN_LENGTH <= length <= MAX_LENGTH:
+                raise InvalidDimensionsError("Invalid package length (range 16~105): {}".format(length))
+
+            if not MIN_SIZE <= (width + height + length) <= MAX_SIZE:
+                raise InvalidDimensionsError("Invalid package dimensions: {}x{}x{}".format(width, height, length))
+
+            return
+
+        # ShippingLabel.TYPE_CYLINDER
+        if width or height:
+            raise InvalidDimensionsError("Cylinder does not use width/height: {}x{}".format(width, height))
+
+        if not MIN_CYLINDER_LENGTH <= length <= MAX_CYLINDER_LENGTH:
+            raise InvalidDimensionsError("Invalid cylinder length (range 18~105): {}".format(length))
+
+        if not MIN_DIAMETER <= diameter <= MAX_DIAMETER:
+            raise InvalidDimensionsError("Invalid cylinder diameter (range 5~91): {}".format(diameter))
+
+        if (length + 2 * diameter) > MAX_CYLINDER_SIZE:
+            raise InvalidDimensionsError("Invalid cylinder dimensions: {}x{}".format(length, diameter))
+
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
 
@@ -335,7 +364,6 @@ class PostingList:
         if shipping_label.posting_card != self.posting_card:
             raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,
                                                                            self.posting_card))
-
         self.shipping_labels[shipping_label.tracking_code.nodigit] = shipping_label
         shipping_label.posting_list = self
 

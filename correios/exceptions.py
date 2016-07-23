@@ -49,6 +49,10 @@ class InvalidShippingLabelError(ModelError):
     pass
 
 
+class InvalidDimensionsError(InvalidShippingLabelError):
+    pass
+
+
 class InvalidAddressesError(ModelError):
     pass
 

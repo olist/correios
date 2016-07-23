@@ -21,7 +21,8 @@ import pytest
 from PIL import Image as image
 
 from correios import DATADIR
-from correios.exceptions import InvalidAddressesError, InvalidTrackingCodeError, InvalidVolumeInformationError
+from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
+                                 InvalidVolumeInformationError, InvalidDimensionsError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList
 
@@ -84,7 +85,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
         invoice_series="A1",
         invoice_type="",
         volume_sequence=(1, 2),
-        width=10, height=10, length=10,
+        width=11, height=2, length=16,
         weight=100,
         text="Hello World!",
         latitude=-25.4131980,
@@ -143,7 +144,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
         sender=sender_address,
         receiver=receiver_address,
         service=40096,  # SERVICE_SEDEX_CODE
-        width=10, height=10, length=10, weight=10000,
+        width=11, height=2, length=16, weight=10000,
         tracking_code="PD12345678 BR",
     )
 
@@ -157,6 +158,46 @@ def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracki
         ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
                       width=10, height=10, length=10, weight=10000,
                       tracking_code=tracking_code)
+
+
+def test_basic_envelop_dimensions_validation():
+    ShippingLabel.validate_dimensions(ShippingLabel.TYPE_ENVELOPE, 0, 0, 0, 0)
+
+
+@pytest.mark.parametrize("weight,width,height,length,posting_weight", [
+    (9000, 50, 60, 15, 9000),
+    (15000, 43, 28, 52, 15000),
+    (7000, 55, 31, 40, 11366),
+])
+def test_posting_weight_calculation(weight, width, height, length, posting_weight):
+    assert round(ShippingLabel.calculate_posting_weight(weight, width, height, length)) == posting_weight
+
+
+@pytest.mark.parametrize("volume_type,width,height,length,diameter", [
+    (ShippingLabel.TYPE_ENVELOPE, 1, 0, 0, 0),
+    (ShippingLabel.TYPE_ENVELOPE, 0, 1, 0, 0),
+    (ShippingLabel.TYPE_ENVELOPE, 0, 0, 1, 0),
+    (ShippingLabel.TYPE_ENVELOPE, 0, 0, 0, 1),
+    (ShippingLabel.TYPE_ENVELOPE, 1, 1, 1, 1),
+    (ShippingLabel.TYPE_PACKAGE, 11, 2, 16, 1),  # invalid diameter
+    (ShippingLabel.TYPE_PACKAGE, 10, 2, 16, 0),  # min width=11
+    (ShippingLabel.TYPE_PACKAGE, 110, 2, 16, 0),  # max width=105
+    (ShippingLabel.TYPE_PACKAGE, 11, 1, 16, 0),  # min height=2
+    (ShippingLabel.TYPE_PACKAGE, 11, 110, 16, 0),  # max height=110
+    (ShippingLabel.TYPE_PACKAGE, 11, 2, 15, 0),  # min length=15
+    (ShippingLabel.TYPE_PACKAGE, 11, 2, 110, 0),  # max length=110
+    (ShippingLabel.TYPE_PACKAGE, 105, 105, 105, 0),  # sum > 200
+    (ShippingLabel.TYPE_CYLINDER, 1, 0, 18, 16),  # invalid width
+    (ShippingLabel.TYPE_CYLINDER, 0, 1, 18, 16),  # invalid height
+    (ShippingLabel.TYPE_CYLINDER, 0, 0, 1, 16),  # min length=18
+    (ShippingLabel.TYPE_CYLINDER, 0, 0, 110, 16),  # max length=105
+    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 15),  # min diameter=16
+    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 110),  # max diameter=91
+    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 16),  # max cylinder size=28
+])
+def test_fail_dimensions_validation(volume_type, width, height, length, diameter):
+    with pytest.raises(InvalidDimensionsError):
+        ShippingLabel.validate_dimensions(volume_type, width, height, length, diameter)
 
 
 def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_address, tracking_code):
