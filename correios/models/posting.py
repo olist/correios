@@ -223,6 +223,16 @@ class ShippingLabel:
         self.posting_list = None
         self.posting_list_group = 0
 
+    @classmethod
+    def calculate_volumetric_weight(cls, width, height, length):
+        return int((width * height * length) / IATA_COEFICIENT)
+
+    @classmethod
+    def calculate_posting_weight(cls, weight, width, height, length):
+        volumetric_weight = cls.calculate_volumetric_weight(width, height, length)
+        if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
+            return weight
+        return max(volumetric_weight, weight)
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
 
@@ -235,11 +245,8 @@ class ShippingLabel:
         return self.posting_card.contract
 
     @property
-    def volumetric_weight(self):
-        volumetric_weight = (self.width * self.height * self.length) / IATA_COEFICIENT
-        if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
-            return self.weight
-        return max(volumetric_weight, self.weight)
+    def posting_weight(self):
+        return self.calculate_posting_weight(self.weight, self.width, self.height, self.length)
 
     def get_order(self):
         return self.order_template.format(self.order)
