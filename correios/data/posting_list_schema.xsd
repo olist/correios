@@ -10,12 +10,12 @@
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="valor_nota_fiscal" type="xs:string"/>
-	<xs:element name="valor_global" type="xs:string"/>	
+	<xs:element name="valor_global" type="xs:string"/>
 	<xs:element name="valor_declarado">
 		<xs:simpleType>
 			<xs:restriction base="xs:string"/>
 		</xs:simpleType>
-	</xs:element>	
+	</xs:element>
 	<xs:element name="valor_cobrado" type="xs:string"/>
 	<xs:element name="valor_a_cobrar">
 		<xs:simpleType>
@@ -124,7 +124,7 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="codigo_servico_adicional" maxOccurs="4"/>
-				<xs:element ref="valor_declarado"/>				
+				<xs:element ref="valor_declarado"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -197,14 +197,14 @@
 				<xs:element ref="peso"/>
 				<xs:element ref="rt1"/>
 				<xs:element ref="rt2"/>
-				<xs:element ref="destinatario"/>	
-				<xs:element ref="nacional"/>				
+				<xs:element ref="destinatario"/>
+				<xs:element ref="nacional"/>
 				<xs:element ref="servico_adicional"/>
-				<xs:element ref="dimensao_objeto"/>				
+				<xs:element ref="dimensao_objeto"/>
 				<xs:element ref="data_postagem_sara"/>
 				<xs:element ref="status_processamento"/>
 				<xs:element ref="numero_comprovante_postagem"/>
-				<xs:element ref="valor_cobrado"/>											
+				<xs:element ref="valor_cobrado"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -353,7 +353,7 @@
 	</xs:element>
 	<xs:element name="forma_pagamento">
 		<xs:simpleType>
-			<xs:restriction base="xs:string">				
+			<xs:restriction base="xs:string">
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -392,12 +392,12 @@
 				</xs:element>
 				<xs:element ref="dimensao_altura"/>
 				<xs:element ref="dimensao_largura"/>
-				<xs:element ref="dimensao_comprimento"/>				
-				<xs:element ref="dimensao_diametro"/>				
+				<xs:element ref="dimensao_comprimento"/>
+				<xs:element ref="dimensao_diametro"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:element name="dimensao_altura">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
@@ -406,7 +406,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	
+
 	<xs:element name="dimensao_largura">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
@@ -415,7 +415,7 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
-	
+
 	<xs:element name="dimensao_comprimento">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
@@ -423,8 +423,8 @@
 				<xs:maxInclusive value="105"/>
 			</xs:restriction>
 		</xs:simpleType>
-	</xs:element>	
-	
+	</xs:element>
+
 	<xs:element name="dimensao_diametro">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
@@ -432,8 +432,8 @@
 				<xs:maxInclusive value="105"/>
 			</xs:restriction>
 		</xs:simpleType>
-	</xs:element>	
-	
+	</xs:element>
+
 	<xs:element name="destinatario">
 		<xs:complexType>
 			<xs:sequence>
@@ -470,8 +470,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="tipo_arquivo"/>
-				<xs:element ref="versao_arquivo"/>				
-				<xs:element ref="plp" maxOccurs="1"/>				
+				<xs:element ref="versao_arquivo"/>
+				<xs:element ref="plp" maxOccurs="1"/>
 				<xs:element ref="remetente"/>
 				<xs:element ref="forma_pagamento"/>
 				<xs:element ref="objeto_postal" maxOccurs="1000"/>
