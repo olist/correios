@@ -150,7 +150,9 @@ class ShippingLabel:
                  value: Optional[Decimal] = Decimal("0.00"),
                  billing: Optional[Decimal] = Decimal("0.00"),
                  volume_sequence: tuple = (1, 1),
-                 text: Optional[str] = ""):
+                 text: Optional[str] = "",
+                 latitude: Optional[float] = 0.0,
+                 longitude: Optional[float] = 0.0):
 
         if sender == receiver:
             raise InvalidAddressesError("Sender and receiver cannot be the same")
@@ -209,6 +211,8 @@ class ShippingLabel:
         self.billing = billing
         self.volume_sequence = volume_sequence
         self.text = text
+        self.latitude = latitude
+        self.longitude = longitude
         self.carrier_logo = image.open(self.carrier_logo)
 
         self.extra_services = []
@@ -289,8 +293,8 @@ class ShippingLabel:
             "{!s:<20}".format(self.receiver.complement[:20]),
             "{!s:>05}".format(str(int(self.value * 100))),
             "{!s:>012}".format(str(self.receiver.phone)[:12] or "0" * 12),
-            "-00.000000",  # TODO: latitude
-            "-00.000000",  # TODO: longitude
+            "{:+010.6f}".format(self.latitude),
+            "{:+010.6f}".format(self.longitude),
             "|",
             "{!s:<30}".format(self.text[:30]),
         ]
