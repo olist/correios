@@ -144,6 +144,8 @@ class ShippingLabelFactory(factory.Factory):
     invoice_number = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
     order = factory.LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
     text = factory.Faker("text", max_nb_chars=100)
+    latitude = 0.0
+    longitude = 0.0
 
 
 register(ShippingLabelFactory, "shipping_label")
