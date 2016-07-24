@@ -44,12 +44,13 @@ class ModelBuilder:
             contract=contract,
             number=posting_card_data.numero,
             administrative_code=posting_card_data.codigoAdministrativo,
-            start_date=posting_card_data.dataVigenciaInicio,
-            end_date=posting_card_data.dataVigenciaFim,
-            status=posting_card_data.statusCartaoPostagem,
-            status_code=posting_card_data.statusCodigo,
-            unit=posting_card_data.unidadeGenerica,
         )
+
+        posting_card.start_date = posting_card_data.dataVigenciaInicio
+        posting_card.end_date = posting_card_data.dataVigenciaFim
+        posting_card.status = posting_card_data.statusCartaoPostagem
+        posting_card.status_code = posting_card_data.statusCodigo
+        posting_card.unit = posting_card_data.unidadeGenerica
 
         for service_data in posting_card_data.servicos:
             service = self.build_service(service_data)
@@ -60,12 +61,13 @@ class ModelBuilder:
     def build_contract(self, contract_data):
         contract = Contract(
             number=contract_data.contratoPK.numero,
-            customer_code=contract_data.codigoCliente,
             regional_direction=contract_data.codigoDiretoria,
-            status_code=contract_data.statusCodigo,
-            start_date=contract_data.dataVigenciaInicio,
-            end_date=contract_data.dataVigenciaFim,
         )
+
+        contract.customer_code = contract_data.codigoCliente
+        contract.status_code = contract_data.statusCodigo
+        contract.start_date = contract_data.dataVigenciaInicio
+        contract.end_date = contract_data.dataVigenciaFim
 
         for posting_card_data in contract_data.cartoesPostagem:
             self.build_posting_card(contract, posting_card_data)
