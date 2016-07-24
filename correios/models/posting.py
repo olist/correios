@@ -358,13 +358,13 @@ class PostingList:
             self.contract = shipping_label.contract
             self.sender = shipping_label.sender
 
-        if shipping_label.tracking_code in self.shipping_labels:
+        if shipping_label.tracking_code.short in self.shipping_labels:
             raise PostingListError("Shipping label {!r} already in posting list".format(shipping_label))
 
         if shipping_label.posting_card != self.posting_card:
             raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,
                                                                            self.posting_card))
-        self.shipping_labels[shipping_label.tracking_code.nodigit] = shipping_label
+        self.shipping_labels[shipping_label.tracking_code.short] = shipping_label
         shipping_label.posting_list = self
 
     def get_tracking_codes(self):
