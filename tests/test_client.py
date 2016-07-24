@@ -13,9 +13,10 @@
 # limitations under the License.
 
 
-import os
+import pytest
 
 from correios.client import ModelBuilder, Correios, PostingListSerializer
+from correios.exceptions import PostingListSerializerError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.user import PostingCard
@@ -96,14 +97,24 @@ def test_builder_posting_card_status():
     assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
 
 
-def test_posting_list_xml_serializer(posting_list, shipping_label):
+def test_posting_list_serialization(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
-
     serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
-
-    with open(os.path.expanduser("~/plp.xml"), "wb") as f:
-        f.write(serializer.get_xml(document))
-
     serializer.validate(document)
-    assert len(document)
+    assert serializer.get_xml(document).startswith(b"<?xml version='1.0' encoding='ISO-8859-1'?>")
+
+
+def test_fail_empty_posting_list_serialization(posting_list):
+    serializer = PostingListSerializer()
+    with pytest.raises(PostingListSerializerError):
+        serializer.get_document(posting_list)
+
+
+def test_fail_closed_posting_list_serialization(posting_list, shipping_label):
+    posting_list.add_shipping_label(shipping_label)
+    posting_list.close()
+
+    serializer = PostingListSerializer()
+    with pytest.raises(PostingListSerializerError):
+        serializer.get_document(posting_list)
