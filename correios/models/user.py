@@ -17,7 +17,7 @@ import os
 from datetime import datetime
 from typing import List, Union, Optional, Sequence
 
-from PIL import Image as image
+from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
@@ -164,7 +164,7 @@ class Service:
     @property
     def symbol_image(self):
         if not self._symbol_image:
-            self._symbol_image = image.open(self.get_symbol_filename())
+            self._symbol_image = Image.open(self.get_symbol_filename())
         return self._symbol_image
 
 

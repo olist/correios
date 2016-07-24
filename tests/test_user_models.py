@@ -16,14 +16,13 @@
 import os
 from datetime import timedelta, datetime, timezone
 
-# noinspection PyPep8Naming
-from PIL import Image as image
-
 import pytest
+from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
-from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD, EXTRA_SERVICE_RN, REGIONAL_DIRECTIONS
+from correios.models.data import (EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD,
+                                  EXTRA_SERVICE_RN, REGIONAL_DIRECTIONS)
 from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract,
                                   PostingCard, Service, ExtraService, RegionalDirection)
 
@@ -202,7 +201,7 @@ def test_basic_service(datetime_object):
     assert service.end_date == datetime_object + timedelta(days=5)
     assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
-    assert isinstance(service.symbol_image, image.Image)
+    assert isinstance(service.symbol_image, Image)
 
 
 def test_sanitize_service():
