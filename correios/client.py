@@ -298,11 +298,14 @@ class Correios:
 
     def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
         posting_list_serializer = PostingListSerializer()
-        label_list = posting_list.get_tracking_codes()
+        document = posting_list_serializer.get_document(posting_list)
+        posting_list_serializer.validate(document)
+
         customer_id = self._auth_call("fechaPlpVariosServicos",
-                                      posting_list_serializer.get_xml(posting_list),
+                                      posting_list_serializer.get_xml(document),
                                       posting_list.id, posting_card.number,
-                                      label_list)
+                                      posting_list.get_tracking_codes())
+
         if customer_id != posting_list.id:
             raise PostingListClosingError("Returned customer id ({!r}) does not match "
                                           "requested ({!r})".format(customer_id, posting_list.id))
