@@ -244,6 +244,7 @@ class Contract:
         self._end_date = _to_datetime(date)
 
     def add_posting_card(self, posting_card: 'PostingCard'):
+        posting_card.contract = self
         self.posting_cards.append(posting_card)
 
     @property
@@ -252,6 +253,9 @@ class Contract:
 
     def __str__(self):
         return str(self.number)
+
+    def __repr__(self):
+        return "<Contract number={!r}>".format(self.number)
 
 
 class PostingCard:
