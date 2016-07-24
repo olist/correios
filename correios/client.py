@@ -245,7 +245,7 @@ class Correios:
         self.password = password
 
         self._soap_client = SoapClient(self.url, verify=self.verify)
-        self.service = self._soap_client.service
+        self.soap_service = self._soap_client.service
         self.model_builder = ModelBuilder()
 
     def _auth_call(self, method_name, *args, **kwargs):
@@ -256,7 +256,7 @@ class Correios:
         return self._call(method_name, *args, **kwargs)
 
     def _call(self, method_name, *args, **kwargs):
-        method = getattr(self.service, method_name)
+        method = getattr(self.soap_service, method_name)
         return method(*args, **kwargs)  # TODO: handle errors
 
     def get_user(self, contract: str, posting_card: str):
