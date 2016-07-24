@@ -52,12 +52,7 @@ class ContractFactory(factory.Factory):
         model = Contract
 
     number = 9912208555
-    customer_code = 279311
     regional_direction = 10
-    status_code = "A"
-    start_date = factory.LazyFunction(datetime.utcnow)
-    end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))
-    posting_cards = []
 
 
 register(ContractFactory, "contract")
@@ -70,11 +65,6 @@ class PostingCardFactory(factory.Factory):
     contract = factory.SubFactory(ContractFactory)
     number = 57018901
     administrative_code = 8082650
-    start_date = factory.LazyFunction(datetime.utcnow)
-    end_date = factory.LazyAttribute(lambda o: o.start_date + timedelta(days=5))
-    status = 1
-    status_code = "I"
-    unit = 8
 
 
 register(PostingCardFactory, "posting_card")

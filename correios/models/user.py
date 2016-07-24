@@ -201,15 +201,9 @@ class ExtraService:
 class Contract:
     def __init__(self,
                  number: Union[int, str],
-                 customer_code: int,
-                 regional_direction: Union[str, int, 'RegionalDirection'],
-                 status_code: str,
-                 start_date: Union[datetime, str],
-                 end_date: Union[datetime, str],
-                 posting_cards: Optional[List['PostingCard']] = None):
+                 regional_direction: Union[str, int, 'RegionalDirection']):
 
         self.number = _to_integer(number)
-        self.customer_code = customer_code
 
         if isinstance(regional_direction, str):
             regional_direction = int(regional_direction)
@@ -219,19 +213,35 @@ class Contract:
 
         self.regional_direction = regional_direction
 
-        self.status_code = status_code
+        self._customer_code = None
+        self._start_date = None
+        self._end_date = None
+        self.status_code = None
+        self.posting_cards = []
 
-        if start_date is not None:
-            start_date = _to_datetime(start_date)
-        self.start_date = start_date
+    @property
+    def customer_code(self):
+        return self._customer_code
 
-        if end_date is not None:
-            end_date = _to_datetime(end_date)
-        self.end_date = end_date
+    @customer_code.setter
+    def customer_code(self, code):
+        self._customer_code = _to_integer(code)
 
-        if posting_cards is None:
-            posting_cards = []
-        self.posting_cards = posting_cards
+    @property
+    def start_date(self):
+        return self._start_date
+
+    @start_date.setter
+    def start_date(self, date):
+        self._start_date = _to_datetime(date)
+
+    @property
+    def end_date(self):
+        return self._end_date
+
+    @end_date.setter
+    def end_date(self, date):
+        self._end_date = _to_datetime(date)
 
     def add_posting_card(self, posting_card: 'PostingCard'):
         self.posting_cards.append(posting_card)
@@ -251,28 +261,35 @@ class PostingCard:
     def __init__(self,
                  contract: Contract,
                  number: Union[int, str],  # 10 digits
-                 administrative_code: Union[int, str],  # 8 digits
-                 start_date: Union[datetime, str],
-                 end_date: Union[datetime, str],
-                 status: Union[int, str],  # 2 digits
-                 status_code: str,
-                 unit: Union[int, str],  # 2 digits
-                 services: Optional[List[Service]] = None):
+                 administrative_code: Union[int, str]):  # 8 digits
         self.contract = contract
         self._number = _to_integer(number)
         self._administrative_code = _to_integer(administrative_code)
-        self.start_date = _to_datetime(start_date)
-        self.end_date = _to_datetime(end_date)
-        self.status = _to_integer(status)
-        self.status_code = status_code
-        self.unit = _to_integer(unit)
-
-        if services is None:
-            services = []
-        self.services = services
+        self._start_date = None
+        self._end_date = None
+        self._status = None
+        self._unit = None
+        self.status_code = None
+        self.services = []
 
         if self not in self.contract.posting_cards:
             self.contract.add_posting_card(self)
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, number):
+        self._status = _to_integer(number)
+
+    @property
+    def unit(self):
+        return self._unit
+
+    @unit.setter
+    def unit(self, number):
+        self._unit = _to_integer(number)
 
     @property
     def number(self):
@@ -281,6 +298,22 @@ class PostingCard:
     @property
     def administrative_code(self):
         return "{:08}".format(self._administrative_code)
+
+    @property
+    def start_date(self):
+        return self._start_date
+
+    @start_date.setter
+    def start_date(self, date):
+        self._start_date = _to_datetime(date)
+
+    @property
+    def end_date(self):
+        return self._end_date
+
+    @end_date.setter
+    def end_date(self, date):
+        self._end_date = _to_datetime(date)
 
     def add_service(self, service: Service):
         self.services.append(service)

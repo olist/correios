@@ -113,60 +113,46 @@ def test_sanitize_user_data(valid_federal_tax_number, valid_state_tax_number):
     assert user.status_number == 1
 
 
-def test_basic_contract(datetime_object):
+def test_basic_contract():
     contract = Contract(
         number=9912208555,
-        customer_code=279311,
         regional_direction=10,
-        status_code="A",
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
     )
 
     assert contract.number == 9912208555
-    assert contract.customer_code == 279311
     assert contract.regional_direction.number == 10
-    assert contract.status_code == "A"
-    assert contract.start_date == datetime_object
-    assert contract.end_date == datetime_object + timedelta(days=5)
     assert contract.posting_cards == []
     assert str(contract) == "9912208555"
+    assert repr(contract) == "<Contract number=9912208555>"
 
 
 def test_sanitize_contract_data():
     contract = Contract(
         number="9912208555  ",
-        customer_code=279311,
         regional_direction="   10",
-        status_code="A",
-        start_date="2014-05-09 00:00:00-03:00",
-        end_date="2018-05-16 00:00:00-03:00",
     )
+    contract.customer_code = "279311"
+    contract.status_code = "A"
+    contract.start_date = "2014-05-09 00:00:00-03:00"
+    contract.end_date = "2018-05-16 00:00:00-03:00"
+
     assert contract.number == 9912208555
     assert contract.regional_direction.number == 10
-    assert contract.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
-    assert contract.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+    assert contract.customer_code == 279311
+    assert contract.status_code == "A"
+    assert contract.start_date == datetime(2014, 5, 9, 0, 0, tzinfo=timezone(timedelta(hours=-3)))
+    assert contract.end_date == datetime(2018, 5, 16, 0, 0, tzinfo=timezone(timedelta(hours=-3)))
 
 
-def test_basic_posting_card(contract, datetime_object):
+def test_basic_posting_card(contract):
     posting_card = PostingCard(
         contract=contract,
         number=57018901,
         administrative_code=8082650,
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
-        status=1,
-        status_code="I",
-        unit=8,
     )
 
     assert posting_card.number == "0057018901"
     assert posting_card.administrative_code == "08082650"
-    assert posting_card.start_date == datetime_object
-    assert posting_card.end_date == datetime_object + timedelta(days=5)
-    assert posting_card.status == 1
-    assert posting_card.status_code == "I"
-    assert posting_card.unit == 8
     assert posting_card.get_contract_number() == 9912208555
     assert str(posting_card) == "0057018901"
     assert repr(posting_card) == "<PostingCard number='0057018901', contract=9912208555>"
@@ -177,17 +163,17 @@ def test_sanitize_posting_card_data(contract):
         contract=contract,
         number="0057018901",
         administrative_code=8082650,
-        start_date="2014-05-09 00:00:00-03:00",
-        end_date="2018-05-16 00:00:00-03:00",
-        status="01",
-        status_code="I",
-        unit="08        ",
     )
+    posting_card.start_date = "2014-05-09 00:00:00-03:00"
+    posting_card.end_date = "2018-05-16 00:00:00-03:00"
+    posting_card.status = "01"
+    posting_card.status_code = "I"
+    posting_card.unit = "08        "
 
     assert posting_card.number == "0057018901"
     assert posting_card.administrative_code == "08082650"
-    assert posting_card.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
-    assert posting_card.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+    assert posting_card.start_date == datetime(2014, 5, 9, 0, 0, tzinfo=timezone(timedelta(hours=-3)))
+    assert posting_card.end_date == datetime(2018, 5, 16, 0, 0, tzinfo=timezone(timedelta(hours=-3)))
     assert posting_card.status == 1
     assert posting_card.status_code == "I"
     assert posting_card.unit == 8
