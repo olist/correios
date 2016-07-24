@@ -22,9 +22,10 @@ from PIL import Image as image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
-                                 InvalidVolumeInformationError, InvalidDimensionsError)
+                                 InvalidVolumeInformationError, InvalidDimensionsError, PostingListError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList
+from tests.conftest import ShippingLabelFactory
 
 FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -218,3 +219,19 @@ def test_basic_posting_list(shipping_label):
     assert posting_list.id == 12345
     assert not posting_list.closed
     assert posting_list.get_tracking_codes()
+
+
+def test_fail_add_different_sender_in_posting_list():
+    posting_list = PostingList(id_=12345)
+    posting_list.add_shipping_label(ShippingLabelFactory.build())
+
+    with pytest.raises(PostingListError):
+        posting_list.add_shipping_label(ShippingLabelFactory.build())
+
+
+def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
+    posting_list = PostingList(id_=12345)
+    posting_list.add_shipping_label(shipping_label)
+
+    with pytest.raises(PostingListError):
+        posting_list.add_shipping_label(shipping_label)
