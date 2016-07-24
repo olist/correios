@@ -17,7 +17,7 @@ import os
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
-from PIL import Image as image
+from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
@@ -149,7 +149,7 @@ class ShippingLabel:
                  volume_type: int = TYPE_PACKAGE,
                  width: int = 0, height: int = 0, length: int = 0, weight: int = 0, diameter: int = 0,
                  extra_services: Optional[Sequence[Union[ExtraService, str, int]]] = None,
-                 logo: Optional[Union[str, image.Image]] = None,
+                 logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
                  invoice_number: Optional[str] = "",
                  invoice_series: Optional[str] = "",
@@ -177,7 +177,7 @@ class ShippingLabel:
             logo = os.path.join(DATADIR, "default_logo.png")
 
         if isinstance(logo, str):
-            logo = image.open(logo)
+            logo = Image.open(logo)
 
         self.validate_dimensions(volume_type, width, height, length, diameter)
 
@@ -203,7 +203,7 @@ class ShippingLabel:
         self.text = text
         self.latitude = latitude
         self.longitude = longitude
-        self.carrier_logo = image.open(self.carrier_logo)
+        self.carrier_logo = Image.open(self.carrier_logo)
 
         self.extra_services = []
         self.extra_services += service.default_extra_services
