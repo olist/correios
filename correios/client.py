@@ -17,7 +17,7 @@ import os
 from typing import Union, Sequence
 
 from correios import xml_utils, DATADIR
-from correios.exceptions import PostingListClosingError, PostingListSerializerError
+from correios.exceptions import PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import TrackingCode, PostingList, ShippingLabel
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
@@ -296,19 +296,19 @@ class Correios:
 
         return result
 
-    def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
+    def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()
         document = posting_list_serializer.get_document(posting_list)
         posting_list_serializer.validate(document)
+        xml = posting_list_serializer.get_xml(document)
+        return xml.decode("ISO-8859-1")
 
-        customer_id = self._auth_call("fechaPlpVariosServicos",
-                                      posting_list_serializer.get_xml(document),
-                                      posting_list.id, posting_card.number,
-                                      posting_list.get_tracking_codes())
+    def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
+        xml = self._generate_xml_string(posting_list)
+        tracking_codes = posting_list.get_tracking_codes()
 
-        if customer_id != posting_list.id:
-            raise PostingListClosingError("Returned customer id ({!r}) does not match "
-                                          "requested ({!r})".format(customer_id, posting_list.id))
+        id_ = self._auth_call("fechaPlpVariosServicos", xml,
+                              posting_list.custom_id, posting_card.number, tracking_codes)
+        posting_list.close_with_id(id_)
 
-        posting_list.close()
         return posting_list

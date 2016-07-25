@@ -339,14 +339,13 @@ class ShippingLabel:
 
 
 class PostingList:
-    def __init__(self,
-                 id_: int):
-        self.id = id_
-        self.initial_shipping_label = None
+    def __init__(self, custom_id: int):
+        self.id = None  # will be filled by close_posting_list
+        self.custom_id = custom_id
         self.shipping_labels = {}
 
         # filled by the first shipping label
-        self.closed = False
+        self.initial_shipping_label = None
         self.posting_card = None
         self.contract = None
         self.sender = None
@@ -370,5 +369,9 @@ class PostingList:
     def get_tracking_codes(self):
         return list(self.shipping_labels.keys())
 
-    def close(self):
-        self.closed = True
+    def close_with_id(self, id_: int):
+        self.id = id_
+
+    @property
+    def closed(self):
+        return self.id is not None
