@@ -210,19 +210,17 @@ def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_ad
 
 
 def test_basic_posting_list(shipping_label):
-    posting_list = PostingList(
-        id_=12345,
-    )
+    posting_list = PostingList(custom_id=12345)
     posting_list.add_shipping_label(shipping_label)
 
-    # TODO
-    assert posting_list.id == 12345
+    assert posting_list.custom_id == 12345
     assert not posting_list.closed
-    assert posting_list.get_tracking_codes()
+    tracking_codes = posting_list.get_tracking_codes()
+    assert tracking_codes and shipping_label.tracking_code.short in tracking_codes
 
 
 def test_fail_add_different_sender_in_posting_list():
-    posting_list = PostingList(id_=12345)
+    posting_list = PostingList(custom_id=12345)
     posting_list.add_shipping_label(ShippingLabelFactory.build())
 
     with pytest.raises(PostingListError):
@@ -230,7 +228,7 @@ def test_fail_add_different_sender_in_posting_list():
 
 
 def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
-    posting_list = PostingList(id_=12345)
+    posting_list = PostingList(custom_id=12345)
     posting_list.add_shipping_label(shipping_label)
 
     with pytest.raises(PostingListError):

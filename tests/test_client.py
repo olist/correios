@@ -19,6 +19,7 @@ from correios.client import ModelBuilder, Correios, PostingListSerializer
 from correios.exceptions import PostingListSerializerError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
+from correios.models.posting import ShippingLabel, PostingList
 from correios.models.user import PostingCard
 from .vcr import vcr
 
@@ -91,6 +92,15 @@ def test_generate_verification_digit():
     assert result[0] == 6
 
 
+@vcr.use_cassette
+def test_close_posting_list(posting_card, posting_list: PostingList, shipping_label: ShippingLabel):
+    shipping_label.posting_card = posting_card
+    posting_list.add_shipping_label(shipping_label)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
+    result = client.close_posting_list(posting_list, posting_card)
+    assert result.id is not None
+
+
 def test_builder_posting_card_status():
     builder = ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE
@@ -111,9 +121,9 @@ def test_fail_empty_posting_list_serialization(posting_list):
         serializer.get_document(posting_list)
 
 
-def test_fail_closed_posting_list_serialization(posting_list, shipping_label):
+def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipping_label):
     posting_list.add_shipping_label(shipping_label)
-    posting_list.close()
+    posting_list.close_with_id(id_=12345)
 
     serializer = PostingListSerializer()
     with pytest.raises(PostingListSerializerError):

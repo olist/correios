@@ -145,7 +145,7 @@ class PostingListFactory(factory.Factory):
     class Meta:
         model = PostingList
 
-    id_ = factory.Sequence(lambda n: n)
+    custom_id = factory.Sequence(lambda n: n)
 
 
 register(PostingListFactory, "posting_list")

@@ -73,9 +73,5 @@ class InvalidRegionalDirectionError(ModelError):
     pass
 
 
-class PostingListClosingError(ClientError):
-    pass
-
-
 class PostingListSerializerError(ClientError):
     pass
