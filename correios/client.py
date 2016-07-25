@@ -14,12 +14,13 @@
 
 
 import os
-from typing import Union, Sequence
+from datetime import datetime
+from typing import Union, Sequence, List, Dict
 
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList, ShippingLabel
+from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -109,6 +110,36 @@ class ModelBuilder:
     def build_tracking_codes_list(self, response):
         codes = response.split(",")
         return [TrackingCode(c) for c in codes]
+
+    def _load_events(self, tracking_code: TrackingCode, events):
+        for event in events:
+            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), "%d/%m/%Y %H:%M")
+            event = TrackingEvent(
+                timestamp=timestamp,
+                event_type=event.tipo,
+                status=event.status,
+                code=event.codigo,
+                location=event.local,
+                city=event.cidade,
+                state=event.uf,
+                receiver=getattr(event, "recebedor", ""),
+                document=getattr(event, "documento", ""),
+                comment=getattr(event, "comentario", ""),
+            )
+            tracking_code.add_event(event)
+
+    def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
+        result = []
+        for tracked_object in response.objeto:
+            tracking_code = tracking_codes[tracked_object.numero]
+            tracking_code.category = tracked_object.categoria
+            tracking_code.name = tracked_object.nome
+            tracking_code.initials = tracked_object.sigla
+            self._load_events(tracking_code, tracked_object.evento)
+
+            result.append(tracking_code)
+
+        return result
 
 
 class PostingListSerializer:
@@ -235,6 +266,7 @@ class Correios:
         'production': ("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", True),
         'test': ("https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", False),
     }
+    websro_url = "https://webservice.correios.com.br/service/rastro/Rastro.wsdl"
 
     def __init__(self, username, password, environment="production"):
         self.username = username
@@ -246,6 +278,9 @@ class Correios:
 
         self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify)
         self.sigep = self.sigep_client.service
+
+        self.websro_client = SoapClient(self.websro_url)
+        self.websro = self.websro_client.service
 
         self.model_builder = ModelBuilder()
 
@@ -313,3 +348,12 @@ class Correios:
         posting_list.close_with_id(id_)
 
         return posting_list
+
+    def get_tracking_code_events(self, tracking_codes):
+        if isinstance(tracking_codes, (str, TrackingCode)):
+            tracking_codes = [tracking_codes]
+        tracking_codes = {str(tc): TrackingCode.create(tc) for tc in tracking_codes}
+        tracking_list = [tc.code for tc in tracking_codes.values()]
+
+        response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101", tracking_list)
+        return self.model_builder.load_tracking_events(tracking_codes, response)

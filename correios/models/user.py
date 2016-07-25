@@ -25,14 +25,14 @@ from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServic
 EXTRA_SERVICE_CODE_SIZE = 2
 
 
-def _to_integer(number: Union[int, str]) -> int:
+def to_integer(number: Union[int, str]) -> int:
     try:
         return int(number.strip())
     except AttributeError:
         return int(number)
 
 
-def _to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
+def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
     if isinstance(date, str):
         last_colon_pos = date.rindex(":")
         date = date[:last_colon_pos] + date[last_colon_pos + 1:]
@@ -140,13 +140,13 @@ class Service:
                  symbol: Optional[str] = None,
                  default_extra_services: Optional[Sequence[Union["ExtraService", str, int]]] = None):
         self.id = id
-        self.code = _to_integer(code)
+        self.code = to_integer(code)
         self.description = description.strip()
         self.display_name = display_name or self.description
         self.category = category.strip()
-        self.postal_code = _to_integer(postal_code)
-        self.start_date = _to_datetime(start_date)
-        self.end_date = _to_datetime(end_date)
+        self.postal_code = to_integer(postal_code)
+        self.start_date = to_datetime(start_date)
+        self.end_date = to_datetime(end_date)
         self.symbol = symbol or "economic"
         self._symbol_image = None
 
@@ -203,7 +203,7 @@ class Contract:
                  number: Union[int, str],
                  regional_direction: Union[str, int, 'RegionalDirection']):
 
-        self.number = _to_integer(number)
+        self.number = to_integer(number)
 
         if isinstance(regional_direction, str):
             regional_direction = int(regional_direction)
@@ -225,7 +225,7 @@ class Contract:
 
     @customer_code.setter
     def customer_code(self, code):
-        self._customer_code = _to_integer(code)
+        self._customer_code = to_integer(code)
 
     @property
     def start_date(self):
@@ -233,7 +233,7 @@ class Contract:
 
     @start_date.setter
     def start_date(self, date):
-        self._start_date = _to_datetime(date)
+        self._start_date = to_datetime(date)
 
     @property
     def end_date(self):
@@ -241,7 +241,7 @@ class Contract:
 
     @end_date.setter
     def end_date(self, date):
-        self._end_date = _to_datetime(date)
+        self._end_date = to_datetime(date)
 
     def add_posting_card(self, posting_card: 'PostingCard'):
         posting_card.contract = self
@@ -267,8 +267,8 @@ class PostingCard:
                  number: Union[int, str],  # 10 digits
                  administrative_code: Union[int, str]):  # 8 digits
         self.contract = contract
-        self._number = _to_integer(number)
-        self._administrative_code = _to_integer(administrative_code)
+        self._number = to_integer(number)
+        self._administrative_code = to_integer(administrative_code)
         self._start_date = None
         self._end_date = None
         self._status = None
@@ -285,7 +285,7 @@ class PostingCard:
 
     @status.setter
     def status(self, number):
-        self._status = _to_integer(number)
+        self._status = to_integer(number)
 
     @property
     def unit(self):
@@ -293,7 +293,7 @@ class PostingCard:
 
     @unit.setter
     def unit(self, number):
-        self._unit = _to_integer(number)
+        self._unit = to_integer(number)
 
     @property
     def number(self):
@@ -309,7 +309,7 @@ class PostingCard:
 
     @start_date.setter
     def start_date(self, date):
-        self._start_date = _to_datetime(date)
+        self._start_date = to_datetime(date)
 
     @property
     def end_date(self):
@@ -317,7 +317,7 @@ class PostingCard:
 
     @end_date.setter
     def end_date(self, date):
-        self._end_date = _to_datetime(date)
+        self._end_date = to_datetime(date)
 
     def add_service(self, service: Service):
         self.services.append(service)
@@ -343,7 +343,7 @@ class User:
         self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
 
         if status_number is not None:
-            status_number = _to_integer(status_number)
+            status_number = to_integer(status_number)
         self.status_number = status_number
 
         if state_tax_number is not None:
@@ -366,7 +366,7 @@ class RegionalDirection:
         if not name:
             raise InvalidRegionalDirectionError("Invalid regional direction name {!r}".format(name))
 
-        self.number = _to_integer(number)
+        self.number = to_integer(number)
         self.code = code.upper()
         self.name = name
 

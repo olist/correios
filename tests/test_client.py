@@ -101,6 +101,20 @@ def test_close_posting_list(posting_card, posting_list: PostingList, shipping_la
     assert result.id is not None
 
 
+@vcr.use_cassette
+def test_get_tracking_codes_events():
+    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    result = client.get_tracking_code_events(["FJ064849483BR", "DU477828695BR"])
+    assert result  # TODO
+
+
+@vcr.use_cassette
+def test_get_tracking_code_events():
+    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    result = client.get_tracking_code_events("FJ064849483BR")
+    assert result  # TODO
+
+
 def test_builder_posting_card_status():
     builder = ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE

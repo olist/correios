@@ -14,6 +14,7 @@
 
 
 import os
+from datetime import datetime
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
@@ -24,7 +25,7 @@ from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformation
                                  InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
 from .address import Address
 from .data import SERVICES
-from .user import Service, ExtraService, PostingCard
+from .user import Service, ExtraService, PostingCard, to_integer
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
@@ -41,6 +42,43 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 
 
+class TrackingEventType(object):
+    def __init__(self, code: str, name: str):
+        self.code = code
+        self.name = name
+
+
+class TrackingEventStatus(object):
+    def __init__(self, code: Union[int, str], name: str):
+        self.code = code
+        self.name = name
+
+
+class TrackingEvent(object):
+    def __init__(self,
+                 timestamp: datetime,
+                 event_type: Union[str, TrackingEventType],
+                 status: Union[int, str, TrackingEventStatus],
+                 code: Union[int, str],
+                 location: str = "",
+                 receiver: str = "",
+                 city: str = "",
+                 state: str = "",
+                 document: str = "",
+                 comment: str = "",
+                 ):
+        self.timestamp = timestamp
+        self.event_type = event_type
+        self.status = status
+        self.code = to_integer(code)
+        self.location = location
+        self.receiver = receiver
+        self.city = city
+        self.state = state
+        self.document = document
+        self.comment = comment
+
+
 class TrackingCode:
     def __init__(self, code: str):
         self.prefix = code[:2].upper()
@@ -52,6 +90,12 @@ class TrackingCode:
             self._digit = int(code[10:11])
 
         self._validate()
+
+        # filled by tracking service
+        self.category = None
+        self.name = None
+        self.initials = None
+        self.events = []
 
     def _validate(self):
         if len(self.prefix) != TRACKING_CODE_PREFIX_SIZE or not self.prefix.isalpha():
@@ -69,6 +113,12 @@ class TrackingCode:
                 self._digit,
                 self.calculate_digit(self.number))
             )
+
+    @classmethod
+    def create(cls, tracking_code: Union[str, 'TrackingCode']):
+        if isinstance(tracking_code, cls):
+            return tracking_code
+        return cls(tracking_code)
 
     @classmethod
     def calculate_digit(cls, number: str) -> int:
@@ -107,6 +157,9 @@ class TrackingCode:
     def splitted(self):
         code = self.code
         return "{!s} {!s} {!s} {!s} {!s}".format(code[:2], code[2:5], code[5:8], code[8:11], code[11:])
+
+    def add_event(self, event: TrackingEvent):
+        self.events.append(event)
 
     def __str__(self):
         return self.code

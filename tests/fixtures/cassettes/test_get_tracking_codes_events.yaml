@@ -1,0 +1,60 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns0="http://resource.webservice.correios.com.br/" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Header/><ns1:Body><ns0:buscaEventosLista><usuario>solidarium2</usuario><senha>d5kgag</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>DU477828695BR</objetos><objetos>FJ064849483BR</objetos></ns0:buscaEventosLista></ns1:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['559']
+      Content-Type: [text/xml;charset=UTF-8]
+      SOAPAction: ['']
+      User-Agent: [python-requests/2.10.0]
+    method: POST
+    uri: http://webservice.correios.com.br/service/rastro
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"\
+        http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header><X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace\
+        \ xmlns:X-OPNET-Transaction-Trace=\"http://opnet.com\">pid=49614,requestid=c13f87c4eb06d6c2483b971c3b33312696e406c8e5f680eb</X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace></soapenv:Header><soapenv:Body><ns2:buscaEventosListaResponse\
+        \ xmlns:ns2=\"http://resource.webservice.correios.com.br/\"><return><versao>2.0</versao><qtd>2</qtd><objeto><numero>DU477828695BR</numero><sigla>DU</sigla><nome>ENCOMENDA\
+        \ E-SEDEX</nome><categoria>E-SEDEX</categoria><evento><tipo>BDE</tipo><status>01</status><data>08/06/2016</data><hora>17:58</hora><descricao>Objeto\
+        \ entregue ao destinat\xE1rio</descricao><recebedor>                     \
+        \                                                   </recebedor><documento>\
+        \                         </documento><comentario>                       \
+        \  </comentario><local>CEE CURITIBA NORTE</local><codigo>82560970</codigo><cidade>Curitiba</cidade><uf>PR</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>08/06/2016</data><hora>10:38</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CEE CURITIBA NORTE</local><codigo>82560970</codigo><cidade>Curitiba</cidade><uf>PR</uf></evento><evento><tipo>BDE</tipo><status>46</status><data>07/06/2016</data><hora>17:42</hora><descricao>Tentativa\
+        \ de entrega n\xE3o efetuada</descricao><detalhe>Entrega prevista para o pr\xF3\
+        ximo dia \xFAtil</detalhe><recebedor>                                    \
+        \                                    </recebedor><documento>             \
+        \            </documento><comentario>                         </comentario><local>CEE\
+        \ CURITIBA NORTE</local><codigo>82560970</codigo><cidade>Curitiba</cidade><uf>PR</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>07/06/2016</data><hora>09:53</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CEE CURITIBA NORTE</local><codigo>82560970</codigo><cidade>Curitiba</cidade><uf>PR</uf></evento><evento><tipo>DO</tipo><status>01</status><data>07/06/2016</data><hora>01:32</hora><descricao>Objeto\
+        \ encaminhado </descricao><local>CTE CURITIBA</local><codigo>80237970</codigo><cidade>Curitiba</cidade><uf>PR</uf><destino><local>CEE\
+        \ CURITIBA NORTE</local><codigo>82560970</codigo><cidade>Curitiba</cidade><bairro>Boa\
+        \ Vista</bairro><uf>PR</uf></destino></evento><evento><tipo>RO</tipo><status>01</status><data>06/06/2016</data><hora>15:52</hora><descricao>Objeto\
+        \ encaminhado </descricao><local>AGF BARIGUI</local><codigo>81200981</codigo><cidade>Curitiba</cidade><uf>PR</uf><destino><local>CTE\
+        \ CURITIBA</local><codigo>80237970</codigo><cidade>Curitiba</cidade><bairro>Centro</bairro><uf>PR</uf></destino></evento><evento><tipo>PO</tipo><status>01</status><data>06/06/2016</data><hora>15:50</hora><descricao>Objeto\
+        \ postado</descricao><local>AGF BARIGUI</local><codigo>81200981</codigo><cidade>Curitiba</cidade><uf>PR</uf></evento></objeto><objeto><numero>FJ064849483BR</numero><sigla>FJ</sigla><nome>REMESSA\
+        \ ECON\xD4MICA C/ AR DIGITAL</nome><categoria>REMESSA ECON\xD4MICA TAL\xC3\
+        O/CART\xC3O</categoria><evento><tipo>BDE</tipo><status>01</status><data>14/07/2016</data><hora>16:24</hora><descricao>Objeto\
+        \ entregue ao destinat\xE1rio</descricao><recebedor>                     \
+        \                                                   </recebedor><documento>\
+        \                         </documento><comentario>                       \
+        \  </comentario><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>14/07/2016</data><hora>09:46</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>PO</tipo><status>01</status><data>13/07/2016</data><hora>17:58</hora><descricao>Objeto\
+        \ postado</descricao><local>CTC CURITIBA/GCCAP</local><codigo>80235971</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento></objeto></return></ns2:buscaEventosListaResponse></soapenv:Body></soapenv:Envelope>"}
+    headers:
+      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
+      Connection: [Keep-Alive]
+      Content-Language: [pt-BR]
+      Content-Length: ['4152']
+      Content-Type: [text/xml; charset=UTF-8]
+      Date: ['Mon, 25 Jul 2016 05:19:11 GMT']
+      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
+      Keep-Alive: ['timeout=10, max=26']
+      Set-Cookie: [_op_aixPageId=a2_697dce67-b8b1-4e9f-a60c-7809d1f1991b; Path=/]
+      X-OPNET-Transaction-Trace: [a2_697dce67-b8b1-4e9f-a60c-7809d1f1991b]
+      X-Powered-By: [Servlet/3.0]
+    status: {code: 200, message: OK}
+version: 1
