@@ -70,7 +70,8 @@ class TrackingCode:
                 self.calculate_digit(self.number))
             )
 
-    def calculate_digit(self, number: str) -> int:
+    @classmethod
+    def calculate_digit(cls, number: str) -> int:
         numbers = [int(c) for c in number if c.isdigit()]
 
         multipliers = [8, 6, 4, 2, 3, 5, 9, 7]

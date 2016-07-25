@@ -27,8 +27,8 @@ from .vcr import vcr
 @vcr.use_cassette
 def test_basic_client():
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    assert client.url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
-    assert not client.verify
+    assert client.sigep_url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "n5f9t8"
 

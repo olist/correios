@@ -16,9 +16,7 @@
 import os
 
 import pytest
-
-# noinspection PyPep8Naming
-from PIL import Image as image
+from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
@@ -105,7 +103,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.tracking_code == tracking_code
     assert shipping_label.get_tracking_code().replace(" ", "") == str(shipping_label.tracking_code)
 
-    assert isinstance(shipping_label.logo, image.Image)
+    assert isinstance(shipping_label.logo, Image)
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
 
     assert shipping_label.order == "123"
@@ -130,7 +128,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.posting_list_group == 0
 
     assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
-    assert isinstance(shipping_label.symbol, image.Image)
+    assert isinstance(shipping_label.symbol, Image)
 
     assert len(shipping_label.get_datamatrix_info()) == 164  # datamatrix info size accordingly with documentation
     assert shipping_label.get_sender_data().count("<br/>") == 3
