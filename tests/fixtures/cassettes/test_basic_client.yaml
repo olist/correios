@@ -134,8 +134,269 @@ interactions:
       Content-Encoding: [gzip]
       Content-Length: ['6675']
       Content-Type: [text/xml;charset=UTF-8]
-      Date: ['Tue, 21 Jun 2016 04:13:52 GMT']
+      Date: ['Mon, 25 Jul 2016 05:12:25 GMT']
       Keep-Alive: ['timeout=5, max=100']
       Vary: ['Accept-Encoding,User-Agent']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.10.0]
+    method: GET
+    uri: https://webservice.correios.com.br/service/rastro/Rastro.wsdl
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<definitions name=\"\
+        rastro\" targetNamespace=\"http://resource.webservice.correios.com.br/\" xmlns:wsp1_2=\"\
+        http://schemas.xmlsoap.org/ws/2004/09/policy\" xmlns=\"http://schemas.xmlsoap.org/wsdl/\"\
+        \ xmlns:wsp=\"http://www.w3.org/ns/ws-policy\" xmlns:wsam=\"http://www.w3.org/2007/05/addressing/metadata\"\
+        \ xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"\
+        \ xmlns:tns=\"http://resource.webservice.correios.com.br/\" xmlns:soap=\"\
+        http://schemas.xmlsoap.org/wsdl/soap/\">\n  <types>\n    <xsd:schema>\n  \
+        \    <xsd:import namespace=\"http://resource.webservice.correios.com.br/\"\
+        \ schemaLocation=\"Rastro_schema1.xsd\"/>\n    </xsd:schema>\n  </types>\n\
+        \  <message name=\"buscaEventosLista\">\n    <part name=\"parameters\" element=\"\
+        tns:buscaEventosLista\">\n    </part>\n  </message>\n  <message name=\"RastroJson\"\
+        >\n    <part name=\"parameters\" element=\"tns:RastroJson\">\n    </part>\n\
+        \  </message>\n  <message name=\"ListaEntregaExterna\">\n    <part name=\"\
+        parameters\" element=\"tns:ListaEntregaExterna\">\n    </part>\n  </message>\n\
+        \  <message name=\"ListaEntregaExternaResponse\">\n    <part name=\"parameters\"\
+        \ element=\"tns:ListaEntregaExternaResponse\">\n    </part>\n  </message>\n\
+        \  <message name=\"buscaEventos\">\n    <part name=\"parameters\" element=\"\
+        tns:buscaEventos\">\n    </part>\n  </message>\n  <message name=\"UnidadesSROResponse\"\
+        >\n    <part name=\"parameters\" element=\"tns:UnidadesSROResponse\">\n  \
+        \  </part>\n  </message>\n  <message name=\"RastroJsonResponse\">\n    <part\
+        \ name=\"parameters\" element=\"tns:RastroJsonResponse\">\n    </part>\n \
+        \ </message>\n  <message name=\"buscaEventosListaResponse\">\n    <part name=\"\
+        parameters\" element=\"tns:buscaEventosListaResponse\">\n    </part>\n  </message>\n\
+        \  <message name=\"UnidadesSRO\">\n    <part name=\"parameters\" element=\"\
+        tns:UnidadesSRO\">\n    </part>\n  </message>\n  <message name=\"buscaEventosResponse\"\
+        >\n    <part name=\"parameters\" element=\"tns:buscaEventosResponse\">\n \
+        \   </part>\n  </message>\n  <portType name=\"Service\">\n    <operation name=\"\
+        buscaEventos\">\n      <input message=\"tns:buscaEventos\" wsam:Action=\"\
+        buscaEventos\">\n    </input>\n      <output message=\"tns:buscaEventosResponse\"\
+        \ wsam:Action=\"http://resource.webservice.correios.com.br/Service/buscaEventosResponse\"\
+        >\n    </output>\n    </operation>\n    <operation name=\"buscaEventosLista\"\
+        >\n      <input message=\"tns:buscaEventosLista\" wsam:Action=\"buscaEventosLista\"\
+        >\n    </input>\n      <output message=\"tns:buscaEventosListaResponse\" wsam:Action=\"\
+        http://resource.webservice.correios.com.br/Service/buscaEventosListaResponse\"\
+        >\n    </output>\n    </operation>\n    <operation name=\"RastroJson\">\n\
+        \      <input message=\"tns:RastroJson\" wsam:Action=\"RastroJson\">\n   \
+        \ </input>\n      <output message=\"tns:RastroJsonResponse\" wsam:Action=\"\
+        http://resource.webservice.correios.com.br/Service/RastroJsonResponse\">\n\
+        \    </output>\n    </operation>\n    <operation name=\"ListaEntregaExterna\"\
+        >\n      <input message=\"tns:ListaEntregaExterna\" wsam:Action=\"ListaEntregaExterna\"\
+        >\n    </input>\n      <output message=\"tns:ListaEntregaExternaResponse\"\
+        \ wsam:Action=\"http://resource.webservice.correios.com.br/Service/ListaEntregaExternaResponse\"\
+        >\n    </output>\n    </operation>\n    <operation name=\"UnidadesSRO\">\n\
+        \      <input message=\"tns:UnidadesSRO\" wsam:Action=\"UnidadesSRO\">\n \
+        \   </input>\n      <output message=\"tns:UnidadesSROResponse\" wsam:Action=\"\
+        http://resource.webservice.correios.com.br/Service/UnidadesSROResponse\">\n\
+        \    </output>\n    </operation>\n  </portType>\n  <binding name=\"ServicePortBinding\"\
+        \ type=\"tns:Service\">\n    <soap:binding style=\"document\" transport=\"\
+        http://schemas.xmlsoap.org/soap/http\"/>\n    <operation name=\"buscaEventos\"\
+        >\n      <soap:operation soapAction=\"buscaEventos\"/>\n      <input>\n  \
+        \      <soap:body use=\"literal\"/>\n      </input>\n      <output>\n    \
+        \    <soap:body use=\"literal\"/>\n      </output>\n    </operation>\n   \
+        \ <operation name=\"buscaEventosLista\">\n      <soap:operation soapAction=\"\
+        buscaEventosLista\"/>\n      <input>\n        <soap:body use=\"literal\"/>\n\
+        \      </input>\n      <output>\n        <soap:body use=\"literal\"/>\n  \
+        \    </output>\n    </operation>\n    <operation name=\"RastroJson\">\n  \
+        \    <soap:operation soapAction=\"RastroJson\"/>\n      <input>\n        <soap:body\
+        \ use=\"literal\"/>\n      </input>\n      <output>\n        <soap:body use=\"\
+        literal\"/>\n      </output>\n    </operation>\n    <operation name=\"ListaEntregaExterna\"\
+        >\n      <soap:operation soapAction=\"ListaEntregaExterna\"/>\n      <input>\n\
+        \        <soap:body use=\"literal\"/>\n      </input>\n      <output>\n  \
+        \      <soap:body use=\"literal\"/>\n      </output>\n    </operation>\n \
+        \   <operation name=\"UnidadesSRO\">\n      <soap:operation soapAction=\"\
+        UnidadesSRO\"/>\n      <input>\n        <soap:body use=\"literal\"/>\n   \
+        \   </input>\n      <output>\n        <soap:body use=\"literal\"/>\n     \
+        \ </output>\n    </operation>\n  </binding>\n  <service name=\"rastro\">\n\
+        \    <port name=\"ServicePort\" binding=\"tns:ServicePortBinding\">\n    \
+        \  <soap:address location=\"http://webservice.correios.com.br:80/service/rastro\"\
+        />\n    </port>\n  </service>\n</definitions>\n"}
+    headers:
+      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
+      Connection: [Keep-Alive]
+      Content-Language: [pt-BR]
+      Content-Type: [text/xml]
+      Date: ['Mon, 25 Jul 2016 05:12:25 GMT']
+      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
+      Keep-Alive: ['timeout=10, max=82']
+      Set-Cookie: [_op_aixPageId=a2_58acace0-287e-46b9-adb9-ee8875a15b51; Path=/]
+      X-OPNET-Transaction-Trace: [a2_58acace0-287e-46b9-adb9-ee8875a15b51]
+      X-Powered-By: [Servlet/3.0]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Cookie: [_op_aixPageId=a2_58acace0-287e-46b9-adb9-ee8875a15b51]
+      User-Agent: [python-requests/2.10.0]
+    method: GET
+    uri: https://webservice.correios.com.br/service/rastro/Rastro_schema1.xsd
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!--Generated by the\
+        \ JavaTM Architecture for XML Binding(JAXB) Reference Implementation, (build\
+        \ IBM 2.2.3-07/05/2013 05:25 AM(foreman)-) \nSee <a href=\"http://java.sun.com/xml/jaxb\"\
+        >http://java.sun.com/xml/jaxb</a> --><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\
+        \ xmlns:tns=\"http://resource.webservice.correios.com.br/\" version=\"1.0\"\
+        \ targetNamespace=\"http://resource.webservice.correios.com.br/\">\n\n  <xs:element\
+        \ name=\"ListaEntregaExterna\" type=\"tns:ListaEntregaExterna\"></xs:element>\n\
+        \n  <xs:element name=\"ListaEntregaExternaResponse\" type=\"tns:ListaEntregaExternaResponse\"\
+        ></xs:element>\n\n  <xs:element name=\"RastroJson\" type=\"tns:RastroJson\"\
+        ></xs:element>\n\n  <xs:element name=\"RastroJsonResponse\" type=\"tns:RastroJsonResponse\"\
+        ></xs:element>\n\n  <xs:element name=\"UnidadesSRO\" type=\"tns:UnidadesSRO\"\
+        ></xs:element>\n\n  <xs:element name=\"UnidadesSROResponse\" type=\"tns:UnidadesSROResponse\"\
+        ></xs:element>\n\n  <xs:element name=\"buscaEventos\" type=\"tns:buscaEventos\"\
+        ></xs:element>\n\n  <xs:element name=\"buscaEventosLista\" type=\"tns:buscaEventosLista\"\
+        ></xs:element>\n\n  <xs:element name=\"buscaEventosListaResponse\" type=\"\
+        tns:buscaEventosListaResponse\"></xs:element>\n\n  <xs:element name=\"buscaEventosResponse\"\
+        \ type=\"tns:buscaEventosResponse\"></xs:element>\n\n  <xs:element name=\"\
+        destino\" type=\"tns:destinos\"></xs:element>\n\n  <xs:element name=\"endereco\"\
+        \ type=\"tns:enderecoMobile\"></xs:element>\n\n  <xs:element name=\"evento\"\
+        \ type=\"tns:eventos\"></xs:element>\n\n  <xs:element name=\"objeto\" type=\"\
+        tns:objeto\"></xs:element>\n\n  <xs:element name=\"rastro\" type=\"tns:sroxml\"\
+        ></xs:element>\n\n  <xs:complexType name=\"buscaEventosLista\">\n    <xs:sequence>\n\
+        \      <xs:element name=\"usuario\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"senha\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"tipo\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"resultado\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"lingua\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"objetos\" type=\"xs:string\" minOccurs=\"0\" maxOccurs=\"\
+        unbounded\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType\
+        \ name=\"buscaEventosListaResponse\">\n    <xs:sequence>\n      <xs:element\
+        \ name=\"return\" type=\"tns:sroxml\" minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n\
+        \  </xs:complexType>\n\n  <xs:complexType name=\"sroxml\">\n    <xs:sequence>\n\
+        \      <xs:element name=\"versao\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"qtd\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"TipoPesquisa\" type=\"xs:string\" minOccurs=\"0\"\
+        ></xs:element>\n      <xs:element name=\"TipoResultado\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element ref=\"tns:objeto\" minOccurs=\"\
+        0\" maxOccurs=\"unbounded\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\
+        \n  <xs:complexType name=\"objeto\">\n    <xs:sequence>\n      <xs:element\
+        \ name=\"numero\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n     \
+        \ <xs:element name=\"sigla\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"nome\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"categoria\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"erro\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element ref=\"tns:evento\" minOccurs=\"0\" maxOccurs=\"unbounded\"\
+        ></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType\
+        \ name=\"eventos\">\n    <xs:sequence>\n      <xs:element name=\"tipo\" type=\"\
+        xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"status\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"\
+        data\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element\
+        \ name=\"hora\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element\
+        \ name=\"descricao\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n  \
+        \    <xs:element name=\"detalhe\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"recebedor\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"documento\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"comentario\" type=\"xs:string\" minOccurs=\"0\"\
+        ></xs:element>\n      <xs:element name=\"local\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"codigo\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"cidade\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"uf\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"sto\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"amazoncode\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"amazontimezone\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element ref=\"\
+        tns:destino\" minOccurs=\"0\" maxOccurs=\"unbounded\"></xs:element>\n    \
+        \  <xs:element ref=\"tns:endereco\" minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n\
+        \  </xs:complexType>\n\n  <xs:complexType name=\"destinos\">\n    <xs:sequence>\n\
+        \      <xs:element name=\"local\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"codigo\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"cidade\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"bairro\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"uf\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"enderecoMobile\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"codigo\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"cep\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"logradouro\" type=\"\
+        xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"complemento\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"\
+        numero\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element\
+        \ name=\"localidade\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n \
+        \     <xs:element name=\"uf\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"bairro\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"latitude\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"longitude\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"celular\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"buscaEventos\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"usuario\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"senha\" type=\"\
+        xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"tipo\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"\
+        resultado\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element\
+        \ name=\"lingua\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n     \
+        \ <xs:element name=\"objetos\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"buscaEventosResponse\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"return\" type=\"tns:sroxml\"\
+        \ minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\
+        \n  <xs:complexType name=\"ListaEntregaExterna\">\n    <xs:sequence>\n   \
+        \   <xs:element name=\"loec\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"ListaEntregaExternaResponse\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"return\" type=\"tns:listaEntregaExterna\"\
+        \ minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\
+        \n  <xs:complexType name=\"listaEntregaExterna\">\n    <xs:sequence>\n   \
+        \   <xs:element name=\"carteiro\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"data\" type=\"xs:dateTime\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"distrito\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"estacao\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"id\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"loec\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"nomeCarteiro\" type=\"xs:string\" minOccurs=\"0\"\
+        ></xs:element>\n      <xs:element name=\"nomeUnidade\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"objetos\" type=\"\
+        tns:objetoPostal\" nillable=\"true\" minOccurs=\"0\" maxOccurs=\"unbounded\"\
+        ></xs:element>\n      <xs:element name=\"unidade\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType\
+        \ name=\"objetoPostal\">\n    <xs:sequence>\n      <xs:element name=\"agrupamento\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"\
+        avisoRecebimento\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n    \
+        \  <xs:element name=\"devolucaoDocumento\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"devolucaoObjeto\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"maoPropria\" type=\"\
+        xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"numeroObjeto\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n \
+        \ </xs:complexType>\n\n  <xs:complexType name=\"RastroJson\">\n    <xs:sequence>\n\
+        \      <xs:element name=\"usuario\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"senha\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"tipo\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"resultado\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"lingua\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"objetos\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \    </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"RastroJsonResponse\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"return\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n\
+        \n  <xs:complexType name=\"UnidadesSRO\">\n    <xs:sequence>\n      <xs:element\
+        \ name=\"codigoSRO\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n  \
+        \  </xs:sequence>\n  </xs:complexType>\n\n  <xs:complexType name=\"UnidadesSROResponse\"\
+        >\n    <xs:sequence>\n      <xs:element name=\"return\" type=\"tns:registroUnidades\"\
+        \ minOccurs=\"0\" maxOccurs=\"unbounded\"></xs:element>\n    </xs:sequence>\n\
+        \  </xs:complexType>\n\n  <xs:complexType name=\"registroUnidades\">\n   \
+        \ <xs:sequence>\n      <xs:element name=\"codigoDR\" type=\"xs:string\" minOccurs=\"\
+        0\"></xs:element>\n      <xs:element name=\"codigoMCU\" type=\"xs:string\"\
+        \ minOccurs=\"0\"></xs:element>\n      <xs:element name=\"codigoSRO\" type=\"\
+        xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"nomeUnidade\"\
+        \ type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element name=\"\
+        siglaDR\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n      <xs:element\
+        \ name=\"siglaTipoUnidade\" type=\"xs:string\" minOccurs=\"0\"></xs:element>\n\
+        \      <xs:element name=\"tipoUnidade\" type=\"xs:string\" minOccurs=\"0\"\
+        ></xs:element>\n    </xs:sequence>\n  </xs:complexType>\n</xs:schema>"}
+    headers:
+      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
+      Connection: [Keep-Alive]
+      Content-Language: [pt-BR]
+      Content-Type: [text/xml]
+      Date: ['Mon, 25 Jul 2016 05:12:26 GMT']
+      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
+      Keep-Alive: ['timeout=10, max=93']
+      Set-Cookie: [_op_aixPageId=a2_1dfbb45d-33ce-412b-ab99-8e8bb7e87010; Path=/]
+      X-OPNET-Transaction-Trace: [a2_1dfbb45d-33ce-412b-ab99-8e8bb7e87010]
+      X-Powered-By: [Servlet/3.0]
     status: {code: 200, message: OK}
 version: 1

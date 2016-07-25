@@ -231,21 +231,22 @@ class Correios:
     TEST = "test"
 
     # 'environment': ('url', 'ssl_verification')
-    environments = {
+    sigep_urls = {
         'production': ("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", True),
         'test': ("https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", False),
     }
 
     def __init__(self, username, password, environment="production"):
-        url, verify = self.environments[environment]
-        self.url = url
-        self.verify = verify
-
         self.username = username
         self.password = password
 
-        self._soap_client = SoapClient(self.url, verify=self.verify)
-        self.soap_service = self._soap_client.service
+        url, verify = self.sigep_urls[environment]
+        self.sigep_url = url
+        self.sigep_verify = verify
+
+        self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify)
+        self.sigep = self.sigep_client.service
+
         self.model_builder = ModelBuilder()
 
     def _auth_call(self, method_name, *args, **kwargs):
@@ -256,7 +257,7 @@ class Correios:
         return self._call(method_name, *args, **kwargs)
 
     def _call(self, method_name, *args, **kwargs):
-        method = getattr(self.soap_service, method_name)
+        method = getattr(self.sigep, method_name)
         return method(*args, **kwargs)  # TODO: handle errors
 
     def get_user(self, contract: str, posting_card: str) -> User:
@@ -289,7 +290,7 @@ class Correios:
                                  service.id, DEFAULT_TRACKING_CODE_QUANTITY)
         return self.model_builder.build_tracking_codes_list(result)
 
-    def generate_verification_digit(self, tracking_codes: Sequence[str]) -> int:
+    def generate_verification_digit(self, tracking_codes: Sequence[str]) -> List[int]:
         tracking_codes = [TrackingCode(tc).nodigit for tc in tracking_codes]
         result = self._auth_call("geraDigitoVerificadorEtiquetas",
                                  tracking_codes)
