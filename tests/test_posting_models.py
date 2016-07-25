@@ -70,6 +70,14 @@ def test_tracking_code_digit_calculator(tracking_code, digit):
     assert tracking.digit == digit
 
 
+def test_tracking_code_creator():
+    tracking_code1 = TrackingCode.create("DL746686536BR")
+    assert tracking_code1.code == "DL746686536BR"
+
+    tracking_code2 = TrackingCode.create(tracking_code1)
+    assert tracking_code1 == tracking_code2
+
+
 def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code):
     shipping_label = ShippingLabel(
         posting_card=posting_card,
