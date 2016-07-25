@@ -259,7 +259,7 @@ class Correios:
         method = getattr(self.soap_service, method_name)
         return method(*args, **kwargs)  # TODO: handle errors
 
-    def get_user(self, contract: str, posting_card: str):
+    def get_user(self, contract: str, posting_card: str) -> User:
         user_data = self._auth_call("buscaCliente", contract, posting_card)
         return self.model_builder.build_user(user_data)
 
@@ -271,7 +271,7 @@ class Correios:
                                     posting_card: PostingCard,
                                     service: Service,
                                     from_zip_code: Union[ZipCode, str],
-                                    to_zip_code: Union[ZipCode, str]):
+                                    to_zip_code: Union[ZipCode, str]) -> bool:
         from_zip_code = ZipCode(from_zip_code)
         to_zip_code = ZipCode(to_zip_code)
         result = self._auth_call("verificaDisponibilidadeServico",
@@ -279,17 +279,17 @@ class Correios:
                                  str(from_zip_code), str(to_zip_code))
         return result
 
-    def get_posting_card_status(self, posting_card: PostingCard):
+    def get_posting_card_status(self, posting_card: PostingCard) -> bool:
         result = self._auth_call("getStatusCartaoPostagem", posting_card.number)
         return self.model_builder.build_posting_card_status(result)
 
-    def request_tracking_codes(self, user: User, service: Service, receiver_type="C"):
+    def request_tracking_codes(self, user: User, service: Service, receiver_type="C") -> list:
         result = self._auth_call("solicitaEtiquetas",
                                  receiver_type, str(user.federal_tax_number),
                                  service.id, DEFAULT_TRACKING_CODE_QUANTITY)
         return self.model_builder.build_tracking_codes_list(result)
 
-    def generate_verification_digit(self, tracking_codes: Sequence[str]):
+    def generate_verification_digit(self, tracking_codes: Sequence[str]) -> int:
         tracking_codes = [TrackingCode(tc).nodigit for tc in tracking_codes]
         result = self._auth_call("geraDigitoVerificadorEtiquetas",
                                  tracking_codes)
