@@ -216,7 +216,6 @@ def test_fail_package_weight_validation():
         Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=50000)
 
 
-
 @pytest.mark.parametrize("sequence", [
     (1,),
     (3, 2),

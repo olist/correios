@@ -36,8 +36,4 @@ def test_render_basic_shipping_label():
 
     pdf = shipping_labels_renderer.render()
 
-    with open(os.path.expanduser("~/correios.pdf"), "wb") as f:
-        pdf.seek(0)
-        f.write(pdf.read())
-
-    assert pdf.getvalue().startswith(b"%PDF-1.4")
+    assert bytes(pdf).startswith(b"%PDF-1.4")

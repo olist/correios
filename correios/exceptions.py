@@ -83,3 +83,7 @@ class InvalidRegionalDirectionError(ModelError):
 
 class PostingListSerializerError(ClientError):
     pass
+
+
+class RendererError(BaseCorreiosError):
+    pass

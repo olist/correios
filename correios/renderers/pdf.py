@@ -24,9 +24,33 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Paragraph
 
-from correios.models.posting import ShippingLabel
+from correios.models.posting import ShippingLabel, PostingList
+from exceptions import RendererError
 
 VERTICAL_SECURITY_MARGIN = 6  # pt
+
+
+class PDF:
+    def __init__(self, page_size):
+        self._file = BytesIO()
+        self.canvas = Canvas(self._file, pagesize=page_size)
+        self._saved = False
+
+    @property
+    def file(self) -> BytesIO:
+        if not self._saved:
+            self.canvas.save()
+            self._saved = True
+
+        self._file.seek(0)
+        return self._file
+
+    def save(self, filename):
+        with open(filename, "wb") as pdf_file:
+            pdf_file.write(self.file.read())
+
+    def __bytes__(self):
+        return self.file.getvalue()
 
 
 class ShippingLabelFlowable(Flowable):
@@ -156,9 +180,10 @@ class ShippingLabelFlowable(Flowable):
 
 class ShippingLabelsPDFRenderer:
     def __init__(self, page_size=pagesizes.A4, hmargin=0, vmargin=0):
-        self.file = BytesIO()
-        self.canvas = Canvas(self.file, pagesize=page_size)
+        self.page_size = page_size
+        self.posting_list = None
         self.labels = []
+        self._tracking_codes = set()
 
         self.page_width = page_size[0]
         self.hmargin = hmargin
@@ -178,31 +203,73 @@ class ShippingLabelsPDFRenderer:
             (self.hmargin + self.col_size, self.vmargin),
         )
 
+    def set_posting_list(self, posting_list: PostingList):
+        self.posting_list = posting_list
+        for shipping_label in posting_list.shipping_labels:
+            self.add_shipping_label(shipping_label)
+
     def add_shipping_label(self, shipping_label: ShippingLabel):
+        if str(shipping_label.tracking_code) in self._tracking_codes:
+            raise RendererError(
+                "Shipping Label with tracking code {!s} already added".format(shipping_label.tracking_code))
         label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
         self.labels.append(label)
+        self._tracking_codes.add(str(shipping_label.tracking_code))
 
-    def draw_grid(self):
-        self.canvas.setLineWidth(0.2)
-        self.canvas.setStrokeColor(colors.gray)
-        self.canvas.line(self.hmargin, self.page_height / 2, self.width + self.hmargin,
-                         self.page_height / 2)
-        self.canvas.line(self.page_width / 2, self.vmargin, self.page_width / 2,
-                         self.height + self.vmargin, )
+    def draw_grid(self, canvas):
+        canvas.setLineWidth(0.2)
+        canvas.setStrokeColor(colors.gray)
+        canvas.line(self.hmargin, self.page_height / 2, self.width + self.hmargin,
+                    self.page_height / 2)
+        canvas.line(self.page_width / 2, self.vmargin, self.page_width / 2,
+                    self.height + self.vmargin, )
 
-    def render(self) -> BytesIO:
+    def render_posting_list(self, pdf=None) -> PDF:
+        if pdf is None:
+            pdf = PDF(self.page_size)
+
+        canvas = pdf.canvas
+
+        # TODO
+
+        canvas.showPage()
+        return pdf
+
+    def render_labels(self, pdf=None) -> PDF:
+        if pdf is None:
+            pdf = PDF(self.page_size)
+
+        canvas = pdf.canvas
+
         pos = len(self._label_position) - 1
         for i, label in enumerate(self.labels):
             pos = i % len(self._label_position)
-            self.labels[i].drawOn(self.canvas, *self._label_position[pos])
+            self.labels[i].drawOn(canvas, *self._label_position[pos])
             if pos == len(self._label_position) - 1:
-                self.draw_grid()
-                self.canvas.showPage()
+                self.draw_grid(canvas)
+                canvas.showPage()
 
         if pos != len(self._label_position) - 1:
-            self.draw_grid()
-            self.canvas.showPage()
+            self.draw_grid(canvas)
+            canvas.showPage()
 
-        self.canvas.save()
-        self.file.seek(0)
-        return self.file
+        return pdf
+
+    def render_label(self, shipping_label: ShippingLabel) -> PDF:
+        pdf = PDF(self.page_size)
+        canvas = pdf.canvas
+
+        label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
+        label.drawOn(canvas, *self._label_position[0])
+
+        self.draw_grid(canvas)
+
+        canvas.showPage()
+
+        return pdf
+
+    def render(self) -> PDF:
+        pdf = PDF(self.page_size)
+        self.render_posting_list(pdf)
+        self.render_labels(pdf)
+        return pdf
