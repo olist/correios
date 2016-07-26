@@ -179,39 +179,37 @@ class ShippingLabelFlowable(Flowable):
 
 
 class ShippingLabelsPDFRenderer:
-    def __init__(self, page_size=pagesizes.A4, hmargin=0, vmargin=0):
-        self.page_size = page_size
-        self.posting_list = None
+    def __init__(self, page_size=pagesizes.A4, shipping_labels_margin=(0, 0), posting_list_margin=(5 * mm, 5 * mm)):
         self.labels = []
         self._tracking_codes = set()
 
+        self.page_size = page_size
         self.page_width = page_size[0]
-        self.hmargin = hmargin
-        self.width = self.page_width - (2 * hmargin)
-
         self.page_height = page_size[1]
-        self.vmargin = vmargin
-        self.height = self.page_height - (2 * vmargin)
 
-        self.col_size = self.width / 2
-        self.row_size = self.height / 2
+        self.posting_list = None
+        self.posting_list_margin = posting_list_margin
 
+        self.shipping_labels_margin = shipping_labels_margin
+        self.shipping_labels_width = self.page_width - (2 * shipping_labels_margin[0])
+        self.shipping_labels_height = self.page_height - (2 * shipping_labels_margin[1])
+        self.col_size = self.shipping_labels_width / 2
+        self.row_size = self.shipping_labels_height / 2
         self._label_position = (
-            (self.hmargin, self.page_height / 2),
-            (self.hmargin + self.col_size, self.page_height / 2),
-            (self.hmargin, self.vmargin),
-            (self.hmargin + self.col_size, self.vmargin),
+            (shipping_labels_margin[0], self.page_height / 2),
+            (shipping_labels_margin[0] + self.col_size, self.page_height / 2),
+            (shipping_labels_margin[0], shipping_labels_margin[1]),
+            (shipping_labels_margin[0] + self.col_size, shipping_labels_margin[1]),
         )
 
     def set_posting_list(self, posting_list: PostingList):
         self.posting_list = posting_list
-        for shipping_label in posting_list.shipping_labels:
+        for shipping_label in posting_list.shipping_labels.values():
             self.add_shipping_label(shipping_label)
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
         if str(shipping_label.tracking_code) in self._tracking_codes:
-            raise RendererError(
-                "Shipping Label with tracking code {!s} already added".format(shipping_label.tracking_code))
+            raise RendererError("Shipping Label {!s} already added".format(shipping_label.tracking_code))
         label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
         self.labels.append(label)
         self._tracking_codes.add(str(shipping_label.tracking_code))
@@ -219,19 +217,26 @@ class ShippingLabelsPDFRenderer:
     def draw_grid(self, canvas):
         canvas.setLineWidth(0.2)
         canvas.setStrokeColor(colors.gray)
-        canvas.line(self.hmargin, self.page_height / 2, self.width + self.hmargin,
+        canvas.line(self.hmargin, self.page_height / 2, self.shipping_labels_width + self.hmargin,
                     self.page_height / 2)
         canvas.line(self.page_width / 2, self.vmargin, self.page_width / 2,
-                    self.height + self.vmargin, )
+                    self.shipping_labels_height + self.vmargin, )
 
     def render_posting_list(self, pdf=None) -> PDF:
         if pdf is None:
             pdf = PDF(self.page_size)
-
         canvas = pdf.canvas
 
-        # TODO
+        hmargin, vmargin = 5 * mm, 5 * mm
+        width, height = self.shipping_labels_width - 10 * mm, self.shipping_labels_height - 10 * mm
+        x1, y1, x2, y2 = 5 * mm, 5 * mm, width + 5 * mm, height + 5 * mm
 
+        canvas.rect(x1, y1, self.shipping_labels_width, self.shipping_labels_height)
+        logo = ImageReader(self.posting_list.logo)
+        canvas.drawImage(logo, x1 + 5 * mm, y2, width=25 * mm,
+                         preserveAspectRatio=True, anchor="sw", mask="auto")
+
+        # TODO
         canvas.showPage()
         return pdf
 

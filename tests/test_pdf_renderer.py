@@ -16,6 +16,8 @@
 import os
 
 from correios.renderers.pdf import ShippingLabelsPDFRenderer
+from models.posting import PostingList
+from models.user import PostingCard
 from tests.conftest import ShippingLabelFactory
 
 TESTDIR = os.path.dirname(__file__)
@@ -37,3 +39,13 @@ def test_render_basic_shipping_label():
     pdf = shipping_labels_renderer.render()
 
     assert bytes(pdf).startswith(b"%PDF-1.4")
+
+
+def test_render_basic_posting_list(posting_list: PostingList, posting_card: PostingCard):
+    shipping_labels_renderer = ShippingLabelsPDFRenderer()
+    shipping_labels = [ShippingLabelFactory.build(posting_card=posting_card) for _ in range(5)]
+    for shipping_label in shipping_labels:
+        posting_list.add_shipping_label(shipping_label)
+    shipping_labels_renderer.set_posting_list(posting_list)
+    pdf = shipping_labels_renderer.render_posting_list()
+    pdf.save(os.path.expanduser("~/plp.pdf"))
