@@ -20,7 +20,7 @@ from typing import Union, Sequence, List, Dict
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent
+from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent, EventStatus
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -113,9 +113,8 @@ class ModelBuilder:
             timestamp = datetime.strptime("{} {}".format(event.data, event.hora), "%d/%m/%Y %H:%M")
             event = TrackingEvent(
                 timestamp=timestamp,
-                event_type=event.tipo,
-                status=event.status,
-                code=event.codigo,
+                status=EventStatus(event.tipo, event.status),
+                location_zip_code=event.codigo,
                 location=event.local,
                 city=event.cidade,
                 state=event.uf,

@@ -44,6 +44,9 @@ class ZipCode:
         return "{}-{}".format(self.code[:5], self.code[-3:])
 
     def __eq__(self, other):
+        if isinstance(other, ZipCode):
+            return self.code == other.code
+
         return self._code == self._validate(other)
 
     def __str__(self):
@@ -59,6 +62,16 @@ class ZipCode:
     def digit(self):
         validator = sum(int(d) for d in self.code)
         return self._next_multiple(validator) - validator
+
+    @classmethod
+    def create(cls, code: Union['ZipCode', int, str]) -> 'ZipCode':
+        if isinstance(code, ZipCode):
+            return code
+
+        if isinstance(code, int):
+            code = str(code)
+
+        return ZipCode(code)
 
 
 class State:

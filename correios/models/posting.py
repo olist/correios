@@ -23,7 +23,7 @@ from PIL import Image
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
                                  InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
-from .address import Address
+from .address import Address, ZipCode
 from .user import Service, ExtraService, PostingCard, to_integer
 
 TRACKING_CODE_SIZE = 13
@@ -41,24 +41,17 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 
 
-class TrackingEventType:
-    def __init__(self, code: str, name: str):
-        self.code = code
-        self.name = name
-
-
-class TrackingEventStatus:
-    def __init__(self, code: Union[int, str], name: str):
-        self.code = code
-        self.name = name
+class EventStatus:
+    def __init__(self, event_type: str, status: int):
+        self.type = event_type
+        self.status = status
 
 
 class TrackingEvent:
     def __init__(self,
                  timestamp: datetime,
-                 event_type: Union[str, TrackingEventType],
-                 status: Union[int, str, TrackingEventStatus],
-                 code: Union[int, str],
+                 status: EventStatus,
+                 location_zip_code: Union[str, ZipCode],
                  location: str = "",
                  receiver: str = "",
                  city: str = "",
@@ -67,9 +60,8 @@ class TrackingEvent:
                  comment: str = "",
                  ):
         self.timestamp = timestamp
-        self.event_type = event_type
         self.status = status
-        self.code = to_integer(code)
+        self.location_zip_code = ZipCode.create(location_zip_code)
         self.location = location
         self.receiver = receiver
         self.city = city
