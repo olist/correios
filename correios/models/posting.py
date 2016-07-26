@@ -170,7 +170,7 @@ class ShippingLabel:
     receipt_template = ("Recebedor: ___________________________________________<br/>"
                         "Assinatura: __________________ Documento: _______________")
     sender_header = "DESTINATÁRIO"
-    carrier_logo = os.path.join(DATADIR, "carrier_logo.png")
+    carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
     receiver_data_template = ("{receiver.name}<br/>"
                               "{receiver.street}, {receiver.number}<br/>"
                               "{receiver.complement} {receiver.neighborhood}<br/>"
