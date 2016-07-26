@@ -20,7 +20,7 @@ from typing import Union, Sequence, List, Dict
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent
+from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent, EventStatus
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -30,13 +30,10 @@ DEFAULT_TRACKING_CODE_QUANTITY = 2  # I tried 1, 2, N... and Correios always ret
 class ModelBuilder:
     def build_service(self, service_data):
         service = Service(
-            id=service_data.id,
             code=service_data.codigo,
+            id=service_data.id,
             description=service_data.descricao,
-            category=service_data.servicoSigep.categoriaServico,
-            postal_code=service_data.servicoSigep.ssiCoCodigoPostal,
-            start_date=service_data.vigencia.dataInicial,
-            end_date=service_data.vigencia.dataFinal,
+            category=service_data.servicoSigep.categoriaServico
         )
         return service
 
@@ -116,9 +113,8 @@ class ModelBuilder:
             timestamp = datetime.strptime("{} {}".format(event.data, event.hora), "%d/%m/%Y %H:%M")
             event = TrackingEvent(
                 timestamp=timestamp,
-                event_type=event.tipo,
-                status=event.status,
-                code=event.codigo,
+                status=EventStatus(event.tipo, event.status),
+                location_zip_code=event.codigo,
                 location=event.local,
                 city=event.cidade,
                 state=event.uf,

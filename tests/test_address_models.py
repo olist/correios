@@ -60,6 +60,15 @@ def test_zip_code_check_digit(zip_code, digit):
     assert zip_code.digit == digit
 
 
+@pytest.mark.parametrize("zip_code", [
+    71010050,
+    "71010050",
+    ZipCode("71010050"),
+])
+def test_zip_code_creation(zip_code):
+    assert ZipCode.create(zip_code) == ZipCode("71010050")
+
+
 def test_basic_phone():
     phone = Phone("+1 (212) 555-1234")
     assert phone == "+12125551234"

@@ -23,7 +23,8 @@ from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError
                                  InvalidVolumeInformationError, InvalidDimensionsError, PostingListError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList
-from tests.conftest import ShippingLabelFactory
+from correios.models.user import Service, ExtraService
+from .conftest import ShippingLabelFactory
 
 FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
 
@@ -103,10 +104,11 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.sender == sender_address
     assert shipping_label.receiver == receiver_address
 
-    assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.service == Service.get(SERVICE_SEDEX)
     assert shipping_label.get_service_name() == "SEDEX"
 
-    assert shipping_label.extra_services == [EXTRA_SERVICE_RN, EXTRA_SERVICE_AR]
+    assert shipping_label.extra_services == [ExtraService.get(EXTRA_SERVICE_RN),
+                                             ExtraService.get(EXTRA_SERVICE_AR)]
 
     assert shipping_label.tracking_code == tracking_code
     assert shipping_label.get_tracking_code().replace(" ", "") == str(shipping_label.tracking_code)
@@ -155,7 +157,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
         tracking_code="PD12345678 BR",
     )
 
-    assert shipping_label.service == SERVICE_SEDEX
+    assert shipping_label.service == Service.get(SERVICE_SEDEX)
     assert shipping_label.tracking_code.code == "PD123456785BR"
     assert len(shipping_label.extra_services) == 1
 
