@@ -20,9 +20,9 @@ from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
-                                 InvalidVolumeInformationError, InvalidDimensionsError, PostingListError)
+                                 InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
-from correios.models.posting import ShippingLabel, TrackingCode, PostingList
+from correios.models.posting import ShippingLabel, TrackingCode, PostingList, Package
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
@@ -79,7 +79,7 @@ def test_tracking_code_creator():
     assert tracking_code1 == tracking_code2
 
 
-def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code):
+def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code, package):
     shipping_label = ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
@@ -92,9 +92,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
         invoice_number="321",
         invoice_series="A1",
         invoice_type="",
-        volume_sequence=(1, 2),
-        width=11, height=2, length=16,
-        weight=100,
+        package=package,
         text="Hello World!",
         latitude=-25.4131980,
         longitude=-49.2584896,
@@ -123,12 +121,8 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_invoice() == "321"
 
     assert shipping_label.get_contract_number() == "9912208555"
-
-    assert shipping_label.volume_sequence == (1, 2)
-    assert shipping_label.get_volume_sequence() == "1/2"
-
-    assert shipping_label.weight == 100
-    assert shipping_label.get_weight() == "100"
+    assert shipping_label.get_package_sequence() == "{}/{}".format(*shipping_label.package.sequence)
+    assert shipping_label.get_weight() == "{}g".format(shipping_label.package.weight)
 
     assert shipping_label.text == "Hello World!"
 
@@ -147,13 +141,13 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert repr(shipping_label) == "<ShippingLabel tracking='{!s}'>".format(shipping_label.tracking_code)
 
 
-def test_basic_default_shipping_label(posting_card, sender_address, receiver_address):
+def test_basic_default_shipping_label(posting_card, sender_address, receiver_address, package):
     shipping_label = ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
         service=40096,  # SERVICE_SEDEX_CODE
-        width=11, height=2, length=16, weight=10000,
+        package=package,
         tracking_code="PD12345678 BR",
     )
 
@@ -162,15 +156,15 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert len(shipping_label.extra_services) == 1
 
 
-def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code):
+def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code, package):
     with pytest.raises(InvalidAddressesError):
         ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
-                      width=10, height=10, length=10, weight=10000,
+                      package=package,
                       tracking_code=tracking_code)
 
 
-def test_basic_envelop_dimensions_validation():
-    ShippingLabel.validate_dimensions(ShippingLabel.TYPE_ENVELOPE, 0, 0, 0, 0)
+def test_package_basic_envelop_dimensions_validation():
+    Package.validate(Package.TYPE_ENVELOPE, 0, 0, 0, 0)
 
 
 @pytest.mark.parametrize("weight,width,height,length,posting_weight", [
@@ -178,43 +172,47 @@ def test_basic_envelop_dimensions_validation():
     (15000, 43, 28, 52, 15000),
     (7000, 55, 31, 40, 11366),
 ])
-def test_posting_weight_calculation(weight, width, height, length, posting_weight):
-    assert round(ShippingLabel.calculate_posting_weight(weight, width, height, length)) == posting_weight
+def test_package_posting_weight_calculation(weight, width, height, length, posting_weight):
+    volumetric_weight = Package.calculate_volumetric_weight(width, height, length)
+    assert Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
 
 
-@pytest.mark.parametrize("volume_type,width,height,length,diameter", [
-    (ShippingLabel.TYPE_ENVELOPE, 1, 0, 0, 0),
-    (ShippingLabel.TYPE_ENVELOPE, 0, 1, 0, 0),
-    (ShippingLabel.TYPE_ENVELOPE, 0, 0, 1, 0),
-    (ShippingLabel.TYPE_ENVELOPE, 0, 0, 0, 1),
-    (ShippingLabel.TYPE_ENVELOPE, 1, 1, 1, 1),
-    (ShippingLabel.TYPE_PACKAGE, 11, 2, 16, 1),  # invalid diameter
-    (ShippingLabel.TYPE_PACKAGE, 10, 2, 16, 0),  # min width=11
-    (ShippingLabel.TYPE_PACKAGE, 110, 2, 16, 0),  # max width=105
-    (ShippingLabel.TYPE_PACKAGE, 11, 1, 16, 0),  # min height=2
-    (ShippingLabel.TYPE_PACKAGE, 11, 110, 16, 0),  # max height=110
-    (ShippingLabel.TYPE_PACKAGE, 11, 2, 15, 0),  # min length=15
-    (ShippingLabel.TYPE_PACKAGE, 11, 2, 110, 0),  # max length=110
-    (ShippingLabel.TYPE_PACKAGE, 105, 105, 105, 0),  # sum > 200
-    (ShippingLabel.TYPE_CYLINDER, 1, 0, 18, 16),  # invalid width
-    (ShippingLabel.TYPE_CYLINDER, 0, 1, 18, 16),  # invalid height
-    (ShippingLabel.TYPE_CYLINDER, 0, 0, 1, 16),  # min length=18
-    (ShippingLabel.TYPE_CYLINDER, 0, 0, 110, 16),  # max length=105
-    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 15),  # min diameter=16
-    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 110),  # max diameter=91
-    (ShippingLabel.TYPE_CYLINDER, 0, 0, 18, 16),  # max cylinder size=28
+@pytest.mark.parametrize("package_type,width,height,length,diameter", [
+    (Package.TYPE_ENVELOPE, 1, 0, 0, 0),
+    (Package.TYPE_ENVELOPE, 0, 1, 0, 0),
+    (Package.TYPE_ENVELOPE, 0, 0, 1, 0),
+    (Package.TYPE_ENVELOPE, 0, 0, 0, 1),
+    (Package.TYPE_ENVELOPE, 1, 1, 1, 1),
+    (Package.TYPE_BOX, 11, 2, 16, 1),  # invalid diameter
+    (Package.TYPE_BOX, 10, 2, 16, 0),  # min width=11
+    (Package.TYPE_BOX, 110, 2, 16, 0),  # max width=105
+    (Package.TYPE_BOX, 11, 1, 16, 0),  # min height=2
+    (Package.TYPE_BOX, 11, 110, 16, 0),  # max height=110
+    (Package.TYPE_BOX, 11, 2, 15, 0),  # min length=15
+    (Package.TYPE_BOX, 11, 2, 110, 0),  # max length=110
+    (Package.TYPE_BOX, 105, 105, 105, 0),  # sum > 200
+    (Package.TYPE_CYLINDER, 1, 0, 18, 16),  # invalid width
+    (Package.TYPE_CYLINDER, 0, 1, 18, 16),  # invalid height
+    (Package.TYPE_CYLINDER, 0, 0, 1, 16),  # min length=18
+    (Package.TYPE_CYLINDER, 0, 0, 110, 16),  # max length=105
+    (Package.TYPE_CYLINDER, 0, 0, 18, 15),  # min diameter=16
+    (Package.TYPE_CYLINDER, 0, 0, 18, 110),  # max diameter=91
+    (Package.TYPE_CYLINDER, 0, 0, 18, 16),  # max cylinder size=28
 ])
-def test_fail_dimensions_validation(volume_type, width, height, length, diameter):
-    with pytest.raises(InvalidDimensionsError):
-        ShippingLabel.validate_dimensions(volume_type, width, height, length, diameter)
+def test_fail_package_dimensions_validation(package_type, width, height, length, diameter):
+    with pytest.raises(InvalidPackageDimensionsError):
+        Package.validate(package_type, width, height, length, diameter)
 
 
-def test_fail_invalid_volumes_argument(posting_card, sender_address, receiver_address, tracking_code):
-    with pytest.raises(InvalidVolumeInformationError):
+@pytest.mark.parametrize("sequence", [
+    (1,),
+    (3, 2),
+])
+def test_fail_package_invalid_sequence(sequence, tracking_code):
+    with pytest.raises(InvalidPackageSequenceError):
         # noinspection PyTypeChecker
-        ShippingLabel(posting_card, sender_address, receiver_address, SERVICE_SEDEX,
-                      width=10, height=10, length=10, weight=10000,
-                      tracking_code=tracking_code, volume_sequence=(1,))  # invalid tuple
+        Package(package_type=Package.TYPE_BOX, width=11, height=10, length=16, weight=10000,
+                sequence=sequence)  # invalid tuple
 
 
 def test_basic_posting_list(shipping_label):

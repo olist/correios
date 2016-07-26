@@ -176,7 +176,7 @@ class PostingListSerializer:
         xml_utils.SubElement(item, "codigo_objeto_cliente")
         xml_utils.SubElement(item, "codigo_servico_postagem", text=str(shipping_label.service))
         xml_utils.SubElement(item, "cubagem", text=str(shipping_label.posting_weight).replace(".", ","))
-        xml_utils.SubElement(item, "peso", text=str(shipping_label.weight))
+        xml_utils.SubElement(item, "peso", text=str(shipping_label.package.weight))
         xml_utils.SubElement(item, "rt1")
         xml_utils.SubElement(item, "rt2")
 
@@ -211,11 +211,11 @@ class PostingListSerializer:
         xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
 
         dimensions = xml_utils.SubElement(item, "dimensao_objeto")
-        xml_utils.SubElement(dimensions, "tipo_objeto", text="{!s:>03}".format(shipping_label.volume_type))
-        xml_utils.SubElement(dimensions, "dimensao_altura", text=str(shipping_label.height))
-        xml_utils.SubElement(dimensions, "dimensao_largura", text=str(shipping_label.width))
-        xml_utils.SubElement(dimensions, "dimensao_comprimento", text=str(shipping_label.length))
-        xml_utils.SubElement(dimensions, "dimensao_diametro", text=str(shipping_label.diameter))
+        xml_utils.SubElement(dimensions, "tipo_objeto", text="{!s:>03}".format(shipping_label.package.package_type))
+        xml_utils.SubElement(dimensions, "dimensao_altura", text=str(shipping_label.package.height))
+        xml_utils.SubElement(dimensions, "dimensao_largura", text=str(shipping_label.package.width))
+        xml_utils.SubElement(dimensions, "dimensao_comprimento", text=str(shipping_label.package.length))
+        xml_utils.SubElement(dimensions, "dimensao_diametro", text=str(shipping_label.package.diameter))
 
         xml_utils.SubElement(item, "data_postagem_sara")
         xml_utils.SubElement(item, "status_processamento", text="0")

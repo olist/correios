@@ -21,8 +21,8 @@ from typing import Optional, Union, Sequence
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
-                                 InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
+from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError,
+                                 InvalidTrackingCodeError, PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
 from .address import Address, ZipCode
 from .user import Service, ExtraService, PostingCard
 
@@ -159,14 +159,101 @@ class TrackingCode:
         return "<TrackingCode code={!r}>".format(self.code)
 
 
+class Package:
+    TYPE_ENVELOPE = 1
+    TYPE_BOX = 2
+    TYPE_CYLINDER = 3
+
+    def __init__(self,
+                 package_type: int = TYPE_BOX,
+                 width: int = 0, height: int = 0, length: int = 0, diameter: int = 0, weight: int = 0,
+                 sequence=(1, 1),
+                 service: Optional['Service'] = None):
+
+        Package.validate(package_type, width, height, length, diameter, service, weight)
+
+        if len(sequence) != 2 or sequence[0] > sequence[1]:
+            raise InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
+
+        self.package_type = package_type
+        self.width = width  # cm
+        self.height = height  # cm
+        self.length = length  # cm
+        self.diameter = diameter  # in cm
+        self.weight = weight  # in grams
+        self.sequence = sequence
+        self.service = service
+
+    @property
+    def volumetric_weight(self):
+        return Package.calculate_volumetric_weight(self.width, self.height, self.length)
+
+    @property
+    def posting_weight(self):
+        return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
+
+    @classmethod
+    def calculate_volumetric_weight(cls, width, height, length):
+        return int((width * height * length) / IATA_COEFICIENT)
+
+    @classmethod
+    def calculate_posting_weight(cls, weight, volumetric_weight):
+        if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
+            return weight
+        return round(max(volumetric_weight, weight))
+
+    @classmethod
+    def validate(cls, package_type, width, height, length, diameter,
+                 service: Optional[Service] = None, weight: int = 0):
+
+        if service and service.max_weight and weight > service.max_weight:
+            raise InvalidPackageWeightError("Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight))
+
+        if package_type == Package.TYPE_ENVELOPE:
+            if any([width, height, length, diameter]):
+                raise InvalidPackageDimensionsError("Invalid envelope dimensions: {}x{}x{}".format(width, height, length))
+            return
+
+        if package_type == Package.TYPE_BOX:
+            if diameter:
+                raise InvalidPackageDimensionsError("Package does not use diameter: {}".format(diameter))
+
+            if not MIN_WIDTH <= width <= MAX_WIDTH:
+                raise InvalidPackageDimensionsError("Invalid package width (range 11~105): {}".format(width))
+
+            if not MIN_HEIGHT <= height <= MAX_HEIGHT:
+                raise InvalidPackageDimensionsError("Invalid package height (range 2~105): {}".format(height))
+
+            if not MIN_LENGTH <= length <= MAX_LENGTH:
+                raise InvalidPackageDimensionsError("Invalid package length (range 16~105): {}".format(length))
+
+            if not MIN_SIZE <= (width + height + length) <= MAX_SIZE:
+                raise InvalidPackageDimensionsError("Invalid package dimensions: {}x{}x{}".format(width, height, length))
+
+            return
+
+        # Volume.TYPE_CYLINDER
+        if width or height:
+            raise InvalidPackageDimensionsError("Cylinder does not use width/height: {}x{}".format(width, height))
+
+        if not MIN_CYLINDER_LENGTH <= length <= MAX_CYLINDER_LENGTH:
+            raise InvalidPackageDimensionsError("Invalid cylinder length (range 18~105): {}".format(length))
+
+        if not MIN_DIAMETER <= diameter <= MAX_DIAMETER:
+            raise InvalidPackageDimensionsError("Invalid cylinder diameter (range 5~91): {}".format(diameter))
+
+        if (length + 2 * diameter) > MAX_CYLINDER_SIZE:
+            raise InvalidPackageDimensionsError("Invalid cylinder dimensions: {}x{}".format(length, diameter))
+
+
 class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"
     contract_number_template = "{!s}"
     order_template = "{!s}"
     service_name_template = "{!s}"
-    volume_template = "{!s}/{!s}"
-    weight_template = "{!s}"
+    package_template = "{!s}/{!s}"
+    weight_template = "{!s}g"
     receipt_template = ("Recebedor: ___________________________________________<br/>"
                         "Assinatura: __________________ Documento: _______________")
     sender_header = "DESTINATÁRIO"
@@ -181,18 +268,13 @@ class ShippingLabel:
                             "{sender.complement} - {sender.neighborhood}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
-    TYPE_ENVELOPE = 1
-    TYPE_PACKAGE = 2
-    TYPE_CYLINDER = 3
-
     def __init__(self,
                  posting_card: PostingCard,
                  sender: Address,
                  receiver: Address,
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
-                 volume_type: int = TYPE_PACKAGE,
-                 width: int = 0, height: int = 0, length: int = 0, weight: int = 0, diameter: int = 0,
+                 package: Package,
                  extra_services: Optional[Sequence[Union[ExtraService, str, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
@@ -201,7 +283,6 @@ class ShippingLabel:
                  invoice_type: Optional[str] = "",
                  value: Optional[Decimal] = Decimal("0.00"),
                  billing: Optional[Decimal] = Decimal("0.00"),
-                 volume_sequence: tuple = (1, 1),
                  text: Optional[str] = "",
                  latitude: Optional[float] = 0.0,
                  longitude: Optional[float] = 0.0):
@@ -209,28 +290,18 @@ class ShippingLabel:
         if sender == receiver:
             raise InvalidAddressesError("Sender and receiver cannot be the same")
 
-        if len(volume_sequence) != 2:
-            raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
-
         if logo is None:
             logo = os.path.join(DATADIR, "default_logo.png")
 
         if isinstance(logo, str):
             logo = Image.open(logo)
 
-        self.validate_dimensions(volume_type, width, height, length, diameter)
-
         self.posting_card = posting_card
         self.sender = sender
         self.receiver = receiver
         self.service = Service.get(service)
         self.tracking_code = TrackingCode.create(tracking_code)
-        self.width = width  # cm
-        self.height = height  # cm
-        self.length = length  # cm
-        self.weight = weight  # in grams
-        self.diameter = diameter  # in cm
-        self.volume_type = volume_type
+        self.package = package
         self.logo = logo
         self.order = order
         self.invoice_number = invoice_number
@@ -238,7 +309,6 @@ class ShippingLabel:
         self.invoice_type = invoice_type
         self.value = value
         self.billing = billing
-        self.volume_sequence = volume_sequence
         self.text = text
         self.latitude = latitude
         self.longitude = longitude
@@ -251,55 +321,6 @@ class ShippingLabel:
 
         self.posting_list = None
         self.posting_list_group = 0
-
-    @classmethod
-    def calculate_volumetric_weight(cls, width, height, length):
-        return int((width * height * length) / IATA_COEFICIENT)
-
-    @classmethod
-    def calculate_posting_weight(cls, weight, width, height, length):
-        volumetric_weight = cls.calculate_volumetric_weight(width, height, length)
-        if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
-            return weight
-        return max(volumetric_weight, weight)
-
-    @classmethod
-    def validate_dimensions(cls, volume_type, width, height, length, diameter):
-        if volume_type == ShippingLabel.TYPE_ENVELOPE:
-            if any([width, height, length, diameter]):
-                raise InvalidDimensionsError("Invalid envelope dimensions: {}x{}x{}".format(width, height, length))
-            return
-
-        if volume_type == ShippingLabel.TYPE_PACKAGE:
-            if diameter:
-                raise InvalidDimensionsError("Package does not use diameter: {}".format(diameter))
-
-            if not MIN_WIDTH <= width <= MAX_WIDTH:
-                raise InvalidDimensionsError("Invalid package width (range 11~105): {}".format(width))
-
-            if not MIN_HEIGHT <= height <= MAX_HEIGHT:
-                raise InvalidDimensionsError("Invalid package height (range 2~105): {}".format(height))
-
-            if not MIN_LENGTH <= length <= MAX_LENGTH:
-                raise InvalidDimensionsError("Invalid package length (range 16~105): {}".format(length))
-
-            if not MIN_SIZE <= (width + height + length) <= MAX_SIZE:
-                raise InvalidDimensionsError("Invalid package dimensions: {}x{}x{}".format(width, height, length))
-
-            return
-
-        # ShippingLabel.TYPE_CYLINDER
-        if width or height:
-            raise InvalidDimensionsError("Cylinder does not use width/height: {}x{}".format(width, height))
-
-        if not MIN_CYLINDER_LENGTH <= length <= MAX_CYLINDER_LENGTH:
-            raise InvalidDimensionsError("Invalid cylinder length (range 18~105): {}".format(length))
-
-        if not MIN_DIAMETER <= diameter <= MAX_DIAMETER:
-            raise InvalidDimensionsError("Invalid cylinder diameter (range 5~91): {}".format(diameter))
-
-        if (length + 2 * diameter) > MAX_CYLINDER_SIZE:
-            raise InvalidDimensionsError("Invalid cylinder dimensions: {}x{}".format(length, diameter))
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
@@ -314,7 +335,7 @@ class ShippingLabel:
 
     @property
     def posting_weight(self):
-        return self.calculate_posting_weight(self.weight, self.width, self.height, self.length)
+        return self.package.posting_weight
 
     def get_order(self):
         return self.order_template.format(self.order)
@@ -328,11 +349,11 @@ class ShippingLabel:
     def get_service_name(self):
         return self.service_name_template.format(self.service.display_name)
 
-    def get_volume_sequence(self):
-        return self.volume_template.format(*self.volume_sequence)
+    def get_package_sequence(self):
+        return self.package_template.format(*self.package.sequence)
 
     def get_weight(self):
-        return self.weight_template.format(self.weight)
+        return self.weight_template.format(self.package.weight)
 
     def get_symbol_filename(self, extension="gif"):
         return self.service.get_symbol_filename(extension)
