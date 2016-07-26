@@ -42,19 +42,19 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 
 
-class TrackingEventType(object):
+class TrackingEventType:
     def __init__(self, code: str, name: str):
         self.code = code
         self.name = name
 
 
-class TrackingEventStatus(object):
+class TrackingEventStatus:
     def __init__(self, code: Union[int, str], name: str):
         self.code = code
         self.name = name
 
 
-class TrackingEvent(object):
+class TrackingEvent:
     def __init__(self,
                  timestamp: datetime,
                  event_type: Union[str, TrackingEventType],
