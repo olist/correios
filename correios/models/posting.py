@@ -21,8 +21,8 @@ from typing import Optional, Union, Sequence
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError,
-                                 InvalidTrackingCodeError, PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
+from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError, InvalidTrackingCodeError,
+                                 PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
 from .address import Address, ZipCode
 from .user import Service, ExtraService, PostingCard
 
@@ -211,7 +211,7 @@ class Package:
 
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
-                raise InvalidPackageDimensionsError("Invalid envelope dimensions: {}x{}x{}".format(width, height, length))
+                raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}x{}".format(width, height, length))
             return
 
         if package_type == Package.TYPE_BOX:
@@ -219,16 +219,16 @@ class Package:
                 raise InvalidPackageDimensionsError("Package does not use diameter: {}".format(diameter))
 
             if not MIN_WIDTH <= width <= MAX_WIDTH:
-                raise InvalidPackageDimensionsError("Invalid package width (range 11~105): {}".format(width))
+                raise InvalidPackageDimensionsError("Invalid width (range 11~105): {}".format(width))
 
             if not MIN_HEIGHT <= height <= MAX_HEIGHT:
-                raise InvalidPackageDimensionsError("Invalid package height (range 2~105): {}".format(height))
+                raise InvalidPackageDimensionsError("Invalid height (range 2~105): {}".format(height))
 
             if not MIN_LENGTH <= length <= MAX_LENGTH:
-                raise InvalidPackageDimensionsError("Invalid package length (range 16~105): {}".format(length))
+                raise InvalidPackageDimensionsError("Invalid length (range 16~105): {}".format(length))
 
             if not MIN_SIZE <= (width + height + length) <= MAX_SIZE:
-                raise InvalidPackageDimensionsError("Invalid package dimensions: {}x{}x{}".format(width, height, length))
+                raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}x{}".format(width, height, length))
 
             return
 
@@ -237,13 +237,13 @@ class Package:
             raise InvalidPackageDimensionsError("Cylinder does not use width/height: {}x{}".format(width, height))
 
         if not MIN_CYLINDER_LENGTH <= length <= MAX_CYLINDER_LENGTH:
-            raise InvalidPackageDimensionsError("Invalid cylinder length (range 18~105): {}".format(length))
+            raise InvalidPackageDimensionsError("Invalid length (range 18~105): {}".format(length))
 
         if not MIN_DIAMETER <= diameter <= MAX_DIAMETER:
-            raise InvalidPackageDimensionsError("Invalid cylinder diameter (range 5~91): {}".format(diameter))
+            raise InvalidPackageDimensionsError("Invalid diameter (range 5~91): {}".format(diameter))
 
         if (length + 2 * diameter) > MAX_CYLINDER_SIZE:
-            raise InvalidPackageDimensionsError("Invalid cylinder dimensions: {}x{}".format(length, diameter))
+            raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}".format(length, diameter))
 
 
 class ShippingLabel:

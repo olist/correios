@@ -20,7 +20,8 @@ from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
-                                 InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError)
+                                 InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError,
+                                 InvalidPackageWeightError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList, Package
 from correios.models.user import Service, ExtraService
@@ -208,9 +209,8 @@ def test_fail_package_dimensions_validation(package_type, width, height, length,
     (1,),
     (3, 2),
 ])
-def test_fail_package_invalid_sequence(sequence, tracking_code):
+def test_fail_package_invalid_sequence(sequence):
     with pytest.raises(InvalidPackageSequenceError):
-        # noinspection PyTypeChecker
         Package(package_type=Package.TYPE_BOX, width=11, height=10, length=16, weight=10000,
                 sequence=sequence)  # invalid tuple
 
