@@ -138,7 +138,8 @@ class Service:
                  category: str,
                  display_name: Optional[str] = "",
                  symbol: Optional[str] = None,
-                 default_extra_services: Optional[Sequence[Union["ExtraService", str, int]]] = None):
+                 max_weight: Optional[int] = None,
+                 default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None):
         self.id = id
         self.code = to_integer(code)
         self.description = description.strip()
@@ -146,6 +147,7 @@ class Service:
         self.category = category.strip()
         self.symbol = symbol or "economic"
         self._symbol_image = None
+        self.max_weight = max_weight
 
         if default_extra_services is None:
             default_extra_services = []
@@ -159,7 +161,7 @@ class Service:
         return os.path.join(DATADIR, filename)
 
     @property
-    def symbol_image(self):
+    def symbol_image(self) -> Image.Image:
         if not self._symbol_image:
             self._symbol_image = Image.open(self.get_symbol_filename())
         return self._symbol_image

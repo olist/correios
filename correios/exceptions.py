@@ -49,15 +49,23 @@ class InvalidShippingLabelError(ModelError):
     pass
 
 
-class InvalidDimensionsError(InvalidShippingLabelError):
+class InvalidPackageError(ModelError):
+    pass
+
+
+class InvalidPackageDimensionsError(InvalidPackageError):
+    pass
+
+
+class InvalidPackageWeightError(InvalidPackageError):
+    pass
+
+
+class InvalidPackageSequenceError(InvalidPackageError):
     pass
 
 
 class InvalidAddressesError(ModelError):
-    pass
-
-
-class InvalidVolumeInformationError(ModelError):
     pass
 
 

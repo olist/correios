@@ -23,7 +23,7 @@ from pytest_factoryboy import register
 from correios.models import data
 from correios.models.address import Address
 from correios.models.data import TRACKING_PREFIX
-from correios.models.posting import TrackingCode, ShippingLabel, PostingList
+from correios.models.posting import TrackingCode, ShippingLabel, PostingList, Package
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -117,6 +117,21 @@ _services = [
 ]
 
 
+class PackageFactory(factory.Factory):
+    class Meta:
+        model = Package
+
+    package_type = Package.TYPE_BOX
+    width = factory.LazyFunction(lambda: random.randint(11, 30))
+    height = factory.LazyFunction(lambda: random.randint(2, 30))
+    length = factory.LazyFunction(lambda: random.randint(16, 30))
+    weight = factory.LazyFunction(lambda: random.randint(1, 100) * 100)
+    sequence = factory.Sequence(lambda n: (n, n + 1))
+
+
+register(PackageFactory, "package")
+
+
 class ShippingLabelFactory(factory.Factory):
     class Meta:
         model = ShippingLabel
@@ -126,11 +141,7 @@ class ShippingLabelFactory(factory.Factory):
     receiver = factory.LazyFunction(AddressFactory.build)
     service = factory.LazyFunction(lambda: random.choice(_services))
     tracking_code = factory.SubFactory(TrackingCodeFactory)
-    volume_type = ShippingLabel.TYPE_PACKAGE
-    width = factory.LazyFunction(lambda: random.randint(11, 30))
-    height = factory.LazyFunction(lambda: random.randint(2, 30))
-    length = factory.LazyFunction(lambda: random.randint(16, 30))
-    weight = factory.LazyFunction(lambda: random.randint(1, 150) * 100)
+    package = factory.SubFactory(PackageFactory)
     invoice_number = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
     order = factory.LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
     text = factory.Faker("text", max_nb_chars=100)

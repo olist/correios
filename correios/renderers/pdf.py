@@ -84,7 +84,7 @@ class ShippingLabelFlowable(Flowable):
         text.wrap(25 * mm, 14)
         text.drawOn(canvas, self.x1 + 40 * mm, self.y2 - (28 * mm) - 14)
 
-        text = Paragraph("{}<br/>{}".format(self.shipping_label.get_volume_sequence(),
+        text = Paragraph("{}<br/>{}".format(self.shipping_label.get_package_sequence(),
                                             self.shipping_label.get_weight()),
                          style=label_style)
         text.wrap(25 * mm, 14)

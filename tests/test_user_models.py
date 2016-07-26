@@ -184,6 +184,7 @@ def test_basic_service():
         description="SEDEX 10",
         category="SERVICO_COM_RESTRICAO",
         symbol="premium",
+        max_weight=10000,
     )
 
     assert service.id == 104707
@@ -194,6 +195,7 @@ def test_basic_service():
     assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
     assert isinstance(service.symbol_image, Image)
+    assert service.max_weight == 10000
 
 
 def test_sanitize_service():
