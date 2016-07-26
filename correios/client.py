@@ -30,13 +30,10 @@ DEFAULT_TRACKING_CODE_QUANTITY = 2  # I tried 1, 2, N... and Correios always ret
 class ModelBuilder:
     def build_service(self, service_data):
         service = Service(
-            id=service_data.id,
             code=service_data.codigo,
+            id=service_data.id,
             description=service_data.descricao,
-            category=service_data.servicoSigep.categoriaServico,
-            postal_code=service_data.servicoSigep.ssiCoCodigoPostal,
-            start_date=service_data.vigencia.dataInicial,
-            end_date=service_data.vigencia.dataFinal,
+            category=service_data.servicoSigep.categoriaServico
         )
         return service
 

@@ -21,6 +21,7 @@ from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
+from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -127,16 +128,15 @@ class StateTaxNumber(AbstractTaxNumber):
 
 
 class Service:
+    _services = {}
+
     # noinspection PyShadowingBuiltins
     def __init__(self,
-                 id: int,
                  code: Union[int, str],
+                 id: int,
                  description: str,
                  category: str,
-                 postal_code: Union[int, str],
                  display_name: Optional[str] = "",
-                 start_date: Optional[Union[datetime, str]] = None,
-                 end_date: Optional[Union[datetime, str]] = None,
                  symbol: Optional[str] = None,
                  default_extra_services: Optional[Sequence[Union["ExtraService", str, int]]] = None):
         self.id = id
@@ -144,9 +144,6 @@ class Service:
         self.description = description.strip()
         self.display_name = display_name or self.description
         self.category = category.strip()
-        self.postal_code = to_integer(postal_code)
-        self.start_date = to_datetime(start_date)
-        self.end_date = to_datetime(end_date)
         self.symbol = symbol or "economic"
         self._symbol_image = None
 
@@ -167,8 +164,19 @@ class Service:
             self._symbol_image = Image.open(self.get_symbol_filename())
         return self._symbol_image
 
+    @classmethod
+    def get(cls, number: Union['Service', int]) -> 'Service':
+        if isinstance(number, Service):
+            return number
+
+        if number not in cls._services:
+            cls._services[number] = cls(code=number, **SERVICES[number])
+        return cls._services[number]
+
 
 class ExtraService:
+    _extra_services = {}
+
     def __init__(self, number: int, code: str, name: str):
         if not number:
             raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
@@ -182,20 +190,17 @@ class ExtraService:
             raise InvalidExtraServiceError("Invalid Extra Service Name {!r}".format(name))
         self.name = name
 
-    @classmethod
-    def get(cls, number_or_code: Union[str, int]):
-        if isinstance(number_or_code, cls):
-            return number_or_code
-
-        from .data import EXTRA_SERVICES_LIST
-        for extra_service in EXTRA_SERVICES_LIST:
-            if extra_service.number == number_or_code or extra_service.code == number_or_code:
-                return extra_service
-        else:
-            raise InvalidExtraServiceError("Unknown Service {!r}".format(number_or_code))
-
     def __repr__(self):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
+
+    @classmethod
+    def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
+        if isinstance(number, ExtraService):
+            return number
+
+        if number not in cls._extra_services:
+            cls._extra_services[number] = cls(number=number, **EXTRA_SERVICES[number])
+        return cls._extra_services[number]
 
 
 class Contract:
@@ -371,18 +376,11 @@ class RegionalDirection:
         self.name = name
 
     @classmethod
-    def get(cls, number_or_code: Union[str, int]):
-        if isinstance(number_or_code, cls):
-            return number_or_code
+    def get(cls, number: Union['RegionalDirection', int]) -> 'RegionalDirection':
+        if isinstance(number, RegionalDirection):
+            return number
 
-        from .data import REGIONAL_DIRECTIONS_LIST
-        for regional_direction in REGIONAL_DIRECTIONS_LIST:
-            if isinstance(number_or_code, str) and regional_direction.code == number_or_code.upper():
-                return regional_direction
-            if regional_direction.number == number_or_code:
-                return regional_direction
-        else:
-            raise InvalidRegionalDirectionError("Unknown direction {!r}".format(number_or_code))
+        return cls(number=number, **REGIONAL_DIRECTIONS[number])
 
     def __repr__(self):
         return "<RegionalDirection number={!r}, code={!r}>".format(self.number, self.code)

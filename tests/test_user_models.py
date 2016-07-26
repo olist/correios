@@ -21,10 +21,9 @@ from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
-from correios.models.data import (EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD,
-                                  EXTRA_SERVICE_RN, REGIONAL_DIRECTIONS)
-from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract,
-                                  PostingCard, Service, ExtraService, RegionalDirection)
+from correios.models.data import EXTRA_SERVICE_AR
+from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService,
+                                  RegionalDirection)
 
 
 def test_basic_federal_tax_number_tax_number():
@@ -178,16 +177,12 @@ def test_sanitize_posting_card_data(contract):
     assert posting_card.unit == 8
 
 
-def test_basic_service(datetime_object):
+def test_basic_service():
     service = Service(
-        id=104707,
         code=40215,
-        display_name="SEDEX 10",
+        id=104707,
         description="SEDEX 10",
         category="SERVICO_COM_RESTRICAO",
-        postal_code=244,
-        start_date=datetime_object,
-        end_date=datetime_object + timedelta(days=5),
         symbol="premium",
     )
 
@@ -196,9 +191,6 @@ def test_basic_service(datetime_object):
     assert service.display_name == "SEDEX 10"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
-    assert service.postal_code == 244
-    assert service.start_date == datetime_object
-    assert service.end_date == datetime_object + timedelta(days=5)
     assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
     assert isinstance(service.symbol_image, Image)
@@ -206,22 +198,25 @@ def test_basic_service(datetime_object):
 
 def test_sanitize_service():
     service = Service(
-        id=104707,
         code="40215                    ",
+        id=104707,
         description="SEDEX 10                      ",
         category="SERVICO_COM_RESTRICAO",
-        postal_code="244",
-        start_date="2014-05-09 00:00:00-03:00",
-        end_date="2018-05-16 00:00:00-03:00",
     )
 
     assert service.id == 104707
     assert service.code == 40215
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
-    assert service.postal_code == 244
-    assert service.start_date == datetime(year=2014, month=5, day=9, tzinfo=timezone(timedelta(hours=-3)))
-    assert service.end_date == datetime(year=2018, month=5, day=16, tzinfo=timezone(timedelta(hours=-3)))
+
+
+def test_service_getter():
+    service = Service.get(40215)
+    assert service.id == 104707
+    assert service.code == 40215
+    assert service.description == "SEDEX 10"
+    assert service.category == "SERVICO_COM_RESTRICAO"
+    assert Service.get(service) == service
 
 
 def test_basic_extra_service():
@@ -249,23 +244,19 @@ def test_fail_extra_service_invalid_data(number, code, name):
 
 
 def test_fail_get_unknown_service():
-    with pytest.raises(InvalidExtraServiceError):
-        ExtraService.get("00")
+    with pytest.raises(KeyError):
+        ExtraService.get(0)
 
 
-@pytest.mark.parametrize("number_or_code,extra_service", (
-        (1, EXTRA_SERVICE_AR),
-        (2, EXTRA_SERVICE_MP),
-        (19, EXTRA_SERVICE_VD),
-        (25, EXTRA_SERVICE_RN),
-        ("AR", EXTRA_SERVICE_AR),
-        ("MP", EXTRA_SERVICE_MP),
-        ("VD", EXTRA_SERVICE_VD),
-        ("RN", EXTRA_SERVICE_RN),
-        (EXTRA_SERVICE_AR, EXTRA_SERVICE_AR),
+@pytest.mark.parametrize("number,extra_service_code", (
+        (1, "AR"),
+        (2, "MP"),
+        (19, "VD"),
+        (25, "RR"),
+        (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
 ))
-def test_extra_service_getter(number_or_code, extra_service):
-    assert ExtraService.get(number_or_code) == extra_service
+def test_extra_service_getter(number, extra_service_code):
+    assert ExtraService.get(number).code == extra_service_code
 
 
 def test_basic_regional_direction():
@@ -292,15 +283,13 @@ def test_fail_regional_direction_invalid_data(number, code, name):
 
 
 def test_fail_get_unknown_regional_direction():
-    with pytest.raises(InvalidRegionalDirectionError):
-        RegionalDirection.get("00")
+    with pytest.raises(KeyError):
+        RegionalDirection.get(0)
 
 
-@pytest.mark.parametrize("number_or_code,regional_direction", (
-        ("AC", REGIONAL_DIRECTIONS[1]),
-        ("ACR", REGIONAL_DIRECTIONS[3]),
-        ("al", REGIONAL_DIRECTIONS[4]),
-        (REGIONAL_DIRECTIONS[1], REGIONAL_DIRECTIONS[1]),
-))
-def test_regional_direction_getter(number_or_code, regional_direction):
-    assert RegionalDirection.get(number_or_code) == regional_direction
+def test_regional_direction_getter():
+    regional_direction = RegionalDirection.get(1)
+    assert regional_direction.number == 1
+    assert regional_direction.code == "AC"
+    assert regional_direction.name == "AC - ADMINISTRAÇAO CENTRAL"
+    assert RegionalDirection.get(regional_direction) == regional_direction
