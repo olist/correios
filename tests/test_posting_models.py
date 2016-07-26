@@ -205,6 +205,18 @@ def test_fail_package_dimensions_validation(package_type, width, height, length,
         Package.validate(package_type, width, height, length, diameter)
 
 
+def test_package_weight_validation():
+    Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=10000)
+    # 10065 - service with no max weight
+    Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(10065), weight=50000)
+
+
+def test_fail_package_weight_validation():
+    with pytest.raises(InvalidPackageWeightError):
+        Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=50000)
+
+
+
 @pytest.mark.parametrize("sequence", [
     (1,),
     (3, 2),
