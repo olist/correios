@@ -24,7 +24,6 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
                                  InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
 from .address import Address
-from .data import SERVICES
 from .user import Service, ExtraService, PostingCard, to_integer
 
 TRACKING_CODE_SIZE = 13
@@ -221,12 +220,6 @@ class ShippingLabel:
         if len(volume_sequence) != 2:
             raise InvalidVolumeInformationError("Volume must be a tuple with 2 elements: (number, total)")
 
-        if isinstance(service, int):
-            service = SERVICES[service]
-
-        if isinstance(tracking_code, str):
-            tracking_code = TrackingCode(tracking_code)
-
         if logo is None:
             logo = os.path.join(DATADIR, "default_logo.png")
 
@@ -238,8 +231,8 @@ class ShippingLabel:
         self.posting_card = posting_card
         self.sender = sender
         self.receiver = receiver
-        self.service = service
-        self.tracking_code = tracking_code
+        self.service = Service.get(service)
+        self.tracking_code = TrackingCode.create(tracking_code)
         self.width = width  # cm
         self.height = height  # cm
         self.length = length  # cm
@@ -260,7 +253,7 @@ class ShippingLabel:
         self.carrier_logo = Image.open(self.carrier_logo)
 
         self.extra_services = []
-        self.extra_services += service.default_extra_services
+        self.extra_services += self.service.default_extra_services
         if extra_services:
             self.extra_services += [ExtraService.get(es) for es in extra_services]
 

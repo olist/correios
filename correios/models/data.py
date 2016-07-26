@@ -13,8 +13,6 @@
 # limitations under the License.
 
 
-from .user import Service, ExtraService, RegionalDirection
-
 TRACKING_PREFIX = {
     "AL": "Agentes de leitura",
     "AR": "Avisos de recebimento",
@@ -250,118 +248,99 @@ TRACKING_PREFIX = {
     "XX": "Encomenda SUR Postal 24 horas",
 }
 
-EXTRA_SERVICES_LIST = {
-    ExtraService(1, "AR", "Aviso de Recebimento"),
-    ExtraService(2, "MP", "Mão Própria Nacional"),
-    ExtraService(19, "VD", "Valor Declarado (Encomendas)"),
-    ExtraService(25, "RN", "Registro Nacional"),
-    ExtraService(37, "??", "Aviso de Recebimento Digital"),
-    ExtraService(49, "??", "Devolução de Nota Fiscal - SEDEX"),
-    ExtraService(57, "??", "Taxa de Entrega de Encomenda Despadronizada"),
-    ExtraService(67, "??", "Logística Reversa Simultânea Domiciliária"),
-    ExtraService(69, "??", "Logística Reversa Simultânea em Agência"),
+EXTRA_SERVICES = {
+    1: {'code': "AR", 'name': "Aviso de Recebimento"},
+    2: {'code': "MP", 'name': "Mão Própria Nacional"},
+    19: {'code': "VD", 'name': "Valor Declarado (Encomendas)"},
+    25: {'code': "RR", 'name': "Registro Nacional"},
+    37: {'code': "AD", 'name': "Aviso de Recebimento Digital"},
+    49: {'code': "DN", 'name': "Devolução de Nota Fiscal - SEDEX"},
+    57: {'code': "TE", 'name': "Taxa de Entrega de Encomenda Despadronizada"},
+    67: {'code': "LRSD", 'name': "Logística Reversa Simultânea Domiciliária"},
+    69: {'code': "LRSA", 'name': "Logística Reversa Simultânea em Agência"},
 }
 
-EXTRA_SERVICES = {s.number: s for s in EXTRA_SERVICES_LIST}
-EXTRA_SERVICE_AR = EXTRA_SERVICES[1]
-EXTRA_SERVICE_MP = EXTRA_SERVICES[2]
-EXTRA_SERVICE_VD = EXTRA_SERVICES[19]
-EXTRA_SERVICE_RN = EXTRA_SERVICES[25]
+EXTRA_SERVICE_AR = 1
+EXTRA_SERVICE_MP = 2
+EXTRA_SERVICE_VD = 19
+EXTRA_SERVICE_RN = 25
 
-SERVICE_LIST = (
-    Service(id=104707, code=40215, display_name='SEDEX 10',
-            description='SEDEX 10', category='SERVICO_COM_RESTRICAO', postal_code=244, symbol="premium",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=104672, code=81019, display_name='E-SEDEX',
-            description='E-SEDEX STANDARD', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=109819, code=41068, display_name='PAC',
-            description='PAC', category='PAC', postal_code=201, symbol="standard",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=109811, code=40444, display_name='SEDEX',
-            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=109810, code=40436, display_name='SEDEX',
-            description='SEDEX - CONTRATO', category='SEDEX', postal_code=263, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=104625, code=40096, display_name='SEDEX',
-            description='SEDEX (CONTRATO)', category='SEDEX', postal_code=263, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=109806, code=40380, display_name='SEDEX',
-            description='SEDEX REVERSO 40096', category='REVERSO', postal_code=740, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=104295, code=40010, display_name='SEDEX',
-            description='SEDEX A VISTA', category='SEDEX', postal_code=275, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=113546, code=41211, display_name='PAC',
-            description='PAC - CONTRATO', category='PAC', postal_code=201, symbol="standard",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=114976, code=40630, display_name='SEDEX',
-            description='SEDEX PAGAMENTO NA ENTREGA -', category='SEDEX', postal_code=641, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=118568, code=40916, display_name='SEDEX',
-            description='SEDEX AGRUPADO II', category='SEDEX', postal_code=275, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=118567, code=40908, display_name='SEDEX',
-            description='SEDEX AGRUPADO I', category='SEDEX', postal_code=275, symbol="express",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=120366, code=41300, display_name='PAC',
-            description='PAC GRANDES FORMATOS', category='SERVICO_COM_RESTRICAO', postal_code=275, symbol="standard",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=115218, code=40169, display_name='SEDEX 12',
-            description='SEDEX 12', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=108934, code=40290, display_name='SEDEX Hoje',
-            description='SEDEX HOJE', category='SERVICO_COM_RESTRICAO', postal_code=263, symbol="premium",
-            default_extra_services=[EXTRA_SERVICE_RN]),
-    Service(id=118424, code=10154, display_name='Carta Registrada',
-            description='CARTA COMERCIAL  REGISTRADA', category='CARTA_REGISTRADA', postal_code=275),
-    Service(id=115487, code=41246, display_name='Papai Noel dos Correios',
-            description='REM. CAMPANHA PAPAI NOEL DOS', category='SEM_CATEGORIA', postal_code=276),
-    Service(id=115136, code=40150, display_name='Protocolo',
-            description='SERVICO DE PROTOCOLO POSTAL -', category='SEDEX', postal_code=263),
-    Service(id=109480, code=10065, display_name='Carta Comercial',
-            description='CARTA COMERCIAL A FATURAR', category='CARTA_REGISTRADA', postal_code=275)
-)
+SERVICES = {
+    40215: {'id': 104707, 'description': 'SEDEX 10', 'category': 'SERVICO_COM_RESTRICAO',
+            'display_name': 'SEDEX 10', 'symbol': "premium", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    81019: {'id': 104672, 'description': 'E-SEDEX STANDARD', 'category': 'SERVICO_COM_RESTRICAO',
+            'display_name': 'E-SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    41068: {'id': 109819, 'description': 'PAC', 'category': 'PAC', 'display_name': 'PAC',
+            'symbol': "standard", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40444: {'id': 109811, 'description': 'SEDEX - CONTRATO', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40436: {'id': 109810, 'description': 'SEDEX - CONTRATO', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40096: {'id': 104625, 'description': 'SEDEX (CONTRATO)', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40380: {'id': 109806, 'description': 'SEDEX REVERSO 40096', 'category': 'REVERSO',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40010: {'id': 104295, 'description': 'SEDEX A VISTA', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    41211: {'id': 113546, 'description': 'PAC - CONTRATO', 'category': 'PAC', 'display_name': 'PAC',
+            'symbol': "standard", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40630: {'id': 114976, 'description': 'SEDEX PAGAMENTO NA ENTREGA -', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40916: {'id': 118568, 'description': 'SEDEX AGRUPADO II', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40908: {'id': 118567, 'description': 'SEDEX AGRUPADO I', 'category': 'SEDEX',
+            'display_name': 'SEDEX', 'symbol': "express", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    41300: {'id': 120366, 'description': 'PAC GRANDES FORMATOS', 'category': 'SERVICO_COM_RESTRICAO',
+            'display_name': 'PAC', 'symbol': "standard",
+            'default_extra_services': [EXTRA_SERVICE_RN]},
+    40169: {'id': 115218, 'description': 'SEDEX 12', 'category': 'SERVICO_COM_RESTRICAO',
+            'display_name': 'SEDEX 12', 'symbol': "premium", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    40290: {'id': 108934, 'description': 'SEDEX HOJE', 'category': 'SERVICO_COM_RESTRICAO',
+            'display_name': 'SEDEX Hoje', 'symbol': "premium", 'default_extra_services': [EXTRA_SERVICE_RN]},
+    10154: {'id': 118424, 'description': 'CARTA COMERCIAL  REGISTRADA', 'category': 'CARTA_REGISTRADA',
+            'display_name': 'Carta Registrada'},
+    41246: {'id': 115487, 'description': 'REM. CAMPANHA PAPAI NOEL DOS', 'category': 'SEM_CATEGORIA',
+            'display_name': 'Papai Noel dos Correios'},
+    40150: {'id': 115136, 'description': 'SERVICO DE PROTOCOLO POSTAL -', 'category': 'SEDEX',
+            'display_name': 'Protocolo'},
+    10065: {'id': 109480, 'description': 'CARTA COMERCIAL A FATURAR', 'category': 'CARTA_REGISTRADA',
+            'display_name': 'Carta Comercial'}
+}
 
-SERVICES = {s.code: s for s in SERVICE_LIST}
-SERVICE_PAC = SERVICES[41068]
-SERVICE_SEDEX = SERVICES[40096]
-SERVICE_SEDEX10 = SERVICES[40215]
-SERVICE_SEDEX12 = SERVICES[40169]
-SERVICE_E_SEDEX = SERVICES[81019]
+SERVICE_PAC = 41068
+SERVICE_SEDEX = 40096
+SERVICE_SEDEX10 = 40215
+SERVICE_SEDEX12 = 40169
+SERVICE_E_SEDEX = 81019
 
-
-REGIONAL_DIRECTIONS_LIST = (
-    RegionalDirection(1, "AC", "AC - ADMINISTRAÇAO CENTRAL"),
-    RegionalDirection(3, "ACR", "DR – ACRE"),
-    RegionalDirection(4, "AL", "DR – ALAGOAS"),
-    RegionalDirection(6, "AM", "DR – AMAZONAS"),
-    RegionalDirection(5, "AP", "DR – AMAPÁ"),
-    RegionalDirection(8, "BA", "DR – BAHIA"),
-    RegionalDirection(10, "BSB", "DR – BRASÍLIA"),
-    RegionalDirection(12, "CE", "DR – CEARÁ"),
-    RegionalDirection(14, "ES", "DR - ESPIRITO SANTO"),
-    RegionalDirection(16, "GO", "DR – GOIÁS"),
-    RegionalDirection(18, "MA", "DR – MARANHÃO"),
-    RegionalDirection(20, "MG", "DR - MINAS GERAIS"),
-    RegionalDirection(22, "MS", "DR - MATO GROSSO DO SUL"),
-    RegionalDirection(24, "MT", "DR - MATO GROSSO"),
-    RegionalDirection(28, "PA", "DR – PARÁ"),
-    RegionalDirection(30, "PB", "DR – PARAÍBA"),
-    RegionalDirection(32, "PE", "DR – PERNAMBUCO"),
-    RegionalDirection(34, "PI", "DR – PIAUÍ"),
-    RegionalDirection(36, "PR", "DR – PARANÁ"),
-    RegionalDirection(50, "RJ", "DR - RIO DE JANEIRO"),
-    RegionalDirection(60, "RN", "DR - RIO GRANDE DO NORTE"),
-    RegionalDirection(26, "RO", "DR – RONDONIA"),
-    RegionalDirection(65, "RR", "DR – RORAIMA"),
-    RegionalDirection(64, "RS", "DR - RIO GRANDE DO SUL"),
-    RegionalDirection(68, "SC", "DR - SANTA CATARINA"),
-    RegionalDirection(70, "SE", "DR – SERGIPE"),
-    RegionalDirection(74, "SPI", "DR - SÃO PAULO INTERIOR"),
-    RegionalDirection(72, "SPM", "DR - SÃO PAULO"),
-    RegionalDirection(75, "TO", "DR - TOCANTINS"),
-)
-
-REGIONAL_DIRECTIONS = {d.number: d for d in REGIONAL_DIRECTIONS_LIST}
+REGIONAL_DIRECTIONS = {
+    1: {'code': "AC", 'name': "AC - ADMINISTRAÇAO CENTRAL"},
+    3: {'code': "ACR", 'name': "DR - ACRE"},
+    4: {'code': "AL", 'name': "DR - ALAGOAS"},
+    6: {'code': "AM", 'name': "DR - AMAZONAS"},
+    5: {'code': "AP", 'name': "DR - AMAPÁ"},
+    8: {'code': "BA", 'name': "DR - BAHIA"},
+    10: {'code': "BSB", 'name': "DR - BRASÍLIA"},
+    12: {'code': "CE", 'name': "DR - CEARÁ"},
+    14: {'code': "ES", 'name': "DR - ESPIRITO SANTO"},
+    16: {'code': "GO", 'name': "DR - GOIÁS"},
+    18: {'code': "MA", 'name': "DR - MARANHÃO"},
+    20: {'code': "MG", 'name': "DR - MINAS GERAIS"},
+    22: {'code': "MS", 'name': "DR - MATO GROSSO DO SUL"},
+    24: {'code': "MT", 'name': "DR - MATO GROSSO"},
+    28: {'code': "PA", 'name': "DR - PARÁ"},
+    30: {'code': "PB", 'name': "DR - PARAÍBA"},
+    32: {'code': "PE", 'name': "DR - PERNAMBUCO"},
+    34: {'code': "PI", 'name': "DR - PIAUÍ"},
+    36: {'code': "PR", 'name': "DR - PARANÁ"},
+    50: {'code': "RJ", 'name': "DR - RIO DE JANEIRO"},
+    60: {'code': "RN", 'name': "DR - RIO GRANDE DO NORTE"},
+    26: {'code': "RO", 'name': "DR - RONDONIA"},
+    65: {'code': "RR", 'name': "DR - RORAIMA"},
+    64: {'code': "RS", 'name': "DR - RIO GRANDE DO SUL"},
+    68: {'code': "SC", 'name': "DR - SANTA CATARINA"},
+    70: {'code': "SE", 'name': "DR - SERGIPE"},
+    74: {'code': "SPI", 'name': "DR - SÃO PAULO INTERIOR"},
+    72: {'code': "SPM", 'name': "DR - SÃO PAULO"},
+    75: {'code': "TO", 'name': "DR - TOCANTINS"},
+}
