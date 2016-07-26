@@ -203,7 +203,7 @@ class Package:
         return round(max(volumetric_weight, weight))
 
     @classmethod
-    def validate(cls, package_type, width, height, length, diameter,
+    def validate(cls, package_type: int, width: int = 0, height: int = 0, length: int = 0, diameter: int = 0,
                  service: Optional[Service] = None, weight: int = 0):
 
         if service and service.max_weight and weight > service.max_weight:
