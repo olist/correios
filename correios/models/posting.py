@@ -399,8 +399,16 @@ class ShippingLabel:
 
 
 class PostingList:
-    def __init__(self, custom_id: int):
+    def __init__(self, custom_id: int, logo: Optional[Union[str, Image.Image]] = None):
         self.id = None  # will be filled by close_posting_list
+
+        if logo is None:
+            logo = os.path.join(DATADIR, "carrier_logo.png")
+
+        if isinstance(logo, str):
+            logo = Image.open(logo)
+
+        self.logo = logo
         self.custom_id = custom_id
         self.shipping_labels = {}
 
