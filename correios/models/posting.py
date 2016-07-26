@@ -24,7 +24,7 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidVolumeInformationError,
                                  InvalidTrackingCodeError, PostingListError, InvalidDimensionsError)
 from .address import Address, ZipCode
-from .user import Service, ExtraService, PostingCard, to_integer
+from .user import Service, ExtraService, PostingCard
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
