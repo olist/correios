@@ -36,7 +36,7 @@ def test_render_basic_shipping_label():
         sl.volume_template = "Volume: {!s}/{!s}"
         shipping_labels_renderer.add_shipping_label(sl)
 
-    pdf = shipping_labels_renderer.render()
+    pdf = shipping_labels_renderer.render_labels()
 
     assert bytes(pdf).startswith(b"%PDF-1.4")
 
