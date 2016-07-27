@@ -24,8 +24,8 @@ from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Paragraph
 
+from correios.exceptions import RendererError
 from correios.models.posting import ShippingLabel, PostingList
-from exceptions import RendererError
 
 VERTICAL_SECURITY_MARGIN = 6  # pt
 
@@ -193,6 +193,7 @@ class ShippingLabelsPDFRenderer:
         self.shipping_labels_margin = shipping_labels_margin
         self.shipping_labels_width = self.page_width - (2 * shipping_labels_margin[0])
         self.shipping_labels_height = self.page_height - (2 * shipping_labels_margin[1])
+
         self.col_size = self.shipping_labels_width / 2
         self.row_size = self.shipping_labels_height / 2
         self._label_position = (
@@ -217,26 +218,46 @@ class ShippingLabelsPDFRenderer:
     def draw_grid(self, canvas):
         canvas.setLineWidth(0.2)
         canvas.setStrokeColor(colors.gray)
-        canvas.line(self.hmargin, self.page_height / 2, self.shipping_labels_width + self.hmargin,
+        canvas.line(self.shipping_labels_margin[0],
+                    self.page_height / 2,
+                    self.shipping_labels_width + self.shipping_labels_margin[0],
                     self.page_height / 2)
-        canvas.line(self.page_width / 2, self.vmargin, self.page_width / 2,
-                    self.shipping_labels_height + self.vmargin, )
+        canvas.line(self.page_width / 2,
+                    self.shipping_labels_margin[1],
+                    self.page_width / 2,
+                    self.shipping_labels_height + self.shipping_labels_margin[1])
 
     def render_posting_list(self, pdf=None) -> PDF:
         if pdf is None:
             pdf = PDF(self.page_size)
         canvas = pdf.canvas
 
-        hmargin, vmargin = 5 * mm, 5 * mm
-        width, height = self.shipping_labels_width - 10 * mm, self.shipping_labels_height - 10 * mm
-        x1, y1, x2, y2 = 5 * mm, 5 * mm, width + 5 * mm, height + 5 * mm
+        width = self.page_width - (2 * self.posting_list_margin[0])
+        height = self.page_height - (2 * self.posting_list_margin[1])
 
-        canvas.rect(x1, y1, self.shipping_labels_width, self.shipping_labels_height)
+        x1, y1 = self.posting_list_margin[0], self.posting_list_margin[1]
+        x2, y2 = width + self.posting_list_margin[0], height + self.posting_list_margin[1]
+
+        # logo
         logo = ImageReader(self.posting_list.logo)
-        canvas.drawImage(logo, x1 + 5 * mm, y2, width=25 * mm,
+        canvas.drawImage(logo, x1, y2 - 10.3 * mm, height=8 * mm,
                          preserveAspectRatio=True, anchor="sw", mask="auto")
 
-        # TODO
+        # head1
+        canvas.setFont("Helvetica-Bold", size=14)
+        canvas.drawCentredString(x2 - ((width - 40 * mm) / 2), y2 - 10 * mm,
+                                 "Empresa Brasileira de Correios e Telégrafo".upper())
+
+        # box
+        canvas.setLineWidth(0.5)
+        canvas.rect(x1, y2 - 45 * mm, width, 30 * mm)
+        canvas.drawCentredString(x1 + width / 2, y2 - (14 * mm) - 15, "Lista de Postagem".upper())
+
+        # debug
+        canvas.setStrokeColor(colors.red)
+        # canvas.rect(x1 + 40 * mm, y2 - (10.3 * mm), width - 40 * mm, 8 * mm)
+        # canvas.line(x1, y2 - 10 * mm, x2, y2 - 10 * mm)
+
         canvas.showPage()
         return pdf
 
