@@ -41,6 +41,9 @@ class InvalidStateTaxNumberError(ModelError):
     pass
 
 
+class InvalidUserContractError(ModelError):
+    pass
+
 class InvalidTrackingCodeError(ModelError):
     pass
 

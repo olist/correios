@@ -91,8 +91,7 @@ def test_basic_user(valid_federal_tax_number, valid_state_tax_number):
     user = User(name="ECT",
                 federal_tax_number=valid_federal_tax_number,
                 state_tax_number=valid_state_tax_number,
-                status_number=1,
-                contracts=[])
+                status_number=1)
 
     assert user.name == "ECT"
     assert user.federal_tax_number == "73119555000120"
@@ -104,18 +103,17 @@ def test_sanitize_user_data(valid_federal_tax_number, valid_state_tax_number):
     user = User(name="    NAME WITH TRAILLING WHITESPACES      ",
                 federal_tax_number=valid_federal_tax_number,
                 state_tax_number=valid_state_tax_number,
-                status_number="1  ",
-                contracts=[])
+                status_number="1  ")
 
     assert user.name == "NAME WITH TRAILLING WHITESPACES"
     assert user.status_number == 1
 
 
-def test_basic_contract():
+def test_basic_contract(user):
     contract = Contract(
+        user=user,
         number=9912208555,
-        regional_direction=10,
-    )
+        regional_direction=10)
 
     assert contract.number == 9912208555
     assert contract.regional_direction.number == 10
@@ -124,8 +122,9 @@ def test_basic_contract():
     assert repr(contract) == "<Contract number=9912208555>"
 
 
-def test_sanitize_contract_data():
+def test_sanitize_contract_data(user):
     contract = Contract(
+        user=user,
         number="9912208555  ",
         regional_direction="   10",
     )

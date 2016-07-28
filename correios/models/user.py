@@ -15,12 +15,13 @@
 
 import os
 from datetime import datetime
-from typing import List, Union, Optional, Sequence
+from typing import Union, Optional, Sequence
 
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
+from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
+                                 InvalidRegionalDirectionError, InvalidUserContractError)
 from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
@@ -205,10 +206,39 @@ class ExtraService:
         return cls._extra_services[number]
 
 
+class User:
+    def __init__(self,
+                 name: str,
+                 federal_tax_number: Union[str, FederalTaxNumber],
+                 state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
+                 status_number: Optional[Union[int, str]] = None):
+        self.name = name.strip()
+        self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
+
+        if status_number is not None:
+            status_number = to_integer(status_number)
+        self.status_number = status_number
+
+        if state_tax_number is not None:
+            state_tax_number = _to_state_tax_number(state_tax_number)
+        self.state_tax_number = state_tax_number
+
+        self.contracts = []
+
+    def add_contract(self, contract: 'Contract'):
+        if contract in self.contracts:
+            raise InvalidUserContractError("Contract {!r} already added".format(contract))
+        self.contracts.append(contract)
+
+
 class Contract:
     def __init__(self,
+                 user: User,
                  number: Union[int, str],
                  regional_direction: Union[str, int, 'RegionalDirection']):
+
+        self.user = user
+        user.add_contract(self)
 
         self.number = to_integer(number)
 
@@ -257,6 +287,10 @@ class Contract:
     @property
     def regional_direction_number(self):
         return self.regional_direction.number
+
+    @property
+    def customer_name(self) -> str:
+        return self.user.name
 
     def __str__(self):
         return str(self.number)
@@ -337,29 +371,6 @@ class PostingCard:
 
     def __str__(self):
         return self.number
-
-
-class User:
-    def __init__(self,
-                 name: str,
-                 federal_tax_number: Union[str, FederalTaxNumber],
-                 state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
-                 status_number: Optional[Union[int, str]] = None,
-                 contracts: Optional[List[Contract]] = None):
-        self.name = name.strip()
-        self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
-
-        if status_number is not None:
-            status_number = to_integer(status_number)
-        self.status_number = status_number
-
-        if state_tax_number is not None:
-            state_tax_number = _to_state_tax_number(state_tax_number)
-        self.state_tax_number = state_tax_number
-
-        if contracts is None:
-            contracts = []
-        self.contracts = contracts
 
 
 class RegionalDirection:

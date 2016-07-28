@@ -36,7 +36,7 @@ def test_basic_client():
 @vcr.use_cassette
 def test_get_user():
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    user = client.get_user(contract="9912208555", posting_card="0057018901")
+    user = client.get_user(contract_number="9912208555", posting_card_number="0057018901")
 
     assert user.name == "ECT"
     assert user.federal_tax_number == "34028316000103"
@@ -77,9 +77,9 @@ def test_get_posting_card_status(posting_card):
 
 
 @vcr.use_cassette
-def test_request_tracking_codes(default_user):
+def test_request_tracking_codes(user):
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    result = client.request_tracking_codes(default_user, Service.get(SERVICE_SEDEX))
+    result = client.request_tracking_codes(user, Service.get(SERVICE_SEDEX))
     assert len(result) == 2
     assert len(result[0].code) == 13
     assert len(result[1].code) == 13

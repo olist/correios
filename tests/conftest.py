@@ -42,15 +42,24 @@ def datetime_object():
     return datetime(1970, 4, 1)
 
 
-@pytest.fixture
-def default_user():
-    return User(name="ECT", federal_tax_number="34028316000103", state_tax_number="0733382100116", status_number=1)
+class UserFactory(factory.Factory):
+    class Meta:
+        model = User
+
+    name = "ECT"
+    federal_tax_number = "34028316000103"
+    state_tax_number = "0733382100116"
+    status_number = 1
+
+
+register(UserFactory, "user")
 
 
 class ContractFactory(factory.Factory):
     class Meta:
         model = Contract
 
+    user = factory.SubFactory(UserFactory)
     number = 9912208555
     regional_direction = 10
 
