@@ -73,7 +73,7 @@ def test_basic_phone():
     phone = Phone("+1 (212) 555-1234")
     assert phone == "+12125551234"
     assert phone == Phone("12125551234", "US")
-    assert phone.display() == "+1 212-555-1234"
+    assert phone.display() == "212-555-1234"
     assert str(phone) == "12125551234"
     assert repr(phone) == "<Phone 12125551234>"
 
