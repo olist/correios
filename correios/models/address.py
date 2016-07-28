@@ -166,7 +166,8 @@ class Phone:
         return parse(number, country)
 
     def display(self) -> str:
-        return format_number(self.parsed, PhoneNumberFormat.INTERNATIONAL)
+        country_code = "+{!s}".format(self.parsed.country_code)
+        return format_number(self.parsed, PhoneNumberFormat.INTERNATIONAL).replace(country_code, "").strip()
 
     def __eq__(self, other: Union["Phone", str]):
         if isinstance(other, Phone):
@@ -238,3 +239,9 @@ class Address:
     @property
     def zip_code_display(self):
         return self.zip_code.display()
+
+    @property
+    def display_address(self):
+        address = "{}, {} {}".format(self.street, self.number, self.complement)
+        city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
+        return address.strip(), city.strip()
