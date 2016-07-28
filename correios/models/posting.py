@@ -206,7 +206,7 @@ class Package:
 
 
     @classmethod
-    def calculate_insurance(cls, per_unit_value, quantity):
+    def calculate_insurance(cls, per_unit_value, quantity=1):
         value = 0
         if per_unit_value > INSURANCE_VALUE_THRESHOLD:
             value = float(per_unit_value - INSURANCE_VALUE_THRESHOLD) * 0.007

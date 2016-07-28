@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+from decimal import Decimal
 import os
 
 import pytest
@@ -250,3 +251,22 @@ def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
 
     with pytest.raises(PostingListError):
         posting_list.add_shipping_label(shipping_label)
+
+
+def test_calculate_insurance_when_not_applicable():
+    value = Package.calculate_insurance(per_unit_value=50, quantity=2)
+    assert value == Decimal(0)
+
+    value = Package.calculate_insurance(per_unit_value=Decimal(10))
+    assert value == Decimal(0)
+
+
+def test_calculate_insurance():
+    value = Package.calculate_insurance(per_unit_value=193)
+    assert value == Decimal(1)
+
+    value = Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2)
+    assert value == Decimal(2)
+
+    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2)
+    assert value == Decimal('6.30')
