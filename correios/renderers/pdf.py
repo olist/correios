@@ -94,7 +94,7 @@ class ShippingLabelFlowable(Flowable):
         canvas.drawImage(symbol, self.x1 + 70 * mm, self.y2 - (27 * mm), width=25 * mm,
                          preserveAspectRatio=True, anchor="sw", mask="auto")
 
-        # header labels
+        # header shipping_labels
         label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=7, leading=8)
         text = Paragraph("{}<br/>{}".format(self.shipping_label.get_invoice(),
                                             self.shipping_label.get_order()),
@@ -178,16 +178,16 @@ class ShippingLabelFlowable(Flowable):
         canvas.rect(self.x1, self.y1, self.width, self.height)
 
 
-class ShippingLabelsPDFRenderer:
+class PostingReportPDFRenderer:
     def __init__(self, page_size=pagesizes.A4, shipping_labels_margin=(0, 0), posting_list_margin=(5 * mm, 5 * mm)):
-        self.labels = []
+        self.shipping_labels = []
         self._tracking_codes = set()
 
         self.page_size = page_size
         self.page_width = page_size[0]
         self.page_height = page_size[1]
 
-        self.posting_list = None
+        self.posting_list = None  # type: PostingList
         self.posting_list_margin = posting_list_margin
 
         self.shipping_labels_margin = shipping_labels_margin
@@ -204,16 +204,17 @@ class ShippingLabelsPDFRenderer:
         )
 
     def set_posting_list(self, posting_list: PostingList):
+        if not posting_list.closed:
+            raise RendererError("Cannot render an open posting list")
+
         self.posting_list = posting_list
         for shipping_label in posting_list.shipping_labels.values():
             self.add_shipping_label(shipping_label)
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
-        if str(shipping_label.tracking_code) in self._tracking_codes:
+        if shipping_label in self.shipping_labels:
             raise RendererError("Shipping Label {!s} already added".format(shipping_label.tracking_code))
-        label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
-        self.labels.append(label)
-        self._tracking_codes.add(str(shipping_label.tracking_code))
+        self.shipping_labels.append(shipping_label)
 
     def draw_grid(self, canvas):
         canvas.setLineWidth(0.2)
@@ -237,6 +238,7 @@ class ShippingLabelsPDFRenderer:
 
         x1, y1 = self.posting_list_margin[0], self.posting_list_margin[1]
         x2, y2 = width + self.posting_list_margin[0], height + self.posting_list_margin[1]
+        label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=8, leading=5 * mm)
 
         # logo
         logo = ImageReader(self.posting_list.logo)
@@ -253,6 +255,48 @@ class ShippingLabelsPDFRenderer:
         canvas.rect(x1, y2 - 45 * mm, width, 30 * mm)
         canvas.drawCentredString(x1 + width / 2, y2 - (14 * mm) - 15, "Lista de Postagem".upper())
 
+        # header info
+        col_width = width / 4
+        spacer = 5 * mm
+
+        col = 0
+        header_label = ("<b>N° da Lista:</b> {!s}<br/>"
+                        "<b>Contrato:</b> {!s}<br/>"
+                        "<b>Cód. Administrativo:</b> {!s}<br/>"
+                        "<b>Cartão:</b> {!s}")
+        header = header_label.format(self.posting_list.number,
+                                     self.posting_list.contract,
+                                     self.posting_list.posting_card.administrative_code,
+                                     self.posting_list.posting_card)
+        text = Paragraph(header, style=label_style)
+        text.wrap(col_width, 30 * mm)
+        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+
+        col = 1
+        header_label = ("<b>Remetente:</b> {!s}<br/>"
+                        "<b>Cliente:</b> {!s}<br/>"
+                        "<b>Endereço:</b> {!s}<br/>"
+                        "{!s}")
+        header = header_label.format(self.posting_list.sender.name,
+                                     self.posting_list.contract.customer_name[:30],
+                                     self.posting_list.sender.display_address[0],
+                                     self.posting_list.sender.display_address[1])
+        text = Paragraph(header, style=label_style)
+        text.wrap(col_width * 2, 30 * mm)
+        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+
+        col = 3
+        header_label = "<b>Telefone:</b> {!s}<br/>"
+        header = header_label.format(self.posting_list.sender.phone.display())
+        text = Paragraph(header, style=label_style)
+        text.wrap(col_width, 30 * mm)
+        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+
+        # table
+        table = []
+        for shipping_label in self.shipping_labels:
+            pass
+
         # debug
         canvas.setStrokeColor(colors.red)
         # canvas.rect(x1 + 40 * mm, y2 - (10.3 * mm), width - 40 * mm, 8 * mm)
@@ -267,30 +311,32 @@ class ShippingLabelsPDFRenderer:
 
         canvas = pdf.canvas
 
-        pos = len(self._label_position) - 1
-        for i, label in enumerate(self.labels):
-            pos = i % len(self._label_position)
-            self.labels[i].drawOn(canvas, *self._label_position[pos])
-            if pos == len(self._label_position) - 1:
+        position = len(self._label_position) - 1
+        for i, shipping_label in enumerate(self.shipping_labels):
+            position = i % len(self._label_position)
+            self.render_label(shipping_label, position, pdf)
+            if position == len(self._label_position) - 1:
                 self.draw_grid(canvas)
                 canvas.showPage()
 
-        if pos != len(self._label_position) - 1:
+        if position != len(self._label_position) - 1:
             self.draw_grid(canvas)
             canvas.showPage()
 
         return pdf
 
-    def render_label(self, shipping_label: ShippingLabel) -> PDF:
-        pdf = PDF(self.page_size)
+    def render_label(self, shipping_label: ShippingLabel, position=0, pdf=None) -> PDF:
+        single_label = pdf is None
+        if single_label:
+            pdf = PDF(self.page_size)
+
         canvas = pdf.canvas
-
         label = ShippingLabelFlowable(shipping_label, self.col_size, self.row_size)
-        label.drawOn(canvas, *self._label_position[0])
+        label.drawOn(pdf.canvas, *self._label_position[position])
 
-        self.draw_grid(canvas)
-
-        canvas.showPage()
+        if single_label:
+            self.draw_grid(canvas)
+            canvas.showPage()
 
         return pdf
 
