@@ -401,7 +401,7 @@ class ShippingLabel:
 
 class PostingList:
     def __init__(self, custom_id: int, logo: Optional[Union[str, Image.Image]] = None):
-        self.id = None  # will be filled by close_posting_list
+        self.number = None  # will be filled by close_posting_list
 
         if logo is None:
             logo = os.path.join(DATADIR, "carrier_logo.png")
@@ -438,9 +438,9 @@ class PostingList:
     def get_tracking_codes(self):
         return list(self.shipping_labels.keys())
 
-    def close_with_id(self, id_: int):
-        self.id = id_
+    def close_with_id(self, number: int):
+        self.number = number
 
     @property
     def closed(self):
-        return self.id is not None
+        return self.number is not None
