@@ -23,6 +23,7 @@ from PIL import Image
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError, InvalidTrackingCodeError,
                                  PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
+from .user import Contract
 from .address import Address, ZipCode
 from .user import Service, ExtraService, PostingCard
 
@@ -414,9 +415,9 @@ class PostingList:
 
         # filled by the first shipping label
         self.initial_shipping_label = None
-        self.posting_card = None
-        self.contract = None
-        self.sender = None
+        self.posting_card = None  # type: PostingCard
+        self.contract = None  # type: Contract
+        self.sender = None  # type: Address
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
         if not self.initial_shipping_label:

@@ -56,8 +56,9 @@ class ModelBuilder:
 
         return posting_card
 
-    def build_contract(self, contract_data):
+    def build_contract(self, user: User, contract_data):
         contract = Contract(
+            user=user,
             number=contract_data.contratoPK.numero,
             regional_direction=contract_data.codigoDiretoria,
         )
@@ -73,18 +74,16 @@ class ModelBuilder:
         return contract
 
     def build_user(self, user_data):
-        contracts = []
-        for contract_data in user_data.contratos:
-            contract = self.build_contract(contract_data)
-            contracts.append(contract)
-
         user = User(
             name=user_data.nome,
             federal_tax_number=FederalTaxNumber(user_data.cnpj),
             state_tax_number=StateTaxNumber(user_data.inscricaoEstadual),
             status_number=user_data.statusCodigo,
-            contracts=contracts,
         )
+
+        for contract_data in user_data.contratos:
+            self.build_contract(user, contract_data)
+
         return user
 
     def build_zip_address(self, zip_address_data):
@@ -291,8 +290,10 @@ class Correios:
         method = getattr(self.sigep, method_name)
         return method(*args, **kwargs)  # TODO: handle errors
 
-    def get_user(self, contract: str, posting_card: str) -> User:
-        user_data = self._auth_call("buscaCliente", contract, posting_card)
+    def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
+        contract_number = str(contract_number)
+        posting_card_number = str(posting_card_number)
+        user_data = self._auth_call("buscaCliente", contract_number, posting_card_number)
         return self.model_builder.build_user(user_data)
 
     def find_zipcode(self, zip_code: Union[ZipCode, str]) -> ZipAddress:
