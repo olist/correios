@@ -97,8 +97,9 @@ def test_close_posting_list(posting_card, posting_list: PostingList, shipping_la
     shipping_label.posting_card = posting_card
     posting_list.add_shipping_label(shipping_label)
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    result = client.close_posting_list(posting_list, posting_card)
-    assert result.id is not None
+    posting_list = client.close_posting_list(posting_list, posting_card)
+    assert posting_list.number is not None
+    assert posting_list.closed
 
 
 @vcr.use_cassette
@@ -137,7 +138,7 @@ def test_fail_empty_posting_list_serialization(posting_list):
 
 def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipping_label):
     posting_list.add_shipping_label(shipping_label)
-    posting_list.close_with_id(id_=12345)
+    posting_list.close_with_id(number=12345)
 
     serializer = PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
