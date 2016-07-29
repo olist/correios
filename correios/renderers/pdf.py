@@ -14,18 +14,22 @@
 
 
 from io import BytesIO
+from typing import List
 
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib import colors, pagesizes
+from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfgen.canvas import Canvas
-from reportlab.platypus import Flowable, Paragraph
+from reportlab.platypus import Flowable, Paragraph, Table, TableStyle
 
 from correios.exceptions import RendererError
 from correios.models.posting import ShippingLabel, PostingList
+from models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD
+from models.user import ExtraService
 
 VERTICAL_SECURITY_MARGIN = 6  # pt
 
@@ -120,7 +124,7 @@ class ShippingLabelFlowable(Flowable):
                                  self.shipping_label.get_tracking_code())
         code = createBarcodeDrawing("Code128", value=str(self.shipping_label.tracking_code),
                                     width=75 * mm, height=18 * mm, quiet=0)
-        code.drawOn(canvas, 10 * mm, self.y2 - (59 * mm))  # Code 128 already include horizontal margins
+        code.drawOn(canvas, 10 * mm, self.y2 - (59 * mm))
 
         # extra services (first three)
         first_row = self.y2 - (40 * mm) - 10  # font-size=10pt
@@ -156,8 +160,8 @@ class ShippingLabelFlowable(Flowable):
 
         # receiver zip barcode
         code = createBarcodeDrawing("Code128", value=str(self.shipping_label.receiver.zip_code),
-                                    width=50 * mm, height=18 * mm)
-        code.drawOn(canvas, 0, self.y2 - (117 * mm))
+                                    width=50 * mm, height=18 * mm, quiet=0)
+        code.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (117 * mm))
 
         # text
         text_style = ParagraphStyle("text", fontName="Helvetica", fontSize=10)
@@ -180,7 +184,7 @@ class ShippingLabelFlowable(Flowable):
 
 class PostingReportPDFRenderer:
     def __init__(self, page_size=pagesizes.A4, shipping_labels_margin=(0, 0), posting_list_margin=(5 * mm, 5 * mm)):
-        self.shipping_labels = []
+        self.shipping_labels = []  # type: List[ShippingLabel]
         self._tracking_codes = set()
 
         self.page_size = page_size
@@ -247,17 +251,17 @@ class PostingReportPDFRenderer:
 
         # head1
         canvas.setFont("Helvetica-Bold", size=14)
-        canvas.drawCentredString(x2 - ((width - 40 * mm) / 2), y2 - 10 * mm,
-                                 "Empresa Brasileira de Correios e Telégrafo".upper())
+        canvas.drawCentredString(x2 - ((width - 40 * mm) / 2), y2 - 9 * mm,
+                                 "Empresa Brasileira de Correios e Telégrafos".upper())
 
         # box
         canvas.setLineWidth(0.5)
         canvas.rect(x1, y2 - 45 * mm, width, 30 * mm)
-        canvas.drawCentredString(x1 + width / 2, y2 - (14 * mm) - 15, "Lista de Postagem".upper())
+        canvas.drawCentredString(x1 + width / 2, y2 - (15 * mm) - 15, "Lista de Postagem".upper())
 
         # header info
-        col_width = width / 4
         spacer = 5 * mm
+        col_width = width / 4
 
         col = 0
         header_label = ("<b>N° da Lista:</b> {!s}<br/>"
@@ -270,7 +274,7 @@ class PostingReportPDFRenderer:
                                      self.posting_list.posting_card)
         text = Paragraph(header, style=label_style)
         text.wrap(col_width, 30 * mm)
-        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+        text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
 
         col = 1
         header_label = ("<b>Remetente:</b> {!s}<br/>"
@@ -283,19 +287,61 @@ class PostingReportPDFRenderer:
                                      self.posting_list.sender.display_address[1])
         text = Paragraph(header, style=label_style)
         text.wrap(col_width * 2, 30 * mm)
-        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+        text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
 
         col = 3
         header_label = "<b>Telefone:</b> {!s}<br/>"
         header = header_label.format(self.posting_list.sender.phone.display())
         text = Paragraph(header, style=label_style)
         text.wrap(col_width, 30 * mm)
-        text.drawOn(canvas, x1 + (col + 1 * spacer + col * col_width), y2 - (43 * mm))
+        text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
+
+        code = createBarcodeDrawing("Code128", value=str(self.posting_list.number),
+                                    width=col_width * 0.6, height=10 * mm, quiet=0)
+        code.drawOn(canvas, x1 + spacer + col * col_width, y2 - (35 * mm))
 
         # table
-        table = []
-        for shipping_label in self.shipping_labels:
-            pass
+        style = [
+            ('FONTNAME', (0, 0), (-1, -1), "Courier"),
+            ('FONTNAME', (0, 0), (-1, 0), "Courier-Bold"),
+            ('FONTSIZE', (0, 0), (-1, -1), 8),
+            ('ALIGN', (6, 1), (6, -1), "RIGHT"),
+        ]
+
+        table = [
+            ("Nº do Objeto", "CEP", "Peso", "AR", "MP", "VD",
+             Paragraph("Valor<br/>Declarado", style=ParagraphStyle(name="th",
+                                                                   fontName="Courier-Bold",
+                                                                   fontSize=8,
+                                                                   alignment=TA_CENTER)),
+             "Nota Fiscal", "Volume", "Destinatário"),
+        ]
+        for i, shipping_label in enumerate(self.shipping_labels, start=1):
+            row = (
+                str(shipping_label.tracking_code),
+                str(shipping_label.receiver.zip_code),
+                str(shipping_label.package.posting_weight),
+                "S" if ExtraService.get(EXTRA_SERVICE_AR) in shipping_label else "N",
+                "S" if ExtraService.get(EXTRA_SERVICE_MP) in shipping_label else "N",
+                "S" if ExtraService.get(EXTRA_SERVICE_VD) in shipping_label else "N",
+                str(shipping_label.value).replace(".", ","),
+                str(shipping_label.invoice_number),
+                shipping_label.get_package_sequence(),
+                shipping_label.receiver.name[:40],
+            )
+            # noinspection PyTypeChecker
+            table.append(row)
+
+            if i % 2:
+                style.append(('BACKGROUND', (0, i), (-1, i), colors.lightgrey))
+
+        table_flow = Table(
+            table,
+            colWidths=(25 * mm, 15 * mm, 10 * mm, 6 * mm, 6 * mm, 6 * mm, 20 * mm, 20 * mm, 20 * mm, width - 128 * mm),
+            style=TableStyle(style),
+        )
+        w, h = table_flow.wrap(0, 0)
+        table_flow.drawOn(canvas, x1, y2 - h - 50 * mm)
 
         # debug
         canvas.setStrokeColor(colors.red)

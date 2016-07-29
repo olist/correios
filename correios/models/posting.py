@@ -398,6 +398,9 @@ class ShippingLabel:
         ]
         return "".join(parts)
 
+    def __contains__(self, extra_service: ExtraService):
+        return extra_service in self.extra_services
+
 
 class PostingList:
     def __init__(self, custom_id: int, logo: Optional[Union[str, Image.Image]] = None):
