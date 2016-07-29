@@ -155,6 +155,9 @@ class Service:
     def __str__(self):
         return str(self.code)
 
+    def __eq__(self, other):
+        return (self.id, self.code) == (other.id, other.code)
+
     def get_symbol_filename(self, extension='gif'):
         filename = "{}.{}".format(self.symbol, extension)
         return os.path.join(DATADIR, filename)
@@ -188,7 +191,7 @@ class ExtraService:
         self.name = name
 
     def __repr__(self):
-        return "<ExtraService number={!r}, code={!r}, id={!r}>".format(self.number, self.code, id(self))
+        return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
 
     def __eq__(self, other):
         return self.number == other.number
