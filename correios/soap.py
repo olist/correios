@@ -30,6 +30,7 @@ class RequestsTransport(HttpAuthenticated):
         self._requests_session = requests.Session()
         self.cert = kwargs.pop('cert', None)
         self.verify = kwargs.pop('verify', True)
+        self.timeout = kwargs.pop('timeout', 8)
         HttpAuthenticated.__init__(self, **kwargs)
 
     def open(self, request):
@@ -40,7 +41,9 @@ class RequestsTransport(HttpAuthenticated):
             data=request.message,
             headers=request.headers,
             cert=self.cert,
-            verify=self.verify)
+            verify=self.verify,
+            timeout=self.timeout,
+        )
         result = BytesIO(resp.content)
         return result
 
@@ -52,13 +55,15 @@ class RequestsTransport(HttpAuthenticated):
             data=request.message,
             headers=request.headers,
             cert=self.cert,
-            verify=self.verify)
+            verify=self.verify,
+            timeout=self.timeout,
+        )
         result = Reply(resp.status_code, resp.headers, resp.content)
         return result
 
 
 class SoapClient(Client):
-    def __init__(self, url, cert=None, verify=True, *args, **kwargs):
-        transport = RequestsTransport(cert=cert, verify=verify)
+    def __init__(self, url, cert=None, verify=True, timeout=8, *args, **kwargs):
+        transport = RequestsTransport(cert=cert, verify=verify, timeout=timeout)
         headers = {"Content-Type": "text/xml;charset=UTF-8", "SOAPAction": ""}
         super().__init__(url, transport=transport, headers=headers, **kwargs)
