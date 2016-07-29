@@ -15,9 +15,9 @@
 
 import os
 
-from correios.renderers.pdf import PostingReportPDFRenderer
 from correios.models.posting import PostingList
 from correios.models.user import PostingCard
+from correios.renderers.pdf import PostingReportPDFRenderer
 from tests.conftest import ShippingLabelFactory
 
 TESTDIR = os.path.dirname(__file__)
