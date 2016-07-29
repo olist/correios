@@ -276,7 +276,7 @@ class ShippingLabel:
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
                  package: Package,
-                 extra_services: Optional[Sequence[Union[ExtraService, str, int]]] = None,
+                 extra_services: Optional[Sequence[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
                  invoice_number: Optional[str] = "",
@@ -315,10 +315,9 @@ class ShippingLabel:
         self.longitude = longitude
         self.carrier_logo = Image.open(self.carrier_logo)
 
-        self.extra_services = []
-        self.extra_services += self.service.default_extra_services
+        self.extra_services = self.service.default_extra_services[:]
         if extra_services:
-            self.extra_services += [ExtraService.get(es) for es in extra_services]
+            self.extra_services.extend(ExtraService.get(es) for es in extra_services)
 
         self.posting_list = None
         self.posting_list_group = 0

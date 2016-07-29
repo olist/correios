@@ -22,7 +22,7 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
                                  InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
-from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RN, EXTRA_SERVICE_AR
+from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR
 from correios.models.posting import ShippingLabel, TrackingCode, PostingList, Package
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
@@ -106,7 +106,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.service == Service.get(SERVICE_SEDEX)
     assert shipping_label.get_service_name() == "SEDEX"
 
-    assert shipping_label.extra_services == [ExtraService.get(EXTRA_SERVICE_RN),
+    assert shipping_label.extra_services == [ExtraService.get(EXTRA_SERVICE_RR),
                                              ExtraService.get(EXTRA_SERVICE_AR)]
 
     assert shipping_label.tracking_code == tracking_code

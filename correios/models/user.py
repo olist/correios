@@ -129,8 +129,6 @@ class StateTaxNumber(AbstractTaxNumber):
 
 
 class Service:
-    _services = {}
-
     # noinspection PyShadowingBuiltins
     def __init__(self,
                  code: Union[int, str],
@@ -167,19 +165,15 @@ class Service:
             self._symbol_image = Image.open(self.get_symbol_filename())
         return self._symbol_image
 
-    @classmethod
-    def get(cls, number: Union['Service', int]) -> 'Service':
-        if isinstance(number, Service):
-            return number
+    @staticmethod
+    def get(code: Union['Service', int]) -> 'Service':
+        if isinstance(code, Service):
+            return code
 
-        if number not in cls._services:
-            cls._services[number] = cls(code=number, **SERVICES[number])
-        return cls._services[number]
+        return Service(code=code, **SERVICES[code])
 
 
 class ExtraService:
-    _extra_services = {}
-
     def __init__(self, number: int, code: str, name: str):
         if not number:
             raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
@@ -194,16 +188,17 @@ class ExtraService:
         self.name = name
 
     def __repr__(self):
-        return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
+        return "<ExtraService number={!r}, code={!r}, id={!r}>".format(self.number, self.code, id(self))
 
-    @classmethod
-    def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
+    def __eq__(self, other):
+        return self.number == other.number
+
+    @staticmethod
+    def get(number: Union['ExtraService', int]) -> 'ExtraService':
         if isinstance(number, ExtraService):
             return number
 
-        if number not in cls._extra_services:
-            cls._extra_services[number] = cls(number=number, **EXTRA_SERVICES[number])
-        return cls._extra_services[number]
+        return ExtraService(number=number, **EXTRA_SERVICES[number])
 
 
 class User:
