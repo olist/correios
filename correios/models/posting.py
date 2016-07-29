@@ -18,6 +18,7 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
+import math
 from PIL import Image
 
 from correios import DATADIR
@@ -195,13 +196,13 @@ class Package:
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length):
-        return int((width * height * length) / IATA_COEFICIENT)
+        return math.ceil((width * height * length) / IATA_COEFICIENT)
 
     @classmethod
     def calculate_posting_weight(cls, weight, volumetric_weight):
         if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
             return weight
-        return round(max(volumetric_weight, weight))
+        return math.ceil(max(volumetric_weight, weight))
 
     @classmethod
     def validate(cls, package_type: int, width: int = 0, height: int = 0, length: int = 0, diameter: int = 0,

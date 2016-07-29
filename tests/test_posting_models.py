@@ -171,7 +171,8 @@ def test_package_basic_envelop_dimensions_validation():
 @pytest.mark.parametrize("weight,width,height,length,posting_weight", [
     (9000, 50, 60, 15, 9000),
     (15000, 43, 28, 52, 15000),
-    (7000, 55, 31, 40, 11366),
+    (7000, 55, 31, 40, 11367),
+    (15000, 73, 73, 73, 64837)  # math.ceil(64836.1)
 ])
 def test_package_posting_weight_calculation(weight, width, height, length, posting_weight):
     volumetric_weight = Package.calculate_volumetric_weight(width, height, length)
