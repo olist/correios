@@ -263,18 +263,19 @@ class Correios:
     }
     websro_url = "https://webservice.correios.com.br/service/rastro/Rastro.wsdl"
 
-    def __init__(self, username, password, environment="production"):
+    def __init__(self, username, password, timeout=8, environment="production"):
         self.username = username
         self.password = password
+        self.timeout = timeout
 
         url, verify = self.sigep_urls[environment]
         self.sigep_url = url
         self.sigep_verify = verify
 
-        self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify)
+        self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify, timeout=self.timeout)
         self.sigep = self.sigep_client.service
 
-        self.websro_client = SoapClient(self.websro_url)
+        self.websro_client = SoapClient(self.websro_url, timeout=self.timeout)
         self.websro = self.websro_client.service
 
         self.model_builder = ModelBuilder()
