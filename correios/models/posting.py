@@ -41,6 +41,7 @@ MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
+INSURANCE_VALUE_THRESHOLD = 50  # R$
 
 
 class EventStatus:
@@ -203,6 +204,15 @@ class Package:
         if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
             return weight
         return math.ceil(max(volumetric_weight, weight))
+
+
+    @classmethod
+    def calculate_insurance(cls, per_unit_value, quantity=1):
+        value = 0
+        if per_unit_value > INSURANCE_VALUE_THRESHOLD:
+            value = float(per_unit_value - INSURANCE_VALUE_THRESHOLD) * 0.007
+
+        return Decimal(value * quantity).quantize(Decimal('0.00'))
 
     @classmethod
     def validate(cls, package_type: int, width: int = 0, height: int = 0, length: int = 0, diameter: int = 0,
