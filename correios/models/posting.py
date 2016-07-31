@@ -205,7 +205,6 @@ class Package:
             return weight
         return math.ceil(max(volumetric_weight, weight))
 
-
     @classmethod
     def calculate_insurance(cls, per_unit_value, quantity=1):
         value = 0

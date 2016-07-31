@@ -160,7 +160,7 @@ class ShippingLabelFlowable(Flowable):
 
         # receiver zip barcode
         code = createBarcodeDrawing("Code128", value=str(self.shipping_label.receiver.zip_code),
-                                    width=50 * mm, height=18 * mm, quiet=0)
+                                    width=30 * mm, height=18 * mm, quiet=0)
         code.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (117 * mm))
 
         # text
@@ -183,6 +183,42 @@ class ShippingLabelFlowable(Flowable):
 
 
 class PostingReportPDFRenderer:
+    label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=8, leading=5 * mm)
+    table_header_style = ParagraphStyle(name="th", fontName="Courier-Bold", fontSize=8, alignment=TA_CENTER)
+    signature_style = ParagraphStyle(name="sign", fontName="Helvetica", fontSize=8, leading=10, alignment=TA_CENTER)
+
+    header_label_col1 = ("<b>N° da Lista:</b> {!s}<br/>"
+                         "<b>Contrato:</b> {!s}<br/>"
+                         "<b>Cód. Administrativo:</b> {!s}<br/>"
+                         "<b>Cartão:</b> {!s}")
+    header_label_col2 = ("<b>Remetente:</b> {!s}<br/>"
+                         "<b>Cliente:</b> {!s}<br/>"
+                         "<b>Endereço:</b> {!s}<br/>"
+                         "{!s}")
+    header_label_col3 = "<b>Telefone:</b> {!s}<br/>"
+
+    table_style = [
+        ('FONTNAME', (0, 0), (-1, -1), "Courier"),
+        ('FONTNAME', (0, 0), (-1, 0), "Courier-Bold"),
+        ('FONTSIZE', (0, 0), (-1, -1), 8),
+        ('ALIGN', (6, 1), (6, -1), "RIGHT"),
+    ]
+    col_widths = (25 * mm, 15 * mm, 10 * mm, 6 * mm, 6 * mm, 6 * mm, 20 * mm, 15 * mm, 13 * mm, 84 * mm)
+    max_receiver_name_size = 48  # chars
+    table_header = ("Nº do Objeto", "CEP", "Peso", "AR", "MP", "VD",
+                    Paragraph("Valor<br/>Declarado", style=table_header_style),
+                    Paragraph("Nota<br/>Fiscal", style=table_header_style),
+                    "Volume", "Destinatário")
+    table_max_rows = 29
+    yes, no = "S", "N"
+
+    footer_title_text = "Apresentar esta lista em caso de pedido de informações".upper()
+    footer_disclaimer = "Estou ciente do disposto na clásula terceria do contrato de prestação de serviços"
+    footer_stamp_text = "Carimbo e assinatura / Matrícula dos Correios"
+    footer_signature_text = ("_________________________________________________________<br/>"
+                             "ASSINATURA REMETENTE<br/><br/><br/>"
+                             "Obs: 1o via p/ a Unidade de Postagem e 2o via p/ o cliente")
+
     def __init__(self, page_size=pagesizes.A4, shipping_labels_margin=(0, 0), posting_list_margin=(5 * mm, 5 * mm)):
         self.shipping_labels = []  # type: List[ShippingLabel]
         self._tracking_codes = set()
@@ -232,103 +268,83 @@ class PostingReportPDFRenderer:
                     self.page_width / 2,
                     self.shipping_labels_height + self.shipping_labels_margin[1])
 
-    def render_posting_list(self, pdf=None) -> PDF:
-        if pdf is None:
-            pdf = PDF(self.page_size)
+    # noinspection PyUnusedLocal
+    def _posting_list_header(self, pdf, width, x1, y1, x2, y2):
         canvas = pdf.canvas
-
-        width = self.page_width - (2 * self.posting_list_margin[0])
-        height = self.page_height - (2 * self.posting_list_margin[1])
-
-        x1, y1 = self.posting_list_margin[0], self.posting_list_margin[1]
-        x2, y2 = width + self.posting_list_margin[0], height + self.posting_list_margin[1]
-        label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=8, leading=5 * mm)
 
         # logo
         logo = ImageReader(self.posting_list.logo)
         canvas.drawImage(logo, x1, y2 - 10.3 * mm, height=8 * mm,
                          preserveAspectRatio=True, anchor="sw", mask="auto")
-
         # head1
         canvas.setFont("Helvetica-Bold", size=14)
         canvas.drawCentredString(x2 - ((width - 40 * mm) / 2), y2 - 9 * mm,
                                  "Empresa Brasileira de Correios e Telégrafos".upper())
-
         # box
         canvas.setLineWidth(0.5)
         canvas.rect(x1, y2 - 45 * mm, width, 30 * mm)
         canvas.drawCentredString(x1 + width / 2, y2 - (15 * mm) - 15, "Lista de Postagem".upper())
-
         # header info
         spacer = 5 * mm
         col_width = width / 4
-
         col = 0
-        header_label = ("<b>N° da Lista:</b> {!s}<br/>"
-                        "<b>Contrato:</b> {!s}<br/>"
-                        "<b>Cód. Administrativo:</b> {!s}<br/>"
-                        "<b>Cartão:</b> {!s}")
-        header = header_label.format(self.posting_list.number,
-                                     self.posting_list.contract,
-                                     self.posting_list.posting_card.administrative_code,
-                                     self.posting_list.posting_card)
-        text = Paragraph(header, style=label_style)
+        header = self.header_label_col1.format(self.posting_list.number,
+                                               self.posting_list.contract,
+                                               self.posting_list.posting_card.administrative_code,
+                                               self.posting_list.posting_card)
+        text = Paragraph(header, style=self.label_style)
         text.wrap(col_width, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
-
         col = 1
-        header_label = ("<b>Remetente:</b> {!s}<br/>"
-                        "<b>Cliente:</b> {!s}<br/>"
-                        "<b>Endereço:</b> {!s}<br/>"
-                        "{!s}")
-        header = header_label.format(self.posting_list.sender.name,
-                                     self.posting_list.contract.customer_name[:30],
-                                     self.posting_list.sender.display_address[0],
-                                     self.posting_list.sender.display_address[1])
-        text = Paragraph(header, style=label_style)
+        header = self.header_label_col2.format(self.posting_list.sender.name,
+                                               self.posting_list.contract.customer_name[:30],
+                                               self.posting_list.sender.display_address[0],
+                                               self.posting_list.sender.display_address[1])
+        text = Paragraph(header, style=self.label_style)
         text.wrap(col_width * 2, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
-
         col = 3
-        header_label = "<b>Telefone:</b> {!s}<br/>"
-        header = header_label.format(self.posting_list.sender.phone.display())
-        text = Paragraph(header, style=label_style)
+        header = self.header_label_col3.format(self.posting_list.sender.phone.display())
+        text = Paragraph(header, style=self.label_style)
         text.wrap(col_width, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
-
         code = createBarcodeDrawing("Code128", value=str(self.posting_list.number),
                                     width=col_width * 0.6, height=10 * mm, quiet=0)
         code.drawOn(canvas, x1 + spacer + col * col_width, y2 - (35 * mm))
 
-        # table
-        style = [
-            ('FONTNAME', (0, 0), (-1, -1), "Courier"),
-            ('FONTNAME', (0, 0), (-1, 0), "Courier-Bold"),
-            ('FONTSIZE', (0, 0), (-1, -1), 8),
-            ('ALIGN', (6, 1), (6, -1), "RIGHT"),
-        ]
+    # noinspection PyUnusedLocal
+    def _posting_list_footer(self, pdf, width, x1, y1, x2, y2):
+        canvas = pdf.canvas
 
-        table = [
-            ("Nº do Objeto", "CEP", "Peso", "AR", "MP", "VD",
-             Paragraph("Valor<br/>Declarado", style=ParagraphStyle(name="th",
-                                                                   fontName="Courier-Bold",
-                                                                   fontSize=8,
-                                                                   alignment=TA_CENTER)),
-             "Nota Fiscal", "Volume", "Destinatário"),
-        ]
-        for i, shipping_label in enumerate(self.shipping_labels, start=1):
+        canvas.rect(x1, y1, width, 38 * mm)
+        canvas.setFont("Helvetica-Bold", size=9)
+        canvas.drawCentredString(x2 - (width / 2), y1 + 38 * mm - 10, self.footer_title_text)
+        canvas.setFont("Helvetica", size=8)
+        canvas.drawString(x1 + 2 * mm, y1 + 28 * mm, self.footer_disclaimer)
+        text_width = stringWidth(self.footer_stamp_text, "Helvetica", 8)
+        canvas.drawString(x2 - 2 * mm - text_width, y1 + 28 * mm, self.footer_stamp_text)
+        text = Paragraph(self.footer_signature_text, style=self.signature_style)
+        text.wrap(stringWidth(self.footer_disclaimer, "Helvetica", 8), 10 * mm)
+        text.drawOn(canvas, x1 + 2 * mm, y1 + 2 * mm)
+
+    # noinspection PyUnusedLocal
+    def _posting_list_table(self, canvas, x1, y1, x2, y2, shipping_labels):
+        style = self.table_style[:]
+        table = [self.table_header]
+        for i, shipping_label in enumerate(shipping_labels, start=1):
             row = (
                 str(shipping_label.tracking_code),
                 str(shipping_label.receiver.zip_code),
                 str(shipping_label.package.posting_weight),
-                "S" if ExtraService.get(EXTRA_SERVICE_AR) in shipping_label else "N",
-                "S" if ExtraService.get(EXTRA_SERVICE_MP) in shipping_label else "N",
-                "S" if ExtraService.get(EXTRA_SERVICE_VD) in shipping_label else "N",
+                self.yes if ExtraService.get(EXTRA_SERVICE_AR) in shipping_label else self.no,
+                self.yes if ExtraService.get(EXTRA_SERVICE_MP) in shipping_label else self.no,
+                self.yes if ExtraService.get(EXTRA_SERVICE_VD) in shipping_label else self.no,
                 str(shipping_label.value).replace(".", ","),
                 str(shipping_label.invoice_number),
                 shipping_label.get_package_sequence(),
-                shipping_label.receiver.name[:40],
+                shipping_label.receiver.name[:self.max_receiver_name_size],
             )
+
             # noinspection PyTypeChecker
             table.append(row)
 
@@ -337,18 +353,31 @@ class PostingReportPDFRenderer:
 
         table_flow = Table(
             table,
-            colWidths=(25 * mm, 15 * mm, 10 * mm, 6 * mm, 6 * mm, 6 * mm, 20 * mm, 20 * mm, 20 * mm, width - 128 * mm),
+            colWidths=self.col_widths,
             style=TableStyle(style),
         )
         w, h = table_flow.wrap(0, 0)
         table_flow.drawOn(canvas, x1, y2 - h - 50 * mm)
 
-        # debug
-        canvas.setStrokeColor(colors.red)
-        # canvas.rect(x1 + 40 * mm, y2 - (10.3 * mm), width - 40 * mm, 8 * mm)
-        # canvas.line(x1, y2 - 10 * mm, x2, y2 - 10 * mm)
+    def render_posting_list(self, pdf=None) -> PDF:
+        if pdf is None:
+            pdf = PDF(self.page_size)
+        canvas = pdf.canvas
 
-        canvas.showPage()
+        width = self.page_width - (2 * self.posting_list_margin[0])
+        height = self.page_height - (2 * self.posting_list_margin[1])
+        x1, y1 = self.posting_list_margin[0], self.posting_list_margin[1]
+        x2, y2 = width + self.posting_list_margin[0], height + self.posting_list_margin[1]
+
+        for start_group_pos in range(0, len(self.shipping_labels), self.table_max_rows):
+            self._posting_list_header(pdf, width, x1, y1, x2, y2)
+
+            group = self.shipping_labels[start_group_pos:start_group_pos + self.table_max_rows]
+            self._posting_list_table(canvas, x1, y1, x2, y2, group)
+
+            self._posting_list_footer(pdf, width, x1, y1, x2, y2)
+            canvas.showPage()
+
         return pdf
 
     def render_labels(self, pdf=None) -> PDF:

@@ -49,4 +49,18 @@ def test_render_basic_posting_list(posting_list: PostingList, posting_card: Post
         posting_list.add_shipping_label(shipping_label)
     shipping_labels_renderer.set_posting_list(posting_list)
     pdf = shipping_labels_renderer.render_posting_list()
-    pdf.save(os.path.expanduser("~/plp.pdf"))
+    assert bytes(pdf).startswith(b"%PDF-1.4")
+
+
+def test_render_all_posting_docs(posting_list: PostingList, posting_card: PostingCard):
+    posting_list.close_with_id(number=12345)
+    shipping_labels_renderer = PostingReportPDFRenderer()
+    shipping_labels = [ShippingLabelFactory.build(posting_card=posting_card) for _ in range(35)]
+    for shipping_label in shipping_labels:
+        posting_list.add_shipping_label(shipping_label)
+    shipping_labels_renderer.set_posting_list(posting_list)
+    pdf = shipping_labels_renderer.render()
+
+    pdf.save(os.path.expanduser("~/posting_docs.pdf"))
+
+    assert bytes(pdf).startswith(b"%PDF-1.4")
