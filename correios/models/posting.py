@@ -13,19 +13,19 @@
 # limitations under the License.
 
 
+import math
 import os
 from datetime import datetime
 from decimal import Decimal
 from typing import Optional, Union, Sequence
 
-import math
 from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError, InvalidTrackingCodeError,
                                  PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
-from .user import Contract
 from .address import Address, ZipCode
+from .user import Contract
 from .user import Service, ExtraService, PostingCard
 
 TRACKING_CODE_SIZE = 13
