@@ -37,7 +37,6 @@ def test_render_basic_shipping_label():
         shipping_labels_renderer.add_shipping_label(sl)
 
     pdf = shipping_labels_renderer.render_labels()
-    pdf.save(os.path.expanduser("~/labels.pdf"))
     assert bytes(pdf).startswith(b"%PDF-1.4")
 
 
@@ -60,7 +59,4 @@ def test_render_all_posting_docs(posting_list: PostingList, posting_card: Postin
         posting_list.add_shipping_label(shipping_label)
     shipping_labels_renderer.set_posting_list(posting_list)
     pdf = shipping_labels_renderer.render()
-
-    pdf.save(os.path.expanduser("~/posting_docs.pdf"))
-
     assert bytes(pdf).startswith(b"%PDF-1.4")
