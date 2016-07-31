@@ -20,7 +20,8 @@ import pytest
 from PIL.Image import Image
 
 from correios import DATADIR
-from correios.exceptions import InvalidFederalTaxNumberError, InvalidExtraServiceError, InvalidRegionalDirectionError
+from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
+                                 InvalidRegionalDirectionError, InvalidUserContractError)
 from correios.models.data import EXTRA_SERVICE_AR
 from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService,
                                   RegionalDirection)
@@ -107,6 +108,17 @@ def test_sanitize_user_data(valid_federal_tax_number, valid_state_tax_number):
 
     assert user.name == "NAME WITH TRAILLING WHITESPACES"
     assert user.status_number == 1
+
+
+def test_fail_add_contract_twice(contract, valid_federal_tax_number, valid_state_tax_number):
+    user = User(name="ECT",
+                federal_tax_number=valid_federal_tax_number,
+                state_tax_number=valid_state_tax_number,
+                status_number=1)
+    user.add_contract(contract)
+
+    with pytest.raises(InvalidUserContractError):
+        user.add_contract(contract)
 
 
 def test_basic_contract(user):
