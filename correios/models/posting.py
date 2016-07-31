@@ -129,6 +129,32 @@ class TrackingCode:
 
         return 11 - module
 
+    @classmethod
+    def create_range(cls, start: Union[str, 'TrackingCode'], end: Union[str, 'TrackingCode']):
+        if not isinstance(start, TrackingCode):
+            start = TrackingCode(start)
+
+        if not isinstance(end, TrackingCode):
+            end = TrackingCode(end)
+
+        if start.prefix != end.prefix:
+            raise InvalidTrackingCodeError("Different tracking code prefixes: {} != {}".format(start.prefix,
+                                                                                               end.prefix))
+
+        if start.suffix != end.suffix:
+            raise InvalidTrackingCodeError("Different tracking code suffixes: {} != {}".format(start.suffix,
+                                                                                               end.suffix))
+
+        start_number = int(start.number)
+        end_number = int(end.number)
+
+        if start_number > end_number:
+            raise InvalidTrackingCodeError("Invalid range numbers: {} > {}".format(start_number,
+                                                                                   end_number))
+
+        code_range = range(int(start.number), int(end.number) + 1)
+        return [TrackingCode(start.prefix + "{:08}".format(n) + start.suffix) for n in code_range]
+
     @property
     def digit(self):
         if self._digit is None:

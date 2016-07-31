@@ -79,10 +79,9 @@ def test_get_posting_card_status(posting_card):
 @vcr.use_cassette
 def test_request_tracking_codes(user):
     client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
-    result = client.request_tracking_codes(user, Service.get(SERVICE_SEDEX))
-    assert len(result) == 2
+    result = client.request_tracking_codes(user, Service.get(SERVICE_SEDEX), quantity=10)
+    assert len(result) == 10
     assert len(result[0].code) == 13
-    assert len(result[1].code) == 13
 
 
 @vcr.use_cassette

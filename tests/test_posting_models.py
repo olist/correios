@@ -81,6 +81,23 @@ def test_tracking_code_creator():
     assert tracking_code1 == tracking_code2
 
 
+def test_tracking_code_range_generator():
+    tracking_codes = TrackingCode.create_range("DL74668650 BR", "DL74668654 BR")
+    assert len(tracking_codes) == 5
+    assert all(isinstance(tc, TrackingCode) for tc in tracking_codes)
+
+
+def test_fail_tracking_code_invalid_range_generator():
+    with pytest.raises(InvalidTrackingCodeError):
+        TrackingCode.create_range("DL74668650 BR", "SX74668654 BR")  # different prefix
+
+    with pytest.raises(InvalidTrackingCodeError):
+        TrackingCode.create_range("DL74668650 BR", "DL74668654 US")  # different suffix
+
+    with pytest.raises(InvalidTrackingCodeError):
+        TrackingCode.create_range("DL74668654 BR", "DL74668650 BR")  # end < start
+
+
 def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code, package):
     shipping_label = ShippingLabel(
         posting_card=posting_card,
