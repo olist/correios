@@ -19,7 +19,7 @@ from correios.client import ModelBuilder, Correios, PostingListSerializer
 from correios.exceptions import PostingListSerializerError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
-from correios.models.posting import ShippingLabel, PostingList
+from correios.models.posting import ShippingLabel, PostingList, TrackingCode
 from correios.models.user import PostingCard, Service
 from .vcr import vcr
 
@@ -105,14 +105,33 @@ def test_close_posting_list(posting_card, posting_list: PostingList, shipping_la
 def test_get_tracking_codes_events():
     client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
     result = client.get_tracking_code_events(["FJ064849483BR", "DU477828695BR"])
-    assert result  # TODO
+
+    assert len(result) == 2
+    assert result[0] != result[1]
+
+    assert isinstance(result[0], TrackingCode)
+    assert result[0].code in ("FJ064849483BR", "DU477828695BR")
+
+    assert isinstance(result[1], TrackingCode)
+    assert result[1].code in ("FJ064849483BR", "DU477828695BR")
 
 
 @vcr.use_cassette
 def test_get_tracking_code_events():
     client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
     result = client.get_tracking_code_events("FJ064849483BR")
-    assert result  # TODO
+
+    assert isinstance(result[0], TrackingCode)
+    assert result[0].code == "FJ064849483BR"
+
+
+@vcr.use_cassette
+def test_get_tracking_code_with_no_verification_digitevents():
+    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    result = client.get_tracking_code_events("FJ06484948BR")
+
+    assert isinstance(result[0], TrackingCode)
+    assert result[0].code == "FJ064849483BR"
 
 
 def test_builder_posting_card_status():

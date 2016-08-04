@@ -1,0 +1,42 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:ns1="http://resource.webservice.correios.com.br/"
+      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:buscaEventosLista><usuario>solidarium2</usuario><senha>d5kgag</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>FJ064849483BR</objetos></ns1:buscaEventosLista></ns0:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['527']
+      Content-Type: [text/xml;charset=UTF-8]
+      SOAPAction: ['']
+      User-Agent: [python-requests/2.10.0]
+    method: POST
+    uri: http://webservice.correios.com.br/service/rastro
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"\
+        http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header><X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace\
+        \ xmlns:X-OPNET-Transaction-Trace=\"http://opnet.com\">pid=15937,requestid=a377a550329bb1a2ede883c659b49b68ad1fe5de37e8dbbd</X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace></soapenv:Header><soapenv:Body><ns2:buscaEventosListaResponse\
+        \ xmlns:ns2=\"http://resource.webservice.correios.com.br/\"><return><versao>2.0</versao><qtd>1</qtd><objeto><numero>FJ064849483BR</numero><sigla>FJ</sigla><nome>REMESSA\
+        \ ECON\xD4MICA C/ AR DIGITAL</nome><categoria>REMESSA ECON\xD4MICA TAL\xC3\
+        O/CART\xC3O</categoria><evento><tipo>BDE</tipo><status>01</status><data>14/07/2016</data><hora>16:24</hora><descricao>Objeto\
+        \ entregue ao destinat\xE1rio</descricao><recebedor>                     \
+        \                                                   </recebedor><documento>\
+        \                         </documento><comentario>                       \
+        \  </comentario><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>14/07/2016</data><hora>09:46</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>PO</tipo><status>01</status><data>13/07/2016</data><hora>17:58</hora><descricao>Objeto\
+        \ postado</descricao><local>CTC CURITIBA/GCCAP</local><codigo>80235971</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento></objeto></return></ns2:buscaEventosListaResponse></soapenv:Body></soapenv:Envelope>"}
+    headers:
+      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
+      Connection: [Keep-Alive]
+      Content-Language: [pt-BR]
+      Content-Length: ['1665']
+      Content-Type: [text/xml; charset=UTF-8]
+      Date: ['Thu, 04 Aug 2016 20:56:11 GMT']
+      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
+      Keep-Alive: ['timeout=10, max=82']
+      Set-Cookie: [_op_aixPageId=a2_c6bc3973-e396-4af2-84de-8c8e9622d9d7; Path=/]
+      X-OPNET-Transaction-Trace: [a2_c6bc3973-e396-4af2-84de-8c8e9622d9d7]
+      X-Powered-By: [Servlet/3.0]
+    status: {code: 200, message: OK}
+version: 1
