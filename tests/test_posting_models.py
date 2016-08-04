@@ -14,6 +14,7 @@
 
 
 import os
+from datetime import datetime
 from decimal import Decimal
 
 import pytest
@@ -24,7 +25,8 @@ from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError
                                  InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR
-from correios.models.posting import ShippingLabel, TrackingCode, PostingList, Package
+from correios.models.posting import (EventStatus, Package, PostingList, ShippingLabel,
+                                     TrackingCode, TrackingEvent)
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
@@ -288,3 +290,16 @@ def test_calculate_insurance():
 
     value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2)
     assert value == Decimal('6.30')
+
+
+def test_event_status():
+    event_status = EventStatus('BDE', 1)
+    assert repr(event_status) == "<EventStatus('BDE', 1)>"
+
+
+def test_tracking_event():
+    tracking_event = TrackingEvent(datetime(2010, 1, 2, 1, 2),
+                                   EventStatus('BDE', 1),
+                                   "70002-900")
+    expected = "<TrackingEvent(<EventStatus('BDE', 1)>, datetime.datetime(2010, 1, 2, 1, 2))>"
+    assert repr(tracking_event) == expected
