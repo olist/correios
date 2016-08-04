@@ -345,11 +345,14 @@ class Correios:
 
         return posting_list
 
-    def get_tracking_code_events(self, tracking_codes):
-        if isinstance(tracking_codes, (str, TrackingCode)):
-            tracking_codes = [tracking_codes]
-        tracking_codes = {str(tc): TrackingCode.create(tc) for tc in tracking_codes}
-        tracking_list = [tc.code for tc in tracking_codes.values()]
+    def get_tracking_code_events(self, tracking_list):
+        if isinstance(tracking_list, (str, TrackingCode)):
+            tracking_list = [tracking_list]
 
-        response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101", tracking_list)
+        tracking_codes = {}
+        for tracking_code in tracking_list:
+            tracking_code = TrackingCode.create(tracking_code)
+            tracking_codes[tracking_code.code] = tracking_code
+
+        response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101", tuple(tracking_codes.keys()))
         return self.model_builder.load_tracking_events(tracking_codes, response)
