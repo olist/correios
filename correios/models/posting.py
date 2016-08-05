@@ -76,7 +76,7 @@ class TrackingEvent:
         self.comment = comment
 
     def __repr__(self):
-        return '<TrackingEvent({!r}, {!r})>'.format(self.status, self.timestamp)
+        return '<TrackingEvent({!r}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
 
 
 class TrackingCode:

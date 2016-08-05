@@ -301,5 +301,5 @@ def test_tracking_event():
     tracking_event = TrackingEvent(datetime(2010, 1, 2, 1, 2),
                                    EventStatus('BDE', 1),
                                    "70002-900")
-    expected = "<TrackingEvent(<EventStatus('BDE', 1)>, datetime.datetime(2010, 1, 2, 1, 2))>"
+    expected = "<TrackingEvent(<EventStatus('BDE', 1)>, 01/02/10-01:02:00)>"
     assert repr(tracking_event) == expected
