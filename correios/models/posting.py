@@ -49,6 +49,9 @@ class EventStatus:
         self.type = event_type
         self.status = status
 
+    def __repr__(self):
+        return '<EventStatus({!r}, {!r})>'.format(self.type, self.status)
+
 
 class TrackingEvent:
     def __init__(self,
@@ -71,6 +74,9 @@ class TrackingEvent:
         self.state = state
         self.document = document
         self.comment = comment
+
+    def __repr__(self):
+        return '<TrackingEvent({!r}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
 
 
 class TrackingCode:
