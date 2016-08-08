@@ -16,7 +16,7 @@
 import pytest
 
 from correios.client import ModelBuilder, Correios, PostingListSerializer
-from correios.exceptions import PostingListSerializerError
+from correios.exceptions import PostingListSerializerError, TrackingCodeNotFoundError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.posting import ShippingLabel, PostingList, TrackingCode
@@ -132,6 +132,14 @@ def test_get_tracking_code_with_no_verification_digitevents():
 
     assert isinstance(result[0], TrackingCode)
     assert result[0].code == "FJ064849483BR"
+
+
+@vcr.use_cassette
+def test_get_tracking_code_object_not_found_by_correios():
+    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+
+    with pytest.raises(TrackingCodeNotFoundError):
+        client.get_tracking_code_events("DU05508759BR")
 
 
 def test_builder_posting_card_status():
