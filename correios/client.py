@@ -18,7 +18,7 @@ from datetime import datetime
 from typing import Union, Sequence, List, Dict
 
 from correios import xml_utils, DATADIR
-from correios.exceptions import PostingListSerializerError, InvalidTrackingCodeError
+from correios.exceptions import PostingListSerializerError, TrackingCodeNotFoundError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent, EventStatus
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
@@ -125,7 +125,7 @@ class ModelBuilder:
         result = []
         for tracked_object in response.objeto:
             if 'erro' in tracked_object:
-                raise InvalidTrackingCodeError(tracked_object['erro'])
+                raise TrackingCodeNotFoundError(tracked_object['erro'])
 
             tracking_code = tracking_codes[tracked_object.numero]
             tracking_code.category = tracked_object.categoria
