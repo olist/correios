@@ -44,6 +44,7 @@ class InvalidStateTaxNumberError(ModelError):
 class InvalidUserContractError(ModelError):
     pass
 
+
 class InvalidTrackingCodeError(ModelError):
     pass
 
@@ -89,4 +90,8 @@ class PostingListSerializerError(ClientError):
 
 
 class RendererError(BaseCorreiosError):
+    pass
+
+
+class TrackingCodeNotFoundError(ModelError):
     pass
