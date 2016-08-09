@@ -137,9 +137,15 @@ def test_get_tracking_code_with_no_verification_digitevents():
 @vcr.use_cassette
 def test_get_tracking_code_object_not_found_by_correios():
     client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    tracking_code = client.get_tracking_code_events("DU05508759BR")[0]
 
-    with pytest.raises(TrackingCodeNotFoundError):
-        client.get_tracking_code_events("DU05508759BR")
+    assert tracking_code.events
+
+    event = tracking_code.events[0]
+    assert event.timestamp
+    assert event.location_zip_code
+    assert event.status.type == "ERROR"
+    assert event.status.status == 1
 
 
 def test_builder_posting_card_status():
