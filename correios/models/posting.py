@@ -45,7 +45,7 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = 50  # R$
 EVENT_TYPES = ('BDE', 'BDI', 'BDR', 'BLQ', 'CAR', 'CD', 'CMT', 'CO', 'CUN',
-               'DO', 'EST', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
+               'DO', 'EST', 'ERROR', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
                'PO', 'RO', 'TRI')
 
 
