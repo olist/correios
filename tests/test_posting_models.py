@@ -297,9 +297,35 @@ def test_event_status():
     assert repr(event_status) == "<EventStatus('BDE', 1)>"
 
 
+def test_tracking_event_initializer():
+    tracking_event = TrackingEvent(timestamp=datetime(2010, 1, 2, 1, 2),
+                                   status="01",
+                                   location_zip_code="82940150",
+                                   location="Correios",
+                                   receiver="José",
+                                   city="Curitiba",
+                                   state="PR",
+                                   document="XYZ",
+                                   comment="The comment",
+                                   description="The description",
+                                   details="The details")
+
+    assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
+    assert tracking_event.status == "01"
+    assert tracking_event.location_zip_code == "82940150"
+    assert tracking_event.location == "Correios"
+    assert tracking_event.receiver == "José"
+    assert tracking_event.city == "Curitiba"
+    assert tracking_event.state == "PR"
+    assert tracking_event.document == "XYZ"
+    assert tracking_event.comment == "The comment"
+    assert tracking_event.description == "The description"
+    assert tracking_event.details == "The details"
+
+
 def test_tracking_event():
     tracking_event = TrackingEvent(datetime(2010, 1, 2, 1, 2),
-                                   EventStatus('BDE', 1),
+                                   EventStatus("BDE", 1),
                                    "70002-900")
     expected = "<TrackingEvent(<EventStatus('BDE', 1)>, 01/02/10-01:02:00)>"
     assert repr(tracking_event) == expected
