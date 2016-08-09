@@ -17,7 +17,7 @@ import math
 import os
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, Union, Sequence
+from typing import Optional, Sequence, Tuple, Union
 
 from PIL import Image
 
@@ -72,7 +72,7 @@ class EventStatus:
 class TrackingEvent:
     def __init__(self,
                  timestamp: datetime,
-                 status: Union[tuple, EventStatus],
+                 status: Union[Tuple[str, int], EventStatus],
                  location_zip_code: Union[str, ZipCode],
                  location: str = "",
                  receiver: str = "",
@@ -99,7 +99,8 @@ class TrackingEvent:
         self.status = status
 
     def __repr__(self):
-        return '<TrackingEvent({}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
+        return '<TrackingEvent({!s}, {!s})>'.format(self.status,
+                                                    self.timestamp.strftime('%x-%X'))
 
 
 class TrackingCode:
