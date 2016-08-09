@@ -118,6 +118,8 @@ class ModelBuilder:
                 receiver=getattr(event, "recebedor", ""),
                 document=getattr(event, "documento", ""),
                 comment=getattr(event, "comentario", ""),
+                description=getattr(event, "descricao", ""),
+                details=getattr(event, "detalhes", ""),
             )
             tracking_code.add_event(event)
 
