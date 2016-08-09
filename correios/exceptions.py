@@ -95,3 +95,7 @@ class RendererError(BaseCorreiosError):
 
 class TrackingCodeNotFoundError(ModelError):
     pass
+
+
+class InvalidEventStatusError(ModelError):
+    pass
