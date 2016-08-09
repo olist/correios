@@ -64,6 +64,8 @@ class TrackingEvent:
                  state: str = "",
                  document: str = "",
                  comment: str = "",
+                 description: str = "",
+                 details: str = "",
                  ):
         self.timestamp = timestamp
         self.status = status
@@ -74,6 +76,8 @@ class TrackingEvent:
         self.state = state
         self.document = document
         self.comment = comment
+        self.description = description
+        self.details = details
 
     def __repr__(self):
         return '<TrackingEvent({!r}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
