@@ -22,8 +22,10 @@ from typing import Optional, Union, Sequence
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidPackageSequenceError, InvalidTrackingCodeError,
-                                 PostingListError, InvalidPackageDimensionsError, InvalidPackageWeightError)
+from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
+                                 InvalidPackageSequenceError, InvalidTrackingCodeError,
+                                 PostingListError, InvalidPackageDimensionsError,
+                                 InvalidPackageWeightError)
 from .address import Address, ZipCode
 from .user import Contract
 from .user import Service, ExtraService, PostingCard
@@ -42,12 +44,26 @@ MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = 50  # R$
+EVENT_TYPES = ('BDE', 'BDI', 'BDR', 'BLQ', 'CAR', 'CD', 'CMT', 'CO', 'CUN',
+               'DO', 'EST', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
+               'PO', 'RO', 'TRI')
 
 
 class EventStatus:
     def __init__(self, event_type: str, status: int):
-        self.type = event_type
+        self.type = self._validate_type(event_type)
         self.status = status
+
+    def _validate_type(self, event_type):
+        event_type = event_type.upper()
+
+        if event_type not in EVENT_TYPES:
+            raise InvalidEventStatusError("{} is not valid".format(event_type))
+
+        return event_type
+
+    def __str__(self):
+        return '({}, {})'.format(self.type, self.status)
 
     def __repr__(self):
         return '<EventStatus({!r}, {!r})>'.format(self.type, self.status)
@@ -56,7 +72,7 @@ class EventStatus:
 class TrackingEvent:
     def __init__(self,
                  timestamp: datetime,
-                 status: EventStatus,
+                 status: Union[tuple, EventStatus],
                  location_zip_code: Union[str, ZipCode],
                  location: str = "",
                  receiver: str = "",
@@ -68,7 +84,6 @@ class TrackingEvent:
                  details: str = "",
                  ):
         self.timestamp = timestamp
-        self.status = status
         self.location_zip_code = ZipCode.create(location_zip_code)
         self.location = location
         self.receiver = receiver
@@ -79,8 +94,12 @@ class TrackingEvent:
         self.description = description
         self.details = details
 
+        if isinstance(status, tuple):
+            status = EventStatus(*status)
+        self.status = status
+
     def __repr__(self):
-        return '<TrackingEvent({!r}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
+        return '<TrackingEvent({}, {})>'.format(self.status, self.timestamp.strftime('%x-%X'))
 
 
 class TrackingCode:
