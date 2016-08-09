@@ -21,12 +21,13 @@ import pytest
 from PIL.Image import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidTrackingCodeError,
-                                 InvalidPackageSequenceError, InvalidPackageDimensionsError, PostingListError,
+from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
+                                 InvalidTrackingCodeError, InvalidPackageSequenceError,
+                                 InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR
-from correios.models.posting import (EventStatus, Package, PostingList, ShippingLabel,
-                                     TrackingCode, TrackingEvent)
+from correios.models.posting import (EventStatus, EVENT_TYPES, Package, PostingList,
+                                     ShippingLabel, TrackingCode, TrackingEvent)
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
@@ -297,9 +298,10 @@ def test_event_status():
     assert repr(event_status) == "<EventStatus('BDE', 1)>"
 
 
-def test_tracking_event_initializer():
+@pytest.mark.parametrize("status", (EventStatus("BDE", "01"), ("BDE", "01")))
+def test_basic_tracking_event(status):
     tracking_event = TrackingEvent(timestamp=datetime(2010, 1, 2, 1, 2),
-                                   status="01",
+                                   status=status,
                                    location_zip_code="82940150",
                                    location="Correios",
                                    receiver="José",
@@ -311,7 +313,8 @@ def test_tracking_event_initializer():
                                    details="The details")
 
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
-    assert tracking_event.status == "01"
+    assert tracking_event.status.type == "BDE"
+    assert tracking_event.status.status == "01"
     assert tracking_event.location_zip_code == "82940150"
     assert tracking_event.location == "Correios"
     assert tracking_event.receiver == "José"
@@ -322,10 +325,21 @@ def test_tracking_event_initializer():
     assert tracking_event.description == "The description"
     assert tracking_event.details == "The details"
 
+    assert repr(tracking_event) == "<TrackingEvent((BDE, 01), 01/02/10-01:02:00)>"
 
-def test_tracking_event():
-    tracking_event = TrackingEvent(datetime(2010, 1, 2, 1, 2),
-                                   EventStatus("BDE", 1),
-                                   "70002-900")
-    expected = "<TrackingEvent(<EventStatus('BDE', 1)>, 01/02/10-01:02:00)>"
-    assert repr(tracking_event) == expected
+
+@pytest.mark.parametrize("event_type", EVENT_TYPES)
+def test_basic_event_status(event_type):
+    event_status = EventStatus(event_type, 1)
+
+    assert event_status.type == event_type
+    assert event_status.status == 1
+
+    assert str(event_status) == "({}, 1)".format(event_type)
+    assert repr(event_status) == "<EventStatus({!r}, 1)>".format(event_type)
+
+
+@pytest.mark.parametrize("event_type", ("XYZ", "ABC", "XXX", "WTF", "BD", ""))
+def test_invalid_event_status(event_type):
+    with pytest.raises(InvalidEventStatusError):
+        EventStatus(event_type, 1)
