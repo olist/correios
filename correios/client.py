@@ -108,7 +108,7 @@ class ModelBuilder:
 
     def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
         event = NotFoundTrackingEvent(
-            timestamp=datetime.now().strftime("%d/%m/%Y %H:%M"),
+            timestamp=datetime.now(),
             status=EventStatus("ERROR", 1),
             comment=tracked_object.erro,
         )
@@ -116,7 +116,7 @@ class ModelBuilder:
 
     def _load_events(self, tracking_code: TrackingCode, events):
         for event in events:
-            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), "%d/%m/%Y %H:%M")
+            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
             event = TrackingEvent(
                 timestamp=timestamp,
                 status=EventStatus(event.tipo, event.status),

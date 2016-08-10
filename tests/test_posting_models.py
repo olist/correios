@@ -326,7 +326,12 @@ def test_basic_tracking_event(status):
     assert tracking_event.description == "The description"
     assert tracking_event.details == "The details"
 
-    assert repr(tracking_event) == "<TrackingEvent((BDE, 01), 01/02/10-01:02:00)>"
+    assert repr(tracking_event) == "<TrackingEvent((BDE, 01), 02/01/2010 01:02)>"
+
+
+def test_tracking_event_timestamp_format(tracking_event):
+    expected_date = "01/01/2016 12:00"
+    assert tracking_event.timestamp.strftime(TrackingEvent.timestamp_format) == expected_date
 
 
 def test_basic_not_found_tracking_event():
