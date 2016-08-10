@@ -45,7 +45,7 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = 50  # R$
 EVENT_TYPES = ('BDE', 'BDI', 'BDR', 'BLQ', 'CAR', 'CD', 'CMT', 'CO', 'CUN',
-               'DO', 'EST', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
+               'DO', 'EST', 'ERROR', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
                'PO', 'RO', 'TRI')
 
 
@@ -70,10 +70,12 @@ class EventStatus:
 
 
 class TrackingEvent:
+    timestamp_format = "%d/%m/%Y %H:%M"
+
     def __init__(self,
                  timestamp: datetime,
                  status: Union[Tuple[str, int], EventStatus],
-                 location_zip_code: Union[str, ZipCode],
+                 location_zip_code: Union[str, ZipCode] = "",
                  location: str = "",
                  receiver: str = "",
                  city: str = "",
@@ -84,7 +86,6 @@ class TrackingEvent:
                  details: str = "",
                  ):
         self.timestamp = timestamp
-        self.location_zip_code = ZipCode.create(location_zip_code)
         self.location = location
         self.receiver = receiver
         self.city = city
@@ -94,13 +95,28 @@ class TrackingEvent:
         self.description = description
         self.details = details
 
+        if location_zip_code:
+            location_zip_code = ZipCode.create(location_zip_code)
+        self.location_zip_code = location_zip_code
+
         if isinstance(status, tuple):
             status = EventStatus(*status)
         self.status = status
 
     def __repr__(self):
-        return '<TrackingEvent({!s}, {!s})>'.format(self.status,
-                                                    self.timestamp.strftime('%x-%X'))
+        timestamp = self.timestamp.strftime(self.timestamp_format)
+        return '<TrackingEvent({!s}, {!s})>'.format(self.status, timestamp)
+
+
+class NotFoundTrackingEvent(TrackingEvent):
+    def __init__(self,
+                 timestamp: datetime,
+                 status: Union[Tuple[str, int], EventStatus],
+                 comment,
+                 ):
+        super().__init__(timestamp=timestamp,
+                         status=status,
+                         comment=comment)
 
 
 class TrackingCode:
