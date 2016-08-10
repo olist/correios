@@ -17,13 +17,15 @@ import random
 from datetime import datetime
 
 import factory
+from factory import faker
 import pytest
 from pytest_factoryboy import register
 
 from correios.models import data
 from correios.models.address import Address
 from correios.models.data import TRACKING_PREFIX
-from correios.models.posting import TrackingCode, ShippingLabel, PostingList, Package
+from correios.models.posting import (PostingList, Package, ShippingLabel, TrackingCode,
+                                     TrackingEvent)
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
 
@@ -77,6 +79,21 @@ class PostingCardFactory(factory.Factory):
 
 
 register(PostingCardFactory, "posting_card")
+
+
+class TrackingEventFactory(factory.Factory):
+    class Meta:
+        model = TrackingEvent
+
+    timestamp = datetime(2016, 1, 1, 12)
+    status = ('PO', '1')
+    location_zip_code = faker.Faker("postcode", locale="pt_BR")
+    location = "CEE"
+    city = faker.Faker("city", locale="pt_BR")
+    state = faker.Faker("estado_sigla", locale="pt_BR")
+    description = "Objeto postado"
+
+register(TrackingEventFactory, "tracking_event")
 
 
 def _random_tracking_code():
