@@ -16,10 +16,11 @@
 import pytest
 
 from correios.client import ModelBuilder, Correios, PostingListSerializer
-from correios.exceptions import PostingListSerializerError, TrackingCodeNotFoundError
+from correios.exceptions import PostingListSerializerError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
-from correios.models.posting import ShippingLabel, PostingList, TrackingCode
+from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
+                                     TrackingCode)
 from correios.models.user import PostingCard, Service
 from .vcr import vcr
 
@@ -142,8 +143,8 @@ def test_get_tracking_code_object_not_found_by_correios():
     assert tracking_code.events
 
     event = tracking_code.events[0]
+    assert isinstance(event, NotFoundTrackingEvent)
     assert event.timestamp
-    assert event.location_zip_code
     assert event.status.type == "ERROR"
     assert event.status.status == 1
 

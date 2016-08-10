@@ -103,6 +103,20 @@ class TrackingEvent:
                                                     self.timestamp.strftime('%x-%X'))
 
 
+class NotFoundTrackingEvent(TrackingEvent):
+    def __init__(self,
+                 timestamp: datetime,
+                 status: Union[Tuple[str, int], EventStatus],
+                 comment: str = "",
+                 ):
+        self.timestamp = timestamp
+        self.comment = comment
+
+        if isinstance(status, tuple):
+            status = EventStatus(*status)
+        self.status = status
+
+
 class TrackingCode:
     def __init__(self, code: str):
         self.prefix = code[:2].upper()
