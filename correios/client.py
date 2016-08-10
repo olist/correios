@@ -20,7 +20,8 @@ from typing import Union, Sequence, List, Dict
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodeNotFoundError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent, EventStatus
+from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
+                             TrackingEvent, EventStatus)
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -105,9 +106,17 @@ class ModelBuilder:
         codes = response.split(",")
         return TrackingCode.create_range(codes[0], codes[1])
 
+    def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
+        event = NotFoundTrackingEvent(
+            timestamp=datetime.now(),
+            status=EventStatus("ERROR", 1),
+            comment=tracked_object.erro,
+        )
+        tracking_code.add_event(event)
+
     def _load_events(self, tracking_code: TrackingCode, events):
         for event in events:
-            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), "%d/%m/%Y %H:%M")
+            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
             event = TrackingEvent(
                 timestamp=timestamp,
                 status=EventStatus(event.tipo, event.status),
@@ -126,14 +135,15 @@ class ModelBuilder:
     def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
         result = []
         for tracked_object in response.objeto:
-            if 'erro' in tracked_object:
-                raise TrackingCodeNotFoundError(tracked_object['erro'])
-
             tracking_code = tracking_codes[tracked_object.numero]
-            tracking_code.category = tracked_object.categoria
-            tracking_code.name = tracked_object.nome
-            tracking_code.initials = tracked_object.sigla
-            self._load_events(tracking_code, tracked_object.evento)
+
+            if 'erro' in tracked_object:
+                self._load_invalid_event(tracking_code, tracked_object)
+            else:
+                tracking_code.name = tracked_object.nome
+                tracking_code.initials = tracked_object.sigla
+                tracking_code.category = tracked_object.categoria
+                self._load_events(tracking_code, tracked_object.evento)
 
             result.append(tracking_code)
 
