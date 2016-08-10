@@ -70,6 +70,8 @@ class EventStatus:
 
 
 class TrackingEvent:
+    timestamp_format = "%d/%m/%Y %H:%M"
+
     def __init__(self,
                  timestamp: datetime,
                  status: Union[Tuple[str, int], EventStatus],
@@ -99,8 +101,8 @@ class TrackingEvent:
         self.status = status
 
     def __repr__(self):
-        return '<TrackingEvent({!s}, {!s})>'.format(self.status,
-                                                    self.timestamp.strftime('%x-%X'))
+        timestamp = self.timestamp.strftime(self.timestamp_format)
+        return '<TrackingEvent({!s}, {!s})>'.format(self.status, timestamp)
 
 
 class NotFoundTrackingEvent(TrackingEvent):
