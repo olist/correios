@@ -75,7 +75,7 @@ class TrackingEvent:
     def __init__(self,
                  timestamp: datetime,
                  status: Union[Tuple[str, int], EventStatus],
-                 location_zip_code: Union[str, ZipCode],
+                 location_zip_code: Union[str, ZipCode] = "",
                  location: str = "",
                  receiver: str = "",
                  city: str = "",
@@ -86,7 +86,6 @@ class TrackingEvent:
                  details: str = "",
                  ):
         self.timestamp = timestamp
-        self.location_zip_code = ZipCode.create(location_zip_code)
         self.location = location
         self.receiver = receiver
         self.city = city
@@ -95,6 +94,10 @@ class TrackingEvent:
         self.comment = comment
         self.description = description
         self.details = details
+
+        if location_zip_code:
+            location_zip_code = ZipCode.create(location_zip_code)
+        self.location_zip_code = location_zip_code
 
         if isinstance(status, tuple):
             status = EventStatus(*status)
@@ -109,14 +112,11 @@ class NotFoundTrackingEvent(TrackingEvent):
     def __init__(self,
                  timestamp: datetime,
                  status: Union[Tuple[str, int], EventStatus],
-                 comment: str = "",
+                 comment,
                  ):
-        self.timestamp = timestamp
-        self.comment = comment
-
-        if isinstance(status, tuple):
-            status = EventStatus(*status)
-        self.status = status
+        super().__init__(timestamp=timestamp,
+                         status=status,
+                         comment=comment)
 
 
 class TrackingCode:
