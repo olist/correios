@@ -20,7 +20,8 @@ from typing import Union, Sequence, List, Dict
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodeNotFoundError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import TrackingCode, PostingList, ShippingLabel, TrackingEvent, EventStatus
+from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
+                             TrackingEvent, EventStatus)
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
 from .soap import SoapClient
 
@@ -106,10 +107,9 @@ class ModelBuilder:
         return TrackingCode.create_range(codes[0], codes[1])
 
     def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
-        event = TrackingEvent(
+        event = NotFoundTrackingEvent(
             timestamp=datetime.now().strftime("%d/%m/%Y %H:%M"),
             status=EventStatus("ERROR", 1),
-            location_zip_code="00000-000",
             comment=tracked_object.erro,
         )
         tracking_code.add_event(event)
