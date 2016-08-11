@@ -25,11 +25,10 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidTrackingCodeError, InvalidPackageSequenceError,
                                  InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
-from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR
+from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, TRACKING_EVENT_TYPES
 from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
                                      Package, PostingList, ShippingLabel, TrackingCode,
                                      TrackingEvent)
-from models.data import TRACKING_EVENT_TYPES
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
