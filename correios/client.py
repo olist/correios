@@ -18,7 +18,7 @@ from datetime import datetime
 from typing import Union, Sequence, List, Dict
 
 from correios import xml_utils, DATADIR
-from correios.exceptions import PostingListSerializerError
+from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
                              TrackingEvent, EventStatus)
@@ -268,6 +268,7 @@ class PostingListSerializer:
 class Correios:
     PRODUCTION = "production"
     TEST = "test"
+    MAX_TRACKING_CODES_PER_REQUEST = 50
 
     # 'environment': ('url', 'ssl_verification')
     sigep_urls = {
@@ -363,6 +364,11 @@ class Correios:
     def get_tracking_code_events(self, tracking_list):
         if isinstance(tracking_list, (str, TrackingCode)):
             tracking_list = [tracking_list]
+
+        if len(tracking_list) > Correios.MAX_TRACKING_CODES_PER_REQUEST:
+            msg = '{} tracking codes requested exceeds the limit of {} stabilished by the Correios'
+            msg = msg.format(len(tracking_list), Correios.MAX_TRACKING_CODES_PER_REQUEST)
+            raise TrackingCodesLimitExceededError(msg)
 
         tracking_codes = {}
         for tracking_code in tracking_list:
