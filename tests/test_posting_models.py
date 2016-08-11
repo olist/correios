@@ -26,9 +26,10 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
 from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR
-from correios.models.posting import (EventStatus, EVENT_TYPES, NotFoundTrackingEvent,
+from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
                                      Package, PostingList, ShippingLabel, TrackingCode,
                                      TrackingEvent)
+from models.data import TRACKING_EVENT_TYPES
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
@@ -344,12 +345,13 @@ def test_basic_not_found_tracking_event():
     assert tracking_event.comment == "Not found"
 
 
-@pytest.mark.parametrize("event_type", EVENT_TYPES)
+@pytest.mark.parametrize("event_type", list(TRACKING_EVENT_TYPES.keys()))
 def test_basic_event_status(event_type):
     event_status = EventStatus(event_type, 1)
 
     assert event_status.type == event_type
     assert event_status.status == 1
+    assert event_status.display_event_type == TRACKING_EVENT_TYPES[event_type]
 
     assert str(event_status) == "({}, 1)".format(event_type)
     assert repr(event_status) == "<EventStatus({!r}, 1)>".format(event_type)
