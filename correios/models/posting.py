@@ -27,8 +27,9 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  PostingListError, InvalidPackageDimensionsError,
                                  InvalidPackageWeightError)
 from .address import Address, ZipCode
-from .user import Contract
 from .user import Service, ExtraService, PostingCard
+from .user import Contract  # noqa: F401
+
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8

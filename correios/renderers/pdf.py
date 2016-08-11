@@ -14,7 +14,7 @@
 
 
 from io import BytesIO
-from typing import List
+from typing import List  # noqa: F401
 
 from reportlab.graphics.barcode import createBarcodeDrawing
 from reportlab.lib import colors, pagesizes
