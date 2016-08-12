@@ -16,7 +16,7 @@
 import pytest
 
 from correios.client import ModelBuilder, Correios, PostingListSerializer
-from correios.exceptions import PostingListSerializerError
+from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
 from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
@@ -147,6 +147,13 @@ def test_get_tracking_code_object_not_found_by_correios():
     assert event.timestamp
     assert event.status.type == "ERROR"
     assert event.status.status == 1
+
+
+def test_get_tracking_codes_events_over_limit():
+    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    codes = ["DU05508759BR"] * 51
+    with pytest.raises(TrackingCodesLimitExceededError):
+        client.get_tracking_code_events(codes)
 
 
 def test_builder_posting_card_status():
