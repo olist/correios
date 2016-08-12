@@ -7,6 +7,10 @@ install:
   - pip install -rrequirements-test.txt
   - pip install tox-travis
   - pip install coveralls
+  - pip install flake8
+
+before_script:
+  - flake8 --max-line-length=120 .
 
 script:
   - tox
