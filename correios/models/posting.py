@@ -27,6 +27,7 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  PostingListError, InvalidPackageDimensionsError,
                                  InvalidPackageWeightError)
 from .address import Address, ZipCode
+from .data import TRACKING_EVENT_TYPES
 from .user import Service, ExtraService, PostingCard
 from .user import Contract  # noqa: F401
 
@@ -45,9 +46,6 @@ MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = 50  # R$
-EVENT_TYPES = ('BDE', 'BDI', 'BDR', 'BLQ', 'CAR', 'CD', 'CMT', 'CO', 'CUN',
-               'DO', 'EST', 'ERROR', 'FC', 'IDC', 'LDI', 'LDE', 'OEC', 'PAR', 'PMT',
-               'PO', 'RO', 'TRI')
 
 
 class EventStatus:
@@ -58,10 +56,14 @@ class EventStatus:
     def _validate_type(self, event_type):
         event_type = event_type.upper()
 
-        if event_type not in EVENT_TYPES:
+        if event_type not in TRACKING_EVENT_TYPES:
             raise InvalidEventStatusError("{} is not valid".format(event_type))
 
         return event_type
+
+    @property
+    def display_event_type(self):
+        return TRACKING_EVENT_TYPES[self.type]
 
     def __str__(self):
         return '({}, {})'.format(self.type, self.status)

@@ -339,3 +339,28 @@ REGIONAL_DIRECTIONS = {
     72: {'code': "SPM", 'name': "DR - SÃO PAULO"},
     75: {'code': "TO", 'name': "DR - TOCANTINS"},
 }
+
+TRACKING_EVENT_TYPES = {
+    "ERROR": "Evento de erro",  # custom event type for "Not Found" error
+    "BDE": "Baixa de distribuição externa",
+    "BDI": "Baixa de distribuição interna",
+    "BDR": "Baixa corretiva",
+    "BLQ": "Bloqueio de objetos",
+    "CAR": "Conferência de lista de registro",
+    "CD": "Conferência de nota de despacho",
+    "CMT": "Chegada de um meio de transporte",
+    "CO": "Coleta de objetos",
+    "CUN": "Conferência de lista de registro",
+    "DO": "Expedição de nota de despacho",
+    "EST": "Estorno",
+    "FC": "Função complementar",
+    "IDC": "Indenização de objetos",
+    "LDI": "Lista de distribuição interna",
+    "LDE": "Lista de distribuição externa",
+    "OEC": "Lista de Objetos Entregues ao Carteiro",
+    "PAR": "Conferência Unidade Internacional",
+    "PMT": "Partida Meio de Transporte",
+    "PO": "Postagem (exceção)",
+    "RO": "Expedição de Lista de Registro",
+    "TRI": "Triagem",
+}
