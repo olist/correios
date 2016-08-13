@@ -105,6 +105,9 @@ class TrackingEvent:
             status = EventStatus(*status)
         self.status = status
 
+    def __str__(self):
+        return '{} - {} - {}/{}'.format(self.description, self.location, self.city, self.state)
+
     def __repr__(self):
         timestamp = self.timestamp.strftime(self.timestamp_format)
         return '<TrackingEvent({!s}, {!s})>'.format(self.status, timestamp)
