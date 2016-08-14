@@ -327,6 +327,7 @@ def test_basic_tracking_event(status):
     assert tracking_event.details == "The details"
 
     assert repr(tracking_event) == "<TrackingEvent((BDE, 01), 02/01/2010 01:02)>"
+    assert str(tracking_event) == "The description - Correios - Curitiba/PR"
 
 
 def test_tracking_event_timestamp_format(tracking_event):
