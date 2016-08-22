@@ -25,7 +25,8 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidTrackingCodeError, InvalidPackageSequenceError,
                                  InvalidPackageDimensionsError, PostingListError,
                                  InvalidPackageWeightError)
-from correios.models.data import SERVICE_SEDEX, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, TRACKING_EVENT_TYPES
+from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
+                                  TRACKING_EVENT_TYPES)
 from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
                                      Package, PostingList, ShippingLabel, TrackingCode,
                                      TrackingEvent)
@@ -276,22 +277,28 @@ def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
 
 
 def test_calculate_insurance_when_not_applicable():
-    value = Package.calculate_insurance(per_unit_value=50, quantity=2)
+    value = Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal(0)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(10))
+    value = Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
     assert value == Decimal(0)
 
 
-def test_calculate_insurance():
-    value = Package.calculate_insurance(per_unit_value=193)
+def test_calculate_insurance_pac():
+    value = Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
     assert value == Decimal(1)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2)
+    value = Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
     assert value == Decimal(2)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2)
+    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
     assert value == Decimal('6.30')
+
+
+def test_calculate_insurance_sedex():
+    # not implemented, defaults to zero
+    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
+    assert value == Decimal('0')
 
 
 def test_event_status():
