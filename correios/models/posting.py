@@ -27,7 +27,7 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  PostingListError, InvalidPackageDimensionsError,
                                  InvalidPackageWeightError)
 from .address import Address, ZipCode
-from .data import TRACKING_EVENT_TYPES
+from .data import SERVICE_PAC, TRACKING_EVENT_TYPES
 from .user import Service, ExtraService, PostingCard
 from .user import Contract  # noqa: F401
 
@@ -284,9 +284,9 @@ class Package:
         return math.ceil(max(volumetric_weight, weight))
 
     @classmethod
-    def calculate_insurance(cls, per_unit_value, quantity=1):
+    def calculate_insurance(cls, per_unit_value, quantity: int = 1, service: Service = None):
         value = 0
-        if per_unit_value > INSURANCE_VALUE_THRESHOLD:
+        if service == SERVICE_PAC and per_unit_value > INSURANCE_VALUE_THRESHOLD:
             value = float(per_unit_value - INSURANCE_VALUE_THRESHOLD) * 0.007
 
         return Decimal(value * quantity).quantize(Decimal('0.00'))
