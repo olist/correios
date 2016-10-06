@@ -195,8 +195,8 @@ class PostingListSerializer:
         receiver = shipping_label.receiver
         address = xml_utils.SubElement(item, "destinatario")
         xml_utils.SubElement(address, "nome_destinatario", cdata=str(receiver.name))
-        xml_utils.SubElement(address, "telefone_destinatario", cdata=str(receiver.phone.short))
-        xml_utils.SubElement(address, "celular_destinatario", cdata=str(receiver.cellphone.short))
+        xml_utils.SubElement(address, "telefone_destinatario", cdata=receiver.phone.short)
+        xml_utils.SubElement(address, "celular_destinatario", cdata=receiver.cellphone.short)
         xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
         xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
         xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
