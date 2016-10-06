@@ -16,6 +16,7 @@
 from decimal import Decimal
 from typing import List, Union
 
+from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError, InvalidAddressNumberError
@@ -156,7 +157,10 @@ class ZipAddress:
 
 class Phone:
     def __init__(self, number: str, country="BR"):
-        self.parsed = self._parse(number, country)
+        try:
+            self.parsed = self._parse(number, country)
+        except NumberParseException:
+            self.parsed = None
         self.country = country
         self.number = "".join(d for d in number if d.isdigit())
 
@@ -166,20 +170,25 @@ class Phone:
         return parse(number, country)
 
     def display(self) -> str:
+        if not self.parsed:
+            return ""
         country_code = "+{!s}".format(self.parsed.country_code)
         return format_number(self.parsed, PhoneNumberFormat.INTERNATIONAL).replace(country_code, "").strip()
 
     @property
     def short(self) -> str:
-        return self.parsed.national_number
+        if not self.parsed:
+            return ""
+        return str(self.parsed.national_number)
 
     def __eq__(self, other: Union["Phone", str]):
-        if isinstance(other, Phone):
-            return self.parsed == other.parsed
-        other = self._parse(other, self.country)
-        return self.parsed == other
+        if not isinstance(other, Phone):
+            other = Phone(other, self.country)
+        return self.parsed == other.parsed
 
     def __str__(self):
+        if not self.parsed:
+            return ""
         return "{}{}".format(self.parsed.country_code, self.parsed.national_number)
 
     def __repr__(self):
@@ -221,7 +230,7 @@ class Address:
             zip_code = ZipCode(zip_code)
         self.zip_code = zip_code
 
-        if phone and not isinstance(phone, Phone):
+        if not isinstance(phone, Phone):
             phone = Phone(phone)
         self.phone = phone
 

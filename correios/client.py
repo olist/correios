@@ -177,7 +177,7 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
         xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city))
         xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
-        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=str(sender.phone.short))
+        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=sender.phone.short)
         xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
         xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
         return sender_info

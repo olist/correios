@@ -74,8 +74,19 @@ def test_basic_phone():
     assert phone == "+12125551234"
     assert phone == Phone("12125551234", "US")
     assert phone.display() == "212-555-1234"
+    assert phone.short == "2125551234"
     assert str(phone) == "12125551234"
     assert repr(phone) == "<Phone 12125551234>"
+
+
+def test_empty_phone():
+    phone = Phone("")
+    assert phone == ""
+    assert phone == Phone("", "US")
+    assert phone.display() == ""
+    assert phone.short == ""
+    assert str(phone) == ""
+    assert repr(phone) == "<Phone >"
 
 
 @pytest.mark.parametrize("code,name", (
