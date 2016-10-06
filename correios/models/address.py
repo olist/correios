@@ -234,7 +234,7 @@ class Address:
             phone = Phone(phone)
         self.phone = phone
 
-        if cellphone and not isinstance(cellphone, Phone):
+        if not isinstance(cellphone, Phone):
             cellphone = Phone(cellphone)
         self.cellphone = cellphone
 
