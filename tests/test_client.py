@@ -18,10 +18,10 @@ import pytest
 from correios.client import ModelBuilder, Correios, PostingListSerializer
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
-from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX
+from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
                                      TrackingCode)
-from correios.models.user import PostingCard, Service
+from correios.models.user import PostingCard, Service, ExtraService
 from .vcr import vcr
 
 
@@ -167,7 +167,22 @@ def test_posting_list_serialization(posting_list, shipping_label):
     serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
-    assert serializer.get_xml(document).startswith(b"<?xml version='1.0' encoding='ISO-8859-1'?>")
+    xml = serializer.get_xml(document)
+    assert xml.startswith(b"<?xml version='1.0' encoding='ISO-8859-1'?><correioslog>")
+    assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" not in xml
+    assert b"<valor_declarado>10,29</valor_declarado>" not in xml
+
+
+def test_declared_value(posting_list, shipping_label):
+    shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
+    shipping_label.value = 10.29
+    posting_list.add_shipping_label(shipping_label)
+    serializer = PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+    assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" in xml
+    assert b"<valor_declarado>10,29</valor_declarado>" in xml
 
 
 def test_fail_empty_posting_list_serialization(posting_list):

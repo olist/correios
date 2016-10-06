@@ -177,7 +177,7 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
         xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city))
         xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
-        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=str(sender.phone))
+        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=str(sender.phone.short))
         xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
         xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
         return sender_info
@@ -195,8 +195,8 @@ class PostingListSerializer:
         receiver = shipping_label.receiver
         address = xml_utils.SubElement(item, "destinatario")
         xml_utils.SubElement(address, "nome_destinatario", cdata=str(receiver.name))
-        xml_utils.SubElement(address, "telefone_destinatario", cdata=str(receiver.phone))
-        xml_utils.SubElement(address, "celular_destinatario", cdata=str(receiver.cellphone))
+        xml_utils.SubElement(address, "telefone_destinatario", cdata=str(receiver.phone.short))
+        xml_utils.SubElement(address, "celular_destinatario", cdata=str(receiver.cellphone.short))
         xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
         xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
         xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
@@ -262,7 +262,8 @@ class PostingListSerializer:
         return schema.assert_(document)
 
     def get_xml(self, document) -> bytes:
-        return xml_utils.tostring(document, encoding="ISO-8859-1")
+        xml = xml_utils.tostring(document, encoding="unicode")
+        return b"<?xml version='1.0' encoding='ISO-8859-1'?>" + xml.encode("iso-8859-1")
 
 
 class Correios:

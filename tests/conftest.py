@@ -16,9 +16,8 @@
 import random
 from datetime import datetime
 
-import factory
-from factory import faker
 import pytest
+from factory import Factory, SubFactory, Faker, LazyFunction, Sequence, faker
 from pytest_factoryboy import register
 
 from correios.models import data
@@ -39,12 +38,7 @@ def valid_state_tax_number():
     return StateTaxNumber("73.119.555/0001-20")
 
 
-@pytest.fixture
-def datetime_object():
-    return datetime(1970, 4, 1)
-
-
-class UserFactory(factory.Factory):
+class UserFactory(Factory):
     class Meta:
         model = User
 
@@ -57,11 +51,11 @@ class UserFactory(factory.Factory):
 register(UserFactory, "user")
 
 
-class ContractFactory(factory.Factory):
+class ContractFactory(Factory):
     class Meta:
         model = Contract
 
-    user = factory.SubFactory(UserFactory)
+    user = SubFactory(UserFactory)
     number = 9912208555
     regional_direction = 10
 
@@ -69,11 +63,11 @@ class ContractFactory(factory.Factory):
 register(ContractFactory, "contract")
 
 
-class PostingCardFactory(factory.Factory):
+class PostingCardFactory(Factory):
     class Meta:
         model = PostingCard
 
-    contract = factory.SubFactory(ContractFactory)
+    contract = SubFactory(ContractFactory)
     number = 57018901
     administrative_code = 8082650
 
@@ -81,7 +75,7 @@ class PostingCardFactory(factory.Factory):
 register(PostingCardFactory, "posting_card")
 
 
-class TrackingEventFactory(factory.Factory):
+class TrackingEventFactory(Factory):
     class Meta:
         model = TrackingEvent
 
@@ -93,6 +87,7 @@ class TrackingEventFactory(factory.Factory):
     state = faker.Faker("estado_sigla", locale="pt_BR")
     description = "Objeto postado"
 
+
 register(TrackingEventFactory, "tracking_event")
 
 
@@ -102,33 +97,33 @@ def _random_tracking_code():
     return "{}{} BR".format(prefix, number)
 
 
-class TrackingCodeFactory(factory.Factory):
+class TrackingCodeFactory(Factory):
     class Meta:
         model = TrackingCode
 
-    code = factory.LazyFunction(_random_tracking_code)
+    code = LazyFunction(_random_tracking_code)
 
 
 register(TrackingCodeFactory, "tracking_code")
 
 
-class AddressFactory(factory.Factory):
+class AddressFactory(Factory):
     class Meta:
         model = Address
 
-    name = factory.Faker("name", locale="pt_BR")
-    street = factory.Faker("street_name", locale="pt_BR")
-    number = factory.Faker("building_number", locale="pt_BR")
-    city = factory.Faker("city", locale="pt_BR")
-    state = factory.Faker("estado_sigla", locale="pt_BR")
-    zip_code = factory.Faker("postcode", locale="pt_BR")
-    complement = factory.Faker("secondary_address")
-    neighborhood = factory.Sequence(lambda n: "Neighborhood #{}".format(n))
-    phone = factory.Faker("phone_number", locale="pt_BR")
-    cellphone = factory.Faker("phone_number", locale="pt_BR")
-    email = factory.Faker("email")
-    latitude = factory.Faker("latitude", locale="pt_BR")
-    longitude = factory.Faker("longitude", locale="pt_BR")
+    name = Faker("name", locale="pt_BR")
+    street = Faker("street_name", locale="pt_BR")
+    number = Faker("building_number", locale="pt_BR")
+    city = Faker("city", locale="pt_BR")
+    state = Faker("estado_sigla", locale="pt_BR")
+    zip_code = Faker("postcode", locale="pt_BR")
+    complement = Faker("secondary_address")
+    neighborhood = Sequence(lambda n: "Neighborhood #{}".format(n))
+    phone = Faker("phone_number", locale="pt_BR")
+    cellphone = Faker("phone_number", locale="pt_BR")
+    email = Faker("email")
+    latitude = Faker("latitude", locale="pt_BR")
+    longitude = Faker("longitude", locale="pt_BR")
 
 
 register(AddressFactory, "address")
@@ -143,34 +138,34 @@ _services = [
 ]
 
 
-class PackageFactory(factory.Factory):
+class PackageFactory(Factory):
     class Meta:
         model = Package
 
     package_type = Package.TYPE_BOX
-    width = factory.LazyFunction(lambda: random.randint(11, 30))
-    height = factory.LazyFunction(lambda: random.randint(2, 30))
-    length = factory.LazyFunction(lambda: random.randint(16, 30))
-    weight = factory.LazyFunction(lambda: random.randint(1, 100) * 100)
-    sequence = factory.Sequence(lambda n: (n, n + 1))
+    width = LazyFunction(lambda: random.randint(11, 30))
+    height = LazyFunction(lambda: random.randint(2, 30))
+    length = LazyFunction(lambda: random.randint(16, 30))
+    weight = LazyFunction(lambda: random.randint(1, 100) * 100)
+    sequence = Sequence(lambda n: (n, n + 1))
 
 
 register(PackageFactory, "package")
 
 
-class ShippingLabelFactory(factory.Factory):
+class ShippingLabelFactory(Factory):
     class Meta:
         model = ShippingLabel
 
-    posting_card = factory.SubFactory(PostingCardFactory)
-    sender = factory.LazyFunction(AddressFactory.build)
-    receiver = factory.LazyFunction(AddressFactory.build)
-    service = factory.LazyFunction(lambda: random.choice(_services))
-    tracking_code = factory.SubFactory(TrackingCodeFactory)
-    package = factory.SubFactory(PackageFactory)
-    invoice_number = factory.LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
-    order = factory.LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
-    text = factory.Faker("text", max_nb_chars=100)
+    posting_card = SubFactory(PostingCardFactory)
+    sender = LazyFunction(AddressFactory.build)
+    receiver = LazyFunction(AddressFactory.build)
+    service = LazyFunction(lambda: random.choice(_services))
+    tracking_code = SubFactory(TrackingCodeFactory)
+    package = SubFactory(PackageFactory)
+    invoice_number = LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
+    order = LazyFunction(lambda: "OLT123ABC{!s:>03}".format(random.randint(1, 999)))
+    text = Faker("text", max_nb_chars=100)
     latitude = 0.0
     longitude = 0.0
 
@@ -178,11 +173,11 @@ class ShippingLabelFactory(factory.Factory):
 register(ShippingLabelFactory, "shipping_label")
 
 
-class PostingListFactory(factory.Factory):
+class PostingListFactory(Factory):
     class Meta:
         model = PostingList
 
-    custom_id = factory.Sequence(lambda n: n)
+    custom_id = Sequence(lambda n: n)
 
 
 register(PostingListFactory, "posting_list")

@@ -29,6 +29,10 @@ class InvalidZipCodeError(ModelError):
     pass
 
 
+class InvalidAddressNumberError(ModelError):
+    pass
+
+
 class InvalidStateError(ModelError):
     pass
 

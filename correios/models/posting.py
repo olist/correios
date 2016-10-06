@@ -28,9 +28,8 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidPackageWeightError)
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES
-from .user import Service, ExtraService, PostingCard
 from .user import Contract  # noqa: F401
-
+from .user import Service, ExtraService, PostingCard
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
@@ -464,9 +463,9 @@ class ShippingLabel:
     def get_datamatrix_info(self):
         parts = [
             "{!s:>08}".format(self.receiver.zip_code),
-            "{!s:>05}".format(self.receiver.zip_code_complement),
+            "{!s:>05}".format(self.receiver.number),
             "{!s:>08}".format(self.sender.zip_code),
-            "{!s:>05}".format(self.sender.zip_code_complement),
+            "{!s:>05}".format(self.sender.number),
             "{!s:>01}".format(self.receiver.zip_code.digit),
             "{!s:>02}".format(self.variable_data_identifier),
             "{!s:>13}".format(self.tracking_code),

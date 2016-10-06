@@ -22,7 +22,7 @@ from PIL import Image
 from correios import DATADIR
 from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
                                  InvalidRegionalDirectionError, InvalidUserContractError)
-from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
+from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES, EXTRA_SERVICE_VD
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -195,6 +195,9 @@ class ExtraService:
 
     def __eq__(self, other):
         return self.number == other.number
+
+    def is_declared_value(self):
+        return self.number == EXTRA_SERVICE_VD
 
     @staticmethod
     def get(number: Union['ExtraService', int]) -> 'ExtraService':
