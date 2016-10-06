@@ -17,7 +17,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError
+from correios.exceptions import InvalidZipCodeError, InvalidStateError, InvalidAddressNumberError
 from correios.models.address import ZipCode, State, Address, Phone
 
 
@@ -169,7 +169,16 @@ def test_basic_address():
     assert address.state == "RJ"
     assert address.zip_code == "12345-678"
     assert address.zip_code_display == "12345-678"
-    assert address.zip_code_complement == "5"
+
+
+def test_fail_invalid_address_number():
+    with pytest.raises(InvalidAddressNumberError):
+        Address(name="John Doe",
+                street="Rua dos Bobos",
+                number="asd",
+                city="Vinicius de Moraes",
+                state="RJ",
+                zip_code="12345-678")
 
 
 def test_basic_address_only_mandatory_args():
@@ -195,13 +204,3 @@ def test_basic_address_only_mandatory_args():
     assert address.cellphone == ""
     assert address.latitude == Decimal("0.0")
     assert address.longitude == Decimal("0.0")
-
-
-def test_address_zip_code_complement():
-    address = Address(name="John Doe", street="Rua dos Bobos", city="Vinicius de Moraes",
-                      state="RJ", zip_code="12345-678", number="5")
-    assert address.zip_code_complement == "5"
-
-    address = Address(name="John Doe", street="Rua dos Bobos", city="Vinicius de Moraes",
-                      state="RJ", zip_code="12345-678", number="KM 5")
-    assert address.zip_code_complement == ""

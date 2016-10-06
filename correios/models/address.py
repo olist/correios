@@ -18,7 +18,7 @@ from typing import List, Union
 
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError
+from correios.exceptions import InvalidZipCodeError, InvalidStateError, InvalidAddressNumberError
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -169,6 +169,10 @@ class Phone:
         country_code = "+{!s}".format(self.parsed.country_code)
         return format_number(self.parsed, PhoneNumberFormat.INTERNATIONAL).replace(country_code, "").strip()
 
+    @property
+    def short(self) -> str:
+        return self.parsed.national_number
+
     def __eq__(self, other: Union["Phone", str]):
         if isinstance(other, Phone):
             return self.parsed == other.parsed
@@ -186,7 +190,7 @@ class Address:
     def __init__(self,
                  name: str,
                  street: str,
-                 number: str,
+                 number: Union[int, str],
                  city: str,
                  state: Union[State, str],
                  zip_code: Union[ZipCode, str],
@@ -200,11 +204,14 @@ class Address:
                  ):
         self.name = name
         self.street = street
-        self.number = number
         self.city = city
         self.complement = complement
         self.neighborhood = neighborhood
         self.email = email
+
+        self.number = str(number)
+        if not self.number.isdigit():
+            raise InvalidAddressNumberError("Address number can only have digits")
 
         if not isinstance(state, State):
             state = State(state)
@@ -229,12 +236,6 @@ class Address:
         if not isinstance(longitude, Decimal):
             longitude = Decimal(longitude)
         self.longitude = longitude
-
-    @property
-    def zip_code_complement(self):
-        if not self.number.isdigit():
-            return ""
-        return self.number
 
     @property
     def zip_code_display(self):
