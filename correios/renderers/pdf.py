@@ -304,13 +304,10 @@ class PostingReportPDFRenderer:
         text.wrap(col_width * 2, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
         col = 3
-
-        if self.posting_list.sender.phone:
-            header = self.header_label_col3.format(self.posting_list.sender.phone.display())
-            text = Paragraph(header, style=self.label_style)
-            text.wrap(col_width, 30 * mm)
-            text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
-
+        header = self.header_label_col3.format(self.posting_list.sender.phone.display())
+        text = Paragraph(header, style=self.label_style)
+        text.wrap(col_width, 30 * mm)
+        text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
         code = createBarcodeDrawing("Code128", value=str(self.posting_list.number),
                                     width=col_width * 0.6, height=10 * mm, quiet=0)
         code.drawOn(canvas, x1 + spacer + col * col_width, y2 - (35 * mm))
