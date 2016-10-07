@@ -179,6 +179,7 @@ TRACKING_PREFIX = {
     "PJ": "PAC",
     "PK": "PAC Extra Grande",
     "PL": "PAC",
+    "PN": "PAC Normal",
     "PR": "Reembolso Postal",
     "QQ": "Objeto de teste (SIGEP Web)",
     "RA": "Objeto registrado / prioritário",
