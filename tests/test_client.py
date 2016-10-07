@@ -168,7 +168,7 @@ def test_posting_list_serialization(posting_list, shipping_label):
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
-    assert xml.startswith(b"<?xml version='1.0' encoding='ISO-8859-1'?><correioslog>")
+    assert xml.startswith(b'<?xml version="1.0" encoding="ISO-8859-1"?><correioslog>')
     assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" not in xml
     assert b"<valor_declarado>10,29</valor_declarado>" not in xml
 
