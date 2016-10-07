@@ -22,7 +22,7 @@ with open("requirements.txt") as reqs:
 
 setup(
     name="correios",
-    version="0.11.3",
+    version="0.11.4",
     url="https://github.com/osantana/correios",
 
     author="Osvaldo Santana Neto",
