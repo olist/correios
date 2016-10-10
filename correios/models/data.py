@@ -364,4 +364,5 @@ TRACKING_EVENT_TYPES = {
     "PO": "Postagem (exceção)",
     "RO": "Expedição de Lista de Registro",
     "TRI": "Triagem",
+    "CMR": "Evento Desconhecido",
 }

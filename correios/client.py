@@ -120,16 +120,17 @@ class ModelBuilder:
             event = TrackingEvent(
                 timestamp=timestamp,
                 status=EventStatus(event.tipo, event.status),
-                location_zip_code=event.codigo,
-                location=event.local,
-                city=event.cidade,
-                state=event.uf,
+                location_zip_code=getattr(event, "codigo", ""),
+                location=getattr(event, "local", ""),
+                city=getattr(event, "cidade", ""),
+                state=getattr(event, "uf", ""),
                 receiver=getattr(event, "recebedor", ""),
                 document=getattr(event, "documento", ""),
                 comment=getattr(event, "comentario", ""),
                 description=getattr(event, "descricao", ""),
                 details=getattr(event, "detalhes", ""),
             )
+
             tracking_code.add_event(event)
 
     def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
