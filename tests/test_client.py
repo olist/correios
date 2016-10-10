@@ -127,6 +127,16 @@ def test_get_tracking_code_events():
 
 
 @vcr.use_cassette
+def test_get_tracking_code_events_withou_city_field():
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
+    result = client.get_tracking_code_events("PJ651329640BR")
+
+    assert isinstance(result[0], TrackingCode)
+    assert result[0].code == "PJ651329640BR"
+    assert result[0].events[0].city == ""
+
+
+@vcr.use_cassette
 def test_get_tracking_code_with_no_verification_digitevents():
     client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
     result = client.get_tracking_code_events("FJ06484948BR")
