@@ -104,7 +104,7 @@ def test_close_posting_list(posting_card, posting_list: PostingList, shipping_la
 
 @vcr.use_cassette
 def test_get_tracking_codes_events():
-    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     result = client.get_tracking_code_events(["FJ064849483BR", "DU477828695BR"])
 
     assert len(result) == 2
@@ -119,7 +119,7 @@ def test_get_tracking_codes_events():
 
 @vcr.use_cassette
 def test_get_tracking_code_events():
-    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     result = client.get_tracking_code_events("FJ064849483BR")
 
     assert isinstance(result[0], TrackingCode)
@@ -138,7 +138,7 @@ def test_get_tracking_code_events_withou_city_field():
 
 @vcr.use_cassette
 def test_get_tracking_code_with_no_verification_digitevents():
-    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     result = client.get_tracking_code_events("FJ06484948BR")
 
     assert isinstance(result[0], TrackingCode)
@@ -147,7 +147,7 @@ def test_get_tracking_code_with_no_verification_digitevents():
 
 @vcr.use_cassette
 def test_get_tracking_code_object_not_found_by_correios():
-    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     tracking_code = client.get_tracking_code_events("DU05508759BR")[0]
 
     assert tracking_code.events
@@ -160,7 +160,7 @@ def test_get_tracking_code_object_not_found_by_correios():
 
 
 def test_get_tracking_codes_events_over_limit():
-    client = Correios(username="solidarium2", password="d5kgag", environment=Correios.TEST)
+    client = Correios(username="sigep", password="n5f9t8", environment=Correios.TEST)
     codes = ["DU05508759BR"] * 51
     with pytest.raises(TrackingCodesLimitExceededError):
         client.get_tracking_code_events(codes)

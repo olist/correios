@@ -2,7 +2,7 @@ interactions:
 - request:
     body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
       xmlns:ns0="http://resource.webservice.correios.com.br/" xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Header/><ns1:Body><ns0:buscaEventosLista><usuario>solidarium2</usuario><senha>d5kgag</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>DU477828695BR</objetos><objetos>FJ064849483BR</objetos></ns0:buscaEventosLista></ns1:Body></SOAP-ENV:Envelope>
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Header/><ns1:Body><ns0:buscaEventosLista><usuario>sigep</usuario><senha>n5f9t8</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>DU477828695BR</objetos><objetos>FJ064849483BR</objetos></ns0:buscaEventosLista></ns1:Body></SOAP-ENV:Envelope>
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
