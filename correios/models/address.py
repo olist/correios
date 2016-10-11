@@ -14,12 +14,12 @@
 
 
 from decimal import Decimal
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError, InvalidAddressNumberError
+from correios.exceptions import InvalidZipCodeError, InvalidStateError
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -217,7 +217,7 @@ class Address:
         self.complement = complement
         self.neighborhood = neighborhood
         self.email = email
-        self.number = str(number)
+        self.raw_number = str(number)
 
         if not isinstance(state, State):
             state = State(state)
@@ -244,15 +244,23 @@ class Address:
         self.longitude = longitude
 
     @property
-    def zip_code_display(self):
+    def zip_code_display(self) -> str:
         return self.zip_code.display()
 
     @property
-    def display_address(self):
-        address = "{}, {} {}".format(self.street, self.number, self.complement)
+    def display_address(self) -> Tuple[str, str]:
+        address = "{}, {} {}".format(self.street, self.raw_number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
         return address.strip(), city.strip()
 
     @property
-    def zip_complement(self):
-        return "".join(d for d in self.number if d.isdigit()) or "0"
+    def filtered_number(self) -> str:
+        return "".join(d for d in self.raw_number if d.isdigit())
+
+    @property
+    def number(self) -> str:
+        return self.filtered_number or "S/N"
+
+    @property
+    def zip_complement(self) -> str:
+        return self.filtered_number or "0"

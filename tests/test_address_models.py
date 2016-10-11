@@ -17,7 +17,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError, InvalidAddressNumberError
+from correios.exceptions import InvalidZipCodeError, InvalidStateError
 from correios.models.address import ZipCode, State, Address, Phone
 
 
@@ -205,3 +205,20 @@ def test_basic_address_only_mandatory_args():
     assert address.cellphone == ""
     assert address.latitude == Decimal("0.0")
     assert address.longitude == Decimal("0.0")
+
+
+@pytest.mark.parametrize("raw,filtered,number,zip_complement", (
+    ('1234', '1234', '1234', '1234'),
+    ('123B', '123', '123', '123'),
+    ('km 5', '5', '5', '5'),
+    ('s/n', '', 'S/N', '0'),
+    ('S/N', '', 'S/N', '0'),
+))
+def test_address_number_handling(raw, filtered, number, zip_complement):
+    address = Address(
+        name="John Doe", street="Rua dos Bobos", city="Vinicius de Moraes", state="RJ", zip_code="12345-678",
+        number=raw,
+    )
+    assert address.filtered_number == filtered
+    assert address.number == number
+    assert address.zip_complement == zip_complement
