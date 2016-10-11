@@ -219,8 +219,6 @@ class Address:
         self.email = email
 
         self.number = str(number)
-        if not self.number.isdigit():
-            raise InvalidAddressNumberError("Address number can only have digits")
 
         if not isinstance(state, State):
             state = State(state)
