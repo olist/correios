@@ -182,16 +182,6 @@ def test_basic_address():
     assert address.zip_code_display == "12345-678"
 
 
-def test_fail_invalid_address_number():
-    with pytest.raises(InvalidAddressNumberError):
-        Address(name="John Doe",
-                street="Rua dos Bobos",
-                number="asd",
-                city="Vinicius de Moraes",
-                state="RJ",
-                zip_code="12345-678")
-
-
 def test_basic_address_only_mandatory_args():
     address = Address(
         name="John Doe",
