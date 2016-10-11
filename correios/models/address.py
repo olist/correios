@@ -217,7 +217,6 @@ class Address:
         self.complement = complement
         self.neighborhood = neighborhood
         self.email = email
-
         self.number = str(number)
 
         if not isinstance(state, State):
@@ -253,3 +252,7 @@ class Address:
         address = "{}, {} {}".format(self.street, self.number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
         return address.strip(), city.strip()
+
+    @property
+    def zip_complement(self):
+        return "".join(d for d in self.number if d.isdigit()) or "0"
