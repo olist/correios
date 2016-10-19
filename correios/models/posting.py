@@ -48,9 +48,9 @@ INSURANCE_VALUE_THRESHOLD = 50  # R$
 
 
 class EventStatus:
-    def __init__(self, event_type: str, status: int):
+    def __init__(self, event_type: str, status: Union[str, int]):
         self.type = self._validate_type(event_type)
-        self.status = status
+        self.status = int(status)
 
     def _validate_type(self, event_type):
         event_type = event_type.upper()

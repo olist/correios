@@ -136,6 +136,8 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_tracking_code().replace(" ", "") == str(shipping_label.tracking_code)
 
     assert isinstance(shipping_label.logo, Image)
+
+    # noinspection PyUnresolvedReferences
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
 
     assert shipping_label.order == "123"
@@ -353,7 +355,7 @@ def test_basic_tracking_event(status):
 
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
     assert tracking_event.status.type == "BDE"
-    assert tracking_event.status.status == "01"
+    assert tracking_event.status.status == 1
     assert tracking_event.location_zip_code == "82940150"
     assert tracking_event.location == "Correios"
     assert tracking_event.receiver == "José"
@@ -364,7 +366,7 @@ def test_basic_tracking_event(status):
     assert tracking_event.description == "The description"
     assert tracking_event.details == "The details"
 
-    assert repr(tracking_event) == "<TrackingEvent((BDE, 01), 02/01/2010 01:02)>"
+    assert repr(tracking_event) == "<TrackingEvent((BDE, 1), 02/01/2010 01:02)>"
     assert str(tracking_event) == "The description - Correios - Curitiba/PR"
 
 
