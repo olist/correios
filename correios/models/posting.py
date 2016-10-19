@@ -404,13 +404,23 @@ class ShippingLabel:
 
         self.extra_services = self.service.default_extra_services[:]
         if extra_services:
-            self.extra_services.extend(ExtraService.get(es) for es in extra_services)
+            self.add_extra_services(extra_services)
 
         self.posting_list = None
         self.posting_list_group = 0
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
+
+    def add_extra_services(self, extra_services: Sequence[Union["ExtraService", int]]):
+        for extra_service in extra_services:
+            self.add_extra_service(extra_service)
+
+    def add_extra_service(self, extra_service: Union["ExtraService", int]):
+        extra_service = ExtraService.get(extra_service)
+        if extra_service.is_declared_value():
+            self.service.validate_declared_value(self.value)
+        self.extra_services.append(extra_service)
 
     @property
     def symbol(self):
