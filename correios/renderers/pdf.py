@@ -58,6 +58,8 @@ class PDF:
 
 
 class ShippingLabelFlowable(Flowable):
+    label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=6, leading=8)
+
     def __init__(self, shipping_label: ShippingLabel, label_width, label_height, hmargin=5 * mm, vmargin=5 * mm):
         super().__init__()
         self.shipping_label = shipping_label
@@ -99,22 +101,21 @@ class ShippingLabelFlowable(Flowable):
                          preserveAspectRatio=True, anchor="sw", mask="auto")
 
         # header shipping_labels
-        label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=7, leading=8)
         text = Paragraph("{}<br/>{}".format(self.shipping_label.get_invoice(),
                                             self.shipping_label.get_order()),
-                         style=label_style)
+                         style=self.label_style)
         text.wrap(25 * mm, 14)
         text.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (28 * mm) - 14)
 
         text = Paragraph("{}<br/>{}".format(self.shipping_label.get_contract_number(),
                                             self.shipping_label.get_service_name()),
-                         style=label_style)
+                         style=self.label_style)
         text.wrap(25 * mm, 14)
         text.drawOn(canvas, self.x1 + 40 * mm, self.y2 - (28 * mm) - 14)
 
         text = Paragraph("{}<br/>{}".format(self.shipping_label.get_package_sequence(),
                                             self.shipping_label.get_weight()),
-                         style=label_style)
+                         style=self.label_style)
         text.wrap(25 * mm, 14)
         text.drawOn(canvas, self.x1 + 70 * mm, self.y2 - (28 * mm) - 14)
 
@@ -187,6 +188,7 @@ class PostingReportPDFRenderer:
     table_header_style = ParagraphStyle(name="th", fontName="Courier-Bold", fontSize=8, alignment=TA_CENTER)
     signature_style = ParagraphStyle(name="sign", fontName="Helvetica", fontSize=8, leading=10, alignment=TA_CENTER)
 
+    heading_title = "Lista de Postagem".upper()
     header_label_col1 = ("<b>N° da Lista:</b> {!s}<br/>"
                          "<b>Contrato:</b> {!s}<br/>"
                          "<b>Cód. Administrativo:</b> {!s}<br/>"
@@ -283,7 +285,7 @@ class PostingReportPDFRenderer:
         # box
         canvas.setLineWidth(0.5)
         canvas.rect(x1, y2 - 45 * mm, width, 30 * mm)
-        canvas.drawCentredString(x1 + width / 2, y2 - (15 * mm) - 15, "Lista de Postagem".upper())
+        canvas.drawCentredString(x1 + width / 2, y2 - (15 * mm) - 15, self.heading_title)
         # header info
         spacer = 5 * mm
         col_width = width / 4
@@ -296,10 +298,10 @@ class PostingReportPDFRenderer:
         text.wrap(col_width, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
         col = 1
-        header = self.header_label_col2.format(self.posting_list.sender.name,
+        header = self.header_label_col2.format(self.posting_list.sender.name[:30],
                                                self.posting_list.contract.customer_name[:30],
-                                               self.posting_list.sender.display_address[0],
-                                               self.posting_list.sender.display_address[1])
+                                               self.posting_list.sender.display_address[0][:30],
+                                               self.posting_list.sender.display_address[1][:30])
         text = Paragraph(header, style=self.label_style)
         text.wrap(col_width * 2, 30 * mm)
         text.drawOn(canvas, x1 + spacer + col * col_width, y2 - (43 * mm))
