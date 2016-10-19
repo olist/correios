@@ -248,6 +248,10 @@ class Address:
         return self.zip_code.display()
 
     @property
+    def basic_address(self):
+        return "{}, {}".format(self.street, self.number)
+
+    @property
     def display_address(self) -> Tuple[str, str]:
         address = "{}, {} {}".format(self.street, self.raw_number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())

@@ -346,14 +346,14 @@ class ShippingLabel:
                         "Assinatura: __________________ Documento: _______________")
     sender_header = "DESTINATÁRIO"
     carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
-    receiver_data_template = ("{receiver.name}<br/>"
-                              "{receiver.street}, {receiver.number}<br/>"
-                              "{receiver.complement} {receiver.neighborhood}<br/>"
+    receiver_data_template = ("{receiver.name!s:>.40}<br/>"
+                              "{receiver.basic_address!s:>.40}<br/>"
+                              "{receiver.complement!s:>.20} {receiver.neighborhood!s:>.20}<br/>"
                               "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
 
     sender_data_template = ("<b>Remetente:</b> {sender.name}<br/>"
-                            "{sender.street}, {sender.number}<br/>"
-                            "{sender.complement} - {sender.neighborhood}<br/>"
+                            "{sender.basic_address!s:>.40}<br/>"
+                            "{sender.complement!s:>.20} - {sender.neighborhood!s:>.20}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
     def __init__(self,
