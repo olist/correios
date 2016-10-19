@@ -485,7 +485,7 @@ class ShippingLabel:
             "{!s:>02}".format(self.posting_list_group),
             "{!s:>05}".format(self.receiver.number),
             "{!s:<20}".format(self.receiver.complement[:20]),
-            "{!s:>05}".format(str(int(self.value * 100))),
+            "{!s:>05}".format(0 if self.value is None else int(self.value * 100)),
             "{!s:>012}".format(str(self.receiver.phone)[:12] or "0" * 12),
             "{:+010.6f}".format(self.latitude),
             "{:+010.6f}".format(self.longitude),
