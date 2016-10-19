@@ -24,9 +24,9 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidTrackingCodeError, InvalidPackageSequenceError,
                                  InvalidPackageDimensionsError, PostingListError,
-                                 InvalidPackageWeightError)
+                                 InvalidPackageWeightError, MaximumDeclaredValueError)
 from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
-                                  TRACKING_EVENT_TYPES)
+                                  TRACKING_EVENT_TYPES, EXTRA_SERVICE_VD)
 from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
                                      Package, PostingList, ShippingLabel, TrackingCode,
                                      TrackingEvent)
@@ -178,6 +178,37 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert shipping_label.service == Service.get(SERVICE_SEDEX)
     assert shipping_label.tracking_code.code == "PD123456785BR"
     assert len(shipping_label.extra_services) == 1
+
+
+def test_shipping_label_with_declared_value(posting_card, sender_address, receiver_address, package):
+    service = Service.get(SERVICE_SEDEX)
+    shipping_label = ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        value=service.max_declared_value - Decimal("1.00"),
+        extra_services=[EXTRA_SERVICE_VD],
+    )
+    assert ExtraService.get(EXTRA_SERVICE_VD) in shipping_label.extra_services
+
+
+def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_address, receiver_address, package):
+    service = Service.get(SERVICE_SEDEX)
+    shipping_label = ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        value=service.max_declared_value + Decimal("1.00"),
+    )
+
+    with pytest.raises(MaximumDeclaredValueError):
+        shipping_label.add_extra_service(ExtraService.get(EXTRA_SERVICE_VD))
 
 
 def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code, package):

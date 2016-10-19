@@ -21,8 +21,9 @@ from PIL.Image import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
-                                 InvalidRegionalDirectionError, InvalidUserContractError)
-from correios.models.data import EXTRA_SERVICE_AR
+                                 InvalidRegionalDirectionError, InvalidUserContractError, MaximumDeclaredValueError,
+                                 MinimumDeclaredValueError)
+from correios.models.data import EXTRA_SERVICE_AR, SERVICE_SEDEX, SERVICE_PAC
 from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService,
                                   RegionalDirection)
 
@@ -230,6 +231,22 @@ def test_service_getter():
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
     assert Service.get(service) == service
+
+
+def test_validate_declared_value_in_service():
+    service = Service.get(SERVICE_SEDEX)
+    with pytest.raises(MaximumDeclaredValueError):
+        service.validate_declared_value(service.max_declared_value + 1)
+
+    with pytest.raises(MinimumDeclaredValueError):
+        service.validate_declared_value(service.min_declared_value - 1)
+
+    service = Service.get(SERVICE_PAC)
+    with pytest.raises(MaximumDeclaredValueError):
+        service.validate_declared_value(service.max_declared_value + 1)
+
+    with pytest.raises(MinimumDeclaredValueError):
+        service.validate_declared_value(service.min_declared_value - 1)
 
 
 def test_basic_extra_service():

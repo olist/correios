@@ -15,13 +15,15 @@
 
 import os
 from datetime import datetime
+from decimal import Decimal
 from typing import Union, Optional, Sequence
 
 from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
-                                 InvalidRegionalDirectionError, InvalidUserContractError)
+                                 InvalidRegionalDirectionError, InvalidUserContractError,
+                                 MaximumDeclaredValueError, MinimumDeclaredValueError)
 from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES, EXTRA_SERVICE_VD
 
 EXTRA_SERVICE_CODE_SIZE = 2
@@ -138,6 +140,8 @@ class Service:
                  display_name: Optional[str] = "",
                  symbol: Optional[str] = None,
                  max_weight: Optional[int] = None,
+                 min_declared_value: Optional[Decimal] = Decimal("0.00"),
+                 max_declared_value: Optional[Decimal] = Decimal("0.00"),
                  default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None):
         self.id = id
         self.code = to_integer(code)
@@ -147,6 +151,8 @@ class Service:
         self.symbol = symbol or "economic"
         self._symbol_image = None
         self.max_weight = max_weight
+        self.min_declared_value = min_declared_value
+        self.max_declared_value = max_declared_value
 
         if default_extra_services is None:
             default_extra_services = []
@@ -155,8 +161,24 @@ class Service:
     def __str__(self):
         return str(self.code)
 
+    def __repr__(self):
+        return "<Service code={!r}, name={!r}>".format(self.code, self.display_name)
+
     def __eq__(self, other):
         return (self.id, self.code) == (other.id, other.code)
+
+    def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
+        if value > self.max_declared_value:
+            raise MaximumDeclaredValueError("Declared value {!r} is greater than maximum "
+                                            "{!r} for service {!r}".format(value,
+                                                                           self.max_declared_value,
+                                                                           self))
+        if value < self.min_declared_value:
+            raise MinimumDeclaredValueError("Declared value {!r} is less than minimum "
+                                            "{!r} for service {!r}".format(value,
+                                                                           self.min_declared_value,
+                                                                           self))
+        return True
 
     def get_symbol_filename(self, extension='gif'):
         filename = "{}.{}".format(self.symbol, extension)
@@ -168,12 +190,11 @@ class Service:
             self._symbol_image = Image.open(self.get_symbol_filename())
         return self._symbol_image
 
-    @staticmethod
-    def get(code: Union['Service', int]) -> 'Service':
-        if isinstance(code, Service):
+    @classmethod
+    def get(cls, code: Union['Service', int]) -> 'Service':
+        if isinstance(code, cls):
             return code
-
-        return Service(code=code, **SERVICES[code])
+        return cls(code=code, **SERVICES[code])
 
 
 class ExtraService:
@@ -199,12 +220,11 @@ class ExtraService:
     def is_declared_value(self):
         return self.number == EXTRA_SERVICE_VD
 
-    @staticmethod
-    def get(number: Union['ExtraService', int]) -> 'ExtraService':
-        if isinstance(number, ExtraService):
+    @classmethod
+    def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
+        if isinstance(number, cls):
             return number
-
-        return ExtraService(number=number, **EXTRA_SERVICES[number])
+        return cls(number=number, **EXTRA_SERVICES[number])
 
 
 class User:
