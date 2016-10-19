@@ -103,3 +103,15 @@ class TrackingCodeNotFoundError(ModelError):
 
 class InvalidEventStatusError(ModelError):
     pass
+
+
+class InvalidDeclaredValueError(ModelError):
+    pass
+
+
+class MaximumDeclaredValueError(InvalidDeclaredValueError):
+    pass
+
+
+class MinimumDeclaredValueError(InvalidDeclaredValueError):
+    pass
