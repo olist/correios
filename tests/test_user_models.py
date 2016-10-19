@@ -233,7 +233,7 @@ def test_service_getter():
     assert Service.get(service) == service
 
 
-def test_validate_declared_value_in_service():
+def test_fail_invalid_declared_value_in_sedex():
     service = Service.get(SERVICE_SEDEX)
     with pytest.raises(MaximumDeclaredValueError):
         service.validate_declared_value(service.max_declared_value + 1)
@@ -241,6 +241,8 @@ def test_validate_declared_value_in_service():
     with pytest.raises(MinimumDeclaredValueError):
         service.validate_declared_value(service.min_declared_value - 1)
 
+
+def test_fail_invalid_declared_value_in_pac():
     service = Service.get(SERVICE_PAC)
     with pytest.raises(MaximumDeclaredValueError):
         service.validate_declared_value(service.max_declared_value + 1)
