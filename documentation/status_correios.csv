@@ -1,198 +1,198 @@
-Tipos,Status,Descrição,Detalhe,O que o cliente deve fazer
-BDE,0,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDI,0,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDR,0,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDE,1,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDI,1,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDR,1,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
-BDE,2,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-BDI,2,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-BDR,2,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-BDE,3,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
-BDI,3,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
-BDR,3,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
-BDE,4,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,4,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,4,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,5,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,5,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,5,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,6,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,6,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,6,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,7,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDI,7,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDR,7,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDE,8,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,8,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,8,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,9,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,9,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,9,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,10,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,10,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,10,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,12,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
-BDI,12,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
-BDR,12,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
-BDE,19,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,19,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,19,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,20,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
-BDI,20,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
-BDR,20,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
-BDE,21,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,21,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,21,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,22,Objeto devolvido aos Correios,,Acompanhar
-BDI,22,Objeto devolvido aos Correios,,Acompanhar
-BDR,22,Objeto devolvido aos Correios,,Acompanhar
-BDE,23,Objeto devolvido ao remetente,Recebido por:,Acompanhar
-BDI,23,Objeto devolvido ao remetente,Recebido por:,Acompanhar
-BDR,23,Objeto devolvido ao remetente,Recebido por:,Acompanhar
-BDE,24,Objeto disponível para retirada em Caixa Postal,,Acompanhar
-BDI,24,Objeto disponível para retirada em Caixa Postal,,Acompanhar
-BDR,24,Objeto disponível para retirada em Caixa Postal,,Acompanhar
-BDE,25,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
-BDI,25,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
-BDR,25,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
-BDE,26,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,26,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,26,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,28,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,28,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,28,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,32,Objeto com data de entrega agendada,,Acompanhar
-BDI,32,Objeto com data de entrega agendada,,Acompanhar
-BDR,32,Objeto com data de entrega agendada,,Acompanhar
-BDE,33,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,33,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,33,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,34,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDI,34,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDR,34,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-BDE,35,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
-BDI,35,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
-BDR,35,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
-BDE,36,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,36,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,36,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,37,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,37,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,37,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,38,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
-BDI,38,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
-BDR,38,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
-BDE,40,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,40,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,40,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,41,A entrega do objeto está condicionada à composição do lote,,Acompanhar
-BDI,41,A entrega do objeto está condicionada à composição do lote,,Acompanhar
-BDR,41,A entrega do objeto está condicionada à composição do lote,,Acompanhar
-BDE,42,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,42,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,42,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,43,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,43,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,43,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,45,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
-BDI,45,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
-BDR,45,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
-BDE,46,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
-BDI,46,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
-BDR,46,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
-BDE,47,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
-BDI,47,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
-BDR,47,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
-BDE,48,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,48,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,48,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,49,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,49,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,49,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,50,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,50,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,50,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,51,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,51,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,51,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,52,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDI,52,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDR,52,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
-BDE,53,Objeto reimpresso e reenviado,,Acompanhar
-BDI,53,Objeto reimpresso e reenviado,,Acompanhar
-BDR,53,Objeto reimpresso e reenviado,,Acompanhar
-BDE,54,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
-BDI,54,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
-BDR,54,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
-BDE,55,Solicitada revisão do tributo estabelecido,,Acompanhar
-BDI,55,Solicitada revisão do tributo estabelecido,,Acompanhar
-BDR,55,Solicitada revisão do tributo estabelecido,,Acompanhar
-BDE,56,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDI,56,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDR,56,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
-BDE,57,Revisão de tributo concluída - Objeto liberado,,Acompanhar
-BDI,57,Revisão de tributo concluída - Objeto liberado,,Acompanhar
-BDR,57,Revisão de tributo concluída - Objeto liberado,,Acompanhar
-BDE,58,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
-BDI,58,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
-BDR,58,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
-BDE,59,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
-BDI,59,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
-BDR,59,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
-BDE,66,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
-BDI,66,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
-BDR,66,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
-BDE,69,Objeto com atraso na entrega,,Acompanhar
-BDI,69,Objeto com atraso na entrega,,Acompanhar
-BDR,69,Objeto com atraso na entrega,,Acompanhar
-BLQ,1,Entrega de objeto bloqueada a pedido do remetente,Objeto em análise de destinação,Acompanhar
-CD,0,Objeto recebido na Unidade dos Correios,,Acompanhar
-CD,1,Objeto recebido na Unidade dos Correios,,Acompanhar
-CD,2,Objeto recebido na Unidade dos Correios,,Acompanhar
-CD,3,Objeto recebido na Unidade dos Correios,,Acompanhar
-CMT,0,Objeto recebido na Unidade dos Correios,,Acompanhar
-CO,1,Objeto coletado,,Acompanhar
-CUN,0,Objeto recebido na Unidade dos Correios,,Acompanhar
-CUN,1,Objeto recebido na Unidade dos Correios,,Acompanhar
-DO,0,Objeto encaminhado para,,Acompanhar
-DO,1,Objeto encaminhado para,,Acompanhar
-DO,2,Objeto encaminhado para,,Acompanhar
-EST,1,Favor desconsiderar a informação anterior,,Acompanhar
-EST,2,Favor desconsiderar a informação anterior,,Acompanhar
-EST,3,Favor desconsiderar a informação anterior,,Acompanhar
-EST,4,Favor desconsiderar a informação anterior,,Acompanhar
-EST,5,Favor desconsiderar a informação anterior,,Acompanhar
-EST,6,Favor desconsiderar a informação anterior,,Acompanhar
-EST,9,Favor desconsiderar a informação anterior,,Acompanhar
-FC,1,Objeto será devolvido por solicitação do remetente,,Acompanhar o retorno do objeto ao remetente.
-FC,2,Objeto com data de entrega agendada,,Acompanhar
-FC,3,Objeto mal encaminhado,Encaminhamento a ser corrigido.,Acompanhar
-FC,4,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
-FC,5,Objeto devolvido aos Correios,,Acompanhar
-FC,7,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
-IDC,1,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,2,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,3,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,4,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,5,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,6,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-IDC,7,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
-LDE,9,Objeto saiu para entrega ao remetente,,Acompanhar
-LDI,0,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-LDI,1,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-LDI,2,Objeto disponível para retirada em Caixa Postal,,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-LDI,3,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-LDI,14,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-OEC,0,Objeto saiu para entrega ao destinatário,,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
-PAR,15,Objeto recebido em <destino>,,Acompanhar
-PAR,16,Objeto recebido no Brasil,Objeto sujeito à fiscalização e atraso na entrega,Acompanhar
-PAR,17,Objeto liberado pela alfândega,,Acompanhar
-PAR,18,Objeto recebido na unidade de exportação,,Acompanhar
-PMT,1,Objeto encaminhado para,,Acompanhar
-PO,0,Objeto postado,,Acompanhar
-PO,1,Objeto postado,,Acompanhar
-PO,9,Objeto postado após o horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Acompanhar
-RO,0,Objeto encaminhado para,,Acompanhar
-RO,1,Objeto encaminhado para,,Acompanhar
-TRI,0,Objeto encaminhado para,,Acompanhar
+Tipos,Status,Category,Descrição,Detalhe,O que o cliente deve fazer
+BDE,0,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDI,0,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDR,0,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDE,1,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDI,1,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDR,1,delivered,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.
+BDE,2,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+BDI,2,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+BDR,2,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde! Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+BDE,3,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
+BDI,3,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
+BDR,3,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar. O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
+BDE,4,delivery_rejected,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,4,delivery_rejected,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,4,delivery_rejected,A entrega não pode ser efetuada - Cliente recusou- se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,5,delivery_unsuccessful,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,5,delivery_unsuccessful,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,5,delivery_unsuccessful,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,6,delivery_unsuccessful,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,6,delivery_unsuccessful,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,6,delivery_unsuccessful,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,7,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDI,7,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDR,7,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDE,8,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,8,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,8,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,9,lost,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,9,lost,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,9,lost,Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,10,shipped_wrong_address,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,10,shipped_wrong_address,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,10,shipped_wrong_address,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,12,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
+BDI,12,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
+BDR,12,waiting_retrieval,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
+BDE,19,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,19,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,19,delivery_unsuccessful,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,20,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
+BDI,20,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
+BDR,20,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
+BDE,21,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,21,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,21,delivery_unsuccessful,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,22,shipped,Objeto devolvido aos Correios,,Acompanhar
+BDI,22,shipped,Objeto devolvido aos Correios,,Acompanhar
+BDR,22,shipped,Objeto devolvido aos Correios,,Acompanhar
+BDE,23,returned,Objeto devolvido ao remetente,Recebido por:,Acompanhar
+BDI,23,returned,Objeto devolvido ao remetente,Recebido por:,Acompanhar
+BDR,23,returned,Objeto devolvido ao remetente,Recebido por:,Acompanhar
+BDE,24,waiting_retrieval,Objeto disponível para retirada em Caixa Postal,,Acompanhar
+BDI,24,waiting_retrieval,Objeto disponível para retirada em Caixa Postal,,Acompanhar
+BDR,24,waiting_retrieval,Objeto disponível para retirada em Caixa Postal,,Acompanhar
+BDE,25,delivery_unsuccessful,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+BDI,25,delivery_unsuccessful,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+BDR,25,delivery_unsuccessful,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+BDE,26,waiting_retrieval,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,26,waiting_retrieval,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,26,waiting_retrieval,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,28,damaged ,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,28,damaged ,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,28,damaged ,Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,32,shipped,Objeto com data de entrega agendada,,Acompanhar
+BDI,32,shipped,Objeto com data de entrega agendada,,Acompanhar
+BDR,32,shipped,Objeto com data de entrega agendada,,Acompanhar
+BDE,33,delivery_rejected,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,33,delivery_rejected,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,33,delivery_rejected,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,34,delivery_unsuccessful,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDI,34,delivery_unsuccessful,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDR,34,delivery_unsuccessful,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDE,35,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
+BDI,35,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
+BDR,35,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
+BDE,36,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,36,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,36,delivery_unsuccessful,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,37,damaged ,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,37,damaged ,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,37,damaged ,Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,38,delivery_unsuccessful,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
+BDI,38,delivery_unsuccessful,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
+BDR,38,delivery_unsuccessful,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
+BDE,40,customs_control,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,40,customs_control,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,40,customs_control,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,41,unknown,A entrega do objeto está condicionada à composição do lote,,Acompanhar
+BDI,41,unknown,A entrega do objeto está condicionada à composição do lote,,Acompanhar
+BDR,41,unknown,A entrega do objeto está condicionada à composição do lote,,Acompanhar
+BDE,42,unknown,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,42,unknown,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,42,unknown,Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,43,customs_control,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,43,customs_control,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,43,customs_control,Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,45,shipped,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
+BDI,45,shipped,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
+BDR,45,shipped,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
+BDE,46,delivery_unsuccessful,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
+BDI,46,delivery_unsuccessful,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
+BDR,46,delivery_unsuccessful,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
+BDE,47,delivery_unsuccessful,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
+BDI,47,delivery_unsuccessful,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
+BDR,47,delivery_unsuccessful,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
+BDE,48,delivery_rejected,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,48,delivery_rejected,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,48,delivery_rejected,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,49,delivery_unsuccessful,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,49,delivery_unsuccessful,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,49,delivery_unsuccessful,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,50,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,50,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,50,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,51,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,51,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,51,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,52,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDI,52,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDR,52,lost,Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE,53,shipped,Objeto reimpresso e reenviado,,Acompanhar
+BDI,53,shipped,Objeto reimpresso e reenviado,,Acompanhar
+BDR,53,shipped,Objeto reimpresso e reenviado,,Acompanhar
+BDE,54,customs_control,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
+BDI,54,customs_control,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
+BDR,54,customs_control,"Para recebimento do objeto, é necessário o pagamento do ICMS Importação",,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
+BDE,55,customs_control,Solicitada revisão do tributo estabelecido,,Acompanhar
+BDI,55,customs_control,Solicitada revisão do tributo estabelecido,,Acompanhar
+BDR,55,customs_control,Solicitada revisão do tributo estabelecido,,Acompanhar
+BDE,56,customs_control,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDI,56,customs_control,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDR,56,customs_control,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE,57,customs_control,Revisão de tributo concluída - Objeto liberado,,Acompanhar
+BDI,57,customs_control,Revisão de tributo concluída - Objeto liberado,,Acompanhar
+BDR,57,customs_control,Revisão de tributo concluída - Objeto liberado,,Acompanhar
+BDE,58,customs_control,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
+BDI,58,customs_control,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
+BDR,58,customs_control,Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
+BDE,59,customs_control,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
+BDI,59,customs_control,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
+BDR,59,customs_control,Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
+BDE,66,shipped_delayed,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
+BDI,66,shipped_delayed,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
+BDR,66,shipped_delayed,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
+BDE,69,shipped_delayed,Objeto com atraso na entrega,,Acompanhar
+BDI,69,shipped_delayed,Objeto com atraso na entrega,,Acompanhar
+BDR,69,shipped_delayed,Objeto com atraso na entrega,,Acompanhar
+BLQ,1,shipped,Entrega de objeto bloqueada a pedido do remetente,Objeto em análise de destinação,Acompanhar
+CD,0,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CD,1,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CD,2,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CD,3,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CMT,0,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CO,1,shipped,Objeto coletado,,Acompanhar
+CUN,0,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+CUN,1,shipped,Objeto recebido na Unidade dos Correios,,Acompanhar
+DO,0,shipped,Objeto encaminhado para,,Acompanhar
+DO,1,shipped,Objeto encaminhado para,,Acompanhar
+DO,2,shipped,Objeto encaminhado para,,Acompanhar
+EST,1,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,2,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,3,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,4,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,5,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,6,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+EST,9,ignore_last_entry,Favor desconsiderar a informação anterior,,Acompanhar
+FC,1,shipped,Objeto será devolvido por solicitação do remetente,,Acompanhar o retorno do objeto ao remetente.
+FC,2,shipped,Objeto com data de entrega agendada,,Acompanhar
+FC,3,shipped,Objeto mal encaminhado,Encaminhamento a ser corrigido.,Acompanhar
+FC,4,shipped,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+FC,5,shipped,Objeto devolvido aos Correios,,Acompanhar
+FC,7,delivery_unsuccessful,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+IDC,1,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,2,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,3,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,4,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,5,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,6,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,7,lost,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+LDE,9,shipped,Objeto saiu para entrega ao remetente,,Acompanhar
+LDI,0,waiting_retrieval,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,1,waiting_retrieval,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,2,waiting_retrieval,Objeto disponível para retirada em Caixa Postal,,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,3,waiting_retrieval,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,14,waiting_retrieval,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+OEC,0,shipped,Objeto saiu para entrega ao destinatário,,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+PAR,15,delivered,Objeto recebido em <destino>,,Acompanhar
+PAR,16,customs_control,Objeto recebido no Brasil,Objeto sujeito à fiscalização e atraso na entrega,Acompanhar
+PAR,17,customs_control,Objeto liberado pela alfândega,,Acompanhar
+PAR,18,shipped,Objeto recebido na unidade de exportação,,Acompanhar
+PMT,1,shipped,Objeto encaminhado para,,Acompanhar
+PO,0,shipped,Objeto postado,,Acompanhar
+PO,1,shipped,Objeto postado,,Acompanhar
+PO,9,shipped,Objeto postado após o horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Acompanhar
+RO,0,shipped,Objeto encaminhado para,,Acompanhar
+RO,1,shipped,Objeto encaminhado para,,Acompanhar
+TRI,0,shipped,Objeto encaminhado para,,Acompanhar
