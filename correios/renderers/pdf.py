@@ -60,7 +60,12 @@ class PDF:
 class ShippingLabelFlowable(Flowable):
     label_style = ParagraphStyle(name="label", fontName="Helvetica", fontSize=6, leading=8)
 
-    def __init__(self, shipping_label: ShippingLabel, label_width, label_height, hmargin=5 * mm, vmargin=5 * mm) -> None:
+    def __init__(self,
+                 shipping_label: ShippingLabel,
+                 label_width,
+                 label_height,
+                 hmargin=5 * mm,
+                 vmargin=5 * mm) -> None:
         super().__init__()
         self.shipping_label = shipping_label
 

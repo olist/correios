@@ -10,4 +10,3 @@ with open(sys.argv[1]) as csvfile:
     for row in reader:
         print("    ({!r}, {!s}): ({!r}, {!r}, {!r}),".format(*row))
 print("}")
-
