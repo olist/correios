@@ -10,7 +10,6 @@ result = []
 with open(sys.argv[1]) as csvfile:
     reader = csv.reader(csvfile)
     for raw_row in reader:
-        #['Tipos', 'Status', 'Descrição', 'Detalhe', 'O que o cliente deve fazer']
         tipo, status, descr, detalhe, cliente = raw_row
         tipo = tipo.strip().replace("\n", " ")
         status = status.strip().replace("\n", " ")
