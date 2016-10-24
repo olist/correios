@@ -31,7 +31,7 @@ EXTRA_SERVICE_CODE_SIZE = 2
 
 def to_integer(number: Union[int, str]) -> int:
     try:
-        return int(number.strip())
+        return int(number.strip())  # type: ignore
     except AttributeError:
         return int(number)
 
@@ -59,7 +59,7 @@ def _to_state_tax_number(state_tax_number) -> "StateTaxNumber":
 
 
 class AbstractTaxNumber:
-    def __init__(self, number: str):
+    def __init__(self, number: str) -> None:
         self._number = self._validate(number)
 
     @property
@@ -142,14 +142,14 @@ class Service:
                  max_weight: Optional[int] = None,
                  min_declared_value: Optional[Decimal] = Decimal("0.00"),
                  max_declared_value: Optional[Decimal] = Decimal("0.00"),
-                 default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None):
+                 default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None) -> None:
         self.id = id
         self.code = to_integer(code)
         self.description = description.strip()
         self.display_name = display_name or self.description
         self.category = category.strip()
         self.symbol = symbol or "economic"
-        self._symbol_image = None
+        self._symbol_image = None  # type: Optional[Image]
         self.max_weight = max_weight
         self.min_declared_value = min_declared_value
         self.max_declared_value = max_declared_value
@@ -194,11 +194,11 @@ class Service:
     def get(cls, code: Union['Service', int]) -> 'Service':
         if isinstance(code, cls):
             return code
-        return cls(code=code, **SERVICES[code])
+        return cls(code=code, **SERVICES[code])  # type: ignore
 
 
 class ExtraService:
-    def __init__(self, number: int, code: str, name: str):
+    def __init__(self, number: int, code: str, name: str) -> None:
         if not number:
             raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
         self.number = number
@@ -232,7 +232,7 @@ class User:
                  name: str,
                  federal_tax_number: Union[str, FederalTaxNumber],
                  state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
-                 status_number: Optional[Union[int, str]] = None):
+                 status_number: Optional[Union[int, str]] = None) -> None:
         self.name = name.strip()
         self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
 
@@ -244,7 +244,7 @@ class User:
             state_tax_number = _to_state_tax_number(state_tax_number)
         self.state_tax_number = state_tax_number
 
-        self.contracts = []
+        self.contracts = []  # type: List[Contract]
 
     def add_contract(self, contract: 'Contract'):
         if contract in self.contracts:
@@ -256,7 +256,7 @@ class Contract:
     def __init__(self,
                  user: User,
                  number: Union[int, str],
-                 regional_direction: Union[str, int, 'RegionalDirection']):
+                 regional_direction: Union[str, int, 'RegionalDirection']) -> None:
 
         self.user = user
         user.add_contract(self)
@@ -271,11 +271,11 @@ class Contract:
 
         self.regional_direction = regional_direction
 
-        self._customer_code = None
-        self._start_date = None
-        self._end_date = None
-        self.status_code = None
-        self.posting_cards = []
+        self._customer_code = None  # type: Optional[str]
+        self._start_date = None  # type: Optional[datetime]
+        self._end_date = None  # type: Optional[datetime]
+        self.status_code = None  # type: Optional[str]
+        self.posting_cards = []  # type: List[PostingCard]
 
     @property
     def customer_code(self):
@@ -327,16 +327,16 @@ class PostingCard:
     def __init__(self,
                  contract: Contract,
                  number: Union[int, str],  # 10 digits
-                 administrative_code: Union[int, str]):  # 8 digits
+                 administrative_code: Union[int, str]) -> None:  # 8 digits
         self.contract = contract
         self._number = to_integer(number)
         self._administrative_code = to_integer(administrative_code)
-        self._start_date = None
-        self._end_date = None
-        self._status = None
-        self._unit = None
-        self.status_code = None
-        self.services = []
+        self._start_date = None  # type: Optional[datetime]
+        self._end_date = None  # type: Optional[datetime]
+        self._status = None  # type: Optional[int]
+        self._unit = None  # type: Optional[str]
+        self.status_code = None  # type: Optional[str]
+        self.services = []  # type: List[Service]
 
         if self not in self.contract.posting_cards:
             self.contract.add_posting_card(self)
@@ -395,7 +395,7 @@ class PostingCard:
 
 
 class RegionalDirection:
-    def __init__(self, number: int, code: str, name: str):
+    def __init__(self, number: int, code: str, name: str) -> None:
         if not number:
             raise InvalidRegionalDirectionError("Invalid regional direction number {!r}".format(number))
 
