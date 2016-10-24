@@ -44,11 +44,11 @@ MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
-INSURANCE_VALUE_THRESHOLD = 50  # R$
+INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
 
 
 class EventStatus:
-    def __init__(self, event_type: str, status: Union[str, int]):
+    def __init__(self, event_type: str, status: Union[str, int]) -> None:
         self.type = self._validate_type(event_type)
         self.status = int(status)
 
@@ -86,7 +86,7 @@ class TrackingEvent:
                  comment: str = "",
                  description: str = "",
                  details: str = "",
-                 ):
+                 ) -> None:
         self.timestamp = timestamp
         self.location = location
         self.receiver = receiver
@@ -118,14 +118,14 @@ class NotFoundTrackingEvent(TrackingEvent):
                  timestamp: datetime,
                  status: Union[Tuple[str, int], EventStatus],
                  comment,
-                 ):
+                 ) -> None:
         super().__init__(timestamp=timestamp,
                          status=status,
                          comment=comment)
 
 
 class TrackingCode:
-    def __init__(self, code: str):
+    def __init__(self, code: str) -> None:
         self.prefix = code[:2].upper()
         self.number = "".join(d for d in code[2:10] if d.isdigit())
         self.suffix = code[-2:].upper()
@@ -137,10 +137,10 @@ class TrackingCode:
         self._validate()
 
         # filled by tracking service
-        self.category = None
-        self.name = None
-        self.initials = None
-        self.events = []
+        self.category = None  # type: Optional[str]
+        self.name = None  # type: Optional[str]
+        self.initials = None  # type: Optional[str]
+        self.events = []  # type: List[TrackingEvent]
 
     def _validate(self):
         if len(self.prefix) != TRACKING_CODE_PREFIX_SIZE or not self.prefix.isalpha():
@@ -248,7 +248,7 @@ class Package:
                  package_type: int = TYPE_BOX,
                  width: int = 0, height: int = 0, length: int = 0, diameter: int = 0, weight: int = 0,
                  sequence=(1, 1),
-                 service: Optional['Service'] = None):
+                 service: Optional['Service'] = None) -> None:
 
         Package.validate(package_type, width, height, length, diameter, service, weight)
 
@@ -283,10 +283,13 @@ class Package:
         return math.ceil(max(volumetric_weight, weight))
 
     @classmethod
-    def calculate_insurance(cls, per_unit_value, quantity: int = 1, service: Service = None):
-        value = 0
-        if service == SERVICE_PAC and per_unit_value > INSURANCE_VALUE_THRESHOLD:
-            value = float(per_unit_value - INSURANCE_VALUE_THRESHOLD) * 0.007
+    def calculate_insurance(cls,
+                            per_unit_value: Decimal,
+                            quantity: int = 1,
+                            service: Union[Service, int] = None) -> Decimal:
+        value = Decimal("0.00")
+        if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
+            value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * Decimal("0.007")
 
         return Decimal(value * quantity).quantize(Decimal('0.00'))
 
@@ -373,7 +376,7 @@ class ShippingLabel:
                  billing: Optional[Decimal] = Decimal("0.00"),
                  text: Optional[str] = "",
                  latitude: Optional[float] = 0.0,
-                 longitude: Optional[float] = 0.0):
+                 longitude: Optional[float] = 0.0) -> None:
 
         if sender == receiver:
             raise InvalidAddressesError("Sender and receiver cannot be the same")
@@ -406,7 +409,7 @@ class ShippingLabel:
         if extra_services:
             self.add_extra_services(extra_services)
 
-        self.posting_list = None
+        self.posting_list = None  # type: Optional[PostingList]
         self.posting_list_group = 0
 
     def __repr__(self):
@@ -499,8 +502,9 @@ class ShippingLabel:
 
 
 class PostingList:
-    def __init__(self, custom_id: int, logo: Optional[Union[str, Image.Image]] = None):
-        self.number = None  # will be filled by close_posting_list
+    def __init__(self, custom_id: int, logo: Optional[Union[str, Image.Image]] = None) -> None:
+        # will be filled by close_posting_list
+        self.number = None  # type: Optional[int]
 
         if logo is None:
             logo = os.path.join(DATADIR, "carrier_logo.png")
@@ -510,10 +514,10 @@ class PostingList:
 
         self.logo = logo
         self.custom_id = custom_id
-        self.shipping_labels = {}
+        self.shipping_labels = {}  # type: Dict[str, ShippingLabel]
 
         # filled by the first shipping label
-        self.initial_shipping_label = None
+        self.initial_shipping_label = None  # type: Optional[ShippingLabel]
         self.posting_card = None  # type: PostingCard
         self.contract = None  # type: Contract
         self.sender = None  # type: Address

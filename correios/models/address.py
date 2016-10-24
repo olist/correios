@@ -26,7 +26,7 @@ STATE_LENGTH = 2
 
 
 class ZipCode:
-    def __init__(self, code: str):
+    def __init__(self, code: str) -> None:
         self._code = self._validate(code)
 
     @property
@@ -107,7 +107,7 @@ class State:
     }
     _name_map = {v.lower(): k for k, v in STATES.items()}
 
-    def __init__(self, code: str):
+    def __init__(self, code: str) -> None:
         self._code = self._validate(code)
 
     @property
@@ -145,7 +145,7 @@ class ZipAddress:
                  city: str,
                  district: str,
                  address: str,
-                 complements: List[str]):
+                 complements: List[str]) -> None:
         self.id = id
         self.zip_code = ZipCode(str(zip_code))
         self.state = State(str(state))
@@ -156,7 +156,7 @@ class ZipAddress:
 
 
 class Phone:
-    def __init__(self, number: str, country="BR"):
+    def __init__(self, number: str, country="BR") -> None:
         try:
             self.parsed = self._parse(number, country)
         except NumberParseException:
@@ -181,7 +181,7 @@ class Phone:
             return ""
         return str(self.parsed.national_number)
 
-    def __eq__(self, other: Union["Phone", str]):
+    def __eq__(self, other):
         if not isinstance(other, Phone):
             other = Phone(other, self.country)
         return self.parsed == other.parsed
@@ -210,7 +210,7 @@ class Address:
                  email: str = "",
                  latitude: Union[Decimal, str] = "0.0",
                  longitude: Union[Decimal, str] = "0.0",
-                 ):
+                 ) -> None:
         self.name = name
         self.street = street
         self.city = city

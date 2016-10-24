@@ -1,6 +1,7 @@
 -r requirements.txt
+mypy-lang
 pytest
 pytest-cov
-pytest-factoryboy==1.1.6
+pytest-factoryboy
 tox
--e git+https://github.com/kevin1024/vcrpy.git#egg=vcrpy
+vcrpy

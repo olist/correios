@@ -263,8 +263,8 @@ class PostingListSerializer:
         return schema.assert_(document)
 
     def get_xml(self, document) -> bytes:
-        xml = xml_utils.tostring(document, encoding="unicode")
-        return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + xml.encode("iso-8859-1")
+        xmlstring = str(xml_utils.tostring(document, encoding="unicode"))
+        return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + xmlstring.encode("iso-8859-1")
 
 
 class Correios:
@@ -322,8 +322,8 @@ class Correios:
                                     service: Service,
                                     from_zip_code: Union[ZipCode, str],
                                     to_zip_code: Union[ZipCode, str]) -> bool:
-        from_zip_code = ZipCode(from_zip_code)
-        to_zip_code = ZipCode(to_zip_code)
+        from_zip_code = ZipCode.create(from_zip_code)
+        to_zip_code = ZipCode.create(to_zip_code)
         result = self._auth_call("verificaDisponibilidadeServico",
                                  posting_card.administrative_code, str(service),
                                  str(from_zip_code), str(to_zip_code))
