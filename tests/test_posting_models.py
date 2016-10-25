@@ -220,6 +220,16 @@ def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracki
                       tracking_code=tracking_code)
 
 
+def test_package_basic():
+    package = Package(package_type=Package.TYPE_BOX,
+                      width=11,
+                      height=10,
+                      length=16,
+                      weight=10000,
+                      service=SERVICE_PAC)  # invalid tuple
+    assert isinstance(package.service, Service)
+
+
 def test_package_basic_envelop_dimensions_validation():
     Package.validate(Package.TYPE_ENVELOPE, 0, 0, 0, 0)
 

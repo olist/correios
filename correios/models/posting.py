@@ -248,7 +248,10 @@ class Package:
                  package_type: int = TYPE_BOX,
                  width: int = 0, height: int = 0, length: int = 0, diameter: int = 0, weight: int = 0,
                  sequence=(1, 1),
-                 service: Optional['Service'] = None) -> None:
+                 service: Optional[Union[Service, int]] = None) -> None:
+
+        if isinstance(service, int):
+            service = Service.get(service)
 
         Package.validate(package_type, width, height, length, diameter, service, weight)
 
