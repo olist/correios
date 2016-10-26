@@ -208,3 +208,16 @@ def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipp
     serializer = PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
         serializer.get_document(posting_list)
+
+
+def test_limit_size_city_name(posting_list, shipping_label):
+    shipping_label.receiver.city = 'Porto Alegre (Rio Grande do Sul)'
+    shipping_label.sender.city = 'Santa Maria (Rio Grande do Sul)'
+    posting_list.add_shipping_label(shipping_label)
+    serializer = PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+
+    assert b"<cidade_destinatario><![CDATA[Porto Alegre (Rio Grande do Su]]></cidade_destinatario>" in xml
+    assert b"<cidade_remetente><![CDATA[Santa Maria (Rio Grande do Sul]]></cidade_remetente>" in xml
