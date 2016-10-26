@@ -176,7 +176,7 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "complemento_remetente", cdata=sender.complement)
         xml_utils.SubElement(sender_info, "bairro_remetente", cdata=sender.neighborhood)
         xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
-        xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city))
+        xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city)[:30])
         xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
         xml_utils.SubElement(sender_info, "telefone_remetente", cdata=sender.phone.short)
         xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
@@ -205,7 +205,7 @@ class PostingListSerializer:
 
         national = xml_utils.SubElement(item, "nacional")
         xml_utils.SubElement(national, "bairro_destinatario", cdata=str(receiver.neighborhood))
-        xml_utils.SubElement(national, "cidade_destinatario", cdata=str(receiver.city))
+        xml_utils.SubElement(national, "cidade_destinatario", cdata=str(receiver.city)[:30])
         xml_utils.SubElement(national, "uf_destinatario", text=str(receiver.state))
         xml_utils.SubElement(national, "cep_destinatario", cdata=str(receiver.zip_code))
         xml_utils.SubElement(national, "codigo_usuario_postal")
