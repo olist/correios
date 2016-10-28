@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-import math
 import os
+import math
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, Sequence, Tuple, Union
+from typing import Optional, Sequence, Tuple, Union, List, Dict
 
 from PIL import Image
 
@@ -240,13 +240,17 @@ class TrackingCode:
 
 
 class Package:
-    TYPE_ENVELOPE = 1
-    TYPE_BOX = 2
-    TYPE_CYLINDER = 3
+    TYPE_ENVELOPE = 1  # type: int
+    TYPE_BOX = 2  # type: int
+    TYPE_CYLINDER = 3  # type: int
 
     def __init__(self,
                  package_type: int = TYPE_BOX,
-                 width: int = 0, height: int = 0, length: int = 0, diameter: int = 0, weight: int = 0,
+                 width: Union[float, int] = 0,
+                 height: Union[float, int] = 0,
+                 length: Union[float, int] = 0,
+                 diameter: Union[float, int] = 0,
+                 weight: Union[float, int] = 0,
                  sequence=(1, 1),
                  service: Optional[Union[Service, int]] = None) -> None:
 
@@ -259,11 +263,11 @@ class Package:
             raise InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
 
         self.package_type = package_type
-        self.width = width  # cm
-        self.height = height  # cm
-        self.length = length  # cm
-        self.diameter = diameter  # in cm
-        self.weight = weight  # in grams
+        self.width = math.ceil(width)  # cm
+        self.height = math.ceil(height)  # cm
+        self.length = math.ceil(length)  # cm
+        self.diameter = math.ceil(diameter)  # in cm
+        self.weight = math.ceil(weight)  # in grams
         self.sequence = sequence
         self.service = service
 
@@ -297,8 +301,20 @@ class Package:
         return Decimal(value * quantity).quantize(Decimal('0.00'))
 
     @classmethod
-    def validate(cls, package_type: int, width: int = 0, height: int = 0, length: int = 0, diameter: int = 0,
-                 service: Optional[Service] = None, weight: int = 0):
+    def validate(cls,
+                 package_type: int,
+                 width: Union[float, int] = 0,
+                 height: Union[float, int] = 0,
+                 length: Union[float, int] = 0,
+                 diameter: Union[float, int] = 0,
+                 service: Optional[Service] = None,
+                 weight: Union[float, int] = 0) -> None:
+
+        width = math.ceil(width)
+        height = math.ceil(height)
+        length = math.ceil(length)
+        diameter = math.ceil(diameter)
+        weight = math.ceil(weight)
 
         if service and service.max_weight and weight > service.max_weight:
             raise InvalidPackageWeightError("Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight))
