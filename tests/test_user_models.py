@@ -265,10 +265,10 @@ def test_extra_service_sanitize_code():
 
 
 @pytest.mark.parametrize("number,code,name", (
-        (0, "XY", "Invalid Number"),
-        (1, "XYZ", "Invalid Code"),
-        (1, "", "Invalid Code"),
-        (1, "XY", ""),  # Invalid Name
+    (0, "XY", "Invalid Number"),
+    (1, "XYZ", "Invalid Code"),
+    (1, "", "Invalid Code"),
+    (1, "XY", ""),  # Invalid Name
 ))
 def test_fail_extra_service_invalid_data(number, code, name):
     with pytest.raises(InvalidExtraServiceError):
@@ -281,11 +281,11 @@ def test_fail_get_unknown_service():
 
 
 @pytest.mark.parametrize("number,extra_service_code", (
-        (1, "AR"),
-        (2, "MP"),
-        (19, "VD"),
-        (25, "RR"),
-        (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
+    (1, "AR"),
+    (2, "MP"),
+    (19, "VD"),
+    (25, "RR"),
+    (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
 ))
 def test_extra_service_getter(number, extra_service_code):
     assert ExtraService.get(number).code == extra_service_code
@@ -305,9 +305,9 @@ def test_regional_direction_sanitize_code():
 
 
 @pytest.mark.parametrize("number,code,name", (
-        (0, "XY", "Invalid Number"),
-        (1, "", "Invalid Code"),
-        (1, "XY", ""),  # Invalid Name
+    (0, "XY", "Invalid Number"),
+    (1, "", "Invalid Code"),
+    (1, "XY", ""),  # Invalid Name
 ))
 def test_fail_regional_direction_invalid_data(number, code, name):
     with pytest.raises(InvalidRegionalDirectionError):
