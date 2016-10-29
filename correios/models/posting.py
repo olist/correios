@@ -17,7 +17,8 @@ import os
 import math
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, Sequence, Tuple, Union, List, Dict
+from typing import Optional, Sequence, Tuple, Union
+from typing import List, Dict  # noqa: F401
 
 from PIL import Image
 
