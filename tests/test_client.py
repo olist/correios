@@ -156,7 +156,7 @@ def test_get_tracking_code_object_not_found_by_correios():
     assert isinstance(event, NotFoundTrackingEvent)
     assert event.timestamp
     assert event.status.type == "ERROR"
-    assert event.status.status == 1
+    assert event.status.status == 0
 
 
 def test_get_tracking_codes_events_over_limit():

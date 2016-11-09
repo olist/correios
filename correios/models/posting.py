@@ -28,7 +28,7 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  PostingListError, InvalidPackageDimensionsError,
                                  InvalidPackageWeightError)
 from .address import Address, ZipCode
-from .data import SERVICE_PAC, TRACKING_EVENT_TYPES
+from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
 from .user import Service, ExtraService, PostingCard
 
@@ -46,20 +46,32 @@ MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
+INSURANCE_PERCENTUAL_COST = Decimal("0.007")  # 0.7%
 
 
 class EventStatus:
-    def __init__(self, event_type: str, status: Union[str, int]) -> None:
-        self.type = self._validate_type(event_type)
-        self.status = int(status)
-
-    def _validate_type(self, event_type):
+    def __init__(self,
+                 event_type: str,
+                 status_code: Union[str, int]) -> None:
         event_type = event_type.upper()
+        status_code = int(status_code)
+        event_status_data = self._get_event_status_data(event_type, status_code)
 
+        self.type = event_type
+        self.status = status_code
+        self.category = event_status_data[0]
+        self.description = event_status_data[1]
+        self.detail = event_status_data[2]
+        self.action = event_status_data[3]
+
+    def _get_event_status_data(self, event_type, status_code):
         if event_type not in TRACKING_EVENT_TYPES:
             raise InvalidEventStatusError("{} is not valid".format(event_type))
 
-        return event_type
+        try:
+            return TRACKING_STATUS[event_type, status_code]
+        except KeyError:
+            raise InvalidEventStatusError("{} is not valid".format(event_type))
 
     @property
     def display_event_type(self):
@@ -72,12 +84,17 @@ class EventStatus:
         return '<EventStatus({!r}, {!r})>'.format(self.type, self.status)
 
 
+class ErrorEventStatus(EventStatus):
+    def __init__(self):
+        super().__init__("ERROR", 0)
+
+
 class TrackingEvent:
     timestamp_format = "%d/%m/%Y %H:%M"
 
     def __init__(self,
                  timestamp: datetime,
-                 status: Union[Tuple[str, int], EventStatus],
+                 status: Union[Tuple[str, Union[str, int]], EventStatus],
                  location_zip_code: Union[str, ZipCode] = "",
                  location: str = "",
                  receiver: str = "",
@@ -115,14 +132,8 @@ class TrackingEvent:
 
 
 class NotFoundTrackingEvent(TrackingEvent):
-    def __init__(self,
-                 timestamp: datetime,
-                 status: Union[Tuple[str, int], EventStatus],
-                 comment,
-                 ) -> None:
-        super().__init__(timestamp=timestamp,
-                         status=status,
-                         comment=comment)
+    def __init__(self, timestamp: datetime, comment) -> None:
+        super().__init__(timestamp=timestamp, status=ErrorEventStatus(), comment=comment)
 
 
 class TrackingCode:
@@ -292,13 +303,13 @@ class Package:
 
     @classmethod
     def calculate_insurance(cls,
-                            per_unit_value: Decimal,
+                            per_unit_value: Union[int, float, Decimal],
                             quantity: int = 1,
                             service: Union[Service, int] = None) -> Decimal:
         value = Decimal("0.00")
+        per_unit_value = Decimal(per_unit_value)
         if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
-            value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * Decimal("0.007")
-
+            value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * INSURANCE_PERCENTUAL_COST
         return Decimal(value * quantity).quantize(Decimal('0.00'))
 
     @classmethod

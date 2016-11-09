@@ -1,0 +1,135 @@
+BDE BDI BDR,0,Entregue,Recebido por,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega.  Não é mais necessário prosseguir com o acompanhamento.
+BDE BDI BDR,1,Entrega Efetuada,Objeto recebido por:,Objeto entregue ao destinatário,Recebido por:,Finalizar a entrega.  Não é mais necessário prosseguir com o acompanhamento.
+BDE BDI BDR,2,Destinatário Ausente,Encaminhado para entrega interna,A entrega não pode ser efetuada - Carteiro não atendido,Aguarde: Objeto estará disponível para retirada na unidade a ser informada.,Acompanhar.  O interessado deverá buscar o objeto em uma Unidade dos Correios.
+BDE BDI BDR,3,Destinatário não apresentou-se para receber,Objeto descartado,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acompanhar.  O interessado não buscou o objeto na unidade dos Correios durante o período de guarda.
+BDE BDI BDR,4,Destinatário recusou-se a receber,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Cliente recusou-se a receber,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,5,Entrega não efetuada,Objeto em devolução ao remetente,A entrega não pode ser efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,6,Destinatário desconhecido,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Cliente desconhecido no local,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,7,Endereço incompleto - em pesquisa,Objeto sujeito a atraso na entrega,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDE BDI BDR,8,Endereço incompleto - em pesquisa,Objeto sujeito a atraso na entrega,A entrega não pode ser efetuada - Endereço incorreto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,9,Não localizado no fluxo postal,"Por favor, entre em contato conosco clicando aqui.",Objeto não localizado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,10,Destinatário mudou-se,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Cliente mudou-se,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,12,Destinatário não apresentou-se para receber,Objeto descartado,Remetente não retirou objeto na Unidade dos Correios,Objeto em análise de destinação,Acionar atendimento dos Correios.
+BDE BDI BDR,19,Endereço incorreto,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,20,Destinatário ausente,Será realizada nova tentativa de entrega,A entrega não pode ser efetuada - Carteiro não atendido,Será realizada nova tentativa de entrega,Acompanhar
+BDE BDI BDR,21,Destinatário ausente em 3 tentativas de entrega,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Carteiro não atendido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,22,Objeto devolvido aos correios, ,Objeto devolvido aos Correios, ,Acompanhar
+BDE BDI BDR,23,Devolvido ao remetente,Nome do recebedor,Objeto devolvido ao remetente,Recebido por:,Acompanhar
+BDE BDI BDR,24,Disponível para retirada na caixa postal, ,Objeto disponível para retirada em Caixa Postal, ,Acompanhar
+BDE BDI BDR,25,Empresa sem expediente,Entrega próximo dia útil,A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+BDE BDI BDR,26,Destinatário não apresentou-se para receber,Objeto em devolução ao remetente,Destinatário não retirou objeto na Unidade dos Correios,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,28,Objeto avariado,"Por favor, entre em contato conosco clicando aqui.",Objeto e/ou conteúdo avariado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,32,Distribuição especial agendada,Data de entrega pré-estabelecida,Objeto com data de entrega agendada, ,Acompanhar
+BDE BDI BDR,33,Destinatário não apresentou a documentação,Objeto em devolução ao remetente,A entrega não pode ser efetuada - Destinatário não apresentou documento exigido,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,34,Endereço com numeração irregular - Em pesquisa,Objeto sujeito a atraso na entrega,A entrega não pode ser efetuada - Logradouro com numeração irregular,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+BDE BDI BDR,35,Logística reversa simultânea,Será realizada nova tentativa de entrega,Coleta ou entrega de objeto não efetuada,Será realizada nova tentativa de coleta ou entrega,Acompanhar
+BDE BDI BDR,36,Logística reversa simultânea,Objeto em devolução ao remetente,Coleta ou entrega de objeto não efetuada,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,37,Objeto conteúdo avariado - Veículo acidentado,"Por favor, entre em contato conosco clicando aqui.",Objeto e/ou conteúdo avariado por acidente com veículo,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,38,Objeto endereçado a empresa falida,Objeto será entregue ao administrador judicial.,Objeto endereçado à empresa falida,Objeto será encaminhado para entrega ao administrador judicial,Acompanhar
+BDE BDI BDR,40,Importação não autorizada por órgão da receita,Objeto em devolução ao remetente,A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,41,Entrega condicionada à composição do lote, ,A entrega do objeto está condicionada à composição do lote, ,Acompanhar
+BDE BDI BDR,42,Lote incompleto - Em pesquisa,"Por favor, entre em contato conosco clicando aqui.",Lote de objetos incompleto,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,43,Objeto retido pelo órgão de fiscalização,"Por favor, entre em contato conosco clicando aqui.",Objeto apreendido por órgão de fiscalização ou outro órgão anuente,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,45,Entrega não efetuada por motivos operacionais,Entrega prevista para o próximo dia útil,Objeto recebido na unidade de distribuição,Entrega prevista para o próximo dia útil,Acompanhar
+BDE BDI BDR,46,Entrega não efetuada por motivos operacionais,Entrega prevista para o próximo dia útil,Tentativa de entrega não efetuada,Entrega prevista para o próximo dia útil,Acompanhar
+BDE BDI BDR,47,Cancelada a última informação, ,Saída para entrega cancelada,Será efetuado novo lançamento para entrega,Acompanhar
+BDE BDI BDR,48,Distribuição não autorizada,Objeto em devolução ao remetente,Retirada em Unidade dos Correios não autorizada pelo remetente,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,49,Dimensões impossibilitam a entrega,Objeto em devolução ao remetente,As dimensões do objeto impossibilitam o tratamento e a entrega,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,50,Objeto perdido em assalto ao carteiro,"Por favor, entre em contato conosco clicando aqui.",Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,51,Objeto perdido em assalto a veículo dos correios,"Por favor, entre em contato conosco clicando aqui.",Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,52,Objeto perdido em assalto a unidade dos correios,"Por favor, entre em contato conosco clicando aqui.",Objeto roubado,Favor entrar em contato com os Correios.,Acionar atendimento dos Correios.
+BDE BDI BDR,53,Objeto reimpresso e reenviado, ,Objeto reimpresso e reenviado, ,Acompanhar. O objeto impresso pelos Correios precisou ser refeito e reenviado.
+BDE BDI BDR,54,AGUARDANDO DOCUMENTO FISCAL - ICMS IMPORTAÇÃO,"Por favor, aguarde.","Para recebimento do objeto, é necessário o pagamento do ICMS Importação", ,Acompanhar. O interessado deverá pagar o imposto devido para retirar o objeto em uma Unidade dos Correios.
+BDE BDI BDR,55,EM REVISÃO DE TRIBUTO,"Por favor, aguarde.",Solicitada revisão do tributo estabelecido, ,Acompanhar
+BDE BDI BDR,56,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Declaração aduaneira ausente ou incorreta,Objeto será devolvido ao remetente,Acompanhar o retorno do objeto ao remetente.
+BDE BDI BDR,57,OBJETO LIBERADO DE TRIBUTO,"Por favor, aguarde.",Revisão de tributo concluída - Objeto liberado, ,Acompanhar
+BDE BDI BDR,58,TRIBUTO ALTERADO,"Por favor, aguarde.",Revisão de tributo concluída - Tributo alterado,O valor do tributo pode ter aumentado ou diminuído,Acompanhar
+BDE BDI BDR,59,TRIBUTO MANTIDO COM JUROS E MULTAS.,"Por favor, aguarde.",Revisão de tributo concluída - Tributo mantido,Poderá haver incidência de juros e multa.,Acompanhar
+BDE BDI BDR,66,Área com distribuição sujeita a prazo diferenciado,Restrição Temporária,Área com distribuição sujeita a prazo diferenciado,Restrição de entrega domiciliar temporária,Acompanhar
+BDE BDI BDR,69,Não localizado no fluxo postal,"Por favor, entre em contato conosco clicando aqui.",Objeto com atraso na entrega, ,Acompanhar
+BLQ,1,Objeto bloqueado a pedido do remetente,"Em tratamento, favor aguardar.",Entrega de objeto bloqueada a pedido do remetente,Objeto em análise de destinação,Acompanhar
+CD,0,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CD,1,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CD,2,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CD,3,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CMT,0,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CO,1,Coletado , ,Objeto coletado, ,Acompanhar
+CUN,0,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+CUN,1,Conferido, ,Objeto recebido na Unidade dos Correios, ,Acompanhar
+DO,0,Encaminhado,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+DO,1,Encaminhado,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+DO,2,Encaminhado,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+EST,1,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,2,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,3,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,4,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,5,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,6,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+EST,9,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+FC,1,Devolvido a pedido do remetente,"Em tratamento, aguarde.",Objeto será devolvido por solicitação do remetente, ,Acompanhar o retorno do objeto ao remetente.
+FC,2,Com entrega agendada,"Em tratamento, aguarde.",Objeto com data de entrega agendada, ,Acompanhar
+FC,3,Mal encaminhado,"Em tratamento, aguarde.",Objeto mal encaminhado,Encaminhamento a ser corrigido.,Acompanhar
+FC,4,Mal endereçado,"Em tratamento, aguarde.",A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+FC,5,Reintegrado,"Em tratamento, aguarde.",Objeto devolvido aos Correios, ,Acompanhar
+FC,7,Restrição Lançamento Externo,"Em tratamento, aguarde.",A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+IDC,1,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,2,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,3,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,4,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,5,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,6,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,7,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+LDE,0,Saiu para entrega , ,Objeto saiu para entrega ao remetente, ,Acompanhar
+LDI,0,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,1,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,2,Disponível em Caixa Postal,Endereço:,Objeto disponível para retirada em Caixa Postal, ,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,3,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,14,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+OEC,0,Saiu para entrega ao destinatário, ,Objeto saiu para entrega ao destinatário, ,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+OEC,1,Saiu para entrega ao destinatário, ,Objeto saiu para entrega ao destinatário, ,Acompanhar
+OEC,9,Saiu para entrega ao remetente, ,Objeto saiu para entrega ao remetente, ,Acompanhar
+PAR,15,Conferido,Recebido/destino,Objeto recebido em <destino>, ,Acompanhar
+PAR,16,Conferido,Recebido/Brasil,Objeto recebido no Brasil,Objeto sujeito à fiscalização e atraso na entrega,Acompanhar
+PAR,17,Conferido,Liberado pela alfândega,Objeto liberado pela alfândega, ,Acompanhar
+PAR,18,Conferido,Recebido na unidade de exportação,Objeto recebido na unidade de exportação, ,Acompanhar
+PMT,1,Partiu em meio de transporte,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+PO,0,Postado , ,Objeto postado, ,Acompanhar
+PO,1,Postado , ,Objeto postado, ,Acompanhar
+PO,9,Postado depois do horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Objeto postado após o horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Acompanhar
+RO,0,Encaminhado,Em trânsito para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+RO,1,Encaminhado,Em trânsito para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+TRI,0,Conferido,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+EST,9,Estornado, ,Favor desconsiderar a informação anterior, ,Acompanhar
+FC,1,Devolvido a pedido do remetente,"Em tratamento, aguarde.",Objeto será devolvido por solicitação do remetente, ,Acompanhar o retorno do objeto ao remetente.
+FC,2,Com entrega agendada,"Em tratamento, aguarde.",Objeto com data de entrega agendada, ,Acompanhar
+FC,3,Mal encaminhado,"Em tratamento, aguarde.",Objeto mal encaminhado,Encaminhamento a ser corrigido.,Acompanhar
+FC,4,Mal endereçado,"Em tratamento, aguarde.",A entrega não pode ser efetuada - Endereço incorreto,Objeto sujeito a atraso na entrega ou a devolução ao remetente,Acompanhar
+FC,5,Reintegrado,"Em tratamento, aguarde.",Objeto devolvido aos Correios, ,Acompanhar
+FC,7,Restrição Lançamento Externo,"Em tratamento, aguarde.",A entrega não pode ser efetuada - Empresa sem expediente,A entrega deverá ocorrer no próximo dia útil,Acompanhar
+IDC,1,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,2,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,3,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,4,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,5,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,6,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+IDC,7,Indenizado, ,Objeto não localizado,Houve indenização dos valores correspondentes,Acompanhar
+LDE,0,Saiu para entrega , ,Objeto saiu para entrega ao remetente, ,Acompanhar
+LDI,0,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,1,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,2,Disponível em Caixa Postal,Endereço:,Objeto disponível para retirada em Caixa Postal, ,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,3,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+LDI,14,Aguardando retirada,Endereço:,Objeto aguardando retirada no endereço indicado,Endereço:,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+OEC,0,Saiu para entrega ao destinatário, ,Objeto saiu para entrega ao destinatário, ,Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.
+OEC,1,Saiu para entrega ao destinatário, ,Objeto saiu para entrega ao destinatário, ,Acompanhar
+OEC,9,Saiu para entrega ao remetente, ,Objeto saiu para entrega ao remetente, ,Acompanhar
+PAR,15,Conferido,Recebido/destino,Objeto recebido em <destino>, ,Acompanhar
+PAR,16,Conferido,Recebido/Brasil,Objeto recebido no Brasil,Objeto sujeito à fiscalização e atraso na entrega,Acompanhar
+PAR,17,Conferido,Liberado pela alfândega,Objeto liberado pela alfândega, ,Acompanhar
+PAR,18,Conferido,Recebido na unidade de exportação,Objeto recebido na unidade de exportação, ,Acompanhar
+PMT,1,Partiu em meio de transporte,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+PO,0,Postado , ,Objeto postado, ,Acompanhar
+PO,1,Postado , ,Objeto postado, ,Acompanhar
+PO,9,Postado depois do horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Objeto postado após o horário limite da agência,Objeto sujeito a encaminhamento no próximo dia útil,Acompanhar
+RO,0,Encaminhado,Em trânsito para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+RO,1,Encaminhado,Em trânsito para,Objeto encaminhado para,<nome da cidade>,Acompanhar
+TRI,0,Conferido,Encaminhado para,Objeto encaminhado para,<nome da cidade>,Acompanhar
