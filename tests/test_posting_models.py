@@ -387,27 +387,49 @@ def test_tracking_event_timestamp_format(tracking_event):
 
 def test_basic_not_found_tracking_event():
     tracking_event = NotFoundTrackingEvent(timestamp=datetime(2010, 1, 2, 1, 2),
-                                           status=("ERROR", 1),
                                            comment="Not found")
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
     assert tracking_event.status.type == "ERROR"
-    assert tracking_event.status.status == 1
+    assert tracking_event.status.status == 0
     assert tracking_event.comment == "Not found"
 
 
-@pytest.mark.parametrize("event_type", list(TRACKING_EVENT_TYPES.keys()))
-def test_basic_event_status(event_type):
-    event_status = EventStatus(event_type, 1)
+@pytest.mark.parametrize("status_type,status_number", [
+    ("BDE", 0),
+    ("BDI", 0),
+    ("BDR", 0),
+    ("BLQ", 1),
+    # ("CAR", 0),
+    ("CD", 0),
+    ("CMT", 0),
+    ("CO", 1),
+    ("CUN", 0),
+    ("DO", 0),
+    ("EST", 1),
+    ("FC", 1),
+    ("IDC", 1),
+    ("LDI", 0),
+    ("LDE", 0),
+    ("OEC", 0),
+    ("PAR", 15),
+    ("PMT", 1),
+    ("PO", 0),
+    ("RO", 0),
+    ("TRI", 0),
+    # ("CMR", 0),
+])
+def test_basic_event_status(status_type, status_number):
+    event_status = EventStatus(status_type, status_number)
 
-    assert event_status.type == event_type
-    assert event_status.status == 1
-    assert event_status.display_event_type == TRACKING_EVENT_TYPES[event_type]
+    assert event_status.type == status_type
+    assert event_status.status == status_number
+    assert event_status.display_event_type == TRACKING_EVENT_TYPES[status_type]
 
-    assert str(event_status) == "({}, 1)".format(event_type)
-    assert repr(event_status) == "<EventStatus({!r}, 1)>".format(event_type)
+    assert str(event_status) == "({}, {})".format(status_type, status_number)
+    assert repr(event_status) == "<EventStatus({!r}, {!r})>".format(status_type, status_number)
 
 
-@pytest.mark.parametrize("event_type", ("XYZ", "ABC", "XXX", "WTF", "BD", ""))
+@pytest.mark.parametrize("event_type", ("XYZ", "ABC", "XXX", "WTF", "BD", "ERROR"))
 def test_invalid_event_status(event_type):
     with pytest.raises(InvalidEventStatusError):
         EventStatus(event_type, 1)

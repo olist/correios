@@ -109,7 +109,6 @@ class ModelBuilder:
     def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
         event = NotFoundTrackingEvent(
             timestamp=datetime.now(),
-            status=EventStatus("ERROR", 1),
             comment=tracked_object.erro,
         )
         tracking_code.add_event(event)
