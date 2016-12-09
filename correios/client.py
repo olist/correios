@@ -263,7 +263,8 @@ class PostingListSerializer:
 
     def get_xml(self, document) -> bytes:
         xmlstring = str(xml_utils.tostring(document, encoding="unicode"))
-        return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + xmlstring.encode("iso-8859-1")
+        encoded_xmlstring = xmlstring.encode("iso-8859-1", errors='ignore')
+        return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + encoded_xmlstring
 
 
 class Correios:
