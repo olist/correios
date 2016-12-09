@@ -183,6 +183,16 @@ def test_posting_list_serialization(posting_list, shipping_label):
     assert b"<valor_declarado>10,29</valor_declarado>" not in xml
 
 
+def test_posting_list_serialization_with_crazy_utf8_character(posting_list, shipping_label):
+    shipping_label.receiver.neighborhood = 'Olho D’Água'
+    posting_list.add_shipping_label(shipping_label)
+    serializer = PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+    assert xml.startswith(b'<?xml version="1.0" encoding="ISO-8859-1"?><correioslog>')
+
+
 def test_declared_value(posting_list, shipping_label):
     shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
     shipping_label.value = 10.29
