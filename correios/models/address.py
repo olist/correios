@@ -14,6 +14,7 @@
 
 
 from decimal import Decimal
+import re
 from typing import List, Union, Tuple
 
 from phonenumbers import NumberParseException
@@ -34,12 +35,10 @@ class ZipCode:
         return self._code
 
     def _validate(self, code) -> str:
-        code = "".join(d for d in code if d.isdigit())
+        if not re.match(r"^\d{5}-?\d{3}$", code):
+            raise InvalidZipCodeError("Invalid ZipCode {}".format(code))
 
-        if len(code) != ZIP_CODE_LENGTH:
-            raise InvalidZipCodeError("ZipCode code must have 8 digits")
-
-        return code
+        return code if len(code) == 8 else code.replace("-", "")
 
     def display(self) -> str:
         return "{}-{}".format(self.code[:5], self.code[-3:])
