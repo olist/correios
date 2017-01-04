@@ -31,12 +31,10 @@ def test_sanitize_zip():
     assert zip_code.code == "82940150"
 
 
-def test_fail_invalid_zip():
+@pytest.mark.parametrize('zipcode', ("12345", "123456789", "12.345-000", "12345.000"))
+def test_fail_invalid_zipcode(zipcode):
     with pytest.raises(InvalidZipCodeError):
-        ZipCode("12345")
-
-    with pytest.raises(InvalidZipCodeError):
-        ZipCode("123456789")
+        ZipCode(zipcode)
 
 
 def test_convert_zip_to_str():
