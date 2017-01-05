@@ -21,12 +21,16 @@ from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError
+from correios.models.data import POSTALCODES, POSTALCODE_MAP
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
 
 
 class ZipCode:
+    REGION_CAPITAL = 'capital'
+    REGION_INTERIOR = 'interior'
+
     def __init__(self, code: str) -> None:
         self._code = self._validate(code)
 
@@ -41,7 +45,7 @@ class ZipCode:
         return code if len(code) == 8 else code.replace("-", "")
 
     def display(self) -> str:
-        return "{}-{}".format(self.code[:5], self.code[-3:])
+        return "{}-{}".format(self.prefix, self.sufix)
 
     def __eq__(self, other):
         if isinstance(other, ZipCode):
@@ -62,6 +66,29 @@ class ZipCode:
     def digit(self):
         validator = sum(int(d) for d in self.code)
         return self._next_multiple(validator) - validator
+
+    @property
+    def prefix(self):
+        return int(self.code[:5])
+
+    @property
+    def sufix(self):
+        return int(self.code[5:])
+
+    @property
+    def state(self):
+        for state, postal_data in POSTALCODE_MAP.items():
+            for postal_range in postal_data['ranges']:
+                if self.prefix in postal_range:
+                    return state
+
+    @property
+    def region(self):
+        postal_data = POSTALCODE_MAP[self.state]
+        for capital_range in postal_data['capital_ranges']:
+            if self.prefix in capital_range:
+                return self.REGION_CAPITAL
+        return self.REGION_INTERIOR
 
     @classmethod
     def create(cls, code: Union['ZipCode', int, str]) -> 'ZipCode':
