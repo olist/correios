@@ -38,11 +38,25 @@ class ZipCode:
     def code(self) -> str:
         return self._code
 
+    def _validate_prefix(self, prefix):
+        prefix = int(prefix)
+        valid = False
+        for postal_range in POSTALCODES:
+            if prefix in postal_range:
+                valid = True
+
+        if valid:
+            return
+
+        raise InvalidZipCodeError("Invalid zipcode range {}".format(prefix))
+
     def _validate(self, code) -> str:
         if not re.match(r"^\d{5}-?\d{3}$", code):
-            raise InvalidZipCodeError("Invalid ZipCode {}".format(code))
+            raise InvalidZipCodeError("Invalid zipcode {}".format(code))
 
-        return code if len(code) == 8 else code.replace("-", "")
+        code = code if len(code) == 8 else code.replace("-", "")
+        self._validate_prefix(code[:5])
+        return code
 
     def display(self) -> str:
         return "{}-{}".format(self.prefix, self.sufix)
