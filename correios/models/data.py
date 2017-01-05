@@ -15,6 +15,7 @@
 
 from decimal import Decimal
 from itertools import chain
+from typing import Dict, Tuple  # noqa
 
 
 TRACKING_PREFIX = {
@@ -1859,6 +1860,6 @@ POSTALCODE_MAP = {
         'ranges': (range(90000, 100000),),
         'capital_ranges': (range(90000, 92000),)
     },
-}
+}  # type: Dict[str, Dict[str, Tuple]]
 
 POSTALCODES = tuple(chain.from_iterable(p['ranges'] for p in POSTALCODE_MAP.values()))
