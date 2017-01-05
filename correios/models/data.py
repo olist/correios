@@ -1730,132 +1730,106 @@ POSTALCODE_MAP = {
         'ranges': (range(1000, 20000),),
         'capital_ranges': (range(1000, 6000), range(8000, 8500)),
     },
-
     'RJ': {
         'ranges': (range(20000, 29000),),
         'capital_ranges': (range(20000, 23800),),
     },
-
     'ES': {
         'ranges': (range(29000, 30000),),
         'capital_ranges': (range(29000, 29100),),
     },
-
     'MG': {
         'ranges': (range(30000, 40000),),
         'capital_ranges': (range(30000, 32000),),
     },
-
     'BA': {
         'ranges': (range(40000, 49000),),
         'capital_ranges': (range(40000, 42600),),
     },
-
     'SE': {
         'ranges': (range(49000, 50000),),
         'capital_ranges': (range(49000, 49100),),
     },
-
     'PE': {
         'ranges': (range(50000, 57000),),
         'capital_ranges': (range(50000, 53000),),
     },
-
     'AL': {
         'ranges': (range(57000, 58000),),
         'capital_ranges': (range(57000, 57100),),
     },
-
     'PB': {
         'ranges': (range(58000, 59000),),
         'capital_ranges': (range(58000, 58100),),
     },
-
     'RN': {
         'ranges': (range(59000, 60000),),
         'capital_ranges': (range(59000, 59140),),
     },
-
     'CE': {
         'ranges': (range(60000, 64000),),
         'capital_ranges': (range(60000, 61600),),
     },
-
     'PI': {
         'ranges': (range(64000, 65000),),
         'capital_ranges': (range(64000, 64100),),
     },
-
     'MA': {
         'ranges': (range(65000, 66000),),
         'capital_ranges': (range(65000, 65110),),
     },
-
     'PA': {
         'ranges': (range(66000, 68900),),
         'capital_ranges': (range(66000, 67000),),
     },
-
     'AP': {
         'ranges': (range(68900, 69000),),
         'capital_ranges': (range(68900, 68915),),
     },
-
     'AM': {
         'ranges': (range(69000, 69300), range(69400, 69900)),
         'capital_ranges': (range(69000, 69100), range(69000, 69100)),
     },
-
     'RR': {
         'ranges': (range(69300, 69400),),
         'capital_ranges': (range(69300, 69340),),
     },
-
     'AC': {
         'ranges': (range(69900, 70000),),
         'capital_ranges': (range(69900, 69925),)
     },
-
     'DF': {
         'ranges': (range(70000, 72800), range(73000, 73700)),
         'capital_ranges': (range(70000, 72800), range(73000, 73700))
     },
-
     'GO': {
         'ranges': (range(72800, 73000), range(73700, 76800)),
         'capital_ranges': (range(74000, 74900),),
     },
-
     'TO': {
         'ranges': (range(77000, 78000),),
         'capital_ranges': (range(77000, 77300),),
     },
-
     'MT': {
         'ranges': (range(78000, 78900),),
         'capital_ranges': (range(78000, 78110),),
     },
-
     'RO': {
         'ranges': (range(76800, 77000),),
         'capital_ranges': (range(76800, 76850),),
     },
-
     'MS': {
         'ranges': (range(79000, 80000),),
         'capital_ranges': (range(79000, 79130),),
     },
-
     'PR': {
         'ranges': (range(80000, 88000),),
         'capital_ranges': (range(80000, 83000),),
     },
-
     'SC': {
         'ranges': (range(88000, 90000),),
         'capital_ranges': (range(88000, 88100),),
     },
-
     'RS': {
         'ranges': (range(90000, 100000),),
         'capital_ranges': (range(90000, 92000),)
