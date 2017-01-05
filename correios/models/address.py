@@ -52,7 +52,7 @@ class ZipCode:
         return code
 
     def display(self) -> str:
-        return "{}-{}".format(self.prefix, self.sufix)
+        return "{}-{}".format(self.code[:5], self.code[-3:])
 
     def __eq__(self, other):
         if isinstance(other, ZipCode):
