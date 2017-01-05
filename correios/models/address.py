@@ -40,15 +40,8 @@ class ZipCode:
 
     def _validate_prefix(self, prefix):
         prefix = int(prefix)
-        valid = False
-        for postal_range in POSTALCODES:
-            if prefix in postal_range:
-                valid = True
-
-        if valid:
-            return
-
-        raise InvalidZipCodeError("Invalid zipcode range {}".format(prefix))
+        if not any(prefix in postal_range for postal_range in POSTALCODES):
+            raise InvalidZipCodeError("Invalid zipcode prefix {}".format(prefix))
 
     def _validate(self, code) -> str:
         if not re.match(r"^\d{5}-?\d{3}$", code):
