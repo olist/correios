@@ -47,19 +47,124 @@ def test_fail_invalid_zipcode_range(zipcode):
         ZipCode(zipcode)
 
 
-def test_zip_code_state():
-    zip_code = ZipCode("05192-123")
-    assert zip_code.state == 'SP'
+@pytest.mark.parametrize('zip_code, state', [
+                         ('13560060',  'SP'),
+                         ('04547-003', 'SP'),
+                         ('28921-100', 'RJ'),
+                         ('22440-033', 'RJ'),
+                         ('29213-360', 'ES'),
+                         ('29048-495', 'ES'),
+                         ('35900-457', 'MG'),
+                         ('30190-060', 'MG'),
+                         ('42800-040', 'BA'),
+                         ('40015-170', 'BA'),
+                         ('49500-000', 'SE'),
+                         ('49037-580', 'SE'),
+                         ('57820-000', 'AL'),
+                         ('57032-901', 'AL'),
+                         ('53370-255', 'PE'),
+                         ('50030-150', 'PE'),
+                         ('58400-355', 'PB'),
+                         ('58051-900', 'PB'),
+                         ('59580-000', 'RN'),
+                         ('59015-900', 'RN'),
+                         ('64260-000', 'PI'),
+                         ('64046-902', 'PI'),
+                         ('62598-973', 'CE'),
+                         ('60060-440', 'CE'),
+                         ('65268-000', 'MA'),
+                         ('65056-480', 'MA'),
+                         ('68040-090', 'PA'),
+                         ('66115-970', 'PA'),
+                         ('68925-000', 'AP'),
+                         ('68908-119', 'AP'),
+                         ('69340-000', 'RR'),
+                         ('69310-000', 'RR'),
+                         ('69400-000', 'AM'),
+                         ('69041-000', 'AM'),
+                         ('69928-000', 'AC'),
+                         ('69918-093', 'AC'),
+                         ('76907-438', 'RO'),
+                         ('76803-970', 'RO'),
+                         ('77600-000', 'TO'),
+                         ('77061-900', 'TO'),
+                         ('76400-000', 'GO'),
+                         ('74810-907', 'GO'),
+                         ('73010-521', 'DF'),
+                         ('70150-000', 'DF'),
+                         ('78200-000', 'MT'),
+                         ('78030-210', 'MT'),
+                         ('79730-000', 'MS'),
+                         ('79101-901', 'MS'),
+                         ('83203-100', 'PR'),
+                         ('80730-000', 'PR'),
+                         ('88330-000', 'SC'),
+                         ('88058-512', 'SC'),
+                         ('95670-000', 'RS'),
+                         ('90560-003', 'RS')])
+def test_zip_code_state(zip_code, state):
+    zip_code = ZipCode(zip_code)
+    assert zip_code.state == state
 
 
-def test_zip_code_region_capital():
-    zip_code = ZipCode("05192-123")
-    assert zip_code.region == 'capital'
-
-
-def test_zip_code_region_interior():
-    zip_code = ZipCode("77312-123")
-    assert zip_code.region == 'interior'
+@pytest.mark.parametrize('zip_code, region', [
+                         ('13560060', 'INTERIOR'),
+                         ('04547-003', 'CAPITAL'),
+                         ('28921-100', 'INTERIOR'),
+                         ('22440-033', 'CAPITAL'),
+                         ('29213-360', 'INTERIOR'),
+                         ('29048-495', 'CAPITAL'),
+                         ('35900-457', 'INTERIOR'),
+                         ('30190-060', 'CAPITAL'),
+                         ('42800-040', 'INTERIOR'),
+                         ('40015-170', 'CAPITAL'),
+                         ('49500-000', 'INTERIOR'),
+                         ('49037-580', 'CAPITAL'),
+                         ('57820-000', 'INTERIOR'),
+                         ('57032-901', 'CAPITAL'),
+                         ('53370-255', 'INTERIOR'),
+                         ('50030-150', 'CAPITAL'),
+                         ('58400-355', 'INTERIOR'),
+                         ('58051-900', 'CAPITAL'),
+                         ('59580-000', 'INTERIOR'),
+                         ('59015-900', 'CAPITAL'),
+                         ('64260-000', 'INTERIOR'),
+                         ('64046-902', 'CAPITAL'),
+                         ('62598-973', 'INTERIOR'),
+                         ('60060-440', 'CAPITAL'),
+                         ('65268-000', 'INTERIOR'),
+                         ('65056-480', 'CAPITAL'),
+                         ('68040-090', 'INTERIOR'),
+                         ('66115-970', 'CAPITAL'),
+                         ('68925-000', 'INTERIOR'),
+                         ('68908-119', 'CAPITAL'),
+                         ('69340-000', 'INTERIOR'),
+                         ('69310-000', 'CAPITAL'),
+                         ('69400-000', 'INTERIOR'),
+                         ('69041-000', 'CAPITAL'),
+                         ('69928-000', 'INTERIOR'),
+                         ('69918-093', 'CAPITAL'),
+                         ('76907-438', 'INTERIOR'),
+                         ('76803-970', 'CAPITAL'),
+                         ('77600-000', 'INTERIOR'),
+                         ('77061-900', 'CAPITAL'),
+                         ('76400-000', 'INTERIOR'),
+                         ('74810-907', 'CAPITAL'),
+                         ('73010-521', 'CAPITAL'),
+                         ('70150-000', 'CAPITAL'),
+                         ('78200-000', 'INTERIOR'),
+                         ('78030-210', 'CAPITAL'),
+                         ('79730-000', 'INTERIOR'),
+                         ('79101-901', 'CAPITAL'),
+                         ('83203-100', 'INTERIOR'),
+                         ('80730-000', 'CAPITAL'),
+                         ('88330-000', 'INTERIOR'),
+                         ('88058-512', 'CAPITAL'),
+                         ('95670-000', 'INTERIOR'),
+                         ('90560-003', 'CAPITAL')])
+def test_zip_code_region(zip_code, region):
+    zip_code = ZipCode(zip_code)
+    assert zip_code.region == region
 
 
 def test_convert_zip_to_str():
