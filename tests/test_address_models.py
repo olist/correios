@@ -24,17 +24,42 @@ from correios.models.address import ZipCode, State, Address, Phone
 def test_basic_zip():
     zip_code = ZipCode("82940150")
     assert zip_code.code == "82940150"
+    assert zip_code.prefix == 82940
+    assert zip_code.sufix == 150
 
 
 def test_sanitize_zip():
     zip_code = ZipCode("82940-150")
     assert zip_code.code == "82940150"
+    assert zip_code.prefix == 82940
+    assert zip_code.sufix == 150
 
 
 @pytest.mark.parametrize('zipcode', ("12345", "123456789", "12.345-000", "12345.000"))
-def test_fail_invalid_zipcode(zipcode):
+def test_fail_invalid_zipcode_format(zipcode):
     with pytest.raises(InvalidZipCodeError):
         ZipCode(zipcode)
+
+
+@pytest.mark.parametrize('zipcode', ("00000-000", "728001-000"))
+def test_fail_invalid_zipcode_range(zipcode):
+    with pytest.raises(InvalidZipCodeError):
+        ZipCode(zipcode)
+
+
+def test_zip_code_state():
+    zip_code = ZipCode("05192-123")
+    assert zip_code.state == 'SP'
+
+
+def test_zip_code_region_capital():
+    zip_code = ZipCode("05192-123")
+    assert zip_code.region == 'capital'
+
+
+def test_zip_code_region_interior():
+    zip_code = ZipCode("77312-123")
+    assert zip_code.region == 'interior'
 
 
 def test_convert_zip_to_str():

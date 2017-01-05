@@ -81,7 +81,7 @@ class TrackingEventFactory(Factory):
 
     timestamp = datetime(2016, 1, 1, 12)
     status = ('PO', '1')
-    location_zip_code = faker.Faker("postcode", locale="pt_BR")
+    location_zip_code = "07192-100"
     location = "CEE"
     city = faker.Faker("city", locale="pt_BR")
     state = faker.Faker("estado_sigla", locale="pt_BR")
@@ -116,7 +116,7 @@ class AddressFactory(Factory):
     number = Faker("building_number", locale="pt_BR")
     city = Faker("city", locale="pt_BR")
     state = Faker("estado_sigla", locale="pt_BR")
-    zip_code = Faker("postcode", locale="pt_BR")
+    zip_code = "07192-100"
     complement = Faker("secondary_address")
     neighborhood = Sequence(lambda n: "Neighborhood #{}".format(n))
     phone = Faker("phone_number", locale="pt_BR")
