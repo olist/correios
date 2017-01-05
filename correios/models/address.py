@@ -28,8 +28,8 @@ STATE_LENGTH = 2
 
 
 class ZipCode:
-    REGION_CAPITAL = 'capital'
-    REGION_INTERIOR = 'interior'
+    REGION_CAPITAL = 'CAPITAL'
+    REGION_INTERIOR = 'INTERIOR'
 
     def __init__(self, code: str) -> None:
         self._code = self._validate(code)
