@@ -1,5 +1,5 @@
-from collections.abc import Container, Iterable, Set, Sized
 from itertools import chain
+from typing import Sized, Iterable, Container, Set
 
 
 class RangeSet(Sized, Iterable, Container):
