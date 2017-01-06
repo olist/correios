@@ -15,7 +15,7 @@ def test_rangeset():
     assert list(RangeSet((1, 3), (4, 6), (7, 9))) == [1, 2, 4, 5, 7, 8]
     assert list(RangeSet((1, 3), RangeSet((4, 6)), range(7, 9))) == [1, 2, 4, 5, 7, 8]
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         RangeSet(1)
 
 

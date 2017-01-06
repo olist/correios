@@ -14,7 +14,8 @@ class RangeSet(Sized, Iterable, Container):
             elif isinstance(r, Iterable) and not isinstance(r, Set):
                 r = [range(*r)]
             else:
-                raise Exception("Invalid argument type {} of argument {!r}".format(type(r), r))
+                msg = "RangeSet argument must be a range, RangeSet or an Iterable, not {}"
+                raise ValueError(msg.format(type(r)))
 
             self.ranges.extend(r)
 
