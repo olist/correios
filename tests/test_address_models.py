@@ -48,7 +48,7 @@ def test_fail_invalid_zipcode_range(zipcode):
 
 
 @pytest.mark.parametrize('zip_code, state', [
-                         ('13560060',  'SP'),
+                         ('13560060', 'SP'),
                          ('04547-003', 'SP'),
                          ('28921-100', 'RJ'),
                          ('22440-033', 'RJ'),

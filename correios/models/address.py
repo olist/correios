@@ -30,6 +30,8 @@ STATE_LENGTH = 2
 class ZipCode:
     REGION_CAPITAL = 'CAPITAL'
     REGION_INTERIOR = 'INTERIOR'
+    ALL = 0
+    CAPITAL = 1
 
     def __init__(self, code: str) -> None:
         self._code = self._validate(code)
@@ -83,13 +85,13 @@ class ZipCode:
     @property
     def state(self):
         for state, postal_data in ZIP_CODE_MAP.items():
-            if self.prefix in postal_data['ranges']:
+            if self.prefix in postal_data[self.ALL]:
                 return state
 
     @property
     def region(self):
         postal_data = ZIP_CODE_MAP[self.state]
-        if self.prefix in postal_data['capital_ranges']:
+        if self.prefix in postal_data[self.CAPITAL]:
             return self.REGION_CAPITAL
         return self.REGION_INTERIOR
 

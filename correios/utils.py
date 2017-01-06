@@ -1,10 +1,9 @@
 from collections.abc import Container, Iterable, Set, Sized
 from itertools import chain
-from typing import Any, Union
 
 
 class RangeSet(Sized, Iterable, Container):
-    def __init__(self, *ranges: Union[range, Any]):
+    def __init__(self, *ranges):
         self.ranges = []
 
         for r in ranges:
