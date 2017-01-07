@@ -14,6 +14,9 @@
 
 
 from decimal import Decimal
+from typing import Dict, Tuple  # noqa
+
+from ..utils import RangeSet
 
 
 TRACKING_PREFIX = {
@@ -1722,3 +1725,116 @@ TRACKING_STATUS = {
         'Acompanhar',
     ),
 }
+
+ZIP_CODE_MAP = {
+    'SP': (
+        RangeSet((1000, 20000)),  # all
+        RangeSet((1000, 6000), (8000, 8500)),  # capital
+    ),
+    'RJ': (
+        RangeSet((20000, 29000)),
+        RangeSet((20000, 23800)),
+    ),
+    'ES': (
+        RangeSet((29000, 30000)),
+        RangeSet((29000, 29100)),
+    ),
+    'MG': (
+        RangeSet((30000, 40000)),
+        RangeSet((30000, 32000)),
+    ),
+    'BA': (
+        RangeSet((40000, 49000)),
+        RangeSet((40000, 42600)),
+    ),
+    'SE': (
+        RangeSet((49000, 50000)),
+        RangeSet((49000, 49100)),
+    ),
+    'PE': (
+        RangeSet((50000, 57000)),
+        RangeSet((50000, 53000)),
+    ),
+    'AL': (
+        RangeSet((57000, 58000)),
+        RangeSet((57000, 57100)),
+    ),
+    'PB': (
+        RangeSet((58000, 59000)),
+        RangeSet((58000, 58100)),
+    ),
+    'RN': (
+        RangeSet((59000, 60000)),
+        RangeSet((59000, 59140)),
+    ),
+    'CE': (
+        RangeSet((60000, 64000)),
+        RangeSet((60000, 61600)),
+    ),
+    'PI': (
+        RangeSet((64000, 65000)),
+        RangeSet((64000, 64100)),
+    ),
+    'MA': (
+        RangeSet((65000, 66000)),
+        RangeSet((65000, 65110)),
+    ),
+    'PA': (
+        RangeSet((66000, 68900)),
+        RangeSet((66000, 67000)),
+    ),
+    'AP': (
+        RangeSet((68900, 69000)),
+        RangeSet((68900, 68915)),
+    ),
+    'AM': (
+        RangeSet((69000, 69300), (69400, 69900)),
+        RangeSet((69000, 69100), (69000, 69100)),
+    ),
+    'RR': (
+        RangeSet((69300, 69400)),
+        RangeSet((69300, 69340)),
+    ),
+    'AC': (
+        RangeSet((69900, 70000)),
+        RangeSet((69900, 69925)),
+    ),
+    'DF': (
+        RangeSet((70000, 72800), (73000, 73700)),
+        RangeSet((70000, 72800), (73000, 73700)),
+    ),
+    'GO': (
+        RangeSet((72800, 73000), (73700, 76800)),
+        RangeSet((74000, 74900)),
+    ),
+    'TO': (
+        RangeSet((77000, 78000)),
+        RangeSet((77000, 77300)),
+    ),
+    'MT': (
+        RangeSet((78000, 78900)),
+        RangeSet((78000, 78110)),
+    ),
+    'RO': (
+        RangeSet((76800, 77000)),
+        RangeSet((76800, 76850)),
+    ),
+    'MS': (
+        RangeSet((79000, 80000)),
+        RangeSet((79000, 79130)),
+    ),
+    'PR': (
+        RangeSet((80000, 88000)),
+        RangeSet((80000, 83000)),
+    ),
+    'SC': (
+        RangeSet((88000, 90000)),
+        RangeSet((88000, 88100)),
+    ),
+    'RS': (
+        RangeSet((90000, 100000)),
+        RangeSet((90000, 92000)),
+    ),
+}  # type: Dict[str, Tuple[RangeSet, RangeSet]]
+
+ZIP_CODES = RangeSet(*(p[0] for p in ZIP_CODE_MAP.values()))

@@ -21,12 +21,18 @@ from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError
+from correios.models.data import ZIP_CODES, ZIP_CODE_MAP
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
 
 
 class ZipCode:
+    REGION_CAPITAL = 'CAPITAL'
+    REGION_INTERIOR = 'INTERIOR'
+    ALL = 0
+    CAPITAL = 1
+
     def __init__(self, code: str) -> None:
         self._code = self._validate(code)
 
@@ -36,9 +42,14 @@ class ZipCode:
 
     def _validate(self, code) -> str:
         if not re.match(r"^\d{5}-?\d{3}$", code):
-            raise InvalidZipCodeError("Invalid ZipCode {}".format(code))
+            raise InvalidZipCodeError("Invalid zipcode {}".format(code))
 
-        return code if len(code) == 8 else code.replace("-", "")
+        code = code.replace("-", "")
+
+        if int(code[:5]) not in ZIP_CODES:
+            raise InvalidZipCodeError("Invalid zipcode prefix {}".format(code[:5]))
+
+        return code
 
     def display(self) -> str:
         return "{}-{}".format(self.code[:5], self.code[-3:])
@@ -62,6 +73,27 @@ class ZipCode:
     def digit(self):
         validator = sum(int(d) for d in self.code)
         return self._next_multiple(validator) - validator
+
+    @property
+    def prefix(self):
+        return int(self.code[:5])
+
+    @property
+    def sufix(self):
+        return int(self.code[5:])
+
+    @property
+    def state(self):
+        for state, postal_data in ZIP_CODE_MAP.items():
+            if self.prefix in postal_data[self.ALL]:
+                return state
+
+    @property
+    def region(self):
+        postal_data = ZIP_CODE_MAP[self.state]
+        if self.prefix in postal_data[self.CAPITAL]:
+            return self.REGION_CAPITAL
+        return self.REGION_INTERIOR
 
     @classmethod
     def create(cls, code: Union['ZipCode', int, str]) -> 'ZipCode':
