@@ -1,5 +1,5 @@
 from itertools import chain
-from typing import Sized, Iterable, Container, Set
+from typing import Container, Iterable, Sized
 
 
 class RangeSet(Sized, Iterable, Container):
@@ -8,16 +8,21 @@ class RangeSet(Sized, Iterable, Container):
 
         for r in ranges:
             if isinstance(r, range):
-                r = [r]
-            elif isinstance(r, RangeSet):
-                r = list(r.ranges)
-            elif isinstance(r, Iterable) and not isinstance(r, Set):
-                r = [range(*r)]
-            else:
+                self.ranges.append(r)
+                continue
+
+            try:
+                element = list(r.ranges)
+            except AttributeError:
+                element = None
+
+            try:
+                element = element or [range(*r)]
+            except:
                 msg = "RangeSet argument must be a range, RangeSet or an Iterable, not {}"
                 raise ValueError(msg.format(type(r)))
 
-            self.ranges.extend(r)
+            self.ranges.extend(element)
 
     def __iter__(self):
         return chain.from_iterable(r for r in self.ranges)
