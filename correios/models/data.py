@@ -963,10 +963,11 @@ TRACKING_STATUS = {
         'Acionar atendimento dos Correios.',
     ),
     ('BDR', 9): (
-        'lost',
+        'delivery_unsuccessful',
         'Objeto não localizado',
         'Favor entrar em contato com os Correios.',
         'Acionar atendimento dos Correios.',
+        'Objeto ainda não chegou na unidade'
     ),
     ('EST', 9): (
         'ignore_last_entry',
