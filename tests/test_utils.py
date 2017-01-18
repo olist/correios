@@ -1,6 +1,8 @@
 import pytest
 
-from correios.utils import RangeSet
+from correios.utils import capitalize_phrase, RangeSet
+
+phrase = 'FOo bAr BAZ qux'
 
 
 @pytest.fixture
@@ -41,3 +43,8 @@ def test_rangeset_does_not_contain(element, rangeset):
 
 def test_rangeset_iter(rangeset):
     assert list(rangeset) == [1, 2, 4, 5, 7, 8]
+
+
+@pytest.mark.parametrize('phrase', (phrase, phrase.upper(), phrase.lower()))
+def test_capitalize_phrase(phrase):
+    assert capitalize_phrase(phrase) == 'Foo Bar Baz Qux'
