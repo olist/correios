@@ -281,8 +281,14 @@ class Address:
 
     @property
     def basic_address(self):
-        address = "{}, {}, {}, {}".format(self.street, self.number,
-                                          self.complement[:20], self.neighborhood)
+        number = self.number
+        if self.complement:
+            number = "{} {}".format(number, self.complement)
+
+        address = "{}, {}, {}".format(self.street, number, self.neighborhood)
+        if len(address) <= 60:
+            address = "{}, {}\n {}".format(self.street, number, self.neighborhood)
+
         return capitalize_phrase(address)
 
     @property

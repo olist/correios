@@ -380,14 +380,12 @@ class ShippingLabel:
                         "Assinatura: __________________ Documento: _______________")
     sender_header = "DESTINATÁRIO"
     carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
-    receiver_data_template = ("{receiver.name!s:>.40}<br/>"
-                              "{receiver.basic_address!s:>.40}<br/>"
-                              "{receiver.complement!s:>.20} {receiver.neighborhood!s:>.20}<br/>"
+    receiver_data_template = ("{receiver.name!s:>.45}<br/>"
+                              "{receiver.basic_address!s:>.95}<br/>"
                               "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
 
     sender_data_template = ("<b>Remetente:</b> {sender.name}<br/>"
-                            "{sender.basic_address!s:>.40}<br/>"
-                            "{sender.complement!s:>.20} - {sender.neighborhood!s:>.20}<br/>"
+                            "{sender.basic_address!s:>.95}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
     def __init__(self,
@@ -493,10 +491,14 @@ class ShippingLabel:
         return self.tracking_code.splitted
 
     def get_receiver_data(self):
-        return self.receiver_data_template.format(receiver=self.receiver)
+        data = self.receiver_data_template.format(receiver=self.receiver)
+        data = data.replace('\n', '<br/>')
+        return data
 
     def get_sender_data(self):
-        return self.sender_data_template.format(sender=self.sender)
+        data = self.sender_data_template.format(sender=self.sender)
+        data = data.replace('\n', '<br/>')
+        return data
 
     def _get_extra_service_info(self) -> str:
         extra_services_numbers = ["00" for _ in range(6)]

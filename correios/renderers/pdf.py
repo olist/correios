@@ -161,7 +161,7 @@ class ShippingLabelFlowable(Flowable):
         # receiver
         receiver_style = ParagraphStyle("receiver", fontName="Helvetica", fontSize=10, leading=15)
         text = Paragraph(self.shipping_label.get_receiver_data(), style=receiver_style)
-        text.wrap(self.width, 22 * mm)
+        text.wrap(self.width - 5 * mm, 24 * mm)
         text.drawOn(canvas, self.x1 + 5 * mm, self.y2 - (98 * mm))
 
         # receiver zip barcode
