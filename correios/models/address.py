@@ -22,6 +22,7 @@ from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError
 from correios.models.data import ZIP_CODES, ZIP_CODE_MAP
+from correios.utils import capitalize_phrase
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -280,7 +281,9 @@ class Address:
 
     @property
     def basic_address(self):
-        return "{}, {}".format(self.street, self.number)
+        address = "{}, {}, {}, {}".format(self.street, self.number,
+                                          self.complement[:20], self.neighborhood)
+        return capitalize_phrase(address)
 
     @property
     def display_address(self) -> Tuple[str, str]:
