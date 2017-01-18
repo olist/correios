@@ -2,6 +2,10 @@ from itertools import chain
 from typing import Container, Iterable, Sized
 
 
+def capitalize_phrase(phrase):
+    return ' '.join(word.capitalize() for word in phrase.split())
+
+
 class RangeSet(Sized, Iterable, Container):
     def __init__(self, *ranges):
         self.ranges = []
