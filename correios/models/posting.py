@@ -491,14 +491,10 @@ class ShippingLabel:
         return self.tracking_code.splitted
 
     def get_receiver_data(self):
-        data = self.receiver_data_template.format(receiver=self.receiver)
-        data = data.replace('\n', '<br/>')
-        return data
+        return self.receiver_data_template.format(receiver=self.receiver).replace('\n', '<br/>')
 
     def get_sender_data(self):
-        data = self.sender_data_template.format(sender=self.sender)
-        data = data.replace('\n', '<br/>')
-        return data
+        return self.sender_data_template.format(sender=self.sender).replace('\n', '<br/>')
 
     def _get_extra_service_info(self) -> str:
         extra_services_numbers = ["00" for _ in range(6)]
