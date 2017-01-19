@@ -181,7 +181,7 @@ class ShippingLabelFlowable(Flowable):
         canvas.line(self.x1, self.y2 - (118 * mm), self.x2, self.y2 - (118 * mm))
         sender_style = ParagraphStyle("sender", fontName="Helvetica", fontSize=9)
         text = Paragraph(self.shipping_label.get_sender_data(), style=sender_style)
-        text.wrap(self.width, 22 * mm)
+        text.wrap(self.width - 5 * mm, 22 * mm)
         text.drawOn(canvas, self.x1 + 5 * mm, self.y1 + 2 * mm)
 
         # border
