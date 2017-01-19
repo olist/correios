@@ -6,6 +6,17 @@ def capitalize_phrase(phrase):
     return ' '.join(word.capitalize() for word in phrase.split(' '))
 
 
+def rreplace(string, old, new, count=None):
+    """
+    Return a copy of string with all occurences of substring
+    old replace by new starting from the right. If the optional
+    argument count is given only the first count occurences are
+    replaced.
+    """
+
+    return string[::-1].replace(old[::-1], new[::-1], count)[::-1]
+
+
 class RangeSet(Sized, Iterable, Container):
     def __init__(self, *ranges):
         self.ranges = []

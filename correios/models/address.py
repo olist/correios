@@ -281,19 +281,14 @@ class Address:
 
     @property
     def basic_address(self):
-        number = self.number
         if self.complement:
-            number = "{} {}".format(number, self.complement)
+            number = "{} - {}".format(self.number, self.complement)
 
-        address = "{}, {}, {}".format(self.street, number, self.neighborhood)
-        if len(address) <= 60:
-            address = "{}, {}\n {}".format(self.street, number, self.neighborhood)
-
-        return capitalize_phrase(address)
+        return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
 
     @property
     def display_address(self) -> Tuple[str, str]:
-        address = "{}, {} {}".format(self.street, self.raw_number, self.complement)
+        address = "{}, {} - {}".format(self.street, self.raw_number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
         return address.strip(), city.strip()
 
