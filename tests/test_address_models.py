@@ -350,3 +350,41 @@ def test_address_number_handling(raw, filtered, number, zip_complement):
     assert address.filtered_number == filtered
     assert address.number == number
     assert address.zip_complement == zip_complement
+
+
+def test_address_basic_address():
+    address = Address(
+        name="John Doe",
+        street="RUA dos Bobos",
+        number="1234",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+        neighborhood="VILA Vileza",
+        complement="AP 01",
+    )
+
+    assert '\n' in address.basic_address
+    assert 'Rua' in address.basic_address
+    assert 'Vila' in address.basic_address
+    assert '1234' in address.basic_address
+    assert 'Ap 01' in address.basic_address
+
+
+def test_address_basic_address_edge_case():
+    address = Address(
+        name="John Doe",
+        street="RUA Professor José Caetano dos Santos Mascarenhas",
+        number="1234",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+        neighborhood="VILA Vileza",
+        complement="AP 01",
+    )
+
+    assert '\n' not in address.basic_address
+    assert 'Rua' in address.basic_address
+    assert 'Vila' in address.basic_address
+    assert '1234' in address.basic_address
+    assert 'Ap 01' in address.basic_address
