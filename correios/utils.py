@@ -2,11 +2,11 @@ from itertools import chain
 from typing import Container, Iterable, Sized
 
 
-def capitalize_phrase(phrase):
+def capitalize_phrase(phrase: str) -> str:
     return ' '.join(word.capitalize() for word in phrase.split(' '))
 
 
-def rreplace(string, old, new, count=None):
+def rreplace(string: str, old: str, new: str, count: int = 0) -> str:
     """
     Return a copy of string with all occurences of substring
     old replace by new starting from the right. If the optional
