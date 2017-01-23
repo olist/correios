@@ -18,7 +18,8 @@ from decimal import Decimal
 import pytest
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError
-from correios.models.address import ZipCode, State, Address, Phone
+from correios.models.address import (ZipCode, State, Address, Phone, ReceiverAddress,
+                                     SenderAddress)
 
 
 def test_basic_zip():
@@ -352,7 +353,7 @@ def test_address_number_handling(raw, filtered, number, zip_complement):
     assert address.zip_complement == zip_complement
 
 
-def test_address_basic_address():
+def test_address_label_address():
     address = Address(
         name="John Doe",
         street="RUA dos Bobos",
@@ -364,15 +365,35 @@ def test_address_basic_address():
         complement="AP 01",
     )
 
-    assert '\n' in address.basic_address
-    assert 'Rua' in address.basic_address
-    assert 'Vila' in address.basic_address
-    assert '1234' in address.basic_address
-    assert 'Ap 01' in address.basic_address
+    assert 'Rua' in address.label_address
+    assert 'Vila' in address.label_address
+    assert '1234' in address.label_address
+    assert 'Ap 01' in address.label_address
 
 
-def test_address_basic_address_edge_case():
-    address = Address(
+@pytest.mark.parametrize('address_class', (ReceiverAddress, SenderAddress))
+def test_custom_address_label_address(address_class):
+    address = address_class(
+        name="John Doe",
+        street="RUA dos Bobos",
+        number="1234",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+        neighborhood="VILA Vileza",
+        complement="AP 01",
+    )
+
+    assert '<br/>' in address.label_address
+    assert 'Rua' in address.label_address
+    assert 'Vila' in address.label_address
+    assert '1234' in address.label_address
+    assert 'Ap 01' in address.label_address
+
+
+@pytest.mark.parametrize('address_class', (ReceiverAddress, SenderAddress))
+def test_custom_address_label_address_long_street_name(address_class):
+    address = address_class(
         name="John Doe",
         street="RUA Professor José Caetano dos Santos Mascarenhas",
         number="1234",
@@ -383,8 +404,8 @@ def test_address_basic_address_edge_case():
         complement="AP 01",
     )
 
-    assert '\n' not in address.basic_address
-    assert 'Rua' in address.basic_address
-    assert 'Vila' in address.basic_address
-    assert '1234' in address.basic_address
-    assert 'Ap 01' in address.basic_address
+    assert '<br/>' not in address.label_address
+    assert 'Rua' in address.label_address
+    assert 'Vila' in address.label_address
+    assert '1234' in address.label_address
+    assert 'Ap 01' in address.label_address
