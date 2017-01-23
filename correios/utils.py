@@ -14,7 +14,11 @@ def rreplace(string: str, old: str, new: str, count: int = 0) -> str:
     replaced.
     """
 
-    return string[::-1].replace(old[::-1], new[::-1], count)[::-1]
+    reverse = string[::-1]
+    if count:
+        return reverse.replace(old[::-1], new[::-1], count)[::-1]
+
+    return reverse.replace(old[::-1], new[::-1])[::-1]
 
 
 class RangeSet(Sized, Iterable, Container):
