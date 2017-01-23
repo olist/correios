@@ -385,7 +385,7 @@ class ShippingLabel:
                               "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
 
     sender_data_template = ("<b>Remetente:</b> {sender.name}<br/>"
-                            "{receiver.label_address!s:>.95}<br/>"
+                            "{sender.label_address!s:>.95}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
     def __init__(self,
