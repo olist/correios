@@ -14,6 +14,7 @@
 
 
 from decimal import Decimal
+import warnings
 
 import pytest
 
@@ -365,10 +366,17 @@ def test_address_label_address():
         complement="AP 01",
     )
 
-    assert 'Rua' in address.label_address
-    assert 'Vila' in address.label_address
-    assert '1234' in address.label_address
-    assert 'Ap 01' in address.label_address
+    with warnings.catch_warnings(record=True) as captured_warnings:
+        warnings.simplefilter("always")
+
+        assert "Rua" in address.label_address
+        assert "Vila" in address.label_address
+        assert "1234" in address.label_address
+        assert "Ap 01" in address.label_address
+
+        assert len(captured_warnings) == 4
+        assert all(w.category == DeprecationWarning for w in captured_warnings)
+        assert all("deprecated" in str(w.message) for w in captured_warnings)
 
 
 @pytest.mark.parametrize('address_class', (ReceiverAddress, SenderAddress))

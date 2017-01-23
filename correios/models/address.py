@@ -16,6 +16,7 @@
 from decimal import Decimal
 import re
 from typing import List, Union, Tuple
+import warnings
 
 from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
@@ -288,7 +289,10 @@ class Address:
 
     @property
     def label_address(self) -> str:
-        template = ("{address.street!s:>.40} {address.number!s:>.8}<br/>"
+        msg = "{}.label_address is going to be deprecated. Make sure you use SendAddress or ReceiverAddress"
+        warnings.warn(msg.format(type(self).__name__), DeprecationWarning)
+
+        template = ("{address.street!s:>.40} {address.number!s:>.8}<br/> "
                     "{address.complement!s:>.20} {address.neighborhood!s:>.28}")
         return capitalize_phrase(template.format(address=self))
 
