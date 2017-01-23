@@ -27,7 +27,6 @@ from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidPackageSequenceError, InvalidTrackingCodeError,
                                  PostingListError, InvalidPackageDimensionsError,
                                  InvalidPackageWeightError)
-from correios.utils import rreplace
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
@@ -382,11 +381,11 @@ class ShippingLabel:
     sender_header = "DESTINATÁRIO"
     carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
     receiver_data_template = ("{receiver.name!s:>.45}<br/>"
-                              "{basic_address!s:>.95}<br/>"
+                              "{receiver.label_address!s:>.95}<br/>"
                               "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
 
     sender_data_template = ("<b>Remetente:</b> {sender.name}<br/>"
-                            "{basic_address!s:>.95}<br/>"
+                            "{receiver.label_address!s:>.95}<br/>"
                             "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
 
     def __init__(self,
@@ -492,20 +491,10 @@ class ShippingLabel:
         return self.tracking_code.splitted
 
     def get_receiver_data(self):
-        basic_address = self.receiver.basic_address
-
-        if len(basic_address) <= 55:
-            basic_address = rreplace(basic_address, ',', '<br/>', count=1)
-
-        return self.receiver_data_template.format(receiver=self.receiver, basic_address=basic_address)
+        return self.receiver_data_template.format(receiver=self.receiver)
 
     def get_sender_data(self):
-        basic_address = self.sender.basic_address
-
-        if len(basic_address) <= 65:
-            basic_address = rreplace(basic_address, ',', '<br/>', count=1)
-
-        return self.sender_data_template.format(sender=self.sender, basic_address=basic_address)
+        return self.sender_data_template.format(sender=self.sender)
 
     def _get_extra_service_info(self) -> str:
         extra_services_numbers = ["00" for _ in range(6)]
