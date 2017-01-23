@@ -16,12 +16,14 @@
 from decimal import Decimal
 import re
 from typing import List, Union, Tuple
+import warnings
 
 from phonenumbers import NumberParseException
 from phonenumbers import PhoneNumberFormat, parse, format_number
 
 from correios.exceptions import InvalidZipCodeError, InvalidStateError
 from correios.models.data import ZIP_CODES, ZIP_CODE_MAP
+from correios.utils import capitalize_phrase, rreplace
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -279,12 +281,24 @@ class Address:
         return self.zip_code.display()
 
     @property
-    def basic_address(self):
-        return "{}, {}".format(self.street, self.number)
+    def basic_address(self) -> str:
+        if self.complement:
+            number = "{} - {}".format(self.number, self.complement)
+
+        return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
+
+    @property
+    def label_address(self) -> str:
+        msg = "{}.label_address is going to be deprecated. Make sure you use SendAddress or ReceiverAddress"
+        warnings.warn(msg.format(type(self).__name__), DeprecationWarning)
+
+        template = ("{address.street!s:>.40} {address.number!s:>.8}<br/> "
+                    "{address.complement!s:>.20} {address.neighborhood!s:>.28}")
+        return capitalize_phrase(template.format(address=self))
 
     @property
     def display_address(self) -> Tuple[str, str]:
-        address = "{}, {} {}".format(self.street, self.raw_number, self.complement)
+        address = "{}, {} - {}".format(self.street, self.raw_number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
         return address.strip(), city.strip()
 
@@ -299,3 +313,25 @@ class Address:
     @property
     def zip_complement(self) -> str:
         return self.filtered_number or "0"
+
+
+class ReceiverAddress(Address):
+    @property
+    def label_address(self) -> str:
+        label_address = self.basic_address
+
+        if len(label_address) <= 55:
+            label_address = rreplace(label_address, ',', '<br/>', count=1)
+
+        return label_address
+
+
+class SenderAddress(Address):
+    @property
+    def label_address(self) -> str:
+        label_address = self.basic_address
+
+        if len(label_address) <= 60:
+            label_address = rreplace(label_address, ',', '<br/>', count=1)
+
+        return label_address
