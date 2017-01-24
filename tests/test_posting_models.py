@@ -161,8 +161,8 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert isinstance(shipping_label.symbol, Image)
 
     assert len(shipping_label.get_datamatrix_info()) == 164  # datamatrix info size accordingly with documentation
-    assert shipping_label.get_sender_data().count("<br/>") == 3
-    assert shipping_label.get_receiver_data().count("<br/>") == 3
+    assert shipping_label.get_sender_data().count("<br/>") >= 2
+    assert shipping_label.get_receiver_data().count("<br/>") >= 2
 
     assert repr(shipping_label) == "<ShippingLabel tracking='{!s}'>".format(shipping_label.tracking_code)
 
