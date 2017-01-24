@@ -21,7 +21,7 @@ from factory import Factory, SubFactory, Faker, LazyFunction, Sequence, faker
 from pytest_factoryboy import register
 
 from correios.models import data
-from correios.models.address import Address
+from correios.models.address import Address, ReceiverAddress, SenderAddress
 from correios.models.data import TRACKING_PREFIX
 from correios.models.posting import (PostingList, Package, ShippingLabel, TrackingCode,
                                      TrackingEvent)
@@ -126,9 +126,19 @@ class AddressFactory(Factory):
     longitude = Faker("longitude", locale="pt_BR")
 
 
+class ReceiverAddressFactory(AddressFactory):
+    class Meta:
+        model = ReceiverAddress
+
+
+class SenderAddressFactory(AddressFactory):
+    class Meta:
+        model = SenderAddress
+
+
 register(AddressFactory, "address")
-register(AddressFactory, "sender_address")
-register(AddressFactory, "receiver_address")
+register(ReceiverAddressFactory, "receiver_address")
+register(SenderAddressFactory, "sender_address")
 
 _services = [
     data.SERVICE_PAC,
@@ -158,8 +168,8 @@ class ShippingLabelFactory(Factory):
         model = ShippingLabel
 
     posting_card = SubFactory(PostingCardFactory)
-    sender = LazyFunction(AddressFactory.build)
-    receiver = LazyFunction(AddressFactory.build)
+    sender = LazyFunction(SenderAddressFactory.build)
+    receiver = LazyFunction(ReceiverAddressFactory.build)
     service = LazyFunction(lambda: random.choice(_services))
     tracking_code = SubFactory(TrackingCodeFactory)
     package = SubFactory(PackageFactory)

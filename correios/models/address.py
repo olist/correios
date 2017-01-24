@@ -282,6 +282,7 @@ class Address:
 
     @property
     def basic_address(self) -> str:
+        number = self.number
         if self.complement:
             number = "{} - {}".format(self.number, self.complement)
 
