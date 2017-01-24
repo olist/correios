@@ -310,6 +310,7 @@ def test_basic_address():
     assert address.state == "RJ"
     assert address.zip_code == "12345-678"
     assert address.zip_code_display == "12345-678"
+    assert address.basic_address == "Rua Dos Bobos, 5 - Apto. 3, Centro"
 
 
 def test_basic_address_only_mandatory_args():
@@ -335,6 +336,36 @@ def test_basic_address_only_mandatory_args():
     assert address.cellphone == ""
     assert address.latitude == Decimal("0.0")
     assert address.longitude == Decimal("0.0")
+    assert address.basic_address == "Rua Dos Bobos, 0"
+
+
+def test_basic_address_with_neighborhood():
+    address = Address(
+        name="John Doe",
+        street="Rua dos Bobos",
+        number="5",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+        neighborhood="Vila Nau",
+        complement="ap 5",
+    )
+
+    assert address.basic_address == "Rua Dos Bobos, 5 - Ap 5, Vila Nau"
+
+
+def test_basic_address_with_neighborhood_without_complement():
+    address = Address(
+        name="John Doe",
+        street="Rua dos Bobos",
+        number="5",
+        city="Vinicius de Moraes",
+        state="RJ",
+        zip_code="12345-678",
+        neighborhood="Vila Nau",
+    )
+
+    assert address.basic_address == "Rua Dos Bobos, 5, Vila Nau"
 
 
 @pytest.mark.parametrize("raw,filtered,number,zip_complement", (
