@@ -286,7 +286,9 @@ class Address:
         if self.complement:
             number = "{} - {}".format(self.number, self.complement)
 
-        return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
+        if self.neighborhood:
+            return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
+        return capitalize_phrase("{}, {}".format(self.street, number))
 
     @property
     def label_address(self) -> str:
