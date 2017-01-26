@@ -315,7 +315,7 @@ def test_basic_address():
 
 def test_basic_address_only_mandatory_args():
     address = Address(
-        name="John Doe",
+        name="JOHN DOE",
         street="Rua dos Bobos",
         number="0",
         city="Vinicius de Moraes",
@@ -323,7 +323,7 @@ def test_basic_address_only_mandatory_args():
         zip_code="12345-678",
     )
 
-    assert address.name == "John Doe"
+    assert address.name == "JOHN DOE"
     assert address.street == "Rua dos Bobos"
     assert address.number == "0"
     assert address.city == "Vinicius de Moraes"
@@ -337,6 +337,7 @@ def test_basic_address_only_mandatory_args():
     assert address.latitude == Decimal("0.0")
     assert address.longitude == Decimal("0.0")
     assert address.basic_address == "Rua Dos Bobos, 0"
+    assert address.label_name == "John Doe"
 
 
 def test_basic_address_with_neighborhood():
