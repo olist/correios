@@ -300,6 +300,10 @@ class Address:
         return capitalize_phrase(template.format(address=self))
 
     @property
+    def label_name(self) -> str:
+        return capitalize_phrase(self.name)
+
+    @property
     def display_address(self) -> Tuple[str, str]:
         address = "{}, {} - {}".format(self.street, self.raw_number, self.complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
