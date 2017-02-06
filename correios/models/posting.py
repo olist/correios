@@ -331,6 +331,9 @@ class Package:
         if service and service.max_weight and weight > service.max_weight:
             raise InvalidPackageWeightError("Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight))
 
+        if service and service.min_weight and weight > service.min_weight:
+            raise InvalidPackageWeightError("The minimum weight is {!r}g".format(service.min_weight))
+
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
                 raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}x{}".format(width, height, length))
