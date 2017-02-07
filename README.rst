@@ -13,4 +13,4 @@ correios
    :target: https://coveralls.io/github/olist/correios?branch=master
    :alt: Latest Coveralls coverage status
 
-A client library for Brazilian Correios APIs and services.
+A client library for Brazilian Correios APIs (SIGEP and SRO) and services.
