@@ -209,7 +209,7 @@ def test_basic_service():
     assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
     assert isinstance(service.symbol_image, Image)
     assert service.max_weight == 10000
-    assert service min_weight == 1
+    assert service.min_weight == 1
 
 
 def test_sanitize_service():
