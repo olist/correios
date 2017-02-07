@@ -26,7 +26,7 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidPackageSequenceError, InvalidTrackingCodeError,
                                  PostingListError, InvalidPackageDimensionsError,
-                                 InvalidPackageWeightError)
+                                 InvalidPackageWeightError, InvalidMinPackageWeightError)
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
@@ -332,7 +332,7 @@ class Package:
             raise InvalidPackageWeightError("Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight))
 
         if service and service.min_weight and weight < service.min_weight:
-            raise InvalidPackageWeightError("The minimum weight is {!r}g".format(service.min_weight))
+            raise InvalidMinPackageWeightError("The minimum weight is {!r}g".format(service.min_weight))
 
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
