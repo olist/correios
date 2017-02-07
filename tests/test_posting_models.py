@@ -24,7 +24,8 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidTrackingCodeError, InvalidPackageSequenceError,
                                  InvalidPackageDimensionsError, PostingListError,
-                                 InvalidPackageWeightError, MaximumDeclaredValueError)
+                                 InvalidPackageWeightError, MaximumDeclaredValueError,
+                                 InvalidMinPackageWeightError)
 from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
                                   TRACKING_EVENT_TYPES, EXTRA_SERVICE_VD)
 from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
@@ -281,6 +282,11 @@ def test_package_weight_validation():
 def test_fail_package_weight_validation():
     with pytest.raises(InvalidPackageWeightError):
         Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=50000)
+
+
+def test_fail_package_when_weight_is_minor_than_1g():
+    with pytest.raises(InvalidMinPackageWeightError):
+        Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=0)
 
 
 @pytest.mark.parametrize("sequence", [

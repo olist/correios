@@ -140,6 +140,7 @@ class Service:
                  display_name: Optional[str] = "",
                  symbol: Optional[str] = None,
                  max_weight: Optional[int] = None,
+                 min_weight: Optional[int] = None,
                  min_declared_value: Optional[Decimal] = Decimal("0.00"),
                  max_declared_value: Optional[Decimal] = Decimal("0.00"),
                  default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None) -> None:
@@ -151,6 +152,7 @@ class Service:
         self.symbol = symbol or "economic"
         self._symbol_image = None  # type: Optional[Image]
         self.max_weight = max_weight
+        self.min_weight = min_weight
         self.min_declared_value = min_declared_value
         self.max_declared_value = max_declared_value
 
