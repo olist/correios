@@ -345,8 +345,7 @@ def test_cylinder_package_change_dimensions_below_minimum(package, dimension, va
     ("length", 0, exceptions.InvalidMinPackageDimensionsError),
     ("length", posting.MAX_LENGTH + 1, exceptions.InvalidMaxPackageDimensionsError),
     ("weight", 0, exceptions.InvalidMinPackageWeightError),
-    ("weight", 100_000, exceptions.InvalidMaxPackageWeightError),
-
+    ("weight", 100000, exceptions.InvalidMaxPackageWeightError),
 ])
 def test_fail_box_package_change_invalid_dimensions(package, dimension, value, exc):
     with pytest.raises(exc):
