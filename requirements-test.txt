@@ -4,4 +4,4 @@ pytest
 pytest-cov
 pytest-factoryboy
 tox
-vcrpy
+vcrpy==1.10.5
