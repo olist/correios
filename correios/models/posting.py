@@ -274,31 +274,83 @@ class Package:
             raise exceptions.InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
 
         self.package_type = package_type
-        self.width = math.ceil(width)  # cm
-        self.height = math.ceil(height)  # cm
-        self.length = math.ceil(length)  # cm
-        self.diameter = math.ceil(diameter)  # in cm
-        self.weight = math.ceil(weight)  # in grams
+
+        self.real_width = width  # cm
+        self.real_height = height  # cm
+        self.real_length = length  # cm
+        self.real_diameter = diameter  # in cm
+        self.real_weight = diameter  # in grams
         self.sequence = sequence
         self.service = service
 
     @property
-    def volumetric_weight(self):
+    def width(self):
+        return max(MIN_WIDTH, int(math.ceil(self.real_width)))
+
+    @width.setter
+    def width(self, width):
+        Package._validate_dimension("width", width, MAX_WIDTH)
+        self.real_width = width
+
+    @property
+    def height(self):
+        return max(MIN_HEIGHT, int(math.ceil(self.real_height)))
+
+    @height.setter
+    def height(self, height):
+        Package._validate_dimension("height", height, MAX_HEIGHT)
+        self.real_height = height
+
+    @property
+    def length(self):
+        return max(MIN_LENGTH, int(math.ceil(self.real_length)))
+
+    @length.setter
+    def length(self, length):
+        Package._validate_dimension("length", length, MAX_LENGTH)
+        self.real_length = length
+
+    @property
+    def diameter(self):
+        return max(MIN_DIAMETER, int(math.ceil(self.real_diameter)))
+
+    @diameter.setter
+    def diameter(self, diameter):
+        Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
+        self.real_diameter = diameter
+
+    @property
+    def weight(self):
+        return int(math.ceil(self.real_weight))
+
+    @weight.setter
+    def weight(self, weight):
+        if weight <= 0:
+            raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
+
+        if self.service and weight > self.service.max_weight:
+            raise exceptions.InvalidMaxPackageWeightError(
+                "Max weight exceeded {!r}g (max. {!r}g)".format(weight, self.service.max_weight)
+            )
+        self.real_weight = weight
+
+    @property
+    def volumetric_weight(self) -> int:
         return Package.calculate_volumetric_weight(self.width, self.height, self.length)
 
     @property
-    def posting_weight(self):
+    def posting_weight(self) -> int:
         return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
 
     @classmethod
-    def calculate_volumetric_weight(cls, width, height, length):
-        return math.ceil((width * height * length) / IATA_COEFICIENT)
+    def calculate_volumetric_weight(cls, width, height, length) -> int:
+        return int(math.ceil((width * height * length) / IATA_COEFICIENT))
 
     @classmethod
-    def calculate_posting_weight(cls, weight, volumetric_weight):
+    def calculate_posting_weight(cls, weight, volumetric_weight) -> int:
         if volumetric_weight <= VOLUMETRIC_WEIGHT_THRESHOLD:
             return weight
-        return math.ceil(max(volumetric_weight, weight))
+        return int(math.ceil(max(volumetric_weight, weight)))
 
     @classmethod
     def calculate_insurance(cls,
@@ -327,8 +379,8 @@ class Package:
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
 
-        if service and service.max_weight and weight > service.max_weight:
-            raise exceptions.InvalidPackageWeightError(
+        if weight <= 0 or (service and service.max_weight and weight > service.max_weight):
+            raise exceptions.InvalidMaxPackageWeightError(
                 "Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight)
             )
 
@@ -345,10 +397,10 @@ class Package:
                     "Package does not use diameter: {}".format(diameter)
                 )
 
-            cls._validate_dimension("width", width, MIN_WIDTH, MAX_WIDTH)
-            cls._validate_dimension("height", height, MIN_HEIGHT, MAX_HEIGHT)
-            cls._validate_dimension("length", length, MIN_LENGTH, MAX_LENGTH)
-            cls._validate_dimension("sum of dimensions", width + height + length, MIN_SIZE, MAX_SIZE)
+            cls._validate_dimension("width", width, MAX_WIDTH)
+            cls._validate_dimension("height", height, MAX_HEIGHT)
+            cls._validate_dimension("length", length, MAX_LENGTH)
+            cls._validate_dimension("sum of dimensions", width + height + length, MAX_SIZE)
             return
 
         # Volume.TYPE_CYLINDER
@@ -357,14 +409,14 @@ class Package:
                 "Cylinder does not use width/height: {}x{}".format(width, height)
             )
 
-        cls._validate_dimension("length", length, MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH)
-        cls._validate_dimension("diameter", diameter, MIN_DIAMETER, MAX_DIAMETER)
-        cls._validate_dimension("cylinder size", length + 2 * diameter, 0, MAX_CYLINDER_SIZE)
+        cls._validate_dimension("length", length, MAX_CYLINDER_LENGTH)
+        cls._validate_dimension("diameter", diameter, MAX_DIAMETER)
+        cls._validate_dimension("cylinder size", length + 2 * diameter, MAX_CYLINDER_SIZE)
 
     @classmethod
-    def _validate_dimension(cls, name, value, minimum, maximum):
-        msg = "Invalid {} (range {}~{}): {}".format(name, minimum, maximum, value)
-        if value < minimum:
+    def _validate_dimension(cls, name, value, maximum):
+        msg = "Invalid {} (range 0~{}): {}".format(name, maximum, value)
+        if value <= 0:
             raise exceptions.InvalidMinPackageDimensionsError(msg)
 
         if value > maximum:

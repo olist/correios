@@ -157,6 +157,7 @@ class PackageFactory(Factory):
     height = LazyFunction(lambda: random.randint(2, 30))
     length = LazyFunction(lambda: random.randint(16, 30))
     weight = LazyFunction(lambda: random.randint(1, 100) * 100)
+    service = LazyFunction(lambda: random.choice(_services))
     sequence = Sequence(lambda n: (n, n + 1))
 
 
