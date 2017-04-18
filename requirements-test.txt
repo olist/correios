@@ -3,5 +3,5 @@ mypy-lang
 pytest
 pytest-cov
 pytest-factoryboy
-tox
+tox==2.7.0
 vcrpy
