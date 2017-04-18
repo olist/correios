@@ -1,6 +1,11 @@
-requests
-suds-jurko
 phonenumbers
+Pillow
+
+# pdf
 reportlab
 hubarcode
+
+# api
+requests
+suds-jurko
 lxml
