@@ -15,14 +15,21 @@
 
 import os
 
+import pytest
+
 from correios.models.posting import PostingList
 from correios.models.user import PostingCard
-from correios.renderers.pdf import PostingReportPDFRenderer
-from tests.conftest import ShippingLabelFactory
+from .conftest import ShippingLabelFactory
+
+try:
+    from correios.renderers.pdf import PostingReportPDFRenderer
+except ImportError:
+    PostingReportPDFRenderer = None
 
 TESTDIR = os.path.dirname(__file__)
 
 
+@pytest.mark.skipif(not PostingReportPDFRenderer, reason="PDF generation support disabled")
 def test_render_basic_shipping_label():
     shipping_labels_renderer = PostingReportPDFRenderer()
     shipping_labels = [ShippingLabelFactory.build() for _ in range(5)]
@@ -40,6 +47,7 @@ def test_render_basic_shipping_label():
     assert bytes(pdf).startswith(b"%PDF-1.4")
 
 
+@pytest.mark.skipif(not PostingReportPDFRenderer, reason="PDF generation support disabled")
 def test_render_basic_posting_list(posting_list: PostingList, posting_card: PostingCard):
     posting_list.close_with_id(number=12345)
     shipping_labels_renderer = PostingReportPDFRenderer()
@@ -51,6 +59,7 @@ def test_render_basic_posting_list(posting_list: PostingList, posting_card: Post
     assert bytes(pdf).startswith(b"%PDF-1.4")
 
 
+@pytest.mark.skipif(not PostingReportPDFRenderer, reason="PDF generation support disabled")
 def test_render_all_posting_docs(posting_list: PostingList, posting_card: PostingCard):
     posting_list.close_with_id(number=12345)
     shipping_labels_renderer = PostingReportPDFRenderer()
