@@ -8,4 +8,4 @@ hubarcode
 # api
 requests
 suds-jurko
-lxml
+lxml==3.7.3
