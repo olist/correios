@@ -2,7 +2,7 @@ phonenumbers==8.4.1
 Pillow==4.1.0
 
 # pdf
-reportlab
+reportlab==3.4.0
 hubarcode
 
 # api
