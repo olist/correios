@@ -2,6 +2,6 @@
 mypy-lang
 pytest
 pytest-cov
-pytest-factoryboy
+pytest-factoryboy==1.3.1
 tox
 vcrpy
