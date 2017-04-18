@@ -16,13 +16,30 @@
 from setuptools import setup, find_packages
 
 
-with open("requirements.txt") as reqs:
-    install_requires = reqs.readlines()
+def load_requirements(filename):
+    install_requires = {}
+    section = "install_requires"
 
+    reqs = open(filename)
+    for raw_line in reqs:
+        line = raw_line.strip()
+        if not line:
+            continue
+
+        if line.startswith("#"):
+            section = line.replace("#", "").strip()
+            continue
+
+        install_requires.setdefault(section, []).append(line)
+
+    return install_requires
+
+
+requirements = load_requirements("requirements.txt")
 
 setup(
     name="correios",
-    version="0.20.2",
+    version="1.0.0",
     url="https://github.com/osantana/correios",
 
     author="Osvaldo Santana Neto",
@@ -32,10 +49,10 @@ setup(
     long_description=open('README.rst').read(),
 
     packages=find_packages(),
-
-    install_requires=install_requires,
-
     include_package_data=True,
+
+    install_requires=requirements.pop("install_requires"),
+    extras_requires=requirements,
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
