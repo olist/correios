@@ -8,4 +8,4 @@ hubarcode==1.0.0
 # api
 requests==2.13.0
 suds-jurko==0.6
-lxml
+lxml==3.7.3
