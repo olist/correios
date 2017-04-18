@@ -17,16 +17,12 @@ import os
 import math
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, Sequence, Tuple, Union
-from typing import List, Dict  # noqa: F401
+from typing import Optional, Sequence, Tuple, Union, List, Dict  # noqa: F401
 
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
-                                 InvalidPackageSequenceError, InvalidTrackingCodeError,
-                                 PostingListError, InvalidPackageDimensionsError,
-                                 InvalidPackageWeightError)
+from correios import exceptions
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
@@ -66,12 +62,12 @@ class EventStatus:
 
     def _get_event_status_data(self, event_type, status_code):
         if event_type not in TRACKING_EVENT_TYPES:
-            raise InvalidEventStatusError("{} is not valid".format(event_type))
+            raise exceptions.InvalidEventStatusError("{} is not valid".format(event_type))
 
         try:
             return TRACKING_STATUS[event_type, status_code]
         except KeyError:
-            raise InvalidEventStatusError("{} is not valid".format(event_type))
+            raise exceptions.InvalidEventStatusError("{} is not valid".format(event_type))
 
     @property
     def display_event_type(self):
@@ -156,16 +152,16 @@ class TrackingCode:
 
     def _validate(self):
         if len(self.prefix) != TRACKING_CODE_PREFIX_SIZE or not self.prefix.isalpha():
-            raise InvalidTrackingCodeError("Invalid tracking code prefix {}".format(self.prefix))
+            raise exceptions.InvalidTrackingCodeError("Invalid tracking code prefix {}".format(self.prefix))
 
         if len(self.suffix) != TRACKING_CODE_SUFFIX_SIZE or not self.suffix.isalpha():
-            raise InvalidTrackingCodeError("Invalid tracking code suffix {}".format(self.suffix))
+            raise exceptions.InvalidTrackingCodeError("Invalid tracking code suffix {}".format(self.suffix))
 
         if len(self.number) != TRACKING_CODE_NUMBER_SIZE or not self.number.isnumeric():
-            raise InvalidTrackingCodeError("Invalid tracking code number {}".format(self.number))
+            raise exceptions.InvalidTrackingCodeError("Invalid tracking code number {}".format(self.number))
 
         if self._digit is not None and self._digit != self.calculate_digit(self.number):
-            raise InvalidTrackingCodeError("Invalid tracking code number {} or digit {} (must be {})".format(
+            raise exceptions.InvalidTrackingCodeError("Invalid tracking code number {} or digit {} (must be {})".format(
                 self.number,
                 self._digit,
                 self.calculate_digit(self.number))
@@ -182,15 +178,15 @@ class TrackingCode:
         numbers = [int(c) for c in number if c.isdigit()]
 
         multipliers = [8, 6, 4, 2, 3, 5, 9, 7]
-        module = sum(multipliers[i] * digit for i, digit in enumerate(numbers)) % 11
+        mod = sum(multipliers[i] * digit for i, digit in enumerate(numbers)) % 11
 
-        if not module:
+        if not mod:
             return 5
 
-        if module == 1:
+        if mod == 1:
             return 0
 
-        return 11 - module
+        return 11 - mod
 
     @classmethod
     def create_range(cls, start: Union[str, 'TrackingCode'], end: Union[str, 'TrackingCode']):
@@ -201,19 +197,22 @@ class TrackingCode:
             end = TrackingCode(end)
 
         if start.prefix != end.prefix:
-            raise InvalidTrackingCodeError("Different tracking code prefixes: {} != {}".format(start.prefix,
-                                                                                               end.prefix))
+            raise exceptions.InvalidTrackingCodeError(
+                "Different tracking code prefixes: {} != {}".format(start.prefix, end.prefix)
+            )
 
         if start.suffix != end.suffix:
-            raise InvalidTrackingCodeError("Different tracking code suffixes: {} != {}".format(start.suffix,
-                                                                                               end.suffix))
+            raise exceptions.InvalidTrackingCodeError(
+                "Different tracking code suffixes: {} != {}".format(start.suffix, end.suffix)
+            )
 
         start_number = int(start.number)
         end_number = int(end.number)
 
         if start_number > end_number:
-            raise InvalidTrackingCodeError("Invalid range numbers: {} > {}".format(start_number,
-                                                                                   end_number))
+            raise exceptions.InvalidTrackingCodeError(
+                "Invalid range numbers: {} > {}".format(start_number, end_number)
+            )
 
         code_range = range(int(start.number), int(end.number) + 1)
         return [TrackingCode(start.prefix + "{:08}".format(n) + start.suffix) for n in code_range]
@@ -272,7 +271,7 @@ class Package:
         Package.validate(package_type, width, height, length, diameter, service, weight)
 
         if len(sequence) != 2 or sequence[0] > sequence[1]:
-            raise InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
+            raise exceptions.InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
 
         self.package_type = package_type
         self.width = math.ceil(width)  # cm
@@ -322,50 +321,54 @@ class Package:
                  service: Optional[Service] = None,
                  weight: Union[float, int] = 0) -> None:
 
-        width = math.ceil(width)
-        height = math.ceil(height)
-        length = math.ceil(length)
-        diameter = math.ceil(diameter)
-        weight = math.ceil(weight)
+        width = int(math.ceil(width))
+        height = int(math.ceil(height))
+        length = int(math.ceil(length))
+        diameter = int(math.ceil(diameter))
+        weight = int(math.ceil(weight))
 
         if service and service.max_weight and weight > service.max_weight:
-            raise InvalidPackageWeightError("Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight))
+            raise exceptions.InvalidPackageWeightError(
+                "Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight)
+            )
 
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
-                raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}x{}".format(width, height, length))
+                raise exceptions.InvalidPackageDimensionsError(
+                    "Invalid dimensions: {}x{}x{}".format(width, height, length)
+                )
             return
 
         if package_type == Package.TYPE_BOX:
             if diameter:
-                raise InvalidPackageDimensionsError("Package does not use diameter: {}".format(diameter))
+                raise exceptions.InvalidPackageDimensionsError(
+                    "Package does not use diameter: {}".format(diameter)
+                )
 
-            if not MIN_WIDTH <= width <= MAX_WIDTH:
-                raise InvalidPackageDimensionsError("Invalid width (range 11~105): {}".format(width))
-
-            if not MIN_HEIGHT <= height <= MAX_HEIGHT:
-                raise InvalidPackageDimensionsError("Invalid height (range 2~105): {}".format(height))
-
-            if not MIN_LENGTH <= length <= MAX_LENGTH:
-                raise InvalidPackageDimensionsError("Invalid length (range 16~105): {}".format(length))
-
-            if not MIN_SIZE <= (width + height + length) <= MAX_SIZE:
-                raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}x{}".format(width, height, length))
-
+            cls._validate_dimension("width", width, MIN_WIDTH, MAX_WIDTH)
+            cls._validate_dimension("height", height, MIN_HEIGHT, MAX_HEIGHT)
+            cls._validate_dimension("length", length, MIN_LENGTH, MAX_LENGTH)
+            cls._validate_dimension("sum of dimensions", width + height + length, MIN_SIZE, MAX_SIZE)
             return
 
         # Volume.TYPE_CYLINDER
         if width or height:
-            raise InvalidPackageDimensionsError("Cylinder does not use width/height: {}x{}".format(width, height))
+            raise exceptions.InvalidPackageDimensionsError(
+                "Cylinder does not use width/height: {}x{}".format(width, height)
+            )
 
-        if not MIN_CYLINDER_LENGTH <= length <= MAX_CYLINDER_LENGTH:
-            raise InvalidPackageDimensionsError("Invalid length (range 18~105): {}".format(length))
+        cls._validate_dimension("length", length, MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH)
+        cls._validate_dimension("diameter", diameter, MIN_DIAMETER, MAX_DIAMETER)
+        cls._validate_dimension("cylinder size", length + 2 * diameter, 0, MAX_CYLINDER_SIZE)
 
-        if not MIN_DIAMETER <= diameter <= MAX_DIAMETER:
-            raise InvalidPackageDimensionsError("Invalid diameter (range 5~91): {}".format(diameter))
+    @classmethod
+    def _validate_dimension(cls, name, value, minimum, maximum):
+        msg = "Invalid {} (range {}~{}): {}".format(name, minimum, maximum, value)
+        if value < minimum:
+            raise exceptions.InvalidMinPackageDimensionsError(msg)
 
-        if (length + 2 * diameter) > MAX_CYLINDER_SIZE:
-            raise InvalidPackageDimensionsError("Invalid dimensions: {}x{}".format(length, diameter))
+        if value > maximum:
+            raise exceptions.InvalidMaxPackageDimensionsError(msg)
 
 
 class ShippingLabel:
@@ -408,7 +411,7 @@ class ShippingLabel:
                  longitude: Optional[float] = 0.0) -> None:
 
         if sender == receiver:
-            raise InvalidAddressesError("Sender and receiver cannot be the same")
+            raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
         if logo is None:
             logo = os.path.join(DATADIR, "default_logo.png")
@@ -559,11 +562,12 @@ class PostingList:
             self.sender = shipping_label.sender
 
         if shipping_label.tracking_code.short in self.shipping_labels:
-            raise PostingListError("Shipping label {!r} already in posting list".format(shipping_label))
+            raise exceptions.PostingListError("Shipping label {!r} already in posting list".format(shipping_label))
 
         if shipping_label.posting_card != self.posting_card:
-            raise PostingListError("Invalid posting card: {} != {}".format(shipping_label.posting_card,
-                                                                           self.posting_card))
+            raise exceptions.PostingListError(
+                "Invalid posting card: {} != {}".format(shipping_label.posting_card, self.posting_card)
+            )
         self.shipping_labels[shipping_label.tracking_code.short] = shipping_label
         shipping_label.posting_list = self
 

@@ -61,7 +61,23 @@ class InvalidPackageDimensionsError(InvalidPackageError):
     pass
 
 
+class InvalidMinPackageDimensionsError(InvalidPackageDimensionsError):
+    pass
+
+
+class InvalidMaxPackageDimensionsError(InvalidPackageDimensionsError):
+    pass
+
+
 class InvalidPackageWeightError(InvalidPackageError):
+    pass
+
+
+class InvalidMinPackageWeightError(InvalidPackageWeightError):
+    pass
+
+
+class InvalidMaxPackageWeightError(InvalidPackageWeightError):
     pass
 
 
