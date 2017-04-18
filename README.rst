@@ -14,3 +14,14 @@ correios
    :alt: Latest Coveralls coverage status
 
 A client library for Brazilian Correios APIs (SIGEP and SRO) and services.
+
+
+Installation
+------------
+
+.. code-block::
+
+   $ pip install correios  # basic model support
+   $ pip install correios[pdf]  # label and posting list pdf generation support
+   $ pip install correios[client]  # support for SIGEP/SRO API client
+   $ pip install correios[pdf,client]  # full installation
