@@ -24,7 +24,8 @@ from correios import DATADIR
 from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
                                  InvalidTrackingCodeError, InvalidPackageSequenceError,
                                  InvalidPackageDimensionsError, PostingListError,
-                                 InvalidPackageWeightError, MaximumDeclaredValueError)
+                                 InvalidPackageWeightError, MaximumDeclaredValueError, InvalidMinPackageDimensionsError,
+                                 InvalidMaxPackageDimensionsError)
 from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
                                   TRACKING_EVENT_TYPES, EXTRA_SERVICE_VD)
 from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
@@ -245,30 +246,30 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
     assert Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
 
 
-@pytest.mark.parametrize("package_type,width,height,length,diameter", [
-    (Package.TYPE_ENVELOPE, 1, 0, 0, 0),
-    (Package.TYPE_ENVELOPE, 0, 1, 0, 0),
-    (Package.TYPE_ENVELOPE, 0, 0, 1, 0),
-    (Package.TYPE_ENVELOPE, 0, 0, 0, 1),
-    (Package.TYPE_ENVELOPE, 1, 1, 1, 1),
-    (Package.TYPE_BOX, 11, 2, 16, 1),  # invalid diameter
-    (Package.TYPE_BOX, 10, 2, 16, 0),  # min width=11
-    (Package.TYPE_BOX, 110, 2, 16, 0),  # max width=105
-    (Package.TYPE_BOX, 11, 1, 16, 0),  # min height=2
-    (Package.TYPE_BOX, 11, 110, 16, 0),  # max height=110
-    (Package.TYPE_BOX, 11, 2, 15, 0),  # min length=15
-    (Package.TYPE_BOX, 11, 2, 110, 0),  # max length=110
-    (Package.TYPE_BOX, 105, 105, 105, 0),  # sum > 200
-    (Package.TYPE_CYLINDER, 1, 0, 18, 16),  # invalid width
-    (Package.TYPE_CYLINDER, 0, 1, 18, 16),  # invalid height
-    (Package.TYPE_CYLINDER, 0, 0, 1, 16),  # min length=18
-    (Package.TYPE_CYLINDER, 0, 0, 110, 16),  # max length=105
-    (Package.TYPE_CYLINDER, 0, 0, 18, 15),  # min diameter=16
-    (Package.TYPE_CYLINDER, 0, 0, 18, 110),  # max diameter=91
-    (Package.TYPE_CYLINDER, 0, 0, 18, 16),  # max cylinder size=28
+@pytest.mark.parametrize("package_type,width,height,length,diameter,exc", [
+    (Package.TYPE_ENVELOPE, 1, 0, 0, 0, InvalidPackageDimensionsError),
+    (Package.TYPE_ENVELOPE, 0, 1, 0, 0, InvalidPackageDimensionsError),
+    (Package.TYPE_ENVELOPE, 0, 0, 1, 0, InvalidPackageDimensionsError),
+    (Package.TYPE_ENVELOPE, 0, 0, 0, 1, InvalidPackageDimensionsError),
+    (Package.TYPE_ENVELOPE, 1, 1, 1, 1, InvalidPackageDimensionsError),
+    (Package.TYPE_BOX, 11, 2, 16, 1, InvalidPackageDimensionsError),  # invalid diameter
+    (Package.TYPE_BOX, 10, 2, 16, 0, InvalidMinPackageDimensionsError),  # min width=11
+    (Package.TYPE_BOX, 110, 2, 16, 0, InvalidMaxPackageDimensionsError),  # max width=105
+    (Package.TYPE_BOX, 11, 1, 16, 0, InvalidMinPackageDimensionsError),  # min height=2
+    (Package.TYPE_BOX, 11, 110, 16, 0, InvalidMaxPackageDimensionsError),  # max height=110
+    (Package.TYPE_BOX, 11, 2, 15, 0, InvalidMinPackageDimensionsError),  # min length=15
+    (Package.TYPE_BOX, 11, 2, 110, 0, InvalidMaxPackageDimensionsError),  # max length=110
+    (Package.TYPE_BOX, 105, 105, 105, 0, InvalidMaxPackageDimensionsError),  # sum > 200
+    (Package.TYPE_CYLINDER, 1, 0, 18, 16, InvalidPackageDimensionsError),  # invalid width
+    (Package.TYPE_CYLINDER, 0, 1, 18, 16, InvalidPackageDimensionsError),  # invalid height
+    (Package.TYPE_CYLINDER, 0, 0, 1, 16, InvalidMinPackageDimensionsError),  # min length=18
+    (Package.TYPE_CYLINDER, 0, 0, 110, 16, InvalidMaxPackageDimensionsError),  # max length=105
+    (Package.TYPE_CYLINDER, 0, 0, 18, 15, InvalidMinPackageDimensionsError),  # min diameter=16
+    (Package.TYPE_CYLINDER, 0, 0, 18, 110, InvalidMaxPackageDimensionsError),  # max diameter=91
+    (Package.TYPE_CYLINDER, 0, 0, 18, 16, InvalidMaxPackageDimensionsError),  # max cylinder size=28
 ])
-def test_fail_package_dimensions_validation(package_type, width, height, length, diameter):
-    with pytest.raises(InvalidPackageDimensionsError):
+def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
+    with pytest.raises(exc):
         Package.validate(package_type, width, height, length, diameter)
 
 
