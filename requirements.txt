@@ -1,4 +1,5 @@
 phonenumbers
+Pillow
 
 # pdf
 reportlab

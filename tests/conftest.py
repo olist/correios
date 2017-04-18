@@ -27,6 +27,11 @@ from correios.models.posting import (PostingList, Package, ShippingLabel, Tracki
                                      TrackingEvent)
 from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
 
+try:
+    from correios import client as correios
+except ImportError:
+    correios = None
+
 
 @pytest.fixture
 def valid_federal_tax_number():
@@ -191,3 +196,8 @@ class PostingListFactory(Factory):
 
 
 register(PostingListFactory, "posting_list")
+
+
+@pytest.fixture
+def client():
+    return correios.Correios(username="sigep", password="n5f9t8", environment=correios.Correios.TEST)
