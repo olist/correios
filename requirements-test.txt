@@ -1,7 +1,7 @@
 -r requirements.txt
 mypy-lang
 pytest
-pytest-cov
+pytest-cov==2.4.0
 pytest-factoryboy
 tox
 vcrpy
