@@ -15,7 +15,7 @@
 
 import os
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Optional, Sequence, Tuple, Union, List, Dict  # noqa: F401
 
@@ -44,6 +44,7 @@ MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
 INSURANCE_PERCENTUAL_COST = Decimal("0.007")  # 0.7%
 MONEY_QUANTIZATION = Decimal("0.00")
+
 
 class EventStatus:
     def __init__(self,
@@ -335,6 +336,10 @@ class Package:
     @property
     def posting_weight(self) -> int:
         return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
+
+    @property
+    def freight_package_type(self) -> int:
+        return [3, 1, 2][self.package_type - 1]  # see documentation for freight calculation
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
@@ -639,3 +644,30 @@ class PostingList:
     @property
     def closed(self):
         return self.number is not None
+
+
+class Freight:
+    def __init__(self,
+                 service: Union[Service, int],
+                 total: Union[Decimal, float, int, str],
+                 delivery_time: Union[int, timedelta],
+                 declared_value: Union[Decimal, float, int, str] = 0.00,
+                 saturday: bool = False,
+                 home: bool = False):
+
+        self.service = Service.get(service)
+
+        if not isinstance(total, Decimal):
+            total = Decimal(total).quantize(MONEY_QUANTIZATION)
+        self.total = total
+
+        if not isinstance(delivery_time, timedelta):
+            delivery_time = timedelta(days=delivery_time)
+        self.delivery_time = delivery_time
+
+        if not isinstance(declared_value, Decimal):
+            declared_value = Decimal(declared_value).quantize(MONEY_QUANTIZATION)
+        self.declared_value = declared_value
+
+        self.saturday = saturday
+        self.home = home
