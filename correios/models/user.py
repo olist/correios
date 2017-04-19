@@ -215,10 +215,12 @@ class ExtraService:
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
 
     def __eq__(self, other):
+        if isinstance(other, int):
+            return self.number == other
         return self.number == other.number
 
     def is_declared_value(self):
-        return self.number == EXTRA_SERVICE_VD
+        return self == EXTRA_SERVICE_VD
 
     @classmethod
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':

@@ -257,6 +257,7 @@ def test_basic_extra_service():
     assert extra_service.code == "AR"
     assert extra_service.name == "Aviso de Recebimento"
     assert repr(extra_service) == "<ExtraService number=1, code='AR'>"
+    assert extra_service == 1
 
 
 def test_extra_service_sanitize_code():
