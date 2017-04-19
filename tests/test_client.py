@@ -17,7 +17,7 @@ import pytest
 
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
-from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD
+from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD, SERVICE_PAC
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
                                      TrackingCode)
 from correios.models.user import PostingCard, Service, ExtraService
@@ -242,3 +242,10 @@ def test_limit_size_city_name(posting_list, shipping_label):
 
     assert b"<cidade_destinatario><![CDATA[Porto Alegre (Rio Grande do Su]]></cidade_destinatario>" in xml
     assert b"<cidade_remetente><![CDATA[Santa Maria (Rio Grande do Sul]]></cidade_remetente>" in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freights(client, posting_card, package):
+    freights = client.calculate_freights(posting_card, [SERVICE_SEDEX, SERVICE_PAC], "07192100", "80030001", package)
+    assert len(freights) == 2

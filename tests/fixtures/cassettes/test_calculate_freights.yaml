@@ -1,0 +1,32 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns1="http://tempuri.org/"><SOAP-ENV:Header/><ns0:Body><ns1:CalcPrecoPrazo><ns1:nCdEmpresa>XXXXXXXX</ns1:nCdEmpresa><ns1:sDsSenha>XXXXXX</ns1:sDsSenha><ns1:nCdServico>40096</ns1:nCdServico><ns1:sCepOrigem>07192100</ns1:sCepOrigem><ns1:sCepDestino>80030001</ns1:sCepDestino><ns1:nVlPeso>0.0</ns1:nVlPeso><ns1:nCdFormato>2</ns1:nCdFormato><ns1:nVlComprimento>18</ns1:nVlComprimento><ns1:nVlAltura>18</ns1:nVlAltura><ns1:nVlLargura>29</ns1:nVlLargura><ns1:nVlDiametro>16</ns1:nVlDiametro><ns1:sCdMaoPropria>N</ns1:sCdMaoPropria><ns1:nVlValorDeclarado>0.0</ns1:nVlValorDeclarado><ns1:sCdAvisoRecebimento>N</ns1:sCdAvisoRecebimento></ns1:CalcPrecoPrazo></ns0:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['908']
+      Content-Type: [text/xml;charset=UTF-8]
+      SOAPAction:
+      - !!binary |
+        Imh0dHA6Ly90ZW1wdXJpLm9yZy9DYWxjUHJlY29QcmF6byI=
+      User-Agent: [python-requests/2.13.0]
+    method: POST
+    uri: http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx
+  response:
+    body: {string: '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><CalcPrecoPrazoResponse
+        xmlns="http://tempuri.org/"><CalcPrecoPrazoResult><Servicos><cServico><Codigo>40096</Codigo><Valor>23,75</Valor><PrazoEntrega>1</PrazoEntrega><ValorMaoPropria>0,00</ValorMaoPropria><ValorAvisoRecebimento>0,00</ValorAvisoRecebimento><ValorValorDeclarado>0,00</ValorValorDeclarado><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>S</EntregaSabado><Erro>0</Erro><MsgErro
+        /><ValorSemAdicionais>23,75</ValorSemAdicionais><obsFim /></cServico></Servicos></CalcPrecoPrazoResult></CalcPrecoPrazoResponse></soap:Body></soap:Envelope>'}
+    headers:
+      Cache-Control: ['private, max-age=0']
+      Content-Length: ['772']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Wed, 19 Apr 2017 21:32:31 GMT']
+      Server: [Microsoft-IIS/7.5]
+      X-AspNet-Version: [4.0.30319]
+      X-Powered-By: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1
