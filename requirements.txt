@@ -1,11 +1,11 @@
-phonenumbers
-Pillow
+phonenumbers==8.4.1
+Pillow==4.1.0
 
 # pdf
-reportlab
-hubarcode
+reportlab==3.4.0
+hubarcode==1.0.0
 
 # api
-requests
-suds-jurko
-lxml
+requests==2.13.0
+suds-jurko==0.6
+lxml==3.7.3
