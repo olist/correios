@@ -418,7 +418,10 @@ class Package:
         if weight <= 0:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
 
-        if service and weight > service.max_weight:
+        if not service or service.max_weight is None:
+            return
+
+        if weight > service.max_weight:
             message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
                 weight,
                 str(service),
