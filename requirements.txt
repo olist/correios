@@ -2,7 +2,7 @@ phonenumbers
 Pillow
 
 # pdf
-reportlab
+reportlab==3.4.0
 hubarcode
 
 # api
