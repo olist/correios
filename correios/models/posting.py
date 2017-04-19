@@ -325,13 +325,7 @@ class Package:
 
     @weight.setter
     def weight(self, weight):
-        if weight <= 0:
-            raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
-
-        if self.service and weight > self.service.max_weight:
-            raise exceptions.InvalidMaxPackageWeightError(
-                "Max weight exceeded {!r}g (max. {!r}g)".format(weight, self.service.max_weight)
-            )
+        Package._validate_weight(weight, self.service)
         self.real_weight = weight
 
     @property
@@ -379,10 +373,7 @@ class Package:
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
 
-        if weight <= 0 or (service and service.max_weight and weight > service.max_weight):
-            raise exceptions.InvalidMaxPackageWeightError(
-                "Max weight exceeded {!r}g (max. {!r}g)".format(weight, service.max_weight)
-            )
+        Package._validate_weight(weight, service)
 
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
@@ -421,6 +412,19 @@ class Package:
 
         if value > maximum:
             raise exceptions.InvalidMaxPackageDimensionsError(msg)
+
+    @classmethod
+    def _validate_weight(cls, weight, service=None):
+        if weight <= 0:
+            raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
+
+        if service and weight > service.max_weight:
+            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
+                weight,
+                str(service),
+                service.max_weight,
+            )
+            raise exceptions.InvalidMaxPackageWeightError(message)
 
 
 class ShippingLabel:
