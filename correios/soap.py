@@ -65,5 +65,5 @@ class RequestsTransport(HttpAuthenticated):
 class SoapClient(Client):
     def __init__(self, url, cert=None, verify=True, timeout=8, *args, **kwargs):
         transport = RequestsTransport(cert=cert, verify=verify, timeout=timeout)
-        headers = {"Content-Type": "text/xml;charset=UTF-8", "SOAPAction": ""}
+        headers = {"Content-Type": "text/xml;charset=UTF-8"}
         super().__init__(url, transport=transport, headers=headers, **kwargs)
