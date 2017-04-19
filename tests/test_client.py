@@ -133,7 +133,7 @@ def test_get_tracking_code_events(client):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_get_tracking_code_events_withou_city_field(client):
+def test_get_tracking_code_events_without_city_field(client):
     result = client.get_tracking_code_events("PJ651329640BR")
 
     assert isinstance(result[0], TrackingCode)
