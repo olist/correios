@@ -16,7 +16,7 @@
 import os
 from datetime import datetime
 from decimal import Decimal
-from typing import Union, Optional, Sequence
+from typing import Union, Optional, Sequence, List
 
 from PIL import Image
 
@@ -155,8 +155,9 @@ class Service:
         self.max_declared_value = max_declared_value
 
         if default_extra_services is None:
-            default_extra_services = []
-        self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
+            self.default_extra_services = []  # type: Sequence
+        else:
+            self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
 
     def __str__(self):
         return str(self.code)
