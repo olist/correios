@@ -43,7 +43,7 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
 INSURANCE_PERCENTUAL_COST = Decimal("0.007")  # 0.7%
-
+MONEY_QUANTIZATION = Decimal("0.00")
 
 class EventStatus:
     def __init__(self,
@@ -355,7 +355,7 @@ class Package:
         per_unit_value = Decimal(per_unit_value)
         if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
             value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * INSURANCE_PERCENTUAL_COST
-        return Decimal(value * quantity).quantize(Decimal('0.00'))
+        return Decimal(value * quantity).quantize(MONEY_QUANTIZATION)
 
     @classmethod
     def validate(cls,
