@@ -13,23 +13,18 @@
 # limitations under the License.
 
 
-import os
 from datetime import datetime
 from decimal import Decimal
 
+import os
 import pytest
 from PIL.Image import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidAddressesError, InvalidEventStatusError,
-                                 InvalidTrackingCodeError, InvalidPackageSequenceError,
-                                 InvalidPackageDimensionsError, PostingListError,
-                                 InvalidPackageWeightError, MaximumDeclaredValueError)
+from correios import exceptions
+from correios.models import posting
 from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
                                   TRACKING_EVENT_TYPES, EXTRA_SERVICE_VD)
-from correios.models.posting import (EventStatus, NotFoundTrackingEvent,
-                                     Package, PostingList, ShippingLabel, TrackingCode,
-                                     TrackingEvent)
 from correios.models.user import Service, ExtraService
 from .conftest import ShippingLabelFactory
 
@@ -43,7 +38,7 @@ FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")
     "dl74668653br",
 ])
 def test_tracking_code_constructor(tracking_code):
-    tracking = TrackingCode(tracking_code)
+    tracking = posting.TrackingCode(tracking_code)
     assert str(tracking) == "DL746686536BR"
     assert tracking.code == "DL746686536BR"
     assert tracking.prefix == "DL"
@@ -64,8 +59,8 @@ def test_tracking_code_constructor(tracking_code):
     "DL46686530 B1",
 ])
 def test_fail_invalid_tracking_code(tracking_code):
-    with pytest.raises(InvalidTrackingCodeError):
-        TrackingCode(tracking_code)
+    with pytest.raises(exceptions.InvalidTrackingCodeError):
+        posting.TrackingCode(tracking_code)
 
 
 @pytest.mark.parametrize("tracking_code,digit", [
@@ -74,37 +69,37 @@ def test_fail_invalid_tracking_code(tracking_code):
     ("DL00000000 BR", 5),
 ])
 def test_tracking_code_digit_calculator(tracking_code, digit):
-    tracking = TrackingCode(tracking_code)
+    tracking = posting.TrackingCode(tracking_code)
     assert tracking.digit == digit
 
 
 def test_tracking_code_creator():
-    tracking_code1 = TrackingCode.create("DL746686536BR")
+    tracking_code1 = posting.TrackingCode.create("DL746686536BR")
     assert tracking_code1.code == "DL746686536BR"
 
-    tracking_code2 = TrackingCode.create(tracking_code1)
+    tracking_code2 = posting.TrackingCode.create(tracking_code1)
     assert tracking_code1 == tracking_code2
 
 
 def test_tracking_code_range_generator():
-    tracking_codes = TrackingCode.create_range("DL74668650 BR", "DL74668654 BR")
+    tracking_codes = posting.TrackingCode.create_range("DL74668650 BR", "DL74668654 BR")
     assert len(tracking_codes) == 5
-    assert all(isinstance(tc, TrackingCode) for tc in tracking_codes)
+    assert all(isinstance(tc, posting.TrackingCode) for tc in tracking_codes)
 
 
 def test_fail_tracking_code_invalid_range_generator():
-    with pytest.raises(InvalidTrackingCodeError):
-        TrackingCode.create_range("DL74668650 BR", "SX74668654 BR")  # different prefix
+    with pytest.raises(exceptions.InvalidTrackingCodeError):
+        posting.TrackingCode.create_range("DL74668650 BR", "SX74668654 BR")  # different prefix
 
-    with pytest.raises(InvalidTrackingCodeError):
-        TrackingCode.create_range("DL74668650 BR", "DL74668654 US")  # different suffix
+    with pytest.raises(exceptions.InvalidTrackingCodeError):
+        posting.TrackingCode.create_range("DL74668650 BR", "DL74668654 US")  # different suffix
 
-    with pytest.raises(InvalidTrackingCodeError):
-        TrackingCode.create_range("DL74668654 BR", "DL74668650 BR")  # end < start
+    with pytest.raises(exceptions.InvalidTrackingCodeError):
+        posting.TrackingCode.create_range("DL74668654 BR", "DL74668650 BR")  # end < start
 
 
 def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code, package):
-    shipping_label = ShippingLabel(
+    shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
@@ -168,7 +163,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
 
 
 def test_basic_default_shipping_label(posting_card, sender_address, receiver_address, package):
-    shipping_label = ShippingLabel(
+    shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
@@ -184,7 +179,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
 
 def test_shipping_label_with_declared_value(posting_card, sender_address, receiver_address, package):
     service = Service.get(SERVICE_SEDEX)
-    shipping_label = ShippingLabel(
+    shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
@@ -199,7 +194,7 @@ def test_shipping_label_with_declared_value(posting_card, sender_address, receiv
 
 def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_address, receiver_address, package):
     service = Service.get(SERVICE_SEDEX)
-    shipping_label = ShippingLabel(
+    shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
@@ -209,29 +204,40 @@ def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_ad
         value=service.max_declared_value + Decimal("1.00"),
     )
 
-    with pytest.raises(MaximumDeclaredValueError):
+    with pytest.raises(exceptions.MaximumDeclaredValueError):
         shipping_label.add_extra_service(ExtraService.get(EXTRA_SERVICE_VD))
 
 
 def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code, package):
-    with pytest.raises(InvalidAddressesError):
-        ShippingLabel(posting_card, sender_address, sender_address, SERVICE_SEDEX,
-                      package=package,
-                      tracking_code=tracking_code)
+    with pytest.raises(exceptions.InvalidAddressesError):
+        posting.ShippingLabel(
+            posting_card,
+            sender_address,
+            sender_address,
+            SERVICE_SEDEX,
+            package=package,
+            tracking_code=tracking_code,
+        )
 
 
 def test_package_basic():
-    package = Package(package_type=Package.TYPE_BOX,
-                      width=11,
-                      height=10,
-                      length=16,
-                      weight=10000,
-                      service=SERVICE_PAC)  # invalid tuple
+    package = posting.Package(
+        package_type=posting.Package.TYPE_BOX,
+        width=11,
+        height=10,
+        length=16,
+        weight=10000,
+        service=SERVICE_PAC,  # invalid tuple
+    )
     assert isinstance(package.service, Service)
 
 
 def test_package_basic_envelop_dimensions_validation():
-    Package.validate(Package.TYPE_ENVELOPE, 0, 0, 0, 0)
+    posting.Package.validate(
+        posting.Package.TYPE_ENVELOPE,
+        0, 0, 0, 0,
+        weight=1,
+    )
 
 
 @pytest.mark.parametrize("weight,width,height,length,posting_weight", [
@@ -241,46 +247,56 @@ def test_package_basic_envelop_dimensions_validation():
     (15000, 73, 73, 73, 64837)  # math.ceil(64836.1)
 ])
 def test_package_posting_weight_calculation(weight, width, height, length, posting_weight):
-    volumetric_weight = Package.calculate_volumetric_weight(width, height, length)
-    assert Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
+    volumetric_weight = posting.Package.calculate_volumetric_weight(width, height, length)
+    assert posting.Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
 
 
-@pytest.mark.parametrize("package_type,width,height,length,diameter", [
-    (Package.TYPE_ENVELOPE, 1, 0, 0, 0),
-    (Package.TYPE_ENVELOPE, 0, 1, 0, 0),
-    (Package.TYPE_ENVELOPE, 0, 0, 1, 0),
-    (Package.TYPE_ENVELOPE, 0, 0, 0, 1),
-    (Package.TYPE_ENVELOPE, 1, 1, 1, 1),
-    (Package.TYPE_BOX, 11, 2, 16, 1),  # invalid diameter
-    (Package.TYPE_BOX, 10, 2, 16, 0),  # min width=11
-    (Package.TYPE_BOX, 110, 2, 16, 0),  # max width=105
-    (Package.TYPE_BOX, 11, 1, 16, 0),  # min height=2
-    (Package.TYPE_BOX, 11, 110, 16, 0),  # max height=110
-    (Package.TYPE_BOX, 11, 2, 15, 0),  # min length=15
-    (Package.TYPE_BOX, 11, 2, 110, 0),  # max length=110
-    (Package.TYPE_BOX, 105, 105, 105, 0),  # sum > 200
-    (Package.TYPE_CYLINDER, 1, 0, 18, 16),  # invalid width
-    (Package.TYPE_CYLINDER, 0, 1, 18, 16),  # invalid height
-    (Package.TYPE_CYLINDER, 0, 0, 1, 16),  # min length=18
-    (Package.TYPE_CYLINDER, 0, 0, 110, 16),  # max length=105
-    (Package.TYPE_CYLINDER, 0, 0, 18, 15),  # min diameter=16
-    (Package.TYPE_CYLINDER, 0, 0, 18, 110),  # max diameter=91
-    (Package.TYPE_CYLINDER, 0, 0, 18, 16),  # max cylinder size=28
+@pytest.mark.parametrize("package_type,width,height,length,diameter,exc", [
+    (posting.Package.TYPE_ENVELOPE, 1, 0, 0, 0, exceptions.InvalidPackageDimensionsError),
+    (posting.Package.TYPE_ENVELOPE, 0, 1, 0, 0, exceptions.InvalidPackageDimensionsError),
+    (posting.Package.TYPE_ENVELOPE, 0, 0, 1, 0, exceptions.InvalidPackageDimensionsError),
+    (posting.Package.TYPE_ENVELOPE, 0, 0, 0, 1, exceptions.InvalidPackageDimensionsError),
+    (posting.Package.TYPE_ENVELOPE, 1, 1, 1, 1, exceptions.InvalidPackageDimensionsError),
+    (posting.Package.TYPE_BOX, 11, 2, 16, 1, exceptions.InvalidPackageDimensionsError),  # invalid diameter
+    (posting.Package.TYPE_BOX, 110, 2, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max width=105
+    (posting.Package.TYPE_BOX, 11, 110, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max height=110
+    (posting.Package.TYPE_BOX, 11, 2, 110, 0, exceptions.InvalidMaxPackageDimensionsError),  # max length=110
+    (posting.Package.TYPE_BOX, 105, 105, 105, 0, exceptions.InvalidMaxPackageDimensionsError),  # sum > 200
+    (posting.Package.TYPE_CYLINDER, 1, 0, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid width
+    (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
+    (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
+    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
+    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=28
 ])
-def test_fail_package_dimensions_validation(package_type, width, height, length, diameter):
-    with pytest.raises(InvalidPackageDimensionsError):
-        Package.validate(package_type, width, height, length, diameter)
+def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
+    with pytest.raises(exc):
+        posting.Package.validate(package_type, width, height, length, diameter, weight=1)
 
 
 def test_package_weight_validation():
-    Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=10000)
-    # 10065 - service with no max weight
-    Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(10065), weight=50000)
+    posting.Package.validate(
+        posting.Package.TYPE_BOX,
+        12, 10, 20,
+        service=Service.get(SERVICE_SEDEX),
+        weight=10000,
+    )
+
+    posting.Package.validate(
+        posting.Package.TYPE_BOX,
+        12, 10, 20,
+        service=Service.get(10065),  # 10065 - service with no max weight
+        weight=50000,
+    )
 
 
 def test_fail_package_weight_validation():
-    with pytest.raises(InvalidPackageWeightError):
-        Package.validate(Package.TYPE_BOX, 12, 10, 20, service=Service.get(SERVICE_SEDEX), weight=50000)
+    with pytest.raises(exceptions.InvalidMaxPackageWeightError):
+        posting.Package.validate(
+            posting.Package.TYPE_BOX,
+            12, 10, 20,
+            service=Service.get(SERVICE_SEDEX),
+            weight=50000,
+        )
 
 
 @pytest.mark.parametrize("sequence", [
@@ -288,13 +304,68 @@ def test_fail_package_weight_validation():
     (3, 2),
 ])
 def test_fail_package_invalid_sequence(sequence):
-    with pytest.raises(InvalidPackageSequenceError):
-        Package(package_type=Package.TYPE_BOX, width=11, height=10, length=16, weight=10000,
-                sequence=sequence)  # invalid tuple
+    with pytest.raises(exceptions.InvalidPackageSequenceError):
+        posting.Package(
+            package_type=posting.Package.TYPE_BOX,
+            width=11,
+            height=10,
+            length=16,
+            weight=10000,
+            sequence=sequence,  # invalid tuple
+        )
+
+
+@pytest.mark.parametrize("dimension,value,minimum", [
+    ("width", 1, posting.MIN_WIDTH),
+    ("height", 1, posting.MIN_HEIGHT),
+    ("length", 1, posting.MIN_LENGTH),
+    ("weight", 1, 1),
+])
+def test_box_package_change_dimensions_below_minimum(package, dimension, value, minimum):
+    setattr(package, dimension, value)
+    assert getattr(package, dimension) == minimum
+
+
+@pytest.mark.parametrize("dimension,value,minimum", [
+    ("diameter", 1, posting.MIN_DIAMETER),
+    ("length", 1, posting.MIN_LENGTH),
+    ("weight", 1, 1),
+])
+def test_cylinder_package_change_dimensions_below_minimum(package, dimension, value, minimum):
+    package.package_type = package.TYPE_CYLINDER
+    setattr(package, dimension, value)
+    assert getattr(package, dimension) == minimum
+
+
+@pytest.mark.parametrize("dimension,value,exc", [
+    ("width", 0, exceptions.InvalidMinPackageDimensionsError),
+    ("width", posting.MAX_WIDTH + 1, exceptions.InvalidMaxPackageDimensionsError),
+    ("height", 0, exceptions.InvalidMinPackageDimensionsError),
+    ("height", posting.MAX_HEIGHT + 1, exceptions.InvalidMaxPackageDimensionsError),
+    ("length", 0, exceptions.InvalidMinPackageDimensionsError),
+    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidMaxPackageDimensionsError),
+    ("weight", 0, exceptions.InvalidMinPackageWeightError),
+    ("weight", 100000, exceptions.InvalidMaxPackageWeightError),
+])
+def test_fail_box_package_change_invalid_dimensions(package, dimension, value, exc):
+    with pytest.raises(exc):
+        setattr(package, dimension, value)
+
+
+@pytest.mark.parametrize("dimension,value,exc", [
+    ("diameter", 0, exceptions.InvalidMinPackageDimensionsError),
+    ("diameter", posting.MAX_DIAMETER + 1, exceptions.InvalidMaxPackageDimensionsError),
+    ("length", 0, exceptions.InvalidMinPackageDimensionsError),
+    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidMaxPackageDimensionsError),
+])
+def test_fail_cylinder_package_change_invalid_dimensions(package, dimension, value, exc):
+    package.package_type = package.TYPE_CYLINDER
+    with pytest.raises(exc):
+        setattr(package, dimension, value)
 
 
 def test_basic_posting_list(shipping_label):
-    posting_list = PostingList(custom_id=12345)
+    posting_list = posting.PostingList(custom_id=12345)
     posting_list.add_shipping_label(shipping_label)
 
     assert posting_list.custom_id == 12345
@@ -304,64 +375,66 @@ def test_basic_posting_list(shipping_label):
 
 
 def test_fail_add_different_sender_in_posting_list():
-    posting_list = PostingList(custom_id=12345)
+    posting_list = posting.PostingList(custom_id=12345)
     posting_list.add_shipping_label(ShippingLabelFactory.build())
 
-    with pytest.raises(PostingListError):
+    with pytest.raises(exceptions.PostingListError):
         posting_list.add_shipping_label(ShippingLabelFactory.build())
 
 
 def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
-    posting_list = PostingList(custom_id=12345)
+    posting_list = posting.PostingList(custom_id=12345)
     posting_list.add_shipping_label(shipping_label)
 
-    with pytest.raises(PostingListError):
+    with pytest.raises(exceptions.PostingListError):
         posting_list.add_shipping_label(shipping_label)
 
 
 def test_calculate_insurance_when_not_applicable():
-    value = Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
+    value = posting.Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal(0)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
+    value = posting.Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
     assert value == Decimal(0)
 
 
 def test_calculate_insurance_pac():
-    value = Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
+    value = posting.Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
     assert value == Decimal(1)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
+    value = posting.Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
     assert value == Decimal(2)
 
-    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
+    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
     assert value == Decimal('6.30')
 
 
 def test_calculate_insurance_sedex():
     # not implemented, defaults to zero
-    value = Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
+    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal('0')
 
 
 def test_event_status():
-    event_status = EventStatus('BDE', 1)
+    event_status = posting.EventStatus('BDE', 1)
     assert repr(event_status) == "<EventStatus('BDE', 1)>"
 
 
-@pytest.mark.parametrize("status", (EventStatus("BDE", "01"), ("BDE", "01")))
+@pytest.mark.parametrize("status", (posting.EventStatus("BDE", "01"), ("BDE", "01")))
 def test_basic_tracking_event(status):
-    tracking_event = TrackingEvent(timestamp=datetime(2010, 1, 2, 1, 2),
-                                   status=status,
-                                   location_zip_code="82940150",
-                                   location="Correios",
-                                   receiver="José",
-                                   city="Curitiba",
-                                   state="PR",
-                                   document="XYZ",
-                                   comment="The comment",
-                                   description="The description",
-                                   details="The details")
+    tracking_event = posting.TrackingEvent(
+        timestamp=datetime(2010, 1, 2, 1, 2),
+        status=status,
+        location_zip_code="82940150",
+        location="Correios",
+        receiver="José",
+        city="Curitiba",
+        state="PR",
+        document="XYZ",
+        comment="The comment",
+        description="The description",
+        details="The details",
+    )
 
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
     assert tracking_event.status.type == "BDE"
@@ -382,12 +455,14 @@ def test_basic_tracking_event(status):
 
 def test_tracking_event_timestamp_format(tracking_event):
     expected_date = "01/01/2016 12:00"
-    assert tracking_event.timestamp.strftime(TrackingEvent.timestamp_format) == expected_date
+    assert tracking_event.timestamp.strftime(posting.TrackingEvent.timestamp_format) == expected_date
 
 
 def test_basic_not_found_tracking_event():
-    tracking_event = NotFoundTrackingEvent(timestamp=datetime(2010, 1, 2, 1, 2),
-                                           comment="Not found")
+    tracking_event = posting.NotFoundTrackingEvent(
+        timestamp=datetime(2010, 1, 2, 1, 2),
+        comment="Not found",
+    )
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
     assert tracking_event.status.type == "ERROR"
     assert tracking_event.status.status == 0
@@ -419,7 +494,7 @@ def test_basic_not_found_tracking_event():
     # ("CMR", 0),
 ])
 def test_basic_event_status(status_type, status_number):
-    event_status = EventStatus(status_type, status_number)
+    event_status = posting.EventStatus(status_type, status_number)
 
     assert event_status.type == status_type
     assert event_status.status == status_number
@@ -431,5 +506,5 @@ def test_basic_event_status(status_type, status_number):
 
 @pytest.mark.parametrize("event_type", ("XYZ", "ABC", "XXX", "WTF", "BD", "ERROR"))
 def test_invalid_event_status(event_type):
-    with pytest.raises(InvalidEventStatusError):
-        EventStatus(event_type, 1)
+    with pytest.raises(exceptions.InvalidEventStatusError):
+        posting.EventStatus(event_type, 1)
