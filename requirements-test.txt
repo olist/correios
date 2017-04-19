@@ -1,6 +1,6 @@
 -r requirements.txt
 mypy-lang
-pytest
+pytest==3.0.7
 pytest-cov
 pytest-factoryboy
 tox
