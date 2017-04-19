@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import os
@@ -230,6 +230,16 @@ def test_package_basic():
         service=SERVICE_PAC,  # invalid tuple
     )
     assert isinstance(package.service, Service)
+    assert package.package_type == posting.Package.TYPE_BOX
+
+
+@pytest.mark.parametrize("package,freight_package_type", [
+    (posting.Package(posting.Package.TYPE_ENVELOPE, 0, 0, 0, weight=1), 3),
+    (posting.Package(posting.Package.TYPE_BOX, 11, 10, 16, weight=1), 1),
+    (posting.Package(posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, weight=1), 2),
+])
+def test_freight_package_type(package, freight_package_type):
+    assert package.freight_package_type == freight_package_type
 
 
 def test_package_basic_envelop_dimensions_validation():
@@ -508,3 +518,12 @@ def test_basic_event_status(status_type, status_number):
 def test_invalid_event_status(event_type):
     with pytest.raises(exceptions.InvalidEventStatusError):
         posting.EventStatus(event_type, 1)
+
+
+def test_basic_freight():
+    freight = posting.Freight(SERVICE_SEDEX, Decimal("10.00"), timedelta(days=5))
+    assert freight.total == Decimal("10.00")
+    assert freight.delivery_time == timedelta(days=5)
+    assert freight.declared_value == Decimal("0.00")
+    assert freight.saturday is False
+    assert freight.home is False
