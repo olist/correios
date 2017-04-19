@@ -257,11 +257,11 @@ class Package:
 
     def __init__(self,
                  package_type: int = TYPE_BOX,
-                 width: Union[float, int] = 0,
-                 height: Union[float, int] = 0,
-                 length: Union[float, int] = 0,
-                 diameter: Union[float, int] = 0,
-                 weight: Union[float, int] = 0,
+                 width: Union[float, int] = 0,  # cm
+                 height: Union[float, int] = 0,  # cm
+                 length: Union[float, int] = 0,  # cm
+                 diameter: Union[float, int] = 0,  # cm
+                 weight: Union[float, int] = 0,  # g
                  sequence=(1, 1),
                  service: Optional[Union[Service, int]] = None) -> None:
 
@@ -278,13 +278,13 @@ class Package:
         self.real_width = width  # cm
         self.real_height = height  # cm
         self.real_length = length  # cm
-        self.real_diameter = diameter  # in cm
-        self.real_weight = diameter  # in grams
+        self.real_diameter = diameter  # cm
+        self.real_weight = diameter  # g
         self.sequence = sequence
         self.service = service
 
     @property
-    def width(self):
+    def width(self) -> int:
         return max(MIN_WIDTH, int(math.ceil(self.real_width)))
 
     @width.setter
@@ -293,7 +293,7 @@ class Package:
         self.real_width = width
 
     @property
-    def height(self):
+    def height(self) -> int:
         return max(MIN_HEIGHT, int(math.ceil(self.real_height)))
 
     @height.setter
@@ -302,7 +302,7 @@ class Package:
         self.real_height = height
 
     @property
-    def length(self):
+    def length(self) -> int:
         return max(MIN_LENGTH, int(math.ceil(self.real_length)))
 
     @length.setter
@@ -311,7 +311,7 @@ class Package:
         self.real_length = length
 
     @property
-    def diameter(self):
+    def diameter(self) -> int:
         return max(MIN_DIAMETER, int(math.ceil(self.real_diameter)))
 
     @diameter.setter
@@ -320,7 +320,7 @@ class Package:
         self.real_diameter = diameter
 
     @property
-    def weight(self):
+    def weight(self) -> int:
         return int(math.ceil(self.real_weight))
 
     @weight.setter
