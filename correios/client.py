@@ -180,7 +180,6 @@ class ModelBuilder:
         return result
 
 
-
 class PostingListSerializer:
     def _get_posting_list_element(self, posting_list):
         element = xml_utils.Element("plp")
