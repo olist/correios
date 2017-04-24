@@ -16,7 +16,7 @@
 import os
 from datetime import datetime
 from decimal import Decimal
-from typing import Union, Optional, Sequence, List
+from typing import Union, Optional, Sequence, List  # noqa: F401
 
 from PIL import Image
 
