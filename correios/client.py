@@ -163,8 +163,7 @@ class ModelBuilder:
 
     def build_freights_list(self, response):
         result = []
-        for i in range(len(response.Servicos)):
-            service = response.Servicos.cServico[i]
+        for service in response.Servicos.cServico:
             value = local_number_to_decimal(service.Valor)
             delivery_time = int(service.PrazoEntrega)
             declared_value = local_number_to_decimal(service.ValorValorDeclarado)
