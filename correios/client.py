@@ -417,7 +417,7 @@ class Correios:
 
     def calculate_freights(self,
                            posting_card: PostingCard,
-                           services: List[Union[Service, int, str]],
+                           services: List[Union[Service, int]],
                            from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
                            package: Package,
                            value: Union[Decimal, float] = 0.00,
@@ -429,7 +429,7 @@ class Correios:
         to_zip = ZipCode.create(to_zip)
 
         if extra_services is None:
-            extra_services = []  # type: Sequence
+            extra_services = []
         else:
             extra_services = [ExtraService.get(es) for es in extra_services]
 

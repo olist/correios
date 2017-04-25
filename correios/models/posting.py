@@ -462,7 +462,7 @@ class ShippingLabel:
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
                  package: Package,
-                 extra_services: Optional[Sequence[Union[ExtraService, int]]] = None,
+                 extra_services: Optional[List[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
                  invoice_number: Optional[str] = "",
@@ -511,7 +511,7 @@ class ShippingLabel:
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
 
-    def add_extra_services(self, extra_services: Sequence[Union["ExtraService", int]]):
+    def add_extra_services(self, extra_services: List[Union["ExtraService", int]]):
         for extra_service in extra_services:
             self.add_extra_service(extra_service)
 
@@ -653,7 +653,7 @@ class Freight:
                  delivery_time: Union[int, timedelta],
                  declared_value: Union[Decimal, float, int, str] = 0.00,
                  saturday: bool = False,
-                 home: bool = False):
+                 home: bool = False) -> None:
 
         self.service = Service.get(service)
 

@@ -155,7 +155,7 @@ class Service:
         self.max_declared_value = max_declared_value
 
         if default_extra_services is None:
-            self.default_extra_services = []  # type: Sequence
+            self.default_extra_services = []  # type: List
         else:
             self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
 
