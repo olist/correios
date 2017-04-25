@@ -13,11 +13,10 @@
 # limitations under the License.
 
 
+import os
 from datetime import datetime
 from decimal import Decimal
 from typing import Union, Sequence, List, Dict, Optional
-
-import os
 
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
