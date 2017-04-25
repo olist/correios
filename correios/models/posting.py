@@ -13,12 +13,12 @@
 # limitations under the License.
 
 
+import os
 import math
 from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Optional, Tuple, Union, List, Dict  # noqa: F401
 
-import os
 from PIL import Image
 
 from correios import DATADIR
