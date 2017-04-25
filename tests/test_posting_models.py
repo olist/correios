@@ -521,9 +521,15 @@ def test_invalid_event_status(event_type):
 
 
 def test_basic_freight():
-    freight = posting.Freight(SERVICE_SEDEX, Decimal("10.00"), timedelta(days=5))
+    freight = posting.Freight(SERVICE_SEDEX, timedelta(days=5), Decimal("10.00"))
     assert freight.total == Decimal("10.00")
     assert freight.delivery_time == timedelta(days=5)
     assert freight.declared_value == Decimal("0.00")
     assert freight.saturday is False
     assert freight.home is False
+
+
+def test_basic_freight_conversion():
+    freight = posting.Freight(SERVICE_SEDEX, 5, 10.00)
+    assert freight.delivery_time == timedelta(days=5)
+    assert freight.total == Decimal("10.00")

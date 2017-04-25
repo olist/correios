@@ -22,10 +22,10 @@ import os
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
-from correios.utils import to_decimal
+from correios.utils import to_decimal, to_integer
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
-                             TrackingEvent, EventStatus, Package, Freight)
+                             TrackingEvent, EventStatus, Package, Freight, FreightError)
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service, ExtraService
 from .soap import SoapClient
 
@@ -157,18 +157,33 @@ class ModelBuilder:
 
     def build_freights_list(self, response):
         result = []
-        for service in response.Servicos.cServico:
-            value = to_decimal(service.Valor)
-            delivery_time = int(service.PrazoEntrega)
-            declared_value = to_decimal(service.ValorValorDeclarado)
-            freight = Freight(
-                service=service.Codigo,
-                total=value,
-                delivery_time=delivery_time,
-                declared_value=declared_value,
-                saturday=service.EntregaSabado.upper() == "S",
-                home=service.EntregaDomiciliar.upper() == "S",
-            )
+        for service_data in response.Servicos.cServico:
+            service = Service.get(service_data.Codigo)
+            error_code = to_integer(service_data.Erro)
+            if error_code:
+                freight = FreightError(
+                    service=service,
+                    error_code=error_code,
+                    error_message=service_data.MsgErro,
+                )
+            else:
+                delivery_time = int(service_data.PrazoEntrega)
+                value = to_decimal(service_data.ValorSemAdicionais)
+                declared_value = to_decimal(service_data.ValorValorDeclarado)
+                ar_value = to_decimal(service_data.ValorAvisoRecebimento)
+                mp_value = to_decimal(service_data.ValorMaoPropria)
+                saturday = service_data.EntregaSabado or ""
+                home = service_data.EntregaDomiciliar or ""
+                freight = Freight(
+                    service=service,
+                    delivery_time=delivery_time,
+                    value=value,
+                    declared_value=declared_value,
+                    ar_value=ar_value,
+                    mp_value=mp_value,
+                    saturday=saturday.upper() == "S",
+                    home=home.upper() == "S",
+                )
             result.append(freight)
         return result
 

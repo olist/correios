@@ -1,8 +1,9 @@
-import re
-from decimal import Decimal
 from datetime import datetime
+from decimal import Decimal
 from itertools import chain
 from typing import Container, Iterable, Sized, Union
+
+import re
 
 
 def capitalize_phrase(phrase: str) -> str:
@@ -57,10 +58,7 @@ class RangeSet(Sized, Iterable, Container):
 
 
 def to_integer(number: Union[int, str]) -> int:
-    try:
-        return int(str(number).strip())
-    except AttributeError:
-        return int(number)
+    return int(str(number).strip())
 
 
 def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:

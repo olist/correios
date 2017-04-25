@@ -13,16 +13,17 @@
 # limitations under the License.
 
 
-import os
 import math
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Optional, Sequence, Tuple, Union, List, Dict  # noqa: F401
+from typing import Optional, Tuple, Union, List, Dict  # noqa: F401
 
+import os
 from PIL import Image
 
 from correios import DATADIR
 from correios import exceptions
+from correios.utils import to_decimal
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
@@ -649,25 +650,55 @@ class PostingList:
 class Freight:
     def __init__(self,
                  service: Union[Service, int],
-                 total: Union[Decimal, float, int, str],
                  delivery_time: Union[int, timedelta],
+                 value: Union[Decimal, float, int, str],
                  declared_value: Union[Decimal, float, int, str] = 0.00,
+                 mp_value: Union[Decimal, float, int, str] = 0.00,
+                 ar_value: Union[Decimal, float, int, str] = 0.00,
                  saturday: bool = False,
                  home: bool = False) -> None:
 
         self.service = Service.get(service)
 
-        if not isinstance(total, Decimal):
-            total = Decimal(total).quantize(MONEY_QUANTIZATION)
-        self.total = total
-
         if not isinstance(delivery_time, timedelta):
             delivery_time = timedelta(days=delivery_time)
         self.delivery_time = delivery_time
 
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+        self.value = value
+
         if not isinstance(declared_value, Decimal):
-            declared_value = Decimal(declared_value).quantize(MONEY_QUANTIZATION)
+            declared_value = to_decimal(declared_value)
         self.declared_value = declared_value
+
+        if not isinstance(mp_value, Decimal):
+            mp_value = to_decimal(mp_value)
+        self.mp_value = mp_value
+
+        if not isinstance(ar_value, Decimal):
+            ar_value = to_decimal(ar_value)
+        self.ar_value = ar_value
 
         self.saturday = saturday
         self.home = home
+        self.error_code = 0
+        self.error_message = ""
+
+    @property
+    def total(self):
+        return self.value + self.declared_value + self.ar_value + self.mp_value
+
+
+class FreightError(Freight):
+    def __init__(self,
+                 service: Union[Service, int],
+                 error_code: Union[str, int],
+                 error_message: str) -> None:
+        super().__init__(
+            service=service,
+            value=Decimal("0.00"),
+            delivery_time=timedelta(days=0),
+        )
+        self.error_code = int(error_code)
+        self.error_message = error_message

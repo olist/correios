@@ -2,7 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.utils import capitalize_phrase, RangeSet, rreplace, to_decimal
+from correios.utils import capitalize_phrase, RangeSet, rreplace, to_decimal, to_integer
 
 phrase = 'FOo bAr BAZ qux'
 
@@ -87,3 +87,12 @@ def test_to_decimal(s, d):
 ))
 def test_to_decimal_precision(v, p, r):
     assert to_decimal(v, p) == r
+
+
+@pytest.mark.parametrize('v, r', (
+    (3, 3),
+    ("3", 3),
+    ("  \t3  \n", 3),
+))
+def test_to_integer(v, r):
+    assert to_integer(v) == r

@@ -152,6 +152,7 @@ class Service:
         return "<Service code={!r}, name={!r}>".format(self.code, self.display_name)
 
     def __eq__(self, other):
+        other = Service.get(other)
         return (self.id, self.code) == (other.id, other.code)
 
     def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
