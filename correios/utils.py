@@ -69,13 +69,15 @@ def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> dateti
     return date
 
 
-def to_decimal(value: Union[str, float], precision=2):
-    value = rreplace(str(value), ",", ".", 1)
-    if "." in value:
-        real, imag = value.rsplit(".", 1)
-    else:
-        real, imag = value, "0"
-    real = re.sub("[,._]", "", real)
+def to_decimal(value: Union[Decimal, str, float], precision=2):
+    if not isinstance(value, Decimal):
+        value = rreplace(str(value), ",", ".", 1)
+        if "." in value:
+            real, imag = value.rsplit(".", 1)
+        else:
+            real, imag = value, "0"
+        real = re.sub("[,._]", "", real)
+        value = Decimal("{}.{}".format(real, imag))
 
     quantize = Decimal("0." + "0" * precision)
-    return Decimal("{}.{}".format(real, imag)).quantize(quantize)
+    return value.quantize(quantize)
