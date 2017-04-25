@@ -13,29 +13,23 @@
 # limitations under the License.
 
 
-import os
-import locale
 from datetime import datetime
+from decimal import Decimal
 from typing import Union, Sequence, List, Dict, Optional
 
-from decimal import Decimal
+import os
 
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
+from correios.utils import to_decimal
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
-                             TrackingEvent, EventStatus, Package, Freight, MONEY_QUANTIZATION)
+                             TrackingEvent, EventStatus, Package, Freight)
 from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service, ExtraService
 from .soap import SoapClient
 
-
 KG = 1000  # g
-
-
-def local_number_to_decimal(value):
-    locale.setlocale(locale.LC_NUMERIC, "pt_BR.UTF-8")
-    return Decimal(locale.atof(value)).quantize(MONEY_QUANTIZATION)
 
 
 class ModelBuilder:
@@ -164,9 +158,9 @@ class ModelBuilder:
     def build_freights_list(self, response):
         result = []
         for service in response.Servicos.cServico:
-            value = local_number_to_decimal(service.Valor)
+            value = to_decimal(service.Valor)
             delivery_time = int(service.PrazoEntrega)
-            declared_value = local_number_to_decimal(service.ValorValorDeclarado)
+            declared_value = to_decimal(service.ValorValorDeclarado)
             freight = Freight(
                 service=service.Codigo,
                 total=value,
