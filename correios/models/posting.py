@@ -44,7 +44,6 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
 INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
 INSURANCE_PERCENTUAL_COST = Decimal("0.007")  # 0.7%
-MONEY_QUANTIZATION = Decimal("0.00")
 
 
 class EventStatus:
@@ -361,7 +360,7 @@ class Package:
         per_unit_value = Decimal(per_unit_value)
         if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
             value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * INSURANCE_PERCENTUAL_COST
-        return Decimal(value * quantity).quantize(MONEY_QUANTIZATION)
+        return to_decimal(value * quantity)
 
     @classmethod
     def validate(cls,
@@ -695,10 +694,6 @@ class FreightError(Freight):
                  service: Union[Service, int],
                  error_code: Union[str, int],
                  error_message: str) -> None:
-        super().__init__(
-            service=service,
-            value=Decimal("0.00"),
-            delivery_time=timedelta(days=0),
-        )
+        super().__init__(service, 0, Decimal("0.00"))
         self.error_code = int(error_code)
         self.error_message = error_message
