@@ -77,7 +77,7 @@ def to_decimal(value: Union[str, float], precision=2):
         real, imag = value.rsplit(".", 1)
     else:
         real, imag = value, "0"
-    real = re.sub("[,.]", "", real)
+    real = re.sub("[,._]", "", real)
 
     quantize = Decimal("0." + "0" * precision)
     return Decimal("{}.{}".format(real, imag)).quantize(quantize)
