@@ -13,13 +13,14 @@
 # limitations under the License.
 
 
-import pytest
 from decimal import Decimal
+
+import pytest
 
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
-from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD, SERVICE_PAC, EXTRA_SERVICE_AR, \
-    EXTRA_SERVICE_MP
+from correios.models.data import (SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD, SERVICE_PAC, EXTRA_SERVICE_AR,
+                                  EXTRA_SERVICE_MP)
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
                                      TrackingCode, Package)
 from correios.models.user import PostingCard, Service, ExtraService
