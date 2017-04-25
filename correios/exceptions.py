@@ -134,7 +134,7 @@ class MinimumDeclaredValueError(InvalidDeclaredValueError):
 
 
 class FreightCalculationError(ClientError):
-    def __init__(self, message: str, code: int, *args):
+    def __init__(self, message: str, code: int, *args) -> None:
         super().__init__(*args)
         self.code = code
         self.message = message
