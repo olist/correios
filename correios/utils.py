@@ -1,5 +1,8 @@
+import re
+from decimal import Decimal
+from datetime import datetime
 from itertools import chain
-from typing import Container, Iterable, Sized
+from typing import Container, Iterable, Sized, Union
 
 
 def capitalize_phrase(phrase: str) -> str:
@@ -51,3 +54,30 @@ class RangeSet(Sized, Iterable, Container):
 
     def __len__(self):
         return sum(len(r) for r in self.ranges)
+
+
+def to_integer(number: Union[int, str]) -> int:
+    try:
+        return int(str(number).strip())
+    except AttributeError:
+        return int(number)
+
+
+def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
+    if isinstance(date, str):
+        last_colon_pos = date.rindex(":")
+        date = date[:last_colon_pos] + date[last_colon_pos + 1:]
+        return datetime.strptime(date, fmt)
+    return date
+
+
+def to_decimal(value: Union[str, float], precision=2):
+    value = rreplace(str(value), ",", ".", 1)
+    if "." in value:
+        real, imag = value.rsplit(".", 1)
+    else:
+        real, imag = value, "0"
+    real = re.sub("[,.]", "", real)
+
+    quantize = Decimal("0." + "0" * precision)
+    return Decimal("{}.{}".format(real, imag)).quantize(quantize)

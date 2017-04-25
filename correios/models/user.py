@@ -13,35 +13,21 @@
 # limitations under the License.
 
 
-import os
-from datetime import datetime
+from datetime import datetime  # noqa: F401
 from decimal import Decimal
 from typing import Union, Optional, Sequence, List  # noqa: F401
 
+import os
 from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
                                  InvalidRegionalDirectionError, InvalidUserContractError,
                                  MaximumDeclaredValueError, MinimumDeclaredValueError)
+from correios.utils import to_integer, to_datetime
 from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES, EXTRA_SERVICE_VD
 
 EXTRA_SERVICE_CODE_SIZE = 2
-
-
-def to_integer(number: Union[int, str]) -> int:
-    try:
-        return int(number.strip())  # type: ignore
-    except AttributeError:
-        return int(number)
-
-
-def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
-    if isinstance(date, str):
-        last_colon_pos = date.rindex(":")
-        date = date[:last_colon_pos] + date[last_colon_pos + 1:]
-        return datetime.strptime(date, fmt)
-    return date
 
 
 def _to_federal_tax_number(federal_tax_number) -> "FederalTaxNumber":
