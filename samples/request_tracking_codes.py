@@ -18,8 +18,8 @@ from ..correios.models.user import User, Service
 
 
 def get_tracking_codes(service, quantity):
-    olist_user = User('Your Company\'s Name', 'Your Company\'s CNPJ')
-    client = Correios('Your Correio\'s username', 'Your correio\'s password')
+    olist_user = User("Your Company's Name", "Your Company's CNPJ")
+    client = Correios("Your Correio's username", "Your correio's password")
     tracking_codes = client.request_tracking_codes(olist_user, Service.get(service), quantity=quantity)
     print(tracking_codes)
 
