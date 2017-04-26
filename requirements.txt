@@ -3,7 +3,7 @@ Pillow
 
 # pdf
 reportlab
-hubarcode
+hubarcode==1.0.0
 
 # api
 requests
