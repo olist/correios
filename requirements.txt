@@ -1,4 +1,4 @@
-phonenumbers
+phonenumbers==8.4.2
 Pillow
 
 # pdf
