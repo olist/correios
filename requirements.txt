@@ -7,5 +7,5 @@ hubarcode
 
 # api
 requests
-suds-jurko
+suds-jurko==0.6
 lxml
