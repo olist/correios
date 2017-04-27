@@ -6,6 +6,6 @@ reportlab
 hubarcode
 
 # api
-requests
+requests==2.13.0
 suds-jurko
 lxml
