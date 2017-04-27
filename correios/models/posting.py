@@ -256,6 +256,12 @@ class Package:
     TYPE_BOX = 2  # type: int
     TYPE_CYLINDER = 3  # type: int
 
+    freight_package_types = {
+        TYPE_BOX: 1,
+        TYPE_CYLINDER: 2,
+        TYPE_ENVELOPE: 3,
+    }  # type: Dict[int, int]
+
     def __init__(self,
                  package_type: int = TYPE_BOX,
                  width: Union[float, int] = 0,  # cm
@@ -339,7 +345,16 @@ class Package:
 
     @property
     def freight_package_type(self) -> int:
-        return [3, 1, 2][self.package_type - 1]  # see documentation for freight calculation
+        """
+        SIGEP API and Freight API different codes to identify package types:
+
+        SIGEP | Freight | Type
+        ------+---------+----------
+          1   |    3    | Envelope
+          2   |    1    | Box
+          3   |    2    | Cylinder
+        """
+        return self.freight_package_types[self.package_type]
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
