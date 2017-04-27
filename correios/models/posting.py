@@ -694,6 +694,6 @@ class FreightError(Freight):
                  service: Union[Service, int],
                  error_code: Union[str, int],
                  error_message: str) -> None:
-        super().__init__(service, 0, Decimal("0.00"))
+        super().__init__(service=service, delivery_time=0, value=Decimal("0.00"))
         self.error_code = int(error_code)
         self.error_message = error_message
