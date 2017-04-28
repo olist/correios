@@ -1,6 +1,8 @@
+from decimal import Decimal
+
 import pytest
 
-from correios.utils import capitalize_phrase, RangeSet, rreplace
+from correios.utils import capitalize_phrase, RangeSet, rreplace, to_decimal, to_integer
 
 phrase = 'FOo bAr BAZ qux'
 
@@ -56,3 +58,41 @@ def test_rreplace():
     assert rreplace(phrase, ' ', '-', 2) == 'foo bar-baz-qux'
     assert rreplace(phrase, ' ', '-', 3) == 'foo-bar-baz-qux'
     assert rreplace(phrase, ' ', '-') == 'foo-bar-baz-qux'
+
+
+@pytest.mark.parametrize('s, d', (
+    ("", Decimal("0.00")),
+    ("3", Decimal("3.00")),
+    ("3.57", Decimal("3.57")),
+    ("3.468", Decimal("3.47")),
+    ("3.4", Decimal("3.40")),
+    ("3,57", Decimal("3.57")),
+    ("3,468", Decimal("3.47")),
+    ("3,4", Decimal("3.40")),
+    ("1,357.93", Decimal("1357.93")),
+    ("1.357,93", Decimal("1357.93")),
+    ("1_357.93", Decimal("1357.93")),
+    ("1_357,93", Decimal("1357.93")),
+))
+def test_to_decimal(s, d):
+    assert to_decimal(s) == d
+
+
+@pytest.mark.parametrize('v, p, r', (
+    ("3.4", 1, Decimal("3.4")),
+    ("3.4", 4, Decimal("3.4000")),
+    ("3.4", 0, Decimal("3")),
+    ("3.6", 0, Decimal("4")),
+    ("3.46876", 2, Decimal("3.47")),
+))
+def test_to_decimal_precision(v, p, r):
+    assert to_decimal(v, p) == r
+
+
+@pytest.mark.parametrize('v, r', (
+    (3, 3),
+    ("3", 3),
+    ("  \t3  \n", 3),
+))
+def test_to_integer(v, r):
+    assert to_integer(v) == r

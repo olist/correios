@@ -15,15 +15,20 @@
 
 import os
 from datetime import datetime
-from typing import Union, Sequence, List, Dict
+from decimal import Decimal
+from typing import Union, Sequence, List, Dict, Optional
 
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
+from correios.utils import to_decimal, to_integer
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
-                             TrackingEvent, EventStatus)
-from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service
+                             TrackingEvent, EventStatus, Package, Freight, FreightError)
+from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service, ExtraService
 from .soap import SoapClient
+
+KG = 1000  # g
 
 
 class ModelBuilder:
@@ -147,6 +152,38 @@ class ModelBuilder:
 
             result.append(tracking_code)
 
+        return result
+
+    def build_freights_list(self, response):
+        result = []
+        for service_data in response.Servicos.cServico:
+            service = Service.get(service_data.Codigo)
+            error_code = to_integer(service_data.Erro)
+            if error_code:
+                freight = FreightError(
+                    service=service,
+                    error_code=error_code,
+                    error_message=service_data.MsgErro,
+                )
+            else:
+                delivery_time = int(service_data.PrazoEntrega)
+                value = to_decimal(service_data.ValorSemAdicionais)
+                declared_value = to_decimal(service_data.ValorValorDeclarado)
+                ar_value = to_decimal(service_data.ValorAvisoRecebimento)
+                mp_value = to_decimal(service_data.ValorMaoPropria)
+                saturday = service_data.EntregaSabado or ""
+                home = service_data.EntregaDomiciliar or ""
+                freight = Freight(
+                    service=service,
+                    delivery_time=delivery_time,
+                    value=value,
+                    declared_value=declared_value,
+                    ar_value=ar_value,
+                    mp_value=mp_value,
+                    saturday=saturday.upper() == "S",
+                    home=home.upper() == "S",
+                )
+            result.append(freight)
         return result
 
 
@@ -278,6 +315,7 @@ class Correios:
         'test': ("https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", False),
     }
     websro_url = "https://webservice.correios.com.br/service/rastro/Rastro.wsdl"
+    freight_url = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL"
 
     def __init__(self, username, password, timeout=8, environment="production"):
         self.username = username
@@ -293,6 +331,9 @@ class Correios:
 
         self.websro_client = SoapClient(self.websro_url, timeout=self.timeout)
         self.websro = self.websro_client.service
+
+        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout)
+        self.freight = self.freight_client.service
 
         self.model_builder = ModelBuilder()
 
@@ -380,3 +421,39 @@ class Correios:
         response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101",
                                                  tuple(tracking_codes.keys()))
         return self.model_builder.load_tracking_events(tracking_codes, response)
+
+    def calculate_freights(self,
+                           posting_card: PostingCard,
+                           services: List[Union[Service, int]],
+                           from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
+                           package: Package,
+                           value: Union[Decimal, float] = 0.00,
+                           extra_services: Optional[Sequence[Union[ExtraService, int]]] = None):
+
+        administrative_code = posting_card.administrative_code
+        services = [Service.get(s) for s in services]
+        from_zip = ZipCode.create(from_zip)
+        to_zip = ZipCode.create(to_zip)
+
+        if extra_services is None:
+            extra_services = []
+        else:
+            extra_services = [ExtraService.get(es) for es in extra_services]
+
+        response = self.freight.CalcPrecoPrazo(
+            administrative_code,
+            self.password,
+            ",".join(str(s) for s in services),
+            str(from_zip),
+            str(to_zip),
+            package.weight / KG,
+            package.package_type,
+            package.length,
+            package.height,
+            package.width,
+            package.diameter,
+            "S" if EXTRA_SERVICE_MP in extra_services else "N",
+            value,
+            "S" if EXTRA_SERVICE_AR in extra_services else "N",
+        )
+        return self.model_builder.build_freights_list(response)

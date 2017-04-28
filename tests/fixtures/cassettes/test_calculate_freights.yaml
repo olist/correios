@@ -1,0 +1,33 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://tempuri.org/"
+      xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns1:Body><ns0:CalcPrecoPrazo><ns0:nCdEmpresa>08082650</ns0:nCdEmpresa><ns0:sDsSenha>n5f9t8</ns0:sDsSenha><ns0:nCdServico>40096,41068</ns0:nCdServico><ns0:sCepOrigem>07192100</ns0:sCepOrigem><ns0:sCepDestino>80030001</ns0:sCepDestino><ns0:nVlPeso>0.0</ns0:nVlPeso><ns0:nCdFormato>2</ns0:nCdFormato><ns0:nVlComprimento>24</ns0:nVlComprimento><ns0:nVlAltura>28</ns0:nVlAltura><ns0:nVlLargura>26</ns0:nVlLargura><ns0:nVlDiametro>16</ns0:nVlDiametro><ns0:sCdMaoPropria>N</ns0:sCdMaoPropria><ns0:nVlValorDeclarado>0.0</ns0:nVlValorDeclarado><ns0:sCdAvisoRecebimento>N</ns0:sCdAvisoRecebimento></ns0:CalcPrecoPrazo></ns1:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['914']
+      Content-Type: [text/xml;charset=UTF-8]
+      SOAPAction:
+      - !!binary |
+        Imh0dHA6Ly90ZW1wdXJpLm9yZy9DYWxjUHJlY29QcmF6byI=
+      User-Agent: [python-requests/2.13.0]
+    method: POST
+    uri: http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx
+  response:
+    body: {string: '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><CalcPrecoPrazoResponse
+        xmlns="http://tempuri.org/"><CalcPrecoPrazoResult><Servicos><cServico><Codigo>40096</Codigo><Valor>23,75</Valor><PrazoEntrega>1</PrazoEntrega><ValorMaoPropria>0,00</ValorMaoPropria><ValorAvisoRecebimento>0,00</ValorAvisoRecebimento><ValorValorDeclarado>0,00</ValorValorDeclarado><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>S</EntregaSabado><Erro>0</Erro><MsgErro
+        /><ValorSemAdicionais>23,75</ValorSemAdicionais><obsFim /></cServico><cServico><Codigo>41068</Codigo><Valor>14,10</Valor><PrazoEntrega>6</PrazoEntrega><ValorMaoPropria>0,00</ValorMaoPropria><ValorAvisoRecebimento>0,00</ValorAvisoRecebimento><ValorValorDeclarado>0,00</ValorValorDeclarado><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>N</EntregaSabado><Erro>0</Erro><MsgErro
+        /><ValorSemAdicionais>14,10</ValorSemAdicionais><obsFim /></cServico></Servicos></CalcPrecoPrazoResult></CalcPrecoPrazoResponse></soap:Body></soap:Envelope>'}
+    headers:
+      Cache-Control: ['private, max-age=0']
+      Content-Length: ['1155']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Tue, 25 Apr 2017 16:47:47 GMT']
+      Server: [Microsoft-IIS/7.5]
+      X-AspNet-Version: [4.0.30319]
+      X-Powered-By: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1

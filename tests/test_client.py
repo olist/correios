@@ -13,13 +13,16 @@
 # limitations under the License.
 
 
+from decimal import Decimal
+
 import pytest
 
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
-from correios.models.data import SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD
+from correios.models.data import (SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD, SERVICE_PAC, EXTRA_SERVICE_AR,
+                                  EXTRA_SERVICE_MP)
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
-                                     TrackingCode)
+                                     TrackingCode, Package)
 from correios.models.user import PostingCard, Service, ExtraService
 from .vcr import vcr
 
@@ -133,7 +136,7 @@ def test_get_tracking_code_events(client):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_get_tracking_code_events_withou_city_field(client):
+def test_get_tracking_code_events_without_city_field(client):
     result = client.get_tracking_code_events("PJ651329640BR")
 
     assert isinstance(result[0], TrackingCode)
@@ -242,3 +245,61 @@ def test_limit_size_city_name(posting_list, shipping_label):
 
     assert b"<cidade_destinatario><![CDATA[Porto Alegre (Rio Grande do Su]]></cidade_destinatario>" in xml
     assert b"<cidade_remetente><![CDATA[Santa Maria (Rio Grande do Sul]]></cidade_remetente>" in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freights(client, posting_card, package):
+    freights = client.calculate_freights(posting_card, [SERVICE_SEDEX, SERVICE_PAC], "07192100", "80030001", package)
+    assert len(freights) == 2
+
+    freight = freights[0]
+    assert freight.error_code == 0
+    assert freight.error_message == ""
+    assert freight.service == SERVICE_SEDEX
+    assert freight.delivery_time.days == 1
+    assert freight.total == Decimal("23.75")
+    assert freight.saturday is True
+    assert freight.home is True
+
+    freight = freights[1]
+    assert freight.error_code == 0
+    assert freight.error_message == ""
+    assert freight.service == SERVICE_PAC
+    assert freight.delivery_time.days == 6
+    assert freight.total == Decimal("14.10")
+    assert freight.saturday is False
+    assert freight.home is True
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freights_with_extra_services(client, posting_card, package):
+    freights = client.calculate_freights(
+        posting_card=posting_card,
+        services=[SERVICE_SEDEX],
+        from_zip="07192100",
+        to_zip="80030001",
+        package=package,
+        value="9000.00",
+        extra_services=[EXTRA_SERVICE_AR, EXTRA_SERVICE_MP]
+    )
+    assert len(freights) == 1
+
+    freight = freights[0]
+    assert freight.service == SERVICE_SEDEX
+    assert freight.total == Decimal("96.03")
+    assert freight.value == Decimal("23.75")
+    assert freight.declared_value == Decimal("62.48")
+    assert freight.mp_value == Decimal("5.50")
+    assert freight.ar_value == Decimal("4.30")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freight_with_error(client, posting_card, package: Package):
+    package.real_weight = 80000  # invalid weight (80kg)
+    freights = client.calculate_freights(posting_card, [SERVICE_SEDEX], "99999000", "99999999", package)
+    assert len(freights) == 1
+    assert freights[0].error_code == -4
+    assert freights[0].error_message == "Peso excedido."

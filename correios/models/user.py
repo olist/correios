@@ -13,35 +13,21 @@
 # limitations under the License.
 
 
-import os
-from datetime import datetime
+from datetime import datetime  # noqa: F401
 from decimal import Decimal
-from typing import Union, Optional, Sequence
+from typing import Union, Optional, Sequence, List  # noqa: F401
 
+import os
 from PIL import Image
 
 from correios import DATADIR
 from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
                                  InvalidRegionalDirectionError, InvalidUserContractError,
                                  MaximumDeclaredValueError, MinimumDeclaredValueError)
+from correios.utils import to_integer, to_datetime
 from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES, EXTRA_SERVICE_VD
 
 EXTRA_SERVICE_CODE_SIZE = 2
-
-
-def to_integer(number: Union[int, str]) -> int:
-    try:
-        return int(number.strip())  # type: ignore
-    except AttributeError:
-        return int(number)
-
-
-def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
-    if isinstance(date, str):
-        last_colon_pos = date.rindex(":")
-        date = date[:last_colon_pos] + date[last_colon_pos + 1:]
-        return datetime.strptime(date, fmt)
-    return date
 
 
 def _to_federal_tax_number(federal_tax_number) -> "FederalTaxNumber":
@@ -155,8 +141,9 @@ class Service:
         self.max_declared_value = max_declared_value
 
         if default_extra_services is None:
-            default_extra_services = []
-        self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
+            self.default_extra_services = []  # type: List
+        else:
+            self.default_extra_services = [ExtraService.get(es) for es in default_extra_services]
 
     def __str__(self):
         return str(self.code)
@@ -165,6 +152,7 @@ class Service:
         return "<Service code={!r}, name={!r}>".format(self.code, self.display_name)
 
     def __eq__(self, other):
+        other = Service.get(other)
         return (self.id, self.code) == (other.id, other.code)
 
     def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
@@ -215,10 +203,12 @@ class ExtraService:
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
 
     def __eq__(self, other):
+        if isinstance(other, int):
+            return self.number == other
         return self.number == other.number
 
     def is_declared_value(self):
-        return self.number == EXTRA_SERVICE_VD
+        return self == EXTRA_SERVICE_VD
 
     @classmethod
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
