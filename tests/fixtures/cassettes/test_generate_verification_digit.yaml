@@ -1,0 +1,37 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:ns1="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns0="http://cliente.bean.master.sigep.bsb.correios.com.br/"><SOAP-ENV:Header/><ns1:Body><ns0:geraDigitoVerificadorEtiquetas><etiquetas>DL74668653
+      BR</etiquetas><usuario>sigep</usuario><senha>XXXXXX</senha></ns0:geraDigitoVerificadorEtiquetas></ns1:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['503']
+      Content-Type: [text/xml; charset=utf-8]
+      SOAPAction:
+      - !!binary |
+        IiI=
+      User-Agent: [python-requests/2.10.0]
+    method: POST
+    uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA42QMQ7CMAxFr4J6gERiYIhCBkQvwMCepCaN1MbBThHcngQVBBvb17e/35c1o82q
+        TzeYMMPmPk+JVfP23VhKVlKyH2G2LOqo+QIpyCYkrCHZGf26csDhYXTirQpA9hhDLHgGipfo7YDU
+        l3hdoFg+AWdM/KbVwAfmpwipgHBgk6jUAiQ4BsjCsRMeiSAiVzELRw1MUBZKZqflqrT8v0Bd/iou
+        f15hnlTa1QAaAQAA
+    headers:
+      Connection: [Keep-Alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['183']
+      Content-Type: [text/xml;charset=UTF-8]
+      Date: ['Wed, 22 Jun 2016 04:25:02 GMT']
+      Keep-Alive: ['timeout=5, max=100']
+      Set-Cookie: [JSESSIONID=vEOxyCOZUaq4712b1-NzjPv0.39987725-7faa-3e86-8a45-e6c0e8576534;
+          Path=/SigepMasterJPA; Secure]
+      Vary: ['Accept-Encoding,User-Agent']
+    status: {code: 200, message: OK}
+version: 1

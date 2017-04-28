@@ -1,0 +1,47 @@
+interactions:
+- request:
+    body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><SOAP-ENV:Envelope xmlns:xsi=\"\
+      http://www.w3.org/2001/XMLSchema-instance\" xmlns:ns0=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"\
+      \ xmlns:ns1=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:SOAP-ENV=\"\
+      http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><ns1:Body><ns0:fechaPlpVariosServicos><xml>&lt;?xml\
+      \ version=&apos;1.0&apos; encoding=&apos;ISO-8859-1&apos;?&gt;\n&lt;correioslog&gt;&lt;tipo_arquivo&gt;Postagem&lt;/tipo_arquivo&gt;&lt;versao_arquivo&gt;2.3&lt;/versao_arquivo&gt;&lt;plp&gt;&lt;id_plp/&gt;&lt;valor_global/&gt;&lt;mcu_unidade_postagem/&gt;&lt;nome_unidade_postagem/&gt;&lt;cartao_postagem&gt;0056789123&lt;/cartao_postagem&gt;&lt;/plp&gt;&lt;remetente&gt;&lt;numero_contrato&gt;9911222777&lt;/numero_contrato&gt;&lt;numero_diretoria&gt;10&lt;/numero_diretoria&gt;&lt;codigo_administrativo&gt;88888888&lt;/codigo_administrativo&gt;&lt;nome_remetente&gt;&lt;![CDATA[Breno\
+      \ Rocha]]&gt;&lt;/nome_remetente&gt;&lt;logradouro_remetente&gt;&lt;![CDATA[Trevo\
+      \ de Carvalho]]&gt;&lt;/logradouro_remetente&gt;&lt;numero_remetente&gt;&lt;![CDATA[169]]&gt;&lt;/numero_remetente&gt;&lt;complemento_remetente&gt;&lt;![CDATA[Suite\
+      \ 704]]&gt;&lt;/complemento_remetente&gt;&lt;bairro_remetente&gt;&lt;![CDATA[Neighborhood\
+      \ #1]]&gt;&lt;/bairro_remetente&gt;&lt;cep_remetente&gt;&lt;![CDATA[78207561]]&gt;&lt;/cep_remetente&gt;&lt;cidade_remetente&gt;&lt;![CDATA[Santos]]&gt;&lt;/cidade_remetente&gt;&lt;uf_remetente&gt;&lt;![CDATA[AP]]&gt;&lt;/uf_remetente&gt;&lt;telefone_remetente&gt;&lt;![CDATA[556111316615]]&gt;&lt;/telefone_remetente&gt;&lt;fax_remetente/&gt;&lt;email_remetente&gt;&lt;![CDATA[michaelmeyer@hotmail.com]]&gt;&lt;/email_remetente&gt;&lt;/remetente&gt;&lt;forma_pagamento/&gt;&lt;objeto_postal&gt;&lt;numero_etiqueta&gt;MZ670943419BR&lt;/numero_etiqueta&gt;&lt;codigo_objeto_cliente/&gt;&lt;codigo_servico_postagem&gt;40169&lt;/codigo_servico_postagem&gt;&lt;cubagem&gt;3200&lt;/cubagem&gt;&lt;peso&gt;3200&lt;/peso&gt;&lt;rt1/&gt;&lt;rt2/&gt;&lt;destinatario&gt;&lt;nome_destinatario&gt;&lt;![CDATA[Lav\xED\
+      nia Ferreira]]&gt;&lt;/nome_destinatario&gt;&lt;telefone_destinatario&gt;&lt;![CDATA[551127299284]]&gt;&lt;/telefone_destinatario&gt;&lt;celular_destinatario&gt;&lt;![CDATA[552142526241]]&gt;&lt;/celular_destinatario&gt;&lt;email_destinatario&gt;&lt;![CDATA[perezkimberly@pope.com]]&gt;&lt;/email_destinatario&gt;&lt;logradouro_destinatario&gt;&lt;![CDATA[Esta\xE7\
+      \xE3o Ryan Ribeiro]]&gt;&lt;/logradouro_destinatario&gt;&lt;complemento_destinatario&gt;&lt;![CDATA[Suite\
+      \ 052]]&gt;&lt;/complemento_destinatario&gt;&lt;numero_end_destinatario&gt;70&lt;/numero_end_destinatario&gt;&lt;/destinatario&gt;&lt;nacional&gt;&lt;bairro_destinatario&gt;&lt;![CDATA[Neighborhood\
+      \ #0]]&gt;&lt;/bairro_destinatario&gt;&lt;cidade_destinatario&gt;&lt;![CDATA[Cunha]]&gt;&lt;/cidade_destinatario&gt;&lt;uf_destinatario&gt;SC&lt;/uf_destinatario&gt;&lt;cep_destinatario&gt;&lt;![CDATA[84292983]]&gt;&lt;/cep_destinatario&gt;&lt;codigo_usuario_postal/&gt;&lt;centro_custo_cliente/&gt;&lt;numero_nota_fiscal&gt;6654&lt;/numero_nota_fiscal&gt;&lt;serie_nota_fiscal/&gt;&lt;valor_nota_fiscal&gt;0,00&lt;/valor_nota_fiscal&gt;&lt;natureza_nota_fiscal/&gt;&lt;descricao_objeto&gt;&lt;![CDATA[Veritatis\
+      \ tempora cu]]&gt;&lt;/descricao_objeto&gt;&lt;valor_a_cobrar&gt;0,00&lt;/valor_a_cobrar&gt;&lt;/nacional&gt;&lt;servico_adicional&gt;&lt;codigo_servico_adicional&gt;025&lt;/codigo_servico_adicional&gt;&lt;valor_declarado&gt;0,00&lt;/valor_declarado&gt;&lt;/servico_adicional&gt;&lt;dimensao_objeto&gt;&lt;tipo_objeto&gt;002&lt;/tipo_objeto&gt;&lt;dimensao_altura&gt;18&lt;/dimensao_altura&gt;&lt;dimensao_largura&gt;27&lt;/dimensao_largura&gt;&lt;dimensao_comprimento&gt;16&lt;/dimensao_comprimento&gt;&lt;dimensao_diametro&gt;0&lt;/dimensao_diametro&gt;&lt;/dimensao_objeto&gt;&lt;data_postagem_sara/&gt;&lt;status_processamento&gt;0&lt;/status_processamento&gt;&lt;numero_comprovante_postagem/&gt;&lt;valor_cobrado/&gt;&lt;/objeto_postal&gt;&lt;/correioslog&gt;</xml><idPlpCliente>0</idPlpCliente><cartaoPostagem>0056789123</cartaoPostagem><listaEtiquetas>MZ67094341BR</listaEtiquetas><usuario>sigep</usuario><senha>XXXXXX</senha></ns0:fechaPlpVariosServicos></ns1:Body></SOAP-ENV:Envelope>"
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['4239']
+      Content-Type: [text/xml; charset=utf-8]
+      SOAPAction:
+      - !!binary |
+        IiI=
+      User-Agent: [python-requests/2.10.0]
+    method: POST
+    uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA4WPTQ4CIQyFr2LmABDHnwVBFibujSbuAatDMkNJixO9vWBGoyt37evr+1rNaJPa
+        xRF6TDC7D31kVbVN0+WclJTsOxgsizKqukC6ylpImJZkY/QrZYvnh9GRW3UB39l9n06WAvIRaAwe
+        +QCcMPKbUowfiO8DxAzCgY2i0DKQ4HCFJBw74ZEISlApBuGoAgnyjaKZL9v1YqXl1Gr5n15MX9fK
+        n//NExVVYcsPAQAA
+    headers:
+      Connection: [Keep-Alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['183']
+      Content-Type: [text/xml;charset=UTF-8]
+      Date: ['Mon, 25 Jul 2016 01:26:48 GMT']
+      Keep-Alive: ['timeout=5, max=100']
+      Set-Cookie: [JSESSIONID=QDnhnDJec5JY04Ekbkg2vnVC.39987725-7faa-3e86-8a45-e6c0e8576534;
+          Path=/SigepMasterJPA; Secure]
+      Vary: ['Accept-Encoding,User-Agent']
+    status: {code: 200, message: OK}
+version: 1

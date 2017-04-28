@@ -141,7 +141,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.invoice_number == "321"
     assert shipping_label.get_invoice() == "321"
 
-    assert shipping_label.get_contract_number() == "9912208555"
+    assert shipping_label.get_contract_number() == "9911222777"
     assert shipping_label.get_package_sequence() == "{}/{}".format(*shipping_label.package.sequence)
     assert shipping_label.get_weight() == "{}g".format(shipping_label.package.weight)
 
