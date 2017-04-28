@@ -15,14 +15,15 @@
 
 import os
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Optional, Sequence, Tuple, Union, List, Dict  # noqa: F401
+from typing import Optional, Tuple, Union, List, Dict  # noqa: F401
 
 from PIL import Image
 
 from correios import DATADIR
 from correios import exceptions
+from correios.utils import to_decimal
 from .address import Address, ZipCode
 from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
 from .user import Contract  # noqa: F401
@@ -255,6 +256,12 @@ class Package:
     TYPE_BOX = 2  # type: int
     TYPE_CYLINDER = 3  # type: int
 
+    freight_package_types = {
+        TYPE_BOX: 1,
+        TYPE_CYLINDER: 2,
+        TYPE_ENVELOPE: 3,
+    }  # type: Dict[int, int]
+
     def __init__(self,
                  package_type: int = TYPE_BOX,
                  width: Union[float, int] = 0,  # cm
@@ -336,6 +343,19 @@ class Package:
     def posting_weight(self) -> int:
         return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
 
+    @property
+    def freight_package_type(self) -> int:
+        """
+        SIGEP API and Freight API different codes to identify package types:
+
+        SIGEP | Freight | Type
+        ------+---------+----------
+          1   |    3    | Envelope
+          2   |    1    | Box
+          3   |    2    | Cylinder
+        """
+        return self.freight_package_types[self.package_type]
+
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
         return int(math.ceil((width * height * length) / IATA_COEFICIENT))
@@ -355,7 +375,7 @@ class Package:
         per_unit_value = Decimal(per_unit_value)
         if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
             value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * INSURANCE_PERCENTUAL_COST
-        return Decimal(value * quantity).quantize(Decimal('0.00'))
+        return to_decimal(value * quantity)
 
     @classmethod
     def validate(cls,
@@ -457,7 +477,7 @@ class ShippingLabel:
                  service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
                  package: Package,
-                 extra_services: Optional[Sequence[Union[ExtraService, int]]] = None,
+                 extra_services: Optional[List[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
                  invoice_number: Optional[str] = "",
@@ -506,7 +526,7 @@ class ShippingLabel:
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
 
-    def add_extra_services(self, extra_services: Sequence[Union["ExtraService", int]]):
+    def add_extra_services(self, extra_services: List[Union["ExtraService", int]]):
         for extra_service in extra_services:
             self.add_extra_service(extra_service)
 
@@ -639,3 +659,56 @@ class PostingList:
     @property
     def closed(self):
         return self.number is not None
+
+
+class Freight:
+    def __init__(self,
+                 service: Union[Service, int],
+                 delivery_time: Union[int, timedelta],
+                 value: Union[Decimal, float, int, str],
+                 declared_value: Union[Decimal, float, int, str] = 0.00,
+                 mp_value: Union[Decimal, float, int, str] = 0.00,
+                 ar_value: Union[Decimal, float, int, str] = 0.00,
+                 saturday: bool = False,
+                 home: bool = False) -> None:
+
+        self.service = Service.get(service)
+
+        if not isinstance(delivery_time, timedelta):
+            delivery_time = timedelta(days=delivery_time)
+        self.delivery_time = delivery_time
+
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+        self.value = value
+
+        if not isinstance(declared_value, Decimal):
+            declared_value = to_decimal(declared_value)
+        self.declared_value = declared_value
+
+        if not isinstance(mp_value, Decimal):
+            mp_value = to_decimal(mp_value)
+        self.mp_value = mp_value
+
+        if not isinstance(ar_value, Decimal):
+            ar_value = to_decimal(ar_value)
+        self.ar_value = ar_value
+
+        self.saturday = saturday
+        self.home = home
+        self.error_code = 0
+        self.error_message = ""
+
+    @property
+    def total(self):
+        return self.value + self.declared_value + self.ar_value + self.mp_value
+
+
+class FreightError(Freight):
+    def __init__(self,
+                 service: Union[Service, int],
+                 error_code: Union[str, int],
+                 error_message: str) -> None:
+        super().__init__(service=service, delivery_time=0, value=Decimal("0.00"))
+        self.error_code = int(error_code)
+        self.error_message = error_message
