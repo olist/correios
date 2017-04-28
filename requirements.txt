@@ -1,5 +1,5 @@
 phonenumbers
-Pillow
+Pillow==4.1.0
 
 # pdf
 reportlab
