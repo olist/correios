@@ -286,7 +286,7 @@ class Package:
         self.real_height = height  # cm
         self.real_length = length  # cm
         self.real_diameter = diameter  # cm
-        self.real_weight = diameter  # g
+        self.real_weight = weight  # g
         self.sequence = sequence
         self.service = service
 
