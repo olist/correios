@@ -227,7 +227,7 @@ def test_package_basic():
         height=10,
         length=16,
         weight=10000,
-        service=SERVICE_PAC,  # invalid tuple
+        service=SERVICE_PAC,
     )
     assert isinstance(package.service, Service)
     assert package.package_type == posting.Package.TYPE_BOX
@@ -307,6 +307,18 @@ def test_fail_package_weight_validation():
             service=Service.get(SERVICE_SEDEX),
             weight=50000,
         )
+
+
+def test_fix_bug_of_weight_using_diameter_information():
+    package = posting.Package(
+        package_type=posting.Package.TYPE_CYLINDER,
+        diameter=2,
+        length=20,
+        weight=10000,
+        service=SERVICE_PAC,
+    )
+    assert package.real_weight == 10000
+    assert package.real_diameter == 2
 
 
 @pytest.mark.parametrize("sequence", [
