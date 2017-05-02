@@ -25,7 +25,8 @@ from correios import DATADIR
 from correios import exceptions
 from correios.utils import to_decimal
 from .address import Address, ZipCode
-from .data import SERVICE_PAC, TRACKING_EVENT_TYPES, TRACKING_STATUS
+from .data import (INSURANCE_VALUE_THRESHOLD_PAC, INSURANCE_VALUE_THRESHOLD_SEDEX, INSURANCE_PERCENTUAL_COST,
+                   SERVICE_PAC, SERVICE_SEDEX, TRACKING_EVENT_TYPES, TRACKING_STATUS)
 from .user import Contract  # noqa: F401
 from .user import Service, ExtraService, PostingCard
 
@@ -42,8 +43,11 @@ MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MAX_CYLINDER_SIZE = 28
-INSURANCE_VALUE_THRESHOLD = Decimal("50.00")  # R$
-INSURANCE_PERCENTUAL_COST = Decimal("0.007")  # 0.7%
+
+INSURANCE_VALUE_THRESHOLDS = {
+    Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
+    Service.get(SERVICE_SEDEX).code: INSURANCE_VALUE_THRESHOLD_SEDEX
+}
 
 
 class EventStatus:
@@ -373,8 +377,11 @@ class Package:
                             service: Union[Service, int] = None) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
-        if Service.get(service) == Service.get(SERVICE_PAC) and per_unit_value > INSURANCE_VALUE_THRESHOLD:
-            value = (per_unit_value - INSURANCE_VALUE_THRESHOLD) * INSURANCE_PERCENTUAL_COST
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(Service.get(service).code, per_unit_value)
+
+        if per_unit_value > insurance_value_threshold:
+            value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
+
         return to_decimal(value * quantity)
 
     @classmethod

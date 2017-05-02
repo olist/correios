@@ -432,9 +432,11 @@ def test_calculate_insurance_pac():
 
 
 def test_calculate_insurance_sedex():
-    # not implemented, defaults to zero
+    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), service=SERVICE_SEDEX)
+    assert value == Decimal('2.98')
+
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
-    assert value == Decimal('0')
+    assert value == Decimal('5.95')
 
 
 def test_event_status():
