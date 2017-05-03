@@ -233,6 +233,22 @@ def test_package_basic():
     assert package.package_type == posting.Package.TYPE_BOX
 
 
+def test_package_attributes():
+    package = posting.Package(
+        package_type=posting.Package.TYPE_BOX,
+        width=11,
+        height=10,
+        length=16,
+        weight=10000,
+        service=SERVICE_PAC,  # invalid tuple
+    )
+    assert package.width == 11
+    assert package.height == 10
+    assert package.length == 16
+    assert package.weight == 10000
+    assert package.service == SERVICE_PAC
+
+
 @pytest.mark.parametrize("package,freight_package_type", [
     (posting.Package(posting.Package.TYPE_ENVELOPE, 0, 0, 0, weight=1), 3),
     (posting.Package(posting.Package.TYPE_BOX, 11, 10, 16, weight=1), 1),
