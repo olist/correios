@@ -167,7 +167,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
         posting_card=posting_card,
         sender=sender_address,
         receiver=receiver_address,
-        service=40096,  # SERVICE_SEDEX_CODE
+        service=4162,  # SERVICE_SEDEX_CODE
         package=package,
         tracking_code="PD12345678 BR",
     )

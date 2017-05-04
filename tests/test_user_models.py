@@ -200,7 +200,7 @@ def test_basic_service():
     )
 
     assert service.id == 104707
-    assert service.code == 40215
+    assert service.code == '40215'
     assert service.display_name == "SEDEX 10"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
@@ -219,7 +219,7 @@ def test_sanitize_service():
     )
 
     assert service.id == 104707
-    assert service.code == 40215
+    assert service.code == '40215'
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
 
@@ -227,7 +227,7 @@ def test_sanitize_service():
 def test_service_getter():
     service = Service.get(40215)
     assert service.id == 104707
-    assert service.code == 40215
+    assert service.code == '40215'
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
     assert Service.get(service) == service
