@@ -268,7 +268,7 @@ EXTRA_SERVICE_VD = 19
 EXTRA_SERVICE_RR = 25
 
 SERVICES = {
-    40215: {
+    '40215': {
         'id': 104707,
         'description': 'SEDEX 10',
         'category': 'SERVICO_COM_RESTRICAO',
@@ -279,7 +279,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    81019: {
+    '81019': {
         'id': 104672,
         'description': 'E-SEDEX STANDARD',
         'category': 'SERVICO_COM_RESTRICAO',
@@ -290,8 +290,19 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    41068: {
+    '41068': {
         'id': 109819,
+        'description': 'PAC CONTRATO AGENCIA',
+        'category': 'PAC',
+        'display_name': 'PAC',
+        'max_weight': 30000,
+        'symbol': "standard",
+        'default_extra_services': [EXTRA_SERVICE_RR],
+        'min_declared_value': Decimal("17.00"),
+        'max_declared_value': Decimal("3000.00"),
+    },
+    '04669': {
+        'id': 124884,
         'description': 'PAC',
         'category': 'PAC',
         'display_name': 'PAC',
@@ -301,7 +312,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("3000.00"),
     },
-    40444: {
+    '40444': {
         'id': 109811,
         'description': 'SEDEX - CONTRATO',
         'category': 'SEDEX',
@@ -312,7 +323,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40436: {
+    '40436': {
         'id': 109810,
         'description': 'SEDEX - CONTRATO',
         'category': 'SEDEX',
@@ -323,7 +334,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40096: {
+    '40096': {
         'id': 104625,
         'description': 'SEDEX (CONTRATO)',
         'category': 'SEDEX',
@@ -334,7 +345,18 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40380: {
+    '04162': {
+        'id': 124849,
+        'description': 'SEDEX CONTRATO AGENCIA',
+        'category': 'SEDEX',
+        'max_weight': 30000,
+        'display_name': 'SEDEX',
+        'symbol': "express",
+        'default_extra_services': [EXTRA_SERVICE_RR],
+        'min_declared_value': Decimal("17.00"),
+        'max_declared_value': Decimal("10000.00"),
+    },
+    '40380': {
         'id': 109806,
         'description': 'SEDEX REVERSO 40096',
         'category': 'REVERSO',
@@ -345,7 +367,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40010: {
+    '40010': {
         'id': 104295,
         'description': 'SEDEX A VISTA',
         'category': 'SEDEX',
@@ -356,7 +378,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    41211: {
+    '41211': {
         'id': 113546,
         'description': 'PAC - CONTRATO',
         'category': 'PAC',
@@ -367,7 +389,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("3000.00"),
     },
-    40630: {
+    '40630': {
         'id': 114976,
         'description': 'SEDEX PAGAMENTO NA ENTREGA -',
         'category': 'SEDEX',
@@ -378,7 +400,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40916: {
+    '40916': {
         'id': 118568,
         'description': 'SEDEX AGRUPADO II',
         'category': 'SEDEX',
@@ -389,7 +411,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40908: {
+    '40908': {
         'id': 118567,
         'description': 'SEDEX AGRUPADO I',
         'category': 'SEDEX',
@@ -400,7 +422,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    41300: {
+    '41300': {
         'id': 120366,
         'description': 'PAC GRANDES FORMATOS',
         'category': 'SERVICO_COM_RESTRICAO',
@@ -411,7 +433,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("3000.00"),
     },
-    40169: {
+    '40169': {
         'id': 115218,
         'description': 'SEDEX 12',
         'category': 'SERVICO_COM_RESTRICAO',
@@ -422,7 +444,7 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    40290: {
+    '40290': {
         'id': 108934,
         'description': 'SEDEX HOJE',
         'category': 'SERVICO_COM_RESTRICAO',
@@ -433,36 +455,36 @@ SERVICES = {
         'min_declared_value': Decimal("17.00"),
         'max_declared_value': Decimal("10000.00"),
     },
-    10154: {
+    '10154': {
         'id': 118424,
         'description': 'CARTA COMERCIAL  REGISTRADA',
         'category': 'CARTA_REGISTRADA',
         'display_name': 'Carta Registrada',
     },
-    41246: {
+    '41246': {
         'id': 115487,
         'description': 'REM. CAMPANHA PAPAI NOEL DOS',
         'category': 'SEM_CATEGORIA',
         'display_name': 'Papai Noel dos Correios'},
-    40150: {
+    '40150': {
         'id': 115136,
         'description': 'SERVICO DE PROTOCOLO POSTAL -',
         'category': 'SEDEX',
         'display_name': 'Protocolo',
     },
-    10065: {
+    '10065': {
         'id': 109480,
         'description': 'CARTA COMERCIAL A FATURAR',
         'category': 'CARTA_REGISTRADA',
         'display_name': 'Carta Comercial',
-    }
-}
+    },
+}  # type: Dict[str, dict]
 
-SERVICE_PAC = 41068
-SERVICE_SEDEX = 40096
-SERVICE_SEDEX10 = 40215
-SERVICE_SEDEX12 = 40169
-SERVICE_E_SEDEX = 81019
+SERVICE_PAC = '04669'
+SERVICE_SEDEX = '04162'
+SERVICE_SEDEX10 = '40215'
+SERVICE_SEDEX12 = '40169'
+SERVICE_E_SEDEX = '81019'
 
 INSURANCE_VALUE_THRESHOLD_PAC = Decimal("50.00")  # R$
 INSURANCE_VALUE_THRESHOLD_SEDEX = Decimal("75.00")  # R$

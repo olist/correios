@@ -130,7 +130,7 @@ class Service:
                  max_declared_value: Optional[Decimal] = Decimal("0.00"),
                  default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None) -> None:
         self.id = id
-        self.code = to_integer(code)
+        self.code = Service.sanitize_code(code)
         self.description = description.strip()
         self.display_name = display_name or self.description
         self.category = category.strip()
@@ -179,10 +179,16 @@ class Service:
         return self._symbol_image
 
     @classmethod
-    def get(cls, code: Union['Service', int]) -> 'Service':
-        if isinstance(code, cls):
-            return code
-        return cls(code=code, **SERVICES[code])  # type: ignore
+    def sanitize_code(cls, code: Union[int, str]) -> str:
+        code = to_integer("".join(d for d in str(code) if d.isdigit()))
+        return "{:05}".format(code)
+
+    @classmethod
+    def get(cls, service: Union['Service', int, str]) -> 'Service':
+        if isinstance(service, cls):
+            return service
+        code = cls.sanitize_code(service)
+        return cls(code=code, **SERVICES[code])
 
 
 class ExtraService:

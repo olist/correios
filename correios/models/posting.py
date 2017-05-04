@@ -274,9 +274,9 @@ class Package:
                  diameter: Union[float, int] = 0,  # cm
                  weight: Union[float, int] = 0,  # g
                  sequence=(1, 1),
-                 service: Optional[Union[Service, int]] = None) -> None:
+                 service: Optional[Union[Service, str, int]] = None) -> None:
 
-        if isinstance(service, int):
+        if service:
             service = Service.get(service)
 
         Package.validate(package_type, width, height, length, diameter, service, weight)
@@ -391,7 +391,7 @@ class Package:
                  height: Union[float, int] = 0,
                  length: Union[float, int] = 0,
                  diameter: Union[float, int] = 0,
-                 service: Optional[Service] = None,
+                 service: Optional[Union[Service, str, int]] = None,
                  weight: Union[float, int] = 0) -> None:
 
         width = int(math.ceil(width))
@@ -399,6 +399,9 @@ class Package:
         length = int(math.ceil(length))
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
+
+        if service:
+            service = Service.get(service)
 
         Package._validate_weight(weight, service)
 
@@ -441,11 +444,16 @@ class Package:
             raise exceptions.InvalidMaxPackageDimensionsError(msg)
 
     @classmethod
-    def _validate_weight(cls, weight, service=None):
+    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> None:
         if weight <= 0:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
 
-        if not service or service.max_weight is None:
+        if not service:
+            return
+
+        service = Service.get(service)
+
+        if service.max_weight is None:
             return
 
         if weight > service.max_weight:
