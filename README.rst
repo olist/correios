@@ -23,5 +23,5 @@ Installation
 
    $ pip install correios  # basic model support
    $ pip install correios[pdf]  # label and posting list pdf generation support
-   $ pip install correios[client]  # support for SIGEP/SRO API client
-   $ pip install correios[pdf,client]  # full installation
+   $ pip install correios[api]  # support for SIGEP/SRO API client
+   $ pip install correios[pdf,api]  # full installation
