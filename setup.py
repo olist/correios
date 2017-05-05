@@ -52,7 +52,7 @@ setup(
     include_package_data=True,
 
     install_requires=requirements.pop("install_requires"),
-    extras_requires=requirements,
+    extras_require=requirements,
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
