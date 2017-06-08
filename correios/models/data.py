@@ -309,7 +309,7 @@ SERVICES = {
         'max_weight': 30000,
         'symbol': "standard",
         'default_extra_services': [EXTRA_SERVICE_RR],
-        'min_declared_value': Decimal("17.00"),
+        'min_declared_value': Decimal("18.00"),
         'max_declared_value': Decimal("3000.00"),
     },
     '40444': {
@@ -353,7 +353,7 @@ SERVICES = {
         'display_name': 'SEDEX',
         'symbol': "express",
         'default_extra_services': [EXTRA_SERVICE_RR],
-        'min_declared_value': Decimal("17.00"),
+        'min_declared_value': Decimal("18.00"),
         'max_declared_value': Decimal("10000.00"),
     },
     '40380': {

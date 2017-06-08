@@ -524,7 +524,7 @@ class ShippingLabel:
         self.invoice_number = invoice_number
         self.invoice_series = invoice_series
         self.invoice_type = invoice_type
-        self.value = value
+        self.value = self.service.min_declared_value if value < self.service.min_declared_value else value
         self.billing = billing
         self.text = text
         self.latitude = latitude
