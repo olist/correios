@@ -176,7 +176,7 @@ class ShippingLabelFactory(Factory):
     posting_card = SubFactory(PostingCardFactory)
     sender = LazyFunction(SenderAddressFactory.build)
     receiver = LazyFunction(ReceiverAddressFactory.build)
-    service = LazyFunction(lambda: random.choice(_services))
+    service = data.SERVICE_PAC
     tracking_code = SubFactory(TrackingCodeFactory)
     package = SubFactory(PackageFactory)
     invoice_number = LazyFunction(lambda: "{!s:>04}".format(random.randint(1234, 9999)))
