@@ -524,7 +524,7 @@ class ShippingLabel:
         self.invoice_number = invoice_number
         self.invoice_series = invoice_series
         self.invoice_type = invoice_type
-        self.value = value
+        self.real_value = value
         self.billing = billing
         self.text = text
         self.latitude = latitude
@@ -550,6 +550,10 @@ class ShippingLabel:
         if extra_service.is_declared_value():
             self.service.validate_declared_value(self.value)
         self.extra_services.append(extra_service)
+
+    @property
+    def value(self) -> Decimal:
+        return max(self.service.min_declared_value, self.real_value)
 
     @property
     def symbol(self):

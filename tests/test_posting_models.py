@@ -192,6 +192,36 @@ def test_shipping_label_with_declared_value(posting_card, sender_address, receiv
     assert ExtraService.get(EXTRA_SERVICE_VD) in shipping_label.extra_services
 
 
+def test_shipping_label_with_min_declared_value_pac(posting_card, sender_address, receiver_address, package):
+    service = Service.get(SERVICE_PAC)
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        value=Decimal("0"),
+        extra_services=[EXTRA_SERVICE_VD],
+    )
+    assert shipping_label.value == Decimal("18.00")
+
+
+def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_address, receiver_address, package):
+    service = Service.get(SERVICE_SEDEX)
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        value=Decimal("0"),
+        extra_services=[EXTRA_SERVICE_VD],
+    )
+    assert shipping_label.value == Decimal("18.00")
+
+
 def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_address, receiver_address, package):
     service = Service.get(SERVICE_SEDEX)
     shipping_label = posting.ShippingLabel(

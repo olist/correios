@@ -206,14 +206,15 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_declared_value(posting_list, shipping_label):
     shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
-    shipping_label.value = 10.29
+    shipping_label.real_value = 10.29
     posting_list.add_shipping_label(shipping_label)
     serializer = correios.PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
+    assert shipping_label.service == Service.get(SERVICE_PAC)
     assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" in xml
-    assert b"<valor_declarado>10,29</valor_declarado>" in xml
+    assert b"<valor_declarado>18,00</valor_declarado>" in xml
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
