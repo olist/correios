@@ -12,58 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import logging
-from io import BytesIO
 
-import requests
-from suds.client import Client
-from suds.transport import Reply
-from suds.transport.http import HttpAuthenticated
+from requests import Session
+from zeep import Client, Transport
 
 
 logger = logging.getLogger(__name__)
 
 
-class RequestsTransport(HttpAuthenticated):
-    def __init__(self, **kwargs):
-        self._requests_session = requests.Session()
-        self.cert = kwargs.pop('cert', None)
-        self.verify = kwargs.pop('verify', True)
-        self.timeout = kwargs.pop('timeout', 8)
-        HttpAuthenticated.__init__(self, **kwargs)
-
-    def open(self, request):
-        self.addcredentials(request)
-        logger.debug("request.open: %s", request)
-        resp = self._requests_session.get(
-            request.url,
-            data=request.message,
-            headers=request.headers,
-            cert=self.cert,
-            verify=self.verify,
-            timeout=self.timeout,
-        )
-        result = BytesIO(resp.content)
-        return result
-
-    def send(self, request):
-        self.addcredentials(request)
-        logger.debug("request.send: %s", request)
-        resp = self._requests_session.post(
-            request.url,
-            data=request.message,
-            headers=request.headers,
-            cert=self.cert,
-            verify=self.verify,
-            timeout=self.timeout,
-        )
-        result = Reply(resp.status_code, resp.headers, resp.content)
-        return result
-
-
 class SoapClient(Client):
-    def __init__(self, url, cert=None, verify=True, timeout=8, *args, **kwargs):
-        transport = RequestsTransport(cert=cert, verify=verify, timeout=timeout)
-        headers = {"Content-Type": "text/xml;charset=UTF-8"}
-        super().__init__(url, transport=transport, headers=headers, **kwargs)
+
+    def __init__(self, wsdl, cert=None, verify=True, timeout=8, **kwargs):
+        session = Session()
+        session.cert = cert
+        session.verify = verify
+        session.timeout = timeout
+        session.headers.update({'Content-Type': 'text/xml;charset=UTF-8'})
+
+        transport = Transport(
+            operation_timeout=timeout,
+            session=session
+        )
+
+        super().__init__(wsdl=wsdl, transport=transport, **kwargs)

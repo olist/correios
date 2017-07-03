@@ -18,8 +18,6 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Union, Sequence, List, Dict, Optional
 
-from suds.cache import NoCache
-
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
@@ -334,7 +332,7 @@ class Correios:
         self.websro_client = SoapClient(self.websro_url, timeout=self.timeout)
         self.websro = self.websro_client.service
 
-        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout, cache=NoCache())
+        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout)
         self.freight = self.freight_client.service
 
         self.model_builder = ModelBuilder()
