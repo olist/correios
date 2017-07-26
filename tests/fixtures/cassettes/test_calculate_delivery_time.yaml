@@ -1,0 +1,32 @@
+interactions:
+- request:
+    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"
+      xmlns:ns1="http://tempuri.org/"><SOAP-ENV:Header/><ns0:Body><ns1:CalcPrazo><ns1:nCdServico>04162</ns1:nCdServico><ns1:sCepOrigem>07192100</ns1:sCepOrigem><ns1:sCepDestino>80030001</ns1:sCepDestino></ns1:CalcPrazo></ns0:Body></SOAP-ENV:Envelope>
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['468']
+      Content-Type: [text/xml;charset=UTF-8]
+      SOAPAction:
+      - !!binary |
+        Imh0dHA6Ly90ZW1wdXJpLm9yZy9DYWxjUHJhem8i
+      User-Agent: [python-requests/2.13.0]
+    method: POST
+    uri: http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx
+  response:
+    body: {string: '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><CalcPrazoResponse
+        xmlns="http://tempuri.org/"><CalcPrazoResult><Servicos><cServico><Codigo>4162</Codigo><PrazoEntrega>1</PrazoEntrega><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>S</EntregaSabado><Erro
+        /><MsgErro /><obsFim /><DataMaxEntrega>31/07/2017</DataMaxEntrega></cServico></Servicos></CalcPrazoResult></CalcPrazoResponse></soap:Body></soap:Envelope>'}
+    headers:
+      Cache-Control: ['private, max-age=0']
+      Content-Length: ['585']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Fri, 28 Jul 2017 12:58:41 GMT']
+      Server: [Microsoft-IIS/7.5]
+      X-AspNet-Version: [4.0.30319]
+      X-Powered-By: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1
