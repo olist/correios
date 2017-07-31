@@ -304,3 +304,19 @@ def test_calculate_freight_with_error(client, posting_card, package: Package):
     assert len(freights) == 1
     assert freights[0].error_code == -4
     assert freights[0].error_message == "Peso excedido."
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_delivery_time(client):
+    expected_delivery_time = 1
+    delivery_time = client.calculate_delivery_time(Service.get(SERVICE_SEDEX), '07192100', '80030001')
+    assert expected_delivery_time == int(delivery_time)
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_delivery_time_service_not_allowed_for_path(client):
+    expected_delivery_time = 0
+    delivery_time = client.calculate_delivery_time(Service.get(SERVICE_PAC), '01311300', '01311300')
+    assert expected_delivery_time == int(delivery_time)
