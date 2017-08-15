@@ -156,7 +156,7 @@ class ModelBuilder:
 
     def build_freights_list(self, response):
         result = []
-        for service_data in response.Servicos.cServico:
+        for service_data in response.cServico:
             service = Service.get(service_data.Codigo)
             error_code = to_integer(service_data.Erro)
             if error_code:
@@ -467,4 +467,4 @@ class Correios:
         to_zip = ZipCode.create(to_zip)
 
         response = self.freight.CalcPrazo(str(service), str(from_zip), str(to_zip))
-        return response.Servicos.cServico[0].PrazoEntrega
+        return response.cServico[0].PrazoEntrega

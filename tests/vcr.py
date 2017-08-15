@@ -25,4 +25,5 @@ vcr = VCR(
     serializer='yaml',
     cassette_library_dir=os.path.join(FIXTURES_DIR, 'cassettes'),
     path_transformer=VCR.ensure_suffix('.yaml'),
+    match_on=['method']
 )
