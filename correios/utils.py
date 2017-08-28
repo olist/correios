@@ -1,10 +1,9 @@
+import os
+import re
 from datetime import datetime
 from decimal import Decimal
 from itertools import chain
 from typing import Container, Iterable, Sized, Union
-
-import os
-import re
 
 
 def capitalize_phrase(phrase: str) -> str:

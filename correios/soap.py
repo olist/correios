@@ -17,7 +17,6 @@ import logging
 from requests import Session
 from zeep import Client, Transport
 
-
 logger = logging.getLogger(__name__)
 
 

@@ -28,7 +28,7 @@ from reportlab.platypus import Flowable, Paragraph, Table, TableStyle
 
 from correios.exceptions import RendererError
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD
-from correios.models.posting import ShippingLabel, PostingList
+from correios.models.posting import PostingList, ShippingLabel
 from correios.models.user import ExtraService
 
 VERTICAL_SECURITY_MARGIN = 6  # pt

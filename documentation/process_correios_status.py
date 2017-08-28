@@ -1,9 +1,8 @@
 #!/usr/bin/env python3.5
 
+import csv
 import re
 import sys
-import csv
-
 
 result = []
 

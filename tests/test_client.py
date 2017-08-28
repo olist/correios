@@ -19,12 +19,18 @@ import pytest
 
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
-from correios.models.data import (SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_VD, SERVICE_PAC, EXTRA_SERVICE_AR,
-                                  EXTRA_SERVICE_MP)
-from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
-                                     TrackingCode, Package)
-from correios.models.user import PostingCard, Service, ExtraService
+from correios.models.data import (
+    EXTRA_SERVICE_AR,
+    EXTRA_SERVICE_MP,
+    EXTRA_SERVICE_VD,
+    SERVICE_PAC,
+    SERVICE_SEDEX,
+    SERVICE_SEDEX10
+)
+from correios.models.posting import NotFoundTrackingEvent, Package, PostingList, ShippingLabel, TrackingCode
+from correios.models.user import ExtraService, PostingCard, Service
 from correios.utils import get_wsdl_path
+
 from .vcr import vcr
 
 try:

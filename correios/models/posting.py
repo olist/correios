@@ -13,22 +13,29 @@
 # limitations under the License.
 
 
-import os
 import math
+import os
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Optional, Tuple, Union, List, Dict  # noqa: F401
+from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
 
 from PIL import Image
 
-from correios import DATADIR
-from correios import exceptions
+from correios import DATADIR, exceptions
 from correios.utils import to_decimal
+
 from .address import Address, ZipCode
-from .data import (INSURANCE_VALUE_THRESHOLD_PAC, INSURANCE_VALUE_THRESHOLD_SEDEX, INSURANCE_PERCENTUAL_COST,
-                   SERVICE_PAC, SERVICE_SEDEX, TRACKING_EVENT_TYPES, TRACKING_STATUS)
+from .data import (
+    INSURANCE_PERCENTUAL_COST,
+    INSURANCE_VALUE_THRESHOLD_PAC,
+    INSURANCE_VALUE_THRESHOLD_SEDEX,
+    SERVICE_PAC,
+    SERVICE_SEDEX,
+    TRACKING_EVENT_TYPES,
+    TRACKING_STATUS
+)
 from .user import Contract  # noqa: F401
-from .user import Service, ExtraService, PostingCard
+from .user import ExtraService, PostingCard, Service
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
