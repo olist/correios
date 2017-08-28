@@ -13,14 +13,13 @@
 # limitations under the License.
 
 
-from decimal import Decimal
 import warnings
+from decimal import Decimal
 
 import pytest
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError
-from correios.models.address import (ZipCode, State, Address, Phone, ReceiverAddress,
-                                     SenderAddress)
+from correios.exceptions import InvalidStateError, InvalidZipCodeError
+from correios.models.address import Address, Phone, ReceiverAddress, SenderAddress, State, ZipCode
 
 
 def test_basic_zip():

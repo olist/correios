@@ -19,6 +19,7 @@ import pytest
 
 from correios.models.posting import PostingList
 from correios.models.user import PostingCard
+
 from .conftest import ShippingLabelFactory
 
 try:

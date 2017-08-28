@@ -13,16 +13,15 @@
 # limitations under the License.
 
 
-from decimal import Decimal
 import re
-from typing import List, Union, Tuple
 import warnings
+from decimal import Decimal
+from typing import List, Tuple, Union
 
-from phonenumbers import NumberParseException
-from phonenumbers import PhoneNumberFormat, parse, format_number
+from phonenumbers import NumberParseException, PhoneNumberFormat, format_number, parse
 
-from correios.exceptions import InvalidZipCodeError, InvalidStateError
-from correios.models.data import ZIP_CODES, ZIP_CODE_MAP
+from correios.exceptions import InvalidStateError, InvalidZipCodeError
+from correios.models.data import ZIP_CODE_MAP, ZIP_CODES
 from correios.utils import capitalize_phrase, rreplace
 
 ZIP_CODE_LENGTH = 8

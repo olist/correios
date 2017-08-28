@@ -14,7 +14,7 @@
 
 
 from ..correios.client import Correios
-from ..correios.models.user import User, Service
+from ..correios.models.user import Service, User
 
 
 def get_tracking_codes(service, quantity):

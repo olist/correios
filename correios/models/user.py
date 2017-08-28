@@ -13,19 +13,25 @@
 # limitations under the License.
 
 
+import os
 from datetime import datetime  # noqa: F401
 from decimal import Decimal
-from typing import Union, Optional, Sequence, List  # noqa: F401
+from typing import List, Optional, Sequence, Union  # noqa: F401
 
-import os
 from PIL import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
-                                 InvalidRegionalDirectionError, InvalidUserContractError,
-                                 MaximumDeclaredValueError, MinimumDeclaredValueError)
-from correios.utils import to_integer, to_datetime
-from .data import EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES, EXTRA_SERVICE_VD
+from correios.exceptions import (
+    InvalidExtraServiceError,
+    InvalidFederalTaxNumberError,
+    InvalidRegionalDirectionError,
+    InvalidUserContractError,
+    MaximumDeclaredValueError,
+    MinimumDeclaredValueError
+)
+from correios.utils import to_datetime, to_integer
+
+from .data import EXTRA_SERVICE_VD, EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
 

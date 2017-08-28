@@ -13,19 +13,25 @@
 # limitations under the License.
 
 
+import os
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-import os
 import pytest
 from PIL.Image import Image
 
-from correios import DATADIR
-from correios import exceptions
+from correios import DATADIR, exceptions
 from correios.models import posting
-from correios.models.data import (SERVICE_SEDEX, SERVICE_PAC, EXTRA_SERVICE_RR, EXTRA_SERVICE_AR,
-                                  TRACKING_EVENT_TYPES, EXTRA_SERVICE_VD)
-from correios.models.user import Service, ExtraService
+from correios.models.data import (
+    EXTRA_SERVICE_AR,
+    EXTRA_SERVICE_RR,
+    EXTRA_SERVICE_VD,
+    SERVICE_PAC,
+    SERVICE_SEDEX,
+    TRACKING_EVENT_TYPES
+)
+from correios.models.user import ExtraService, Service
+
 from .conftest import ShippingLabelFactory
 
 FIXTURESDIR = os.path.join(os.path.dirname(__file__), "fixtures")

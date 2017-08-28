@@ -18,7 +18,6 @@ from typing import Dict, Tuple  # noqa
 
 from ..utils import RangeSet
 
-
 TRACKING_PREFIX = {
     "AL": "Agentes de leitura",
     "AR": "Avisos de recebimento",

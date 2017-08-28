@@ -16,16 +16,26 @@
 import os
 from datetime import datetime
 from decimal import Decimal
-from typing import Union, Sequence, List, Dict, Optional
+from typing import Dict, List, Optional, Sequence, Union
 
-from correios import xml_utils, DATADIR
+from correios import DATADIR, xml_utils
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
-from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
 from correios.utils import to_decimal, to_integer
+
 from .models.address import ZipAddress, ZipCode
-from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
-                             TrackingEvent, EventStatus, Package, Freight, FreightError)
-from .models.user import User, FederalTaxNumber, StateTaxNumber, Contract, PostingCard, Service, ExtraService
+from .models.posting import (
+    EventStatus,
+    Freight,
+    FreightError,
+    NotFoundTrackingEvent,
+    Package,
+    PostingList,
+    ShippingLabel,
+    TrackingCode,
+    TrackingEvent
+)
+from .models.user import Contract, ExtraService, FederalTaxNumber, PostingCard, Service, StateTaxNumber, User
 from .soap import SoapClient
 
 KG = 1000  # g
