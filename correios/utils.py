@@ -3,6 +3,7 @@ from decimal import Decimal
 from itertools import chain
 from typing import Container, Iterable, Sized, Union
 
+import os
 import re
 
 
@@ -81,3 +82,9 @@ def to_decimal(value: Union[Decimal, str, float], precision=2):
 
     quantize = Decimal("0." + "0" * precision)
     return value.quantize(quantize)
+
+
+def get_wsdl_path(filename) -> str:
+    return os.path.abspath(
+        'correios/wsdls/{}'.format(filename)
+    )
