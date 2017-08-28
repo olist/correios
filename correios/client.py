@@ -18,8 +18,6 @@ from datetime import datetime
 from decimal import Decimal
 from typing import Union, Sequence, List, Dict, Optional
 
-from suds.cache import NoCache
-
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
@@ -158,7 +156,7 @@ class ModelBuilder:
 
     def build_freights_list(self, response):
         result = []
-        for service_data in response.Servicos.cServico:
+        for service_data in response.cServico:
             service = Service.get(service_data.Codigo)
             error_code = to_integer(service_data.Erro)
             if error_code:
@@ -334,7 +332,7 @@ class Correios:
         self.websro_client = SoapClient(self.websro_url, timeout=self.timeout)
         self.websro = self.websro_client.service
 
-        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout, cache=NoCache())
+        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout)
         self.freight = self.freight_client.service
 
         self.model_builder = ModelBuilder()
@@ -469,4 +467,4 @@ class Correios:
         to_zip = ZipCode.create(to_zip)
 
         response = self.freight.CalcPrazo(str(service), str(from_zip), str(to_zip))
-        return response.Servicos.cServico[0].PrazoEntrega
+        return response.cServico[0].PrazoEntrega

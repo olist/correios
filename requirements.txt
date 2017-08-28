@@ -7,5 +7,5 @@ hubarcode
 
 # api
 requests
-suds-jurko
+zeep
 lxml
