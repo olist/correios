@@ -29,6 +29,7 @@ from correios.models.data import (
 )
 from correios.models.posting import NotFoundTrackingEvent, Package, PostingList, ShippingLabel, TrackingCode
 from correios.models.user import ExtraService, PostingCard, Service
+from correios.utils import get_wsdl_path
 
 from .vcr import vcr
 

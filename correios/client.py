@@ -21,7 +21,7 @@ from typing import Dict, List, Optional, Sequence, Union
 from correios import DATADIR, xml_utils
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
-from correios.utils import to_decimal, to_integer
+from correios.utils import get_wsdl_path, to_decimal, to_integer
 
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (
