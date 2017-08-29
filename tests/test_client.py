@@ -42,7 +42,7 @@ except ImportError:
 @vcr.use_cassette
 def test_basic_client():
     client = correios.Correios(username="sigep", password="XXXXXX", environment=correios.Correios.TEST)
-    assert client.sigep_url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    assert client.sigep_url == get_wsdl_path('AtendeCliente-test.wsdl')
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"

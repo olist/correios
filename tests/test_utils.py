@@ -96,3 +96,9 @@ def test_to_decimal_precision(v, p, r):
 ))
 def test_to_integer(v, r):
     assert to_integer(v) == r
+
+
+def test_get_wsdl_file_path():
+    filepath = get_wsdl_path('fake')
+
+    assert 'correios/wsdls/fake' in filepath
