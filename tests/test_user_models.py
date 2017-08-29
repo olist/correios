@@ -14,18 +14,31 @@
 
 
 import os
-from datetime import timedelta, datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import pytest
 from PIL.Image import Image
 
 from correios import DATADIR
-from correios.exceptions import (InvalidFederalTaxNumberError, InvalidExtraServiceError,
-                                 InvalidRegionalDirectionError, InvalidUserContractError, MaximumDeclaredValueError,
-                                 MinimumDeclaredValueError)
-from correios.models.data import EXTRA_SERVICE_AR, SERVICE_SEDEX, SERVICE_PAC
-from correios.models.user import (FederalTaxNumber, StateTaxNumber, User, Contract, PostingCard, Service, ExtraService,
-                                  RegionalDirection)
+from correios.exceptions import (
+    InvalidExtraServiceError,
+    InvalidFederalTaxNumberError,
+    InvalidRegionalDirectionError,
+    InvalidUserContractError,
+    MaximumDeclaredValueError,
+    MinimumDeclaredValueError
+)
+from correios.models.data import EXTRA_SERVICE_AR, SERVICE_PAC, SERVICE_SEDEX
+from correios.models.user import (
+    Contract,
+    ExtraService,
+    FederalTaxNumber,
+    PostingCard,
+    RegionalDirection,
+    Service,
+    StateTaxNumber,
+    User
+)
 
 
 def test_basic_federal_tax_number_tax_number():

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3.5
 
-import sys
 import csv
+import sys
 from collections import OrderedDict
-
 
 status = OrderedDict()
 

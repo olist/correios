@@ -2,14 +2,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.utils import (
-    capitalize_phrase,
-    get_wsdl_path,
-    RangeSet,
-    rreplace,
-    to_decimal,
-    to_integer,
-)
+from correios.utils import RangeSet, capitalize_phrase, get_wsdl_path, rreplace, to_decimal, to_integer
 
 phrase = 'FOo bAr BAZ qux'
 

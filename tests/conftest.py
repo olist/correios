@@ -17,15 +17,14 @@ import random
 from datetime import datetime
 
 import pytest
-from factory import Factory, SubFactory, Faker, LazyFunction, Sequence, faker
+from factory import Factory, Faker, LazyFunction, Sequence, SubFactory, faker
 from pytest_factoryboy import register
 
 from correios.models import data
 from correios.models.address import Address, ReceiverAddress, SenderAddress
 from correios.models.data import TRACKING_PREFIX
-from correios.models.posting import (PostingList, Package, ShippingLabel, TrackingCode,
-                                     TrackingEvent)
-from correios.models.user import FederalTaxNumber, StateTaxNumber, Contract, PostingCard, User
+from correios.models.posting import Package, PostingList, ShippingLabel, TrackingCode, TrackingEvent
+from correios.models.user import Contract, FederalTaxNumber, PostingCard, StateTaxNumber, User
 
 try:
     from correios import client as correios

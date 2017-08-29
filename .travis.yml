@@ -16,9 +16,11 @@ install:
   - pip install tox-travis
   - pip install codecov
   - pip install flake8
+  - pip install isort
 
 before_script:
-  - flake8 --max-line-length=120 .
+  - isort --check --diff -rc correios tests
+  - flake8 --max-line-length=120 correios tests
 
 script:
   - tox
