@@ -9,9 +9,9 @@ correios
    :target: https://travis-ci.org/olist/correios
    :alt: Latest Travis CI build status
 
-.. image:: https://coveralls.io/repos/github/olist/correios/badge.svg?branch=master
-   :target: https://coveralls.io/github/olist/correios?branch=master
-   :alt: Latest Coveralls coverage status
+.. image:: https://codecov.io/gh/olist/correios/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/olist/correios
+   :alt: Latest coverage status
 
 A client library for Brazilian Correios APIs (SIGEP and SRO) and services.
 

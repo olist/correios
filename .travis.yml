@@ -14,7 +14,7 @@ matrix:
 install:
   - pip install -rrequirements-test.txt
   - pip install tox-travis
-  - pip install coveralls
+  - pip install codecov
   - pip install flake8
 
 before_script:
@@ -24,4 +24,4 @@ script:
   - tox
 
 after_success:
-  - coveralls
+  - codecov
