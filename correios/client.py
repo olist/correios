@@ -21,7 +21,7 @@ from typing import Union, Sequence, List, Dict, Optional
 from correios import xml_utils, DATADIR
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_MP, EXTRA_SERVICE_AR
-from correios.utils import to_decimal, to_integer
+from correios.utils import to_decimal, to_integer, get_wsdl_path
 from .models.address import ZipAddress, ZipCode
 from .models.posting import (NotFoundTrackingEvent, TrackingCode, PostingList, ShippingLabel,
                              TrackingEvent, EventStatus, Package, Freight, FreightError)
@@ -311,11 +311,11 @@ class Correios:
 
     # 'environment': ('url', 'ssl_verification')
     sigep_urls = {
-        'production': ("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", True),
-        'test': ("https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", False),
+        'production': (get_wsdl_path('AtendeCliente-production.wsdl'), True),
+        'test': (get_wsdl_path('AtendeCliente-test.wsdl'), False),
     }
-    websro_url = "https://webservice.correios.com.br/service/rastro/Rastro.wsdl"
-    freight_url = "http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL"
+    websro_url = get_wsdl_path('Rastro.wsdl')
+    freight_url = get_wsdl_path('CalcPrecoPrazo.asmx')
 
     def __init__(self, username, password, timeout=8, environment="production"):
         self.username = username

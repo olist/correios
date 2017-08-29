@@ -24,6 +24,7 @@ from correios.models.data import (SERVICE_SEDEX10, SERVICE_SEDEX, EXTRA_SERVICE_
 from correios.models.posting import (NotFoundTrackingEvent, PostingList, ShippingLabel,
                                      TrackingCode, Package)
 from correios.models.user import PostingCard, Service, ExtraService
+from correios.utils import get_wsdl_path
 from .vcr import vcr
 
 try:
@@ -36,7 +37,7 @@ except ImportError:
 @vcr.use_cassette
 def test_basic_client():
     client = correios.Correios(username="sigep", password="XXXXXX", environment=correios.Correios.TEST)
-    assert client.sigep_url == "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    assert client.sigep_url == get_wsdl_path('AtendeCliente-test.wsdl')
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"
