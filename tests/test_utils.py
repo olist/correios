@@ -1,4 +1,5 @@
 from decimal import Decimal
+from unittest import mock
 
 import pytest
 
@@ -102,3 +103,13 @@ def test_get_wsdl_file_path():
     filepath = get_wsdl_path('fake')
 
     assert 'correios/wsdls/fake' in filepath
+
+
+def test_should_use_pkg_resources_to_get_wsdl_files():
+    """
+    The wsdl files should be load from installed packages
+    """
+    with mock.patch('pkg_resources.resource_filename') as mock_resouce:
+        get_wsdl_path('fake')
+
+    mock_resouce.assert_called_with('correios', 'wsdls/fake')

@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 from datetime import datetime
 from decimal import Decimal
 from itertools import chain
 from typing import Container, Iterable, Sized, Union
+
+import pkg_resources
 
 
 def capitalize_phrase(phrase: str) -> str:
@@ -98,6 +99,7 @@ def to_decimal(value: Union[Decimal, str, float], precision=2):
 
 
 def get_wsdl_path(filename) -> str:
-    return os.path.abspath(
-        'correios/wsdls/{}'.format(filename)
-    )
+    resource_package = 'correios'
+    resource_path = '/'.join(('wsdls', filename))
+
+    return pkg_resources.resource_filename(resource_package, resource_path)
