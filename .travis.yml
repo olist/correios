@@ -19,8 +19,8 @@ install:
   - pip install isort
 
 before_script:
-  - isort --check --diff
-  - flake8 --max-line-length=120 .
+  - isort --check --diff -rc correios tests
+  - flake8 --max-line-length=120 correios tests
 
 script:
   - tox
