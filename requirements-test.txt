@@ -1,6 +1,6 @@
 -r requirements.txt
 factory-boy==2.8.1
-mypy-lang
+mypy
 pytest
 pytest-cov
 pytest-factoryboy
