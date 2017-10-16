@@ -17,6 +17,7 @@ from decimal import Decimal
 
 import pytest
 
+from correios import client as correios
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
 from correios.models.data import (
@@ -33,13 +34,7 @@ from correios.utils import get_wsdl_path
 
 from .vcr import vcr
 
-try:
-    from correios import client as correios
-except ImportError:
-    correios = None
 
-
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_basic_client():
     client = correios.Correios(username="sigep", password="XXXXXX", environment=correios.Correios.TEST)
@@ -49,7 +44,6 @@ def test_basic_client():
     assert client.password == "XXXXXX"
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_user(client):
     user = client.get_user(contract_number="9911222777", posting_card_number="0056789123")
@@ -64,7 +58,6 @@ def test_get_user(client):
     assert len(contract.posting_cards) == 1
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_find_zip_code(client):
     zip_address = client.find_zipcode(ZipCode("70002-900"))
@@ -78,21 +71,18 @@ def test_find_zip_code(client):
     assert zip_address.complements == []
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_verify_service_availability(client, posting_card):
     status = client.verify_service_availability(posting_card, SERVICE_SEDEX10, "82940150", "01310000")
     assert status is True
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_posting_card_status(client, posting_card):
     status = client.get_posting_card_status(posting_card)
     assert status == PostingCard.ACTIVE
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_request_tracking_codes(client, user):
     result = client.request_tracking_codes(user, Service.get(SERVICE_SEDEX), quantity=10)
@@ -100,14 +90,12 @@ def test_request_tracking_codes(client, user):
     assert len(result[0].code) == 13
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_generate_verification_digit(client):
     result = client.generate_verification_digit(["DL74668653 BR"])
     assert result[0] == 6
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_close_posting_list(client, posting_card, posting_list: PostingList, shipping_label: ShippingLabel):
     shipping_label.posting_card = posting_card
@@ -117,7 +105,6 @@ def test_close_posting_list(client, posting_card, posting_list: PostingList, shi
     assert posting_list.closed
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_codes_events(client):
     result = client.get_tracking_code_events(["FJ064849483BR", "DU477828695BR"])
@@ -132,7 +119,6 @@ def test_get_tracking_codes_events(client):
     assert result[1].code in ("FJ064849483BR", "DU477828695BR")
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_events(client):
     result = client.get_tracking_code_events("FJ064849483BR")
@@ -141,7 +127,6 @@ def test_get_tracking_code_events(client):
     assert result[0].code == "FJ064849483BR"
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_events_without_city_field(client):
     result = client.get_tracking_code_events("PJ651329640BR")
@@ -151,7 +136,6 @@ def test_get_tracking_code_events_without_city_field(client):
     assert result[0].events[0].city == ""
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_with_no_verification_digitevents(client):
     result = client.get_tracking_code_events("FJ06484948BR")
@@ -160,7 +144,6 @@ def test_get_tracking_code_with_no_verification_digitevents(client):
     assert result[0].code == "FJ064849483BR"
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_object_not_found_by_correios(client):
     tracking_code = client.get_tracking_code_events("DU05508759BR")[0]
@@ -173,21 +156,18 @@ def test_get_tracking_code_object_not_found_by_correios(client):
     assert event.status.status == 0
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_get_tracking_codes_events_over_limit(client):
     codes = ["DU05508759BR"] * 51
     with pytest.raises(TrackingCodesLimitExceededError):
         client.get_tracking_code_events(codes)
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_builder_posting_card_status():
     builder = correios.ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE
     assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_posting_list_serialization(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
     serializer = correios.PostingListSerializer()
@@ -199,7 +179,6 @@ def test_posting_list_serialization(posting_list, shipping_label):
     assert b"<valor_declarado>10,29</valor_declarado>" not in xml
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_posting_list_serialization_with_crazy_utf8_character(posting_list, shipping_label):
     shipping_label.receiver.neighborhood = 'Olho D’Água'
     posting_list.add_shipping_label(shipping_label)
@@ -210,7 +189,6 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
     assert xml.startswith(b'<?xml version="1.0" encoding="ISO-8859-1"?><correioslog>')
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_declared_value(posting_list, shipping_label):
     shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
     shipping_label.real_value = 10.29
@@ -224,14 +202,12 @@ def test_declared_value(posting_list, shipping_label):
     assert b"<valor_declarado>18,00</valor_declarado>" in xml
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_fail_empty_posting_list_serialization(posting_list):
     serializer = correios.PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
         serializer.get_document(posting_list)
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipping_label):
     posting_list.add_shipping_label(shipping_label)
     posting_list.close_with_id(number=12345)
@@ -241,7 +217,6 @@ def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipp
         serializer.get_document(posting_list)
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_limit_size_city_name(posting_list, shipping_label):
     shipping_label.receiver.city = 'Porto Alegre (Rio Grande do Sul)'
     shipping_label.sender.city = 'Santa Maria (Rio Grande do Sul)'
@@ -255,7 +230,6 @@ def test_limit_size_city_name(posting_list, shipping_label):
     assert b"<cidade_remetente><![CDATA[Santa Maria (Rio Grande do Sul]]></cidade_remetente>" in xml
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_calculate_freights(client, posting_card, package):
     freights = client.calculate_freights(posting_card, [SERVICE_SEDEX, SERVICE_PAC], "07192100", "80030001", package)
@@ -280,7 +254,6 @@ def test_calculate_freights(client, posting_card, package):
     assert freight.home is True
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_calculate_freights_with_extra_services(client, posting_card, package):
     freights = client.calculate_freights(
@@ -303,7 +276,6 @@ def test_calculate_freights_with_extra_services(client, posting_card, package):
     assert freight.ar_value == Decimal("4.30")
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_calculate_freight_with_error(client, posting_card, package: Package):
     package.real_weight = 80000  # invalid weight (80kg)
@@ -313,7 +285,6 @@ def test_calculate_freight_with_error(client, posting_card, package: Package):
     assert freights[0].error_message == "Peso excedido."
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_calculate_delivery_time(client):
     expected_delivery_time = 1
@@ -321,7 +292,6 @@ def test_calculate_delivery_time(client):
     assert expected_delivery_time == int(delivery_time)
 
 
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_calculate_delivery_time_service_not_allowed_for_path(client):
     expected_delivery_time = 0
