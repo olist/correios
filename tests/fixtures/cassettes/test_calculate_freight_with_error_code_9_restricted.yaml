@@ -1,0 +1,36 @@
+interactions:
+- request:
+    body: '<?xml version=''1.0'' encoding=''utf-8''?>
+
+      <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Body><ns0:CalcPrecoPrazo
+      xmlns:ns0="http://tempuri.org/"><ns0:nCdEmpresa>08888888</ns0:nCdEmpresa><ns0:sDsSenha>XXXXXX</ns0:sDsSenha><ns0:nCdServico>40010</ns0:nCdServico><ns0:sCepOrigem>09960610</ns0:sCepOrigem><ns0:sCepDestino>04475490</ns0:sCepDestino><ns0:nVlPeso>2.6</ns0:nVlPeso><ns0:nCdFormato>2</ns0:nCdFormato><ns0:nVlComprimento>22</ns0:nVlComprimento><ns0:nVlAltura>12</ns0:nVlAltura><ns0:nVlLargura>17</ns0:nVlLargura><ns0:nVlDiametro>16</ns0:nVlDiametro><ns0:sCdMaoPropria>S</ns0:sCdMaoPropria><ns0:nVlValorDeclarado>9000.00</ns0:nVlValorDeclarado><ns0:sCdAvisoRecebimento>S</ns0:sCdAvisoRecebimento></ns0:CalcPrecoPrazo></soap-env:Body></soap-env:Envelope>'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['797']
+      Content-Type: [text/xml; charset=utf-8]
+      SOAPAction: ['"http://tempuri.org/CalcPrecoPrazo"']
+      User-Agent: [Zeep/2.4.0 (www.python-zeep.org)]
+    method: POST
+    uri: http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"utf-8\"?><soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"
+        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><soap:Body><CalcPrecoPrazoResponse
+        xmlns=\"http://tempuri.org/\"><CalcPrecoPrazoResult><Servicos><cServico><Codigo>40010</Codigo><Valor>165,95</Valor><PrazoEntrega>8</PrazoEntrega><ValorMaoPropria>5,90</ValorMaoPropria><ValorAvisoRecebimento>5,00</ValorAvisoRecebimento><ValorValorDeclarado>134,25</ValorValorDeclarado><EntregaDomiciliar>S</EntregaDomiciliar><EntregaSabado>S</EntregaSabado><Erro>09</Erro><MsgErro>O
+        CEP de destino est\xE1 sujeito a condi\xE7\xF5es especiais de entrega  pela
+        \ ECT e ser\xE1 realizada com o acr\xE9scimo de at\xE9 7 (sete) dias \xFAteis
+        ao prazo regular.</MsgErro><ValorSemAdicionais>20,80</ValorSemAdicionais><obsFim>O
+        CEP de destino est\xE1 sujeito a condi\xE7\xF5es especiais de entrega  pela
+        \ ECT e ser\xE1 realizada com o acr\xE9scimo de at\xE9 7 (sete) dias \xFAteis
+        ao prazo regular.</obsFim></cServico></Servicos></CalcPrecoPrazoResult></CalcPrecoPrazoResponse></soap:Body></soap:Envelope>"}
+    headers:
+      Cache-Control: ['private, max-age=0']
+      Content-Length: ['1108']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Fri, 20 Oct 2017 18:13:55 GMT']
+      Server: [Microsoft-IIS/7.5]
+      X-AspNet-Version: [4.0.30319]
+      X-Powered-By: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1

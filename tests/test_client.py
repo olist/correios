@@ -23,6 +23,9 @@ from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
     EXTRA_SERVICE_VD,
+    FINAL_ZIPCODE_RESTRICTED,
+    INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    INITIAL_ZIPCODE_RESTRICTED,
     SERVICE_PAC,
     SERVICE_SEDEX,
     SERVICE_SEDEX10
@@ -263,7 +266,7 @@ def test_calculate_freights(client, posting_card, package):
 
     freight = freights[0]
     assert freight.error_code == 0
-    assert freight.error_message == ""
+    assert not freight.error_message
     assert freight.service == SERVICE_SEDEX
     assert freight.delivery_time.days == 1
     assert freight.total == Decimal("23.75")
@@ -272,7 +275,7 @@ def test_calculate_freights(client, posting_card, package):
 
     freight = freights[1]
     assert freight.error_code == 0
-    assert freight.error_message == ""
+    assert not freight.error_message
     assert freight.service == SERVICE_PAC
     assert freight.delivery_time.days == 6
     assert freight.total == Decimal("14.10")
@@ -327,3 +330,84 @@ def test_calculate_delivery_time_service_not_allowed_for_path(client):
     expected_delivery_time = 0
     delivery_time = client.calculate_delivery_time(Service.get(SERVICE_PAC), '01311300', '01311300')
     assert expected_delivery_time == int(delivery_time)
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freight_with_error_code_10_restricted(
+    client,
+    posting_card,
+    package
+):
+    freights = client.calculate_freights(
+        posting_card=posting_card,
+        services=[SERVICE_SEDEX],
+        from_zip='07192100',
+        to_zip='09960610',
+        package=package,
+        value="9000.00",
+        extra_services=[EXTRA_SERVICE_AR, EXTRA_SERVICE_MP]
+    )
+
+    assert len(freights) == 1
+
+    freight = freights[0]
+    assert len(freights) == 1
+    assert freight.error_code == FINAL_ZIPCODE_RESTRICTED
+    assert freight.value != 0
+    assert freight.delivery_time.days == 2
+    assert freight.saturday
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freight_with_error_code_11_restricted(
+    client,
+    posting_card,
+    package
+):
+    freights = client.calculate_freights(
+        posting_card=posting_card,
+        services=[SERVICE_SEDEX],
+        from_zip='09960610',
+        to_zip='04475490',
+        package=package,
+        value="9000.00",
+        extra_services=[EXTRA_SERVICE_AR, EXTRA_SERVICE_MP]
+    )
+
+    assert len(freights) == 1
+
+    freight = freights[0]
+    assert len(freights) == 1
+    assert freight.error_code == INITIAL_AND_FINAL_ZIPCODE_RESTRICTED
+    assert freight.value != 0
+    assert freight.delivery_time.days == 8
+    assert freight.saturday
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_calculate_freight_with_error_code_9_restricted(
+    client,
+    posting_card,
+    package
+):
+    freights = client.calculate_freights(
+        posting_card=posting_card,
+        services=[SERVICE_SEDEX],
+        from_zip='09960610',
+        to_zip='04475490',
+        package=package,
+        value="9000.00",
+        extra_services=[EXTRA_SERVICE_AR, EXTRA_SERVICE_MP]
+    )
+
+    assert len(freights) == 1
+
+    freight = freights[0]
+    assert len(freights) == 1
+    assert freight.error_code == INITIAL_ZIPCODE_RESTRICTED
+    assert freight.value != 0
+    assert freight.delivery_time.days == 8
+    assert freight.saturday

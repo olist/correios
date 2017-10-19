@@ -27,7 +27,6 @@ from .models.address import ZipAddress, ZipCode
 from .models.posting import (
     EventStatus,
     Freight,
-    FreightError,
     NotFoundTrackingEvent,
     Package,
     PostingList,
@@ -169,30 +168,27 @@ class ModelBuilder:
         for service_data in response.cServico:
             service = Service.get(service_data.Codigo)
             error_code = to_integer(service_data.Erro)
-            if error_code:
-                freight = FreightError(
-                    service=service,
-                    error_code=error_code,
-                    error_message=service_data.MsgErro,
-                )
-            else:
-                delivery_time = int(service_data.PrazoEntrega)
-                value = to_decimal(service_data.ValorSemAdicionais)
-                declared_value = to_decimal(service_data.ValorValorDeclarado)
-                ar_value = to_decimal(service_data.ValorAvisoRecebimento)
-                mp_value = to_decimal(service_data.ValorMaoPropria)
-                saturday = service_data.EntregaSabado or ""
-                home = service_data.EntregaDomiciliar or ""
-                freight = Freight(
-                    service=service,
-                    delivery_time=delivery_time,
-                    value=value,
-                    declared_value=declared_value,
-                    ar_value=ar_value,
-                    mp_value=mp_value,
-                    saturday=saturday.upper() == "S",
-                    home=home.upper() == "S",
-                )
+            delivery_time = int(service_data.PrazoEntrega)
+            value = to_decimal(service_data.ValorSemAdicionais)
+            declared_value = to_decimal(service_data.ValorValorDeclarado)
+            ar_value = to_decimal(service_data.ValorAvisoRecebimento)
+            mp_value = to_decimal(service_data.ValorMaoPropria)
+            saturday = service_data.EntregaSabado or ""
+            home = service_data.EntregaDomiciliar or ""
+            error_message = service_data.MsgErro or None
+
+            freight = Freight(
+                service=service,
+                delivery_time=delivery_time,
+                value=value,
+                declared_value=declared_value,
+                ar_value=ar_value,
+                mp_value=mp_value,
+                saturday=saturday.upper() == "S",
+                home=home.upper() == "S",
+                error_code=error_code,
+                error_message=error_message,
+            )
             result.append(freight)
         return result
 
