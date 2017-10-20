@@ -54,34 +54,18 @@ class InvalidShippingLabelError(ModelError):
 
 
 class InvalidPackageError(ModelError):
-    pass
+
+    def __init__(self, errors):
+        self.errors = errors
+
+    def __str__(self):
+        if len(self.errors) > 1:
+            return "Invalid Package: {} and {}".format(", ".join(self.errors[:-1]), self.errors[-1])
+        else:
+            return "Invalid Package: {}".format(self.errors[0])
 
 
-class InvalidPackageDimensionsError(InvalidPackageError):
-    pass
-
-
-class InvalidMinPackageDimensionsError(InvalidPackageDimensionsError):
-    pass
-
-
-class InvalidMaxPackageDimensionsError(InvalidPackageDimensionsError):
-    pass
-
-
-class InvalidPackageWeightError(InvalidPackageError):
-    pass
-
-
-class InvalidMinPackageWeightError(InvalidPackageWeightError):
-    pass
-
-
-class InvalidMaxPackageWeightError(InvalidPackageWeightError):
-    pass
-
-
-class InvalidPackageSequenceError(InvalidPackageError):
+class InvalidPackageSequenceError(ModelError):
     pass
 
 

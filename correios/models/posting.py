@@ -24,6 +24,7 @@ from PIL import Image
 from correios import DATADIR, exceptions
 from correios.utils import to_decimal
 
+from . import errors
 from .address import Address, ZipCode
 from .data import (
     INSURANCE_PERCENTUAL_COST,
@@ -307,7 +308,10 @@ class Package:
 
     @width.setter
     def width(self, width):
-        Package._validate_dimension("width", width, MAX_WIDTH)
+        error = Package._validate_dimension("width", width, MAX_WIDTH)
+        if error:
+            raise exceptions.InvalidPackageError([error])
+
         self.real_width = width
 
     @property
@@ -316,7 +320,10 @@ class Package:
 
     @height.setter
     def height(self, height):
-        Package._validate_dimension("height", height, MAX_HEIGHT)
+        error = Package._validate_dimension("height", height, MAX_HEIGHT)
+        if error:
+            raise exceptions.InvalidPackageError([error])
+
         self.real_height = height
 
     @property
@@ -325,7 +332,10 @@ class Package:
 
     @length.setter
     def length(self, length):
-        Package._validate_dimension("length", length, MAX_LENGTH)
+        error = Package._validate_dimension("length", length, MAX_LENGTH)
+        if error:
+            raise exceptions.InvalidPackageError([error])
+
         self.real_length = length
 
     @property
@@ -334,7 +344,10 @@ class Package:
 
     @diameter.setter
     def diameter(self, diameter):
-        Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
+        error = Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
+        if error:
+            raise exceptions.InvalidPackageError([error])
+
         self.real_diameter = diameter
 
     @property
@@ -343,7 +356,10 @@ class Package:
 
     @weight.setter
     def weight(self, weight):
-        Package._validate_weight(weight, self.service)
+        error = Package._validate_weight(weight, self.service)
+        if error:
+            raise exceptions.InvalidPackageError([error])
+
         self.real_weight = weight
 
     @property
@@ -407,53 +423,86 @@ class Package:
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
 
+        error_list = []
+
         if service:
             service = Service.get(service)
 
-        Package._validate_weight(weight, service)
+        error = Package._validate_weight(weight, service)
+        if error:
+            error_list.append(error)
 
         if package_type == Package.TYPE_ENVELOPE:
-            if any([width, height, length, diameter]):
-                raise exceptions.InvalidPackageDimensionsError(
-                    "Invalid dimensions: {}x{}x{}".format(width, height, length)
-                )
-            return
+            error_list += Package._validate_envelope(width, height, length, diameter)
+        elif package_type == Package.TYPE_BOX:
+            error_list += Package._validate_box(width, height, length, diameter)
+        else:  # Volume.TYPE_CYLINDER
+            error_list += Package._validate_cylinder(width, height, length, diameter)
 
-        if package_type == Package.TYPE_BOX:
-            if diameter:
-                raise exceptions.InvalidPackageDimensionsError(
-                    "Package does not use diameter: {}".format(diameter)
-                )
+        if error_list:
+            raise exceptions.InvalidPackageError(error_list)
 
-            cls._validate_dimension("width", width, MAX_WIDTH)
-            cls._validate_dimension("height", height, MAX_HEIGHT)
-            cls._validate_dimension("length", length, MAX_LENGTH)
-            cls._validate_dimension("sum of dimensions", width + height + length, MAX_SIZE)
-            return
+    @classmethod
+    def _validate_envelope(cls, width, height, length, diameter) -> list:
+        if any([width, height, length, diameter]):
+            msg = "Envelope package does not use width, height, length and diameter"
+            return [errors.PackageError(msg)]
+        return []
 
-        # Volume.TYPE_CYLINDER
+    @classmethod
+    def _validate_box(cls, width, height, length, diameter) -> list:
+        error_list = []
+
+        if diameter:
+            msg = "Box package does not use diameter"
+            error = errors.PackageError(msg)
+            error_list.append(error)
+
+        call_args = [
+            ("width", width, MAX_WIDTH),
+            ("height", height, MAX_HEIGHT),
+            ("length", length, MAX_LENGTH),
+            ("sum of dimensions", width + height + length, MAX_SIZE)
+        ]
+        for args in call_args:
+            error = cls._validate_dimension(*args)
+            if error:
+                error_list.append(error)
+
+        return error_list
+
+    @classmethod
+    def _validate_cylinder(cls, width, height, length, diameter) -> list:
+        error_list = []
+
         if width or height:
-            raise exceptions.InvalidPackageDimensionsError(
-                "Cylinder does not use width/height: {}x{}".format(width, height)
-            )
+            msg = "Cylinder package does not use width and height"
+            error = errors.PackageError(msg)
+            error_list.append(error)
 
-        cls._validate_dimension("length", length, MAX_CYLINDER_LENGTH)
-        cls._validate_dimension("diameter", diameter, MAX_DIAMETER)
-        cls._validate_dimension("cylinder size", length + 2 * diameter, MAX_CYLINDER_SIZE)
+        call_args = [
+            ("length", length, MAX_CYLINDER_LENGTH),
+            ("diameter", diameter, MAX_DIAMETER),
+            ("cylinder size", length + 2 * diameter, MAX_CYLINDER_SIZE),
+        ]
+        for args in call_args:
+            error = cls._validate_dimension(*args)
+            if error:
+                error_list.append(error)
+
+        return error_list
 
     @classmethod
-    def _validate_dimension(cls, name, value, maximum):
-        msg = "Invalid {} (range 0~{}): {}".format(name, maximum, value)
-        if value <= 0:
-            raise exceptions.InvalidMinPackageDimensionsError(msg)
+    def _validate_dimension(cls, name, value, maximum) -> (errors.PackageError, None):
+        if value <= 0 or value > maximum:
+            return errors.PackageDimensionError(name, value, 0, maximum)
 
-        if value > maximum:
-            raise exceptions.InvalidMaxPackageDimensionsError(msg)
+        return
 
     @classmethod
-    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> None:
+    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> (errors.PackageError, None):
         if weight <= 0:
-            raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
+            return errors.PackageWeightError(None, weight, 0, None)
 
         if not service:
             return
@@ -464,12 +513,7 @@ class Package:
             return
 
         if weight > service.max_weight:
-            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
-                weight,
-                str(service),
-                service.max_weight,
-            )
-            raise exceptions.InvalidMaxPackageWeightError(message)
+            return errors.PackageWeightError(service, weight, 0, service.max_weight)
 
 
 class ShippingLabel:

@@ -298,21 +298,21 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
 
 
 @pytest.mark.parametrize("package_type,width,height,length,diameter,exc", [
-    (posting.Package.TYPE_ENVELOPE, 1, 0, 0, 0, exceptions.InvalidPackageDimensionsError),
-    (posting.Package.TYPE_ENVELOPE, 0, 1, 0, 0, exceptions.InvalidPackageDimensionsError),
-    (posting.Package.TYPE_ENVELOPE, 0, 0, 1, 0, exceptions.InvalidPackageDimensionsError),
-    (posting.Package.TYPE_ENVELOPE, 0, 0, 0, 1, exceptions.InvalidPackageDimensionsError),
-    (posting.Package.TYPE_ENVELOPE, 1, 1, 1, 1, exceptions.InvalidPackageDimensionsError),
-    (posting.Package.TYPE_BOX, 11, 2, 16, 1, exceptions.InvalidPackageDimensionsError),  # invalid diameter
-    (posting.Package.TYPE_BOX, 110, 2, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max width=105
-    (posting.Package.TYPE_BOX, 11, 110, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max height=110
-    (posting.Package.TYPE_BOX, 11, 2, 110, 0, exceptions.InvalidMaxPackageDimensionsError),  # max length=110
-    (posting.Package.TYPE_BOX, 105, 105, 105, 0, exceptions.InvalidMaxPackageDimensionsError),  # sum > 200
-    (posting.Package.TYPE_CYLINDER, 1, 0, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid width
-    (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
-    (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
-    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
-    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=28
+    (posting.Package.TYPE_ENVELOPE, 1, 0, 0, 0, exceptions.InvalidPackageError),
+    (posting.Package.TYPE_ENVELOPE, 0, 1, 0, 0, exceptions.InvalidPackageError),
+    (posting.Package.TYPE_ENVELOPE, 0, 0, 1, 0, exceptions.InvalidPackageError),
+    (posting.Package.TYPE_ENVELOPE, 0, 0, 0, 1, exceptions.InvalidPackageError),
+    (posting.Package.TYPE_ENVELOPE, 1, 1, 1, 1, exceptions.InvalidPackageError),
+    (posting.Package.TYPE_BOX, 11, 2, 16, 1, exceptions.InvalidPackageError),  # invalid diameter
+    (posting.Package.TYPE_BOX, 110, 2, 16, 0, exceptions.InvalidPackageError),  # max width=105
+    (posting.Package.TYPE_BOX, 11, 110, 16, 0, exceptions.InvalidPackageError),  # max height=110
+    (posting.Package.TYPE_BOX, 11, 2, 110, 0, exceptions.InvalidPackageError),  # max length=110
+    (posting.Package.TYPE_BOX, 105, 105, 105, 0, exceptions.InvalidPackageError),  # sum > 200
+    (posting.Package.TYPE_CYLINDER, 1, 0, 18, 16, exceptions.InvalidPackageError),  # invalid width
+    (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageError),  # invalid height
+    (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidPackageError),  # max length=105
+    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidPackageError),  # max diameter=91
+    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidPackageError),  # max cylinder size=28
 ])
 def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
     with pytest.raises(exc):
@@ -336,7 +336,7 @@ def test_package_weight_validation():
 
 
 def test_fail_package_weight_validation():
-    with pytest.raises(exceptions.InvalidMaxPackageWeightError):
+    with pytest.raises(exceptions.InvalidPackageError):
         posting.Package.validate(
             posting.Package.TYPE_BOX,
             12, 10, 20,
@@ -396,14 +396,14 @@ def test_cylinder_package_change_dimensions_below_minimum(package, dimension, va
 
 
 @pytest.mark.parametrize("dimension,value,exc", [
-    ("width", 0, exceptions.InvalidMinPackageDimensionsError),
-    ("width", posting.MAX_WIDTH + 1, exceptions.InvalidMaxPackageDimensionsError),
-    ("height", 0, exceptions.InvalidMinPackageDimensionsError),
-    ("height", posting.MAX_HEIGHT + 1, exceptions.InvalidMaxPackageDimensionsError),
-    ("length", 0, exceptions.InvalidMinPackageDimensionsError),
-    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidMaxPackageDimensionsError),
-    ("weight", 0, exceptions.InvalidMinPackageWeightError),
-    ("weight", 100000, exceptions.InvalidMaxPackageWeightError),
+    ("width", 0, exceptions.InvalidPackageError),
+    ("width", posting.MAX_WIDTH + 1, exceptions.InvalidPackageError),
+    ("height", 0, exceptions.InvalidPackageError),
+    ("height", posting.MAX_HEIGHT + 1, exceptions.InvalidPackageError),
+    ("length", 0, exceptions.InvalidPackageError),
+    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidPackageError),
+    ("weight", 0, exceptions.InvalidPackageError),
+    ("weight", 100000, exceptions.InvalidPackageError),
 ])
 def test_fail_box_package_change_invalid_dimensions(package, dimension, value, exc):
     with pytest.raises(exc):
@@ -411,10 +411,10 @@ def test_fail_box_package_change_invalid_dimensions(package, dimension, value, e
 
 
 @pytest.mark.parametrize("dimension,value,exc", [
-    ("diameter", 0, exceptions.InvalidMinPackageDimensionsError),
-    ("diameter", posting.MAX_DIAMETER + 1, exceptions.InvalidMaxPackageDimensionsError),
-    ("length", 0, exceptions.InvalidMinPackageDimensionsError),
-    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidMaxPackageDimensionsError),
+    ("diameter", 0, exceptions.InvalidPackageError),
+    ("diameter", posting.MAX_DIAMETER + 1, exceptions.InvalidPackageError),
+    ("length", 0, exceptions.InvalidPackageError),
+    ("length", posting.MAX_LENGTH + 1, exceptions.InvalidPackageError),
 ])
 def test_fail_cylinder_package_change_invalid_dimensions(package, dimension, value, exc):
     package.package_type = package.TYPE_CYLINDER
