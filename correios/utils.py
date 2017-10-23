@@ -56,7 +56,7 @@ class RangeSet(Sized, Iterable, Container):
 
             try:
                 element = element or [range(*r)]
-            except:
+            except Exception:
                 msg = "RangeSet argument must be a range, RangeSet or an Iterable, not {}"
                 raise ValueError(msg.format(type(r)))
 

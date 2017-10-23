@@ -722,11 +722,21 @@ class Freight:
             ar_value = to_decimal(ar_value)
         self.ar_value = ar_value
 
+        if not isinstance(saturday, bool):
+            saturday = (saturday == 'S')
         self.saturday = saturday
+
+        if not isinstance(home, bool):
+            home = (home == 'S')
         self.home = home
+
         self.error_code = error_code
         self.error_message = error_message
 
     @property
     def total(self):
         return self.value + self.declared_value + self.ar_value + self.mp_value
+
+
+class FreightError(Freight):
+    pass

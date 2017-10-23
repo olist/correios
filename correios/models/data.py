@@ -1863,9 +1863,3 @@ ZIP_CODE_MAP = {
 }  # type: Dict[str, Tuple[RangeSet, RangeSet]]
 
 ZIP_CODES = RangeSet(*(p[0] for p in ZIP_CODE_MAP.values()))
-
-
-# Status Code Restriction Zip
-INITIAL_ZIPCODE_RESTRICTED = 9
-FINAL_ZIPCODE_RESTRICTED = 10
-INITIAL_AND_FINAL_ZIPCODE_RESTRICTED = 11

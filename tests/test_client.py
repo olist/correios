@@ -17,20 +17,18 @@ from decimal import Decimal
 
 import pytest
 
+from correios.client import ValidRestrictResponse
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
     EXTRA_SERVICE_VD,
-    FINAL_ZIPCODE_RESTRICTED,
-    INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
-    INITIAL_ZIPCODE_RESTRICTED,
     SERVICE_PAC,
     SERVICE_SEDEX,
     SERVICE_SEDEX10
 )
-from correios.models.posting import NotFoundTrackingEvent, Package, PostingList, ShippingLabel, TrackingCode
+from correios.models.posting import Freight, NotFoundTrackingEvent, Package, PostingList, ShippingLabel, TrackingCode
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.utils import get_wsdl_path
 
@@ -352,8 +350,10 @@ def test_calculate_freight_with_error_code_10_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
+
+    assert isinstance(freight, Freight)
     assert len(freights) == 1
-    assert freight.error_code == FINAL_ZIPCODE_RESTRICTED
+    assert freight.error_code == ValidRestrictResponse.FINAL_ZIPCODE_RESTRICTED.value
     assert freight.value != 0
     assert freight.delivery_time.days == 2
     assert freight.saturday
@@ -379,8 +379,9 @@ def test_calculate_freight_with_error_code_11_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
+    assert isinstance(freight, Freight)
     assert len(freights) == 1
-    assert freight.error_code == INITIAL_AND_FINAL_ZIPCODE_RESTRICTED
+    assert freight.error_code == ValidRestrictResponse.INITIAL_AND_FINAL_ZIPCODE_RESTRICTED.value
     assert freight.value != 0
     assert freight.delivery_time.days == 8
     assert freight.saturday
@@ -406,8 +407,10 @@ def test_calculate_freight_with_error_code_9_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
+
+    assert isinstance(freight, Freight)
     assert len(freights) == 1
-    assert freight.error_code == INITIAL_ZIPCODE_RESTRICTED
+    assert freight.error_code == ValidRestrictResponse.INITIAL_ZIPCODE_RESTRICTED.value
     assert freight.value != 0
     assert freight.delivery_time.days == 8
     assert freight.saturday
