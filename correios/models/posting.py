@@ -493,27 +493,31 @@ class Package:
         return error_list
 
     @classmethod
-    def _validate_dimension(cls, name, value, maximum) -> (errors.PackageError, None):
+    def _validate_dimension(cls, name, value, maximum) -> Union[errors.PackageError, None]:
         if value <= 0 or value > maximum:
             return errors.PackageDimensionError(name, value, 0, maximum)
 
-        return
+        return None
 
     @classmethod
-    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> (errors.PackageError, None):
+    def _validate_weight(cls,
+                         weight,
+                         service: Optional[Union[Service, str, int]]=None) -> Union[errors.PackageError, None]:
         if weight <= 0:
             return errors.PackageWeightError(None, weight, 0, None)
 
         if not service:
-            return
+            return None
 
         service = Service.get(service)
 
         if service.max_weight is None:
-            return
+            return None
 
         if weight > service.max_weight:
             return errors.PackageWeightError(service, weight, 0, service.max_weight)
+
+        return None
 
 
 class ShippingLabel:
