@@ -1,0 +1,75 @@
+<correioslog>
+  <tipo_arquivo>Postagem</tipo_arquivo>
+  <versao_arquivo>2.3</versao_arquivo>
+  <plp>
+    <id_plp>875057</id_plp>
+    <valor_global>22.22</valor_global>
+    <mcu_unidade_postagem>4140</mcu_unidade_postagem>
+    <nome_unidade_postagem>AC MINISTERIO DA MARINHA</nome_unidade_postagem>
+    <cartao_postagem>0056789123</cartao_postagem>
+  </plp>
+  <remetente>
+    <numero_contrato>9911222777</numero_contrato>
+    <numero_diretoria>10</numero_diretoria>
+    <codigo_administrativo>08082650</codigo_administrativo>
+    <nome_remetente>Vasco da Gama</nome_remetente>
+    <logradouro_remetente>Rua Anita Garibaldi, 100</logradouro_remetente>
+    <numero_remetente>100</numero_remetente>
+    <complemento_remetente/>
+    <bairro_remetente>Copacabana</bairro_remetente>
+    <cep_remetente>22041080</cep_remetente>
+    <cidade_remetente>Rio de Janeiro</cidade_remetente>
+    <uf_remetente>RJ</uf_remetente>
+    <telefone_remetente/>
+    <fax_remetente/>
+    <email_remetente/>
+  </remetente>
+  <forma_pagamento/>
+  <objeto_postal>
+    <numero_etiqueta>SO230262969BR</numero_etiqueta>
+    <codigo_objeto_cliente/>
+    <codigo_servico_postagem>04669</codigo_servico_postagem>
+    <cubagem/>
+    <peso>2250</peso>
+    <rt1>B0000000152</rt1>
+    <rt2/>
+    <destinatario>
+      <nome_destinatario>Mundo dos Computadores Loja I</nome_destinatario>
+      <telefone_destinatario/>
+      <celular_destinatario/>
+      <email_destinatario/>
+      <logradouro_destinatario>Av. Mutirao</logradouro_destinatario>
+      <complemento_destinatario/>
+      <numero_end_destinatario>1856</numero_end_destinatario>
+    </destinatario>
+    <nacional>
+      <bairro_destinatario>CENTRO</bairro_destinatario>
+      <cidade_destinatario>SAO PAULO-S20</cidade_destinatario>
+      <uf_destinatario>SP</uf_destinatario>
+      <cep_destinatario>05639030</cep_destinatario>
+      <codigo_usuario_postal/>
+      <centro_custo_cliente/>
+      <numero_nota_fiscal>1424</numero_nota_fiscal>
+      <serie_nota_fiscal/>
+      <valor_nota_fiscal>0,0</valor_nota_fiscal>
+      <natureza_nota_fiscal/>
+      <descricao_objeto/>
+      <valor_a_cobrar>0,0</valor_a_cobrar>
+    </nacional>
+    <servico_adicional>
+      <valor_declarado/>
+      <codigo_servico_adicional>25</codigo_servico_adicional>
+    </servico_adicional>
+    <dimensao_objeto>
+      <tipo_objeto>2</tipo_objeto>
+      <dimensao_altura>8.0</dimensao_altura>
+      <dimensao_largura>35.0</dimensao_largura>
+      <dimensao_comprimento>20.0</dimensao_comprimento>
+      <dimensao_diametro>0.0</dimensao_diametro>
+    </dimensao_objeto>
+    <data_postagem_sara>20170630</data_postagem_sara>
+    <status_processamento>1</status_processamento>
+    <numero_comprovante_postagem>32973055</numero_comprovante_postagem>
+    <valor_cobrado>22.22</valor_cobrado>
+  </objeto_postal>
+</correioslog>

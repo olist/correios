@@ -14,7 +14,7 @@
 
 
 import os
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -102,6 +102,107 @@ def test_fail_tracking_code_invalid_range_generator():
 
     with pytest.raises(exceptions.InvalidTrackingCodeError):
         posting.TrackingCode.create_range("DL74668654 BR", "DL74668650 BR")  # end < start
+
+
+def test_receipt_basic():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt.number == 1234
+    assert receipt.real_post_date == '20160812'
+    assert receipt.real_value == '18.00'
+    assert isinstance(receipt.post_date, date)
+    assert receipt.post_date.day == 12
+    assert receipt.post_date.month == 8
+    assert receipt.post_date.year == 2016
+    fake_date = date(year=2016, month=8, day=12)
+    assert isinstance(
+        posting.Receipt(
+            number=1234,
+            post_date=fake_date,
+            value='18.00'
+        ).post_date, date
+    )
+    assert isinstance(
+        posting.Receipt(
+            number=1234,
+            post_date=fake_date,
+            value='18.00'
+        ).value, Decimal
+    )
+
+
+def test_receipt_representation(receipt):
+    repr_ = (
+        '<Receipt('
+        'number={number}, '
+        'post_date={post_date}, '
+        'value={value}'
+        ')>'.format(
+            number=receipt.number,
+            post_date=receipt.post_date,
+            value=receipt.value
+        )
+    )
+    assert repr(receipt) == repr_
+
+
+def test_receipt_should_equals():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt == posting.Receipt(
+        number=1234,
+        post_date='20160812',
+        value='18.00'
+    )
+
+
+def test_receipt_should_different():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt != posting.Receipt(
+        number=1235,
+        post_date='20160812',
+        value='18.00'
+    )
+    assert receipt != posting.Receipt(
+        number=1234,
+        post_date='20160813',
+        value='18.00'
+    )
+    assert receipt != posting.Receipt(
+        number=1235,
+        post_date='20160813',
+        value='19.00'
+    )
+
+
+def test_postal_unit_basic(postal_unit):
+    assert hasattr(postal_unit, 'code')
+    assert hasattr(postal_unit, 'description')
+
+
+def test_post_info_basic(postal_unit, posting_list):
+    post_info = posting.PostInfo(
+        postal_unit=postal_unit,
+        posting_list=posting_list,
+        value='18.00'
+    )
+    assert post_info.postal_unit == postal_unit
+    assert post_info.posting_list == posting_list
+    assert post_info.real_value == '18.00'
+    assert isinstance(post_info.value, Decimal)
+
+
+def test_post_info_representation(post_info):
+    repr_ = (
+        '<PostInfo('
+        'postal_unit={postal_unit}, '
+        'posting_list={posting_list}, '
+        'value={value}'
+        ')>'.format(
+            postal_unit=post_info.postal_unit,
+            posting_list=post_info.posting_list,
+            value=post_info.value
+        )
+    )
+    assert repr(post_info) == repr_
 
 
 def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code, package):
@@ -227,6 +328,27 @@ def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_addre
         extra_services=[EXTRA_SERVICE_VD],
     )
     assert shipping_label.value == Decimal("18.50")
+
+
+def test_posted_shipping_label(
+    posting_card,
+    sender_address,
+    receiver_address,
+    package,
+    receipt
+):
+    service = Service.get(SERVICE_SEDEX)
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        receipt=receipt
+    )
+    assert shipping_label.receipt is not None
+    assert shipping_label.posted
 
 
 def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_address, receiver_address, package):
