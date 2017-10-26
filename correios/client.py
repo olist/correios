@@ -24,14 +24,17 @@ from correios.exceptions import PostingListSerializerError, TrackingCodesLimitEx
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
 from correios.utils import get_wsdl_path, to_decimal, to_integer
 
-from .models.address import ZipAddress, ZipCode
+from .models.address import ReceiverAddress, SenderAddress, ZipAddress, ZipCode
 from .models.posting import (
     EventStatus,
     Freight,
     FreightError,
     NotFoundTrackingEvent,
     Package,
+    PostalUnit,
+    PostInfo,
     PostingList,
+    Receipt,
     ShippingLabel,
     TrackingCode,
     TrackingEvent
@@ -77,7 +80,7 @@ class ModelBuilder:
         posting_card.end_date = posting_card_data.dataVigenciaFim
         posting_card.status = posting_card_data.statusCartaoPostagem
         posting_card.status_code = posting_card_data.statusCodigo
-        posting_card.unit = posting_card_data.unidadeGenerica
+        posting_card.unit = posting_card_data.unidadeGenerica.strip() or 0
 
         for service_data in posting_card_data.servicos:
             service = self.build_service(service_data)
@@ -126,6 +129,160 @@ class ModelBuilder:
             complements=[zip_address_data.complemento, zip_address_data.complemento2]
         )
         return zip_address
+
+    def build_post_info(self, data, user: User) -> PostInfo:
+        post_info = PostInfo(
+            postal_unit=self.build_postal_unit(data.plp),
+            posting_list=self._load_posting_list(
+                data=data,
+                user=user
+            ),
+            value=data.plp.valor_global
+        )
+        return post_info
+
+    def build_receipt(self,  data) -> Receipt:
+        receipt = Receipt(
+            number=data.numero_comprovante_postagem,
+            post_date=data.data_postagem_sara.text,
+            value=data.valor_cobrado.text
+        )
+        return receipt
+
+    def build_postal_unit(self, data) -> PostalUnit:
+        postal_unit = PostalUnit(
+            code=data.mcu_unidade_postagem,
+            description=data.nome_unidade_postagem,
+        )
+        return postal_unit
+
+    def _load_posting_list(self, data, user: User) -> PostingList:
+        contract_number = to_integer(data.remetente.numero_contrato)
+
+        contract = next(
+            c for c in user.contracts if c.number == contract_number
+        )
+
+        posting_card_number = str(data.plp.cartao_postagem.text)
+
+        posting_card = next(
+            p for p in contract.posting_cards
+            if p.number == posting_card_number
+        )
+
+        posting_list = PostingList(custom_id=0)
+
+        for postal_object in data.objeto_postal:
+
+            posting_list.add_shipping_label(self._load_shipping_label(
+                data=postal_object,
+                posting_card=posting_card,
+                sender_address=self._load_sender_address(data.remetente),
+            ))
+
+        posting_list.close_with_id(data.plp.id_plp)
+
+        return posting_list
+
+    def _load_shipping_label(
+        self,
+        data,
+        posting_card: PostingCard,
+        sender_address: SenderAddress,
+    ) -> ShippingLabel:
+
+        declared_value = getattr(
+            data.servico_adicional,
+            'valor_declarado',
+            None
+        )
+        extra_services_codes = list(
+            data.servico_adicional.codigo_servico_adicional
+        )
+        extra_services = [
+            ExtraService.get(code) for code in extra_services_codes if code
+        ]
+
+        invoice_value = getattr(data.nacional, 'valor_nota_fiscal', None)
+
+        billing = getattr(data.nacional, 'valor_a_cobrar', None) or '0.00'
+
+        shipping_label = ShippingLabel(
+            billing=to_decimal(billing),
+            invoice_number=data.nacional.numero_nota_fiscal,
+            invoice_series=data.nacional.serie_nota_fiscal,
+            value=to_decimal(declared_value or invoice_value or '0.00'),
+            text=data.nacional.descricao_objeto,
+            posting_card=posting_card,
+            sender=sender_address,
+            receiver=self._load_receiver_address(data),
+            package=self._load_package(data),
+            service=Service.get(data.codigo_servico_postagem.text),
+            tracking_code=data.numero_etiqueta.text,
+            receipt=self.build_receipt(data)
+        )
+
+        shipping_label.add_extra_services([
+            extra_service for extra_service in extra_services
+            if extra_service not in shipping_label.extra_services
+        ])
+
+        return shipping_label
+
+    def _load_sender_address(self, data) -> SenderAddress:
+        sender_address = SenderAddress(
+            email=data.email_remetente.text,
+            name=data.nome_remetente.text,
+            street=data.logradouro_remetente.text,
+            number=data.numero_remetente.text,
+            complement=data.complemento_remetente.text,
+            neighborhood=data.bairro_remetente.text,
+            zip_code=data.cep_remetente.text,
+            city=data.cidade_remetente.text,
+            state=data.uf_remetente.text,
+            phone=data.telefone_remetente.text or '',
+        )
+
+        return sender_address
+
+    def _load_receiver_address(self, data) -> ReceiverAddress:
+        receiver_data = data.destinatario
+
+        extra_data = data.nacional
+
+        receiver_address = ReceiverAddress(
+            email=getattr(receiver_data, 'email_remetente', ''),
+            name=receiver_data.nome_destinatario.text or '',
+            street=receiver_data.logradouro_destinatario.text or '',
+            number=receiver_data.numero_end_destinatario.text or '',
+            complement=receiver_data.complemento_destinatario.text or '',
+            neighborhood=extra_data.bairro_destinatario.text or '',
+            zip_code=extra_data.cep_destinatario.text or '',
+            city=extra_data.cidade_destinatario.text or '',
+            state=extra_data.uf_destinatario.text or '',
+            phone=receiver_data.celular_destinatario.text or '',
+        )
+
+        return receiver_address
+
+    def _load_package(self, data) -> Package:
+        dimensions = data.dimensao_objeto
+
+        package = Package(
+            diameter=float(
+                dimensions.dimensao_diametro.text.replace(',', '.')
+            ),
+            height=float(dimensions.dimensao_altura.text.replace(',', '.')),
+            length=float(
+                dimensions.dimensao_comprimento.text.replace(',', '.')
+            ),
+            weight=float(data.peso.text.replace(',', '.')),
+            width=float(dimensions.dimensao_largura.text.replace(',', '.')),
+            package_type=dimensions.tipo_objeto,
+            service=data.codigo_servico_postagem.text
+        )
+
+        return package
 
     def build_posting_card_status(self, response):
         if response.lower() != "normal":
@@ -424,6 +581,20 @@ class Correios:
                                  tracking_codes)
 
         return result
+
+    def get_post_info(self, number: int) -> PostInfo:
+        result = self._auth_call('solicitaXmlPlp', number)
+
+        data = xml_utils.fromstring(result.encode('iso-8859-1'))
+        contract_number = data.remetente.numero_contrato.text  # type: ignore
+        posting_card_number = data.plp.cartao_postagem.text  # type: ignore
+
+        user = self.get_user(
+            contract_number=contract_number,
+            posting_card_number=posting_card_number
+        )
+
+        return self.model_builder.build_post_info(data=data, user=user)
 
     def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()

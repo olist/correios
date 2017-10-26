@@ -14,7 +14,7 @@
 
 from functools import wraps
 
-from lxml import etree
+from lxml import etree, objectify
 
 
 def add_text_argument(f):
@@ -39,3 +39,4 @@ SubElement = add_text_argument(etree.SubElement)
 tostring = etree.tostring
 parse = etree.parse
 XMLSchema = etree.XMLSchema
+fromstring = objectify.fromstring
