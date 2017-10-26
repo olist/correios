@@ -23,7 +23,16 @@ from pytest_factoryboy import register
 from correios.models import data
 from correios.models.address import Address, ReceiverAddress, SenderAddress
 from correios.models.data import TRACKING_PREFIX
-from correios.models.posting import Package, PostingList, ShippingLabel, TrackingCode, TrackingEvent
+from correios.models.posting import (
+    Package,
+    PostalUnit,
+    PostInfo,
+    PostingList,
+    Receipt,
+    ShippingLabel,
+    TrackingCode,
+    TrackingEvent
+)
 from correios.models.user import Contract, FederalTaxNumber, PostingCard, StateTaxNumber, User
 
 try:
@@ -168,6 +177,23 @@ class PackageFactory(Factory):
 register(PackageFactory, "package")
 
 
+class ReceiptFactory(Factory):
+    class Meta:
+        model = Receipt
+
+    number = faker.Faker('pyint')
+    post_date = faker.Faker('date', pattern='%Y%m%d')
+    value = faker.Faker(
+        'pydecimal',
+        left_digits=2,
+        right_digits=2,
+        positive=True
+    )
+
+
+register(ReceiptFactory, 'receipt')
+
+
 class ShippingLabelFactory(Factory):
     class Meta:
         model = ShippingLabel
@@ -188,6 +214,13 @@ class ShippingLabelFactory(Factory):
 register(ShippingLabelFactory, "shipping_label")
 
 
+class PostedShippingLabelFactory(ShippingLabelFactory):
+    receipt = SubFactory(ReceiptFactory)
+
+
+register(PostedShippingLabelFactory, 'posted_shipping_label')
+
+
 class PostingListFactory(Factory):
     class Meta:
         model = PostingList
@@ -195,7 +228,35 @@ class PostingListFactory(Factory):
     custom_id = Sequence(lambda n: n)
 
 
-register(PostingListFactory, "posting_list")
+register(PostingListFactory, 'posting_list')
+
+
+class PostalUnitFactory(Factory):
+    class Meta:
+        model = PostalUnit
+
+    code = faker.Faker('random_number', digits=4)
+    description = Faker('company', locale='pt_BR')
+
+
+register(PostalUnitFactory, 'postal_unit')
+
+
+class PostInfoFactory(Factory):
+    class Meta:
+        model = PostInfo
+
+    postal_unit = SubFactory(PostalUnitFactory)
+    posting_list = SubFactory(PostingListFactory)
+    value = faker.Faker(
+        'pydecimal',
+        left_digits=2,
+        right_digits=2,
+        positive=True
+    )
+
+
+register(PostInfoFactory, 'post_info')
 
 
 @pytest.fixture
