@@ -15,9 +15,11 @@ lib
 lib64
 __pycache__
 
+htmlcov
 .coverage
 .tox
 .cache
+.mypy_cache
 
 pip-log.txt
 
