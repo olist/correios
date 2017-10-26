@@ -28,7 +28,7 @@ from correios.models.data import (
     EXTRA_SERVICE_VD,
     SERVICE_PAC,
     SERVICE_SEDEX,
-    TRACKING_EVENT_TYPES,
+    TRACKING_EVENT_TYPES
 )
 from correios.models.user import ExtraService, Service
 

@@ -25,7 +25,7 @@ from correios.exceptions import (
     InvalidRegionalDirectionError,
     InvalidUserContractError,
     MaximumDeclaredValueError,
-    MinimumDeclaredValueError,
+    MinimumDeclaredValueError
 )
 
 from ..utils import get_resource_path, to_datetime, to_integer

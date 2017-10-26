@@ -24,7 +24,7 @@ from correios.exceptions import (
     InvalidRegionalDirectionError,
     InvalidUserContractError,
     MaximumDeclaredValueError,
-    MinimumDeclaredValueError,
+    MinimumDeclaredValueError
 )
 from correios.models.data import EXTRA_SERVICE_AR, SERVICE_PAC, SERVICE_SEDEX
 from correios.models.user import (
@@ -35,7 +35,7 @@ from correios.models.user import (
     RegionalDirection,
     Service,
     StateTaxNumber,
-    User,
+    User
 )
 
 
