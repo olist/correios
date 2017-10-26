@@ -16,6 +16,7 @@
 import os
 from datetime import datetime
 from decimal import Decimal
+from enum import Enum
 from typing import Dict, List, Optional, Sequence, Union
 
 from correios import DATADIR, xml_utils
@@ -39,6 +40,20 @@ from .models.user import Contract, ExtraService, FederalTaxNumber, PostingCard, 
 from .soap import SoapClient
 
 KG = 1000  # g
+
+
+class ValidRestrictResponse(Enum):
+    INITIAL_ZIPCODE_RESTRICTED = 9
+    FINAL_ZIPCODE_RESTRICTED = 10
+    INITIAL_AND_FINAL_ZIPCODE_RESTRICTED = 11
+
+    @classmethod
+    def restricted_codes(cls):
+        return [
+            cls.FINAL_ZIPCODE_RESTRICTED.value,
+            cls.INITIAL_AND_FINAL_ZIPCODE_RESTRICTED.value,
+            cls.FINAL_ZIPCODE_RESTRICTED.value
+        ]
 
 
 class ModelBuilder:
@@ -167,34 +182,30 @@ class ModelBuilder:
     def build_freights_list(self, response):
         result = []
         for service_data in response.cServico:
-            service = Service.get(service_data.Codigo)
-            error_code = to_integer(service_data.Erro)
-            if error_code:
-                freight = FreightError(
-                    service=service,
-                    error_code=error_code,
-                    error_message=service_data.MsgErro,
-                )
-            else:
-                delivery_time = int(service_data.PrazoEntrega)
-                value = to_decimal(service_data.ValorSemAdicionais)
-                declared_value = to_decimal(service_data.ValorValorDeclarado)
-                ar_value = to_decimal(service_data.ValorAvisoRecebimento)
-                mp_value = to_decimal(service_data.ValorMaoPropria)
-                saturday = service_data.EntregaSabado or ""
-                home = service_data.EntregaDomiciliar or ""
-                freight = Freight(
-                    service=service,
-                    delivery_time=delivery_time,
-                    value=value,
-                    declared_value=declared_value,
-                    ar_value=ar_value,
-                    mp_value=mp_value,
-                    saturday=saturday.upper() == "S",
-                    home=home.upper() == "S",
-                )
+            freight = self.build_freight(service_data=service_data)
             result.append(freight)
         return result
+
+    def build_freight(self, service_data):
+        data = {
+            'service': Service.get(service_data.Codigo),
+            'error_code': to_integer(service_data.Erro),
+            'delivery_time': int(service_data.PrazoEntrega),
+            'value': to_decimal(service_data.ValorSemAdicionais),
+            'declared_value': to_decimal(service_data.ValorValorDeclarado),
+            'ar_value': to_decimal(service_data.ValorAvisoRecebimento),
+            'mp_value': to_decimal(service_data.ValorMaoPropria),
+            'saturday': service_data.EntregaSabado or "",
+            'home': service_data.EntregaDomiciliar or "",
+            'error_message': service_data.MsgErro or None
+        }
+
+        if (
+            data['error_code'] and
+            not data['error_code'] in ValidRestrictResponse.restricted_codes()
+        ):
+            return FreightError(**data)
+        return Freight(**data)
 
 
 class PostingListSerializer:

@@ -696,7 +696,9 @@ class Freight:
                  mp_value: Union[Decimal, float, int, str] = 0.00,
                  ar_value: Union[Decimal, float, int, str] = 0.00,
                  saturday: bool = False,
-                 home: bool = False) -> None:
+                 home: bool = False,
+                 error_code: Union[int, str] = 0,
+                 error_message: str = None) -> None:
 
         self.service = Service.get(service)
 
@@ -720,10 +722,16 @@ class Freight:
             ar_value = to_decimal(ar_value)
         self.ar_value = ar_value
 
+        if not isinstance(saturday, bool):
+            saturday = (saturday == 'S')
         self.saturday = saturday
+
+        if not isinstance(home, bool):
+            home = (home == 'S')
         self.home = home
-        self.error_code = 0
-        self.error_message = ""
+
+        self.error_code = error_code
+        self.error_message = error_message
 
     @property
     def total(self):
@@ -731,10 +739,4 @@ class Freight:
 
 
 class FreightError(Freight):
-    def __init__(self,
-                 service: Union[Service, int],
-                 error_code: Union[str, int],
-                 error_message: str) -> None:
-        super().__init__(service=service, delivery_time=0, value=Decimal("0.00"))
-        self.error_code = int(error_code)
-        self.error_message = error_message
+    pass
