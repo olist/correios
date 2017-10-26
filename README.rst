@@ -25,3 +25,27 @@ Installation
    $ pip install correios[pdf]  # label and posting list pdf generation support
    $ pip install correios[api]  # support for SIGEP/SRO API client
    $ pip install correios[pdf,api]  # full installation
+
+
+Update Local WSDL Files
+-----------------------
+
+Local WSDL files are used to increase performance on SOAP requests. Enventually
+you'll want to update them and withou having to update this lib.
+
+So you can use the method update_wsdl to do it.
+
+.. code-block::
+
+   from correios.update_wsdl import update_wsdl
+
+   update_wsdl()
+
+That's it!
+
+If you want to maintain this files on a custom path you can set the environment
+variable CORREIOS_WSDL_PATH
+
+.. code-block::
+
+  export CORREIOS_WSDL_PATH=/my/custom/path/wsdls
