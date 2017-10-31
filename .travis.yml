@@ -12,15 +12,10 @@ matrix:
         - python: '3.6.2'
 
 install:
-  - pip install -rrequirements-test.txt
-  - pip install tox-travis
-  - pip install codecov
-  - pip install flake8
-  - pip install isort
+  - make install
 
 before_script:
-  - isort --check --diff -rc correios tests
-  - flake8 --max-line-length=120 correios tests
+  - make lint
 
 script:
   - tox
