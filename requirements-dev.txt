@@ -1,2 +1,5 @@
 -r requirements-test.txt
 bumpversion
+isort
+flake8
+mypy
