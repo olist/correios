@@ -33,19 +33,27 @@ Update Local WSDL Files
 Local WSDL files are used to increase performance on SOAP requests. Enventually
 you'll want to update them and withou having to update this lib.
 
-So you can use the method update_wsdl to do it.
+If you want to maintain this files on a custom path you can pass the 'path'
+option with the custom path. Don't use relative paths.
+
+Just run on shell
+
+.. code-block::
+
+   $ update-correios-wsdl -p /path/to/your/custom/wsdl/folder
+
+Arguments:
+-p, --path : Custom path where wsdl files will be saved, note that this option
+will have higher priority than the value of the envvar 'CORREIOS_WSDL_PATH'
+
+
+Or you can use the method update_wsdl to do it.
 
 .. code-block::
 
    from correios.update_wsdl import update_wsdl
 
-   update_wsdl()
+   update_wsdl(path='/path/to/your/custom/wsdl/folder')
 
 That's it!
 
-If you want to maintain this files on a custom path you can set the environment
-variable CORREIOS_WSDL_PATH
-
-.. code-block::
-
-  export CORREIOS_WSDL_PATH=/my/custom/path/wsdls
