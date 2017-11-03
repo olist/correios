@@ -1,6 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://cliente.bean.master.sigep.bsb.correios.com.br/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="AtendeClienteService" targetNamespace="http://cliente.bean.master.sigep.bsb.correios.com.br/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://cliente.bean.master.sigep.bsb.correios.com.br/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://cliente.bean.master.sigep.bsb.correios.com.br/">
+  <xs:element name="VerificaSeTodosObjetosCancelados" type="tns:VerificaSeTodosObjetosCancelados"/>
+  <xs:element name="VerificaSeTodosObjetosCanceladosResponse" type="tns:VerificaSeTodosObjetosCanceladosResponse"/>
+  <xs:element name="atualizaPagamentoNaEntrega" type="tns:atualizaPagamentoNaEntrega"/>
+  <xs:element name="atualizaPagamentoNaEntregaResponse" type="tns:atualizaPagamentoNaEntregaResponse"/>
+  <xs:element name="atualizaRemessaAgrupada" type="tns:atualizaRemessaAgrupada"/>
+  <xs:element name="atualizaRemessaAgrupadaResponse" type="tns:atualizaRemessaAgrupadaResponse"/>
   <xs:element name="bloquearObjeto" type="tns:bloquearObjeto"/>
   <xs:element name="bloquearObjetoResponse" type="tns:bloquearObjetoResponse"/>
   <xs:element name="buscaCliente" type="tns:buscaCliente"/>
@@ -10,7 +16,17 @@
   <xs:element name="buscaPagamentoEntrega" type="tns:buscaPagamentoEntrega"/>
   <xs:element name="buscaPagamentoEntregaResponse" type="tns:buscaPagamentoEntregaResponse"/>
   <xs:element name="buscaServicos" type="tns:buscaServicos"/>
+  <xs:element name="buscaServicosAdicionaisAtivos" type="tns:buscaServicosAdicionaisAtivos"/>
+  <xs:element name="buscaServicosAdicionaisAtivosResponse" type="tns:buscaServicosAdicionaisAtivosResponse"/>
   <xs:element name="buscaServicosResponse" type="tns:buscaServicosResponse"/>
+  <xs:element name="buscaServicosValorDeclarado" type="tns:buscaServicosValorDeclarado"/>
+  <xs:element name="buscaServicosValorDeclaradoResponse" type="tns:buscaServicosValorDeclaradoResponse"/>
+  <xs:element name="buscaServicosXServicosAdicionais" type="tns:buscaServicosXServicosAdicionais"/>
+  <xs:element name="buscaServicosXServicosAdicionaisResponse" type="tns:buscaServicosXServicosAdicionaisResponse"/>
+  <xs:element name="buscaTarifaVale" type="tns:buscaTarifaVale"/>
+  <xs:element name="buscaTarifaValeResponse" type="tns:buscaTarifaValeResponse"/>
+  <xs:element name="calculaTarifaServico" type="tns:calculaTarifaServico"/>
+  <xs:element name="calculaTarifaServicoResponse" type="tns:calculaTarifaServicoResponse"/>
   <xs:element name="cancelarObjeto" type="tns:cancelarObjeto"/>
   <xs:element name="cancelarObjetoResponse" type="tns:cancelarObjetoResponse"/>
   <xs:element name="cancelarPedidoScol" type="tns:cancelarPedidoScol"/>
@@ -63,6 +79,24 @@
   <xs:element name="validarPostagemSimultaneaResponse" type="tns:validarPostagemSimultaneaResponse"/>
   <xs:element name="verificaDisponibilidadeServico" type="tns:verificaDisponibilidadeServico"/>
   <xs:element name="verificaDisponibilidadeServicoResponse" type="tns:verificaDisponibilidadeServicoResponse"/>
+  <xs:complexType name="buscaServicosAdicionaisAtivos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaServicosAdicionaisAtivosResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:servicoAdicionalXML"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="servicoAdicionalXML">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+      <xs:element minOccurs="0" name="sigla" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="fechaPlp">
     <xs:sequence>
       <xs:element minOccurs="0" name="xml" type="xs:string"/>
@@ -92,6 +126,30 @@
       <xs:element minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="calculaTarifaServico">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+      <xs:element minOccurs="0" name="codServico" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepOrigem" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepDestino" type="xs:string"/>
+      <xs:element minOccurs="0" name="peso" type="xs:string"/>
+      <xs:element minOccurs="0" name="codFormato" type="xs:int"/>
+      <xs:element minOccurs="0" name="comprimento" type="xs:double"/>
+      <xs:element minOccurs="0" name="altura" type="xs:double"/>
+      <xs:element minOccurs="0" name="largura" type="xs:double"/>
+      <xs:element minOccurs="0" name="diametro" type="xs:double"/>
+      <xs:element minOccurs="0" name="codMaoPropria" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorDeclarado" type="xs:double"/>
+      <xs:element minOccurs="0" name="codAvisoRecebimento" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="calculaTarifaServicoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="validaPlp">
     <xs:sequence>
       <xs:element name="cliente" type="xs:long"/>
@@ -110,415 +168,22 @@
       <xs:element name="return" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="cancelarObjeto">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="idPlp" type="xs:long"/>
-      <xs:element minOccurs="0" name="numeroEtiqueta" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="cancelarObjetoResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterClienteAtualizacao">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="cnpjCliente" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterClienteAtualizacaoResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:dateTime"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="verificaDisponibilidadeServico">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
-      <xs:element minOccurs="0" name="numeroServico" type="xs:string"/>
-      <xs:element minOccurs="0" name="cepOrigem" type="xs:string"/>
-      <xs:element minOccurs="0" name="cepDestino" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="verificaDisponibilidadeServicoResponse">
-    <xs:sequence>
-      <xs:element name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="fechaPlpVariosServicos">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="xml" type="xs:string"/>
-      <xs:element minOccurs="0" name="idPlpCliente" type="xs:long"/>
-      <xs:element minOccurs="0" name="cartaoPostagem" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaEtiquetas" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="fechaPlpVariosServicosResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="geraDigitoVerificadorEtiquetas">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="etiquetas" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="geraDigitoVerificadorEtiquetasResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:int"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterEmbalagemLRS">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterEmbalagemLRSResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:embalagemLRSMaster"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="embalagemLRSMaster">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
-      <xs:element minOccurs="0" name="nome" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="registrarPedidosInformacao">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoRegistro"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="pedidoInformacaoRegistro">
-    <xs:complexContent>
-      <xs:extension base="tns:pedidoInformacao">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="cliente" type="tns:cliente"/>
-          <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
-          <xs:element minOccurs="0" name="conta" type="tns:conta"/>
-          <xs:element minOccurs="0" name="conteudoObjeto" type="xs:string"/>
-          <xs:element minOccurs="0" name="cpfCnpj" type="xs:string"/>
-          <xs:element minOccurs="0" name="destinatario" type="tns:destinatario"/>
-          <xs:element minOccurs="0" name="embalagem" type="xs:string"/>
-          <xs:element minOccurs="0" name="motivo" type="xs:int"/>
-          <xs:element minOccurs="0" name="observacao" type="xs:string"/>
-          <xs:element minOccurs="0" name="postagem" type="tns:postagem"/>
-          <xs:element minOccurs="0" name="remetente" type="tns:remetente"/>
-          <xs:element minOccurs="0" name="servico" type="xs:int"/>
-          <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType abstract="true" name="pedidoInformacao">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="cliente">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="numeroContrato" type="xs:string"/>
-      <xs:element minOccurs="0" name="possuiContrato" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="conta">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigoBanco" type="xs:string"/>
-      <xs:element minOccurs="0" name="nomeBanco" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroAgencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroConta" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="destinatario">
-    <xs:complexContent>
-      <xs:extension base="tns:pessoa">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="pessoa">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
-      <xs:element minOccurs="0" name="cep" type="xs:string"/>
-      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
-      <xs:element minOccurs="0" name="ddd" type="xs:string"/>
-      <xs:element minOccurs="0" name="endereco" type="xs:string"/>
-      <xs:element minOccurs="0" name="nome" type="xs:string"/>
-      <xs:element minOccurs="0" name="numero" type="xs:string"/>
-      <xs:element minOccurs="0" name="pais" type="xs:string"/>
-      <xs:element minOccurs="0" name="telefone" type="xs:string"/>
-      <xs:element minOccurs="0" name="uf" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="postagem">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="agencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="avisoRecebimento" type="xs:string"/>
-      <xs:element minOccurs="0" name="data" type="xs:string"/>
-      <xs:element minOccurs="0" name="local" type="xs:string"/>
-      <xs:element minOccurs="0" name="valorDeclarado" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="remetente">
-    <xs:complexContent>
-      <xs:extension base="tns:pessoa">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="email" type="xs:string"/>
-          <xs:element minOccurs="0" name="empresa" type="xs:string"/>
-          <xs:element minOccurs="0" name="fax" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="registrarPedidosInformacaoResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="retorno">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigoPI" type="xs:long"/>
-      <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="codigoRetorno" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataPrazoResposta" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataResposta" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataUltimaRecorrencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="mensagemRetorno" type="xs:string"/>
-      <xs:element minOccurs="0" name="resposta" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="validaEtiquetaPLP">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="numeroEtiqueta" type="xs:string"/>
-      <xs:element minOccurs="0" name="idPlp" type="xs:long"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="validaEtiquetaPLPResponse">
-    <xs:sequence>
-      <xs:element name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultarPedidosInformacao">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoConsulta"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="pedidoInformacaoConsulta">
-    <xs:complexContent>
-      <xs:extension base="tns:pedidoInformacao">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="numero" type="xs:long"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="consultarPedidosInformacaoResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultaCEP">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="cep" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultaCEPResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:enderecoERP"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="enderecoERP">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
-      <xs:element minOccurs="0" name="cep" type="xs:string"/>
-      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento2" type="xs:string"/>
-      <xs:element minOccurs="0" name="end" type="xs:string"/>
-      <xs:element name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="uf" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="unidadesPostagem" nillable="true" type="tns:unidadePostagemERP"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="unidadePostagemERP">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="diretoriaRegional" type="xs:string"/>
-      <xs:element minOccurs="0" name="endereco" type="tns:enderecoERP"/>
-      <xs:element minOccurs="0" name="id" type="xs:string"/>
-      <xs:element minOccurs="0" name="nome" type="xs:string"/>
-      <xs:element minOccurs="0" name="status" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="integrarUsuarioScol">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="integrarUsuarioScolResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterMensagemRetornoPI">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterMensagemRetornoPIResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:mensagemRetornoPIMaster"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="mensagemRetornoPIMaster">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
-      <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="solicitaPLP">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="idPlpMaster" type="xs:long"/>
-      <xs:element minOccurs="0" name="numEtiqueta" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="solicitaPLPResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="getStatusCartaoPostagem">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="numeroCartaoPostagem" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="getStatusCartaoPostagemResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:statusCartao"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="validarPostagemSimultanea">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
-      <xs:element minOccurs="0" name="codigoServico" type="xs:int"/>
-      <xs:element minOccurs="0" name="cepDestinatario" type="xs:string"/>
-      <xs:element minOccurs="0" name="coleta" type="tns:coletaSimultaneaTO"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="coletaSimultaneaTO">
-    <xs:complexContent>
-      <xs:extension base="tns:coletaTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="obj" type="xs:string"/>
-          <xs:element minOccurs="0" name="obs" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="coletaTO">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="cklist" type="xs:string"/>
-      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
-      <xs:element minOccurs="0" name="id_cliente" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="produto" nillable="true" type="tns:produtoTO"/>
-      <xs:element minOccurs="0" name="remetente" type="tns:remetenteTO"/>
-      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
-      <xs:element minOccurs="0" name="valor_declarado" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="produtoTO">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:long"/>
-      <xs:element minOccurs="0" name="qtd" type="xs:long"/>
-      <xs:element minOccurs="0" name="tipo" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="remetenteTO">
-    <xs:complexContent>
-      <xs:extension base="tns:pessoaTO">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="celular" type="xs:string"/>
-          <xs:element minOccurs="0" name="ddd_celular" type="xs:string"/>
-          <xs:element minOccurs="0" name="identificacao" type="xs:string"/>
-          <xs:element minOccurs="0" name="sms" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="pessoaTO">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
-      <xs:element minOccurs="0" name="cep" type="xs:string"/>
-      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
-      <xs:element minOccurs="0" name="ddd" type="xs:string"/>
-      <xs:element minOccurs="0" name="email" type="xs:string"/>
-      <xs:element minOccurs="0" name="logradouro" type="xs:string"/>
-      <xs:element minOccurs="0" name="nome" type="xs:string"/>
-      <xs:element minOccurs="0" name="numero" type="xs:string"/>
-      <xs:element minOccurs="0" name="referencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="telefone" type="xs:string"/>
-      <xs:element minOccurs="0" name="uf" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="validarPostagemSimultaneaResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterMotivosPI">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterMotivosPIResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:motivoPIMaster"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="motivoPIMaster">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
-      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="getStatusPLP">
+  <xs:complexType name="VerificaSeTodosObjetosCancelados">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:objetoPostal"/>
-      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="objetoPostal">
     <xs:sequence>
       <xs:element minOccurs="0" name="codigoEtiqueta" type="xs:string"/>
       <xs:element minOccurs="0" name="dataAtualizacaoCliente" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="dataBloqueioObjeto" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="dataCancelamentoEtiqueta" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="dataInclusao" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="objetoPostalPK" type="tns:objetoPostalPK"/>
       <xs:element minOccurs="0" name="plpNu" type="xs:long"/>
       <xs:element minOccurs="0" name="preListaPostagem" type="tns:preListaPostagem"/>
+      <xs:element minOccurs="0" name="statusBloqueio" type="xs:string"/>
       <xs:element minOccurs="0" name="statusEtiqueta" type="tns:statusObjetoPostal"/>
     </xs:sequence>
   </xs:complexType>
@@ -647,6 +312,29 @@
       <xs:element minOccurs="0" name="numero" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="unidadePostagemERP">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="diretoriaRegional" type="xs:string"/>
+      <xs:element minOccurs="0" name="endereco" type="tns:enderecoERP"/>
+      <xs:element minOccurs="0" name="id" type="xs:string"/>
+      <xs:element minOccurs="0" name="nome" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="enderecoERP">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
+      <xs:element minOccurs="0" name="cep" type="xs:string"/>
+      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
+      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+      <xs:element minOccurs="0" name="complemento2" type="xs:string"/>
+      <xs:element minOccurs="0" name="end" type="xs:string"/>
+      <xs:element name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="uf" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="unidadesPostagem" nillable="true" type="tns:unidadePostagemERP"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="servicoERP">
     <xs:sequence>
       <xs:element minOccurs="0" name="codigo" type="xs:string"/>
@@ -671,6 +359,8 @@
       <xs:element minOccurs="0" name="exigeDimensoes" type="xs:boolean"/>
       <xs:element minOccurs="0" name="exigeValorCobrar" type="xs:boolean"/>
       <xs:element name="imitm" type="xs:long"/>
+      <xs:element minOccurs="0" name="pagamentoEntrega" type="xs:string"/>
+      <xs:element minOccurs="0" name="remessaAgrupada" type="xs:string"/>
       <xs:element name="servico" type="xs:long"/>
       <xs:element minOccurs="0" name="servicoERP" type="tns:servicoERP"/>
       <xs:element minOccurs="0" name="ssiCoCodigoPostal" type="xs:string"/>
@@ -705,14 +395,496 @@
       <xs:element minOccurs="0" name="id" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="VerificaSeTodosObjetosCanceladosResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancelarObjeto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="idPlp" type="xs:long"/>
+      <xs:element minOccurs="0" name="numeroEtiqueta" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancelarObjetoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="atualizaPagamentoNaEntrega">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="atualizaPagamentoNaEntregaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterClienteAtualizacao">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cnpjCliente" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterClienteAtualizacaoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verificaDisponibilidadeServico">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
+      <xs:element minOccurs="0" name="numeroServico" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepOrigem" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepDestino" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verificaDisponibilidadeServicoResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="fechaPlpVariosServicos">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="xml" type="xs:string"/>
+      <xs:element minOccurs="0" name="idPlpCliente" type="xs:long"/>
+      <xs:element minOccurs="0" name="cartaoPostagem" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaEtiquetas" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="fechaPlpVariosServicosResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="geraDigitoVerificadorEtiquetas">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="etiquetas" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="geraDigitoVerificadorEtiquetasResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterEmbalagemLRS">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="obterEmbalagemLRSResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:embalagemLRSMaster"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="embalagemLRSMaster">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="nome" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registrarPedidosInformacao">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoRegistro"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pedidoInformacaoRegistro">
+    <xs:complexContent>
+      <xs:extension base="tns:pedidoInformacao">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cliente" type="tns:clienteFaleconosco"/>
+          <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
+          <xs:element minOccurs="0" name="conta" type="tns:conta"/>
+          <xs:element minOccurs="0" name="conteudoObjeto" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpfCnpj" type="xs:string"/>
+          <xs:element minOccurs="0" name="destinatario" type="tns:destinatarioFaleConosco"/>
+          <xs:element minOccurs="0" name="embalagem" type="xs:string"/>
+          <xs:element minOccurs="0" name="motivo" type="xs:int"/>
+          <xs:element minOccurs="0" name="observacao" type="xs:string"/>
+          <xs:element minOccurs="0" name="postagem" type="tns:postagem"/>
+          <xs:element minOccurs="0" name="remetente" type="tns:remetenteFaleConosco"/>
+          <xs:element minOccurs="0" name="servico" type="xs:int"/>
+          <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="pedidoInformacao">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clienteFaleconosco">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroContrato" type="xs:string"/>
+      <xs:element minOccurs="0" name="possuiContrato" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="conta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoBanco" type="xs:string"/>
+      <xs:element minOccurs="0" name="nomeBanco" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroAgencia" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroConta" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="destinatarioFaleConosco">
+    <xs:complexContent>
+      <xs:extension base="tns:pessoaFaleconosco">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="pessoaFaleconosco">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
+      <xs:element minOccurs="0" name="cep" type="xs:string"/>
+      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
+      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+      <xs:element minOccurs="0" name="ddd" type="xs:string"/>
+      <xs:element minOccurs="0" name="endereco" type="xs:string"/>
+      <xs:element minOccurs="0" name="nome" type="xs:string"/>
+      <xs:element minOccurs="0" name="numero" type="xs:string"/>
+      <xs:element minOccurs="0" name="pais" type="xs:string"/>
+      <xs:element minOccurs="0" name="telefone" type="xs:string"/>
+      <xs:element minOccurs="0" name="uf" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="postagem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="agencia" type="xs:string"/>
+      <xs:element minOccurs="0" name="avisoRecebimento" type="xs:string"/>
+      <xs:element minOccurs="0" name="data" type="xs:string"/>
+      <xs:element minOccurs="0" name="local" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorDeclarado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="remetenteFaleConosco">
+    <xs:complexContent>
+      <xs:extension base="tns:pessoaFaleconosco">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="email" type="xs:string"/>
+          <xs:element minOccurs="0" name="empresa" type="xs:string"/>
+          <xs:element minOccurs="0" name="fax" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="registrarPedidosInformacaoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="retorno">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoPI" type="xs:long"/>
+      <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoRetorno" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataPrazoResposta" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataRegistro" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataResposta" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataUltimaRecorrencia" type="xs:string"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="mensagemRetorno" type="xs:string"/>
+      <xs:element minOccurs="0" name="resposta" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validaEtiquetaPLP">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroEtiqueta" type="xs:string"/>
+      <xs:element minOccurs="0" name="idPlp" type="xs:long"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validaEtiquetaPLPResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="consultarPedidosInformacao">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoConsulta"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pedidoInformacaoConsulta">
+    <xs:complexContent>
+      <xs:extension base="tns:pedidoInformacao">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="numero" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="consultarPedidosInformacaoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaServicosValorDeclarado">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaServicosValorDeclaradoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="consultaCEP">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cep" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="consultaCEPResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:enderecoERP"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="integrarUsuarioScol">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="integrarUsuarioScolResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterMensagemRetornoPI">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="obterMensagemRetornoPIResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:mensagemRetornoPIMaster"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="mensagemRetornoPIMaster">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
+      <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="atualizaRemessaAgrupada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="atualizaRemessaAgrupadaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="solicitaPLP">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="idPlpMaster" type="xs:long"/>
+      <xs:element minOccurs="0" name="numEtiqueta" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="solicitaPLPResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getStatusCartaoPostagem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroCartaoPostagem" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getStatusCartaoPostagemResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:statusCartao"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaTarifaVale">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+      <xs:element minOccurs="0" name="codServico" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepOrigem" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepDestino" type="xs:string"/>
+      <xs:element minOccurs="0" name="peso" type="xs:string"/>
+      <xs:element minOccurs="0" name="codFormato" type="xs:int"/>
+      <xs:element minOccurs="0" name="comprimento" type="xs:double"/>
+      <xs:element minOccurs="0" name="altura" type="xs:double"/>
+      <xs:element minOccurs="0" name="largura" type="xs:double"/>
+      <xs:element minOccurs="0" name="valorDeclarado" type="xs:double"/>
+      <xs:element minOccurs="0" name="servicoAdicional" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaTarifaValeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:valePostal"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valePostal">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cidNoCidade" type="xs:string"/>
+      <xs:element minOccurs="0" name="ctcCoAadministrativo" type="xs:string"/>
+      <xs:element minOccurs="0" name="ctcNuContrato" type="xs:long"/>
+      <xs:element minOccurs="0" name="ctcNuContratoEct" type="xs:long"/>
+      <xs:element minOccurs="0" name="cvpEdBairro" type="xs:string"/>
+      <xs:element minOccurs="0" name="cvpEdCliente" type="xs:string"/>
+      <xs:element minOccurs="0" name="cvpEdComplemento" type="xs:string"/>
+      <xs:element minOccurs="0" name="cvpEdNumero" type="xs:string"/>
+      <xs:element minOccurs="0" name="cvpNoCliente" type="xs:string"/>
+      <xs:element minOccurs="0" name="cvpNuCep" type="xs:long"/>
+      <xs:element minOccurs="0" name="descricaoErro" type="xs:string"/>
+      <xs:element minOccurs="0" name="estSgEstado" type="xs:string"/>
+      <xs:element name="monVarTarifaAdicional" type="xs:int"/>
+      <xs:element name="monVarTarifaServico" type="xs:int"/>
+      <xs:element name="monVarValorDescontos" type="xs:int"/>
+      <xs:element name="monVarValorImposto" type="xs:int"/>
+      <xs:element minOccurs="0" name="prsCoProdutoServico" type="xs:long"/>
+      <xs:element minOccurs="0" name="pveNu" type="xs:long"/>
+      <xs:element minOccurs="0" name="pveOrgNuAgencia" type="xs:long"/>
+      <xs:element minOccurs="0" name="pveOrgNuAgenciaDes" type="xs:long"/>
+      <xs:element minOccurs="0" name="pveOrgNuAgenciaOri" type="xs:long"/>
+      <xs:element name="retornaCodErro" type="xs:int"/>
+      <xs:element minOccurs="0" name="sitNoSituacao" type="xs:string"/>
+      <xs:element minOccurs="0" name="tlgTxDescricao" type="xs:string"/>
+      <xs:element minOccurs="0" name="vapDhTransacao" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="vapNuEtiquetaEncomenda" type="xs:string"/>
+      <xs:element minOccurs="0" name="vapVrCobradoEct" type="xs:double"/>
+      <xs:element minOccurs="0" name="vapVrNominal" type="xs:double"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validarPostagemSimultanea">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
+      <xs:element minOccurs="0" name="codigoServico" type="xs:int"/>
+      <xs:element minOccurs="0" name="idCartaoPostagem" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepDestinatario" type="xs:string"/>
+      <xs:element minOccurs="0" name="coleta" type="tns:coletaSimultanea"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="coletaSimultanea">
+    <xs:complexContent>
+      <xs:extension base="tns:coleta">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="obj" type="xs:string"/>
+          <xs:element minOccurs="0" name="obs" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="coleta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="cklist" type="xs:string"/>
+      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="documento" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="id_cliente" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="produto" nillable="true" type="tns:produto"/>
+      <xs:element minOccurs="0" name="remetente" type="tns:remetente"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
+      <xs:element minOccurs="0" name="valor_declarado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="produto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="qtd" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="remetente">
+    <xs:complexContent>
+      <xs:extension base="tns:pessoa">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="celular" type="xs:string"/>
+          <xs:element minOccurs="0" name="ddd_celular" type="xs:string"/>
+          <xs:element minOccurs="0" name="identificacao" type="xs:string"/>
+          <xs:element minOccurs="0" name="sms" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="pessoa">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
+      <xs:element minOccurs="0" name="cep" type="xs:string"/>
+      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
+      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+      <xs:element minOccurs="0" name="ddd" type="xs:string"/>
+      <xs:element minOccurs="0" name="email" type="xs:string"/>
+      <xs:element minOccurs="0" name="logradouro" type="xs:string"/>
+      <xs:element minOccurs="0" name="nome" type="xs:string"/>
+      <xs:element minOccurs="0" name="numero" type="xs:string"/>
+      <xs:element minOccurs="0" name="referencia" type="xs:string"/>
+      <xs:element minOccurs="0" name="telefone" type="xs:string"/>
+      <xs:element minOccurs="0" name="uf" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="validarPostagemSimultaneaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterMotivosPI">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="obterMotivosPIResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:motivoPIMaster"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="motivoPIMaster">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
+      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getStatusPLP">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:objetoPostal"/>
+      <xs:element minOccurs="0" name="arg1" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="getStatusPLPResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:statusPlp"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="buscaServicosXServicosAdicionais">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaServicosXServicosAdicionaisResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="cancelarPedidoScol">
     <xs:sequence>
-      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:string"/>
       <xs:element minOccurs="0" name="idPostagem" type="xs:string"/>
       <xs:element minOccurs="0" name="tipo" type="xs:string"/>
       <xs:element minOccurs="0" name="usuario" type="xs:string"/>
@@ -721,20 +893,20 @@
   </xs:complexType>
   <xs:complexType name="cancelarPedidoScolResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:retornoCancelamentoTO"/>
+      <xs:element minOccurs="0" name="return" type="tns:retornoCancelamento"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="retornoCancelamentoTO">
+  <xs:complexType name="retornoCancelamento">
     <xs:sequence>
       <xs:element minOccurs="0" name="cod_erro" type="xs:string"/>
       <xs:element minOccurs="0" name="codigo_administrativo" type="xs:string"/>
       <xs:element minOccurs="0" name="data" type="xs:string"/>
       <xs:element minOccurs="0" name="hora" type="xs:string"/>
       <xs:element minOccurs="0" name="msg_erro" type="xs:string"/>
-      <xs:element minOccurs="0" name="objeto_postal" type="tns:objetoSimplificadoTO"/>
+      <xs:element minOccurs="0" name="objeto_postal" type="tns:objetoSimplificado"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="objetoSimplificadoTO">
+  <xs:complexType name="objetoSimplificado">
     <xs:sequence>
       <xs:element minOccurs="0" name="datahora_cancelamento" type="xs:string"/>
       <xs:element minOccurs="0" name="numero_pedido" type="xs:int"/>
@@ -813,29 +985,30 @@
   </xs:complexType>
   <xs:complexType name="validarPostagemReversa">
     <xs:sequence>
-      <xs:element minOccurs="0" name="codAdministrativo" type="xs:int"/>
-      <xs:element minOccurs="0" name="codigoServico" type="xs:int"/>
+      <xs:element minOccurs="0" name="codAdministrativo" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigoServico" type="xs:string"/>
       <xs:element minOccurs="0" name="cepDestinatario" type="xs:string"/>
-      <xs:element minOccurs="0" name="coleta" type="tns:coletaReversaTO"/>
+      <xs:element minOccurs="0" name="idCartaoPostagem" type="xs:string"/>
+      <xs:element minOccurs="0" name="coleta" type="tns:coletaReversa"/>
       <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="senha" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="coletaReversaTO">
+  <xs:complexType name="coletaReversa">
     <xs:complexContent>
-      <xs:extension base="tns:coletaTO">
+      <xs:extension base="tns:coleta">
         <xs:sequence>
           <xs:element minOccurs="0" name="ag" type="xs:string"/>
           <xs:element minOccurs="0" name="ar" type="xs:int"/>
-          <xs:element minOccurs="0" name="cartao" type="xs:long"/>
+          <xs:element minOccurs="0" name="cartao" type="xs:string"/>
           <xs:element minOccurs="0" name="numero" type="xs:int"/>
-          <xs:element maxOccurs="unbounded" minOccurs="0" name="obj_col" nillable="true" type="tns:objetoTO"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="obj_col" nillable="true" type="tns:objeto"/>
           <xs:element minOccurs="0" name="servico_adicional" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:complexType name="objetoTO">
+  <xs:complexType name="objeto">
     <xs:sequence>
       <xs:element minOccurs="0" name="desc" type="xs:string"/>
       <xs:element minOccurs="0" name="entrega" type="xs:string"/>
@@ -866,6 +1039,10 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="senha" type="xs:string"/>
+      <xs:element minOccurs="0" name="contrato" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataInicio" type="xs:string"/>
+      <xs:element minOccurs="0" name="dataFim" type="xs:string"/>
+      <xs:element minOccurs="0" name="etiqueta" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="buscaPagamentoEntregaResponse">
@@ -899,15 +1076,6 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:servicoERP"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:simpleType name="statusCartao">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Desconhecido"/>
-      <xs:enumeration value="Normal"/>
-      <xs:enumeration value="Suspenso"/>
-      <xs:enumeration value="Cancelado"/>
-      <xs:enumeration value="Irregular"/>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="statusGerente">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Ativo"/>
@@ -952,6 +1120,15 @@
       <xs:enumeration value="Estorno"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="statusCartao">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Desconhecido"/>
+      <xs:enumeration value="Normal"/>
+      <xs:enumeration value="Suspenso"/>
+      <xs:enumeration value="Cancelado"/>
+      <xs:enumeration value="Irregular"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="tipoBloqueio">
     <xs:restriction base="xs:string">
       <xs:enumeration value="FRAUDE_BLOQUEIO"/>
@@ -969,14 +1146,6 @@
       <xs:enumeration value="DESBLOQUEADO"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:element name="SigepClienteException" nillable="true" type="xs:string"/>
-  <xs:element name="AutenticacaoException" nillable="true" type="xs:string"/>
-  <xs:element name="Exception" type="tns:Exception"/>
-  <xs:complexType name="Exception">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="message" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:element name="SQLException" type="tns:SQLException"/>
   <xs:complexType name="SQLException">
     <xs:sequence>
@@ -985,8 +1154,26 @@
       <xs:element minOccurs="0" name="message" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:element name="SigepClienteException" nillable="true" type="xs:string"/>
+  <xs:element name="AutenticacaoException" nillable="true" type="xs:string"/>
+  <xs:element name="Exception" type="tns:Exception"/>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ErroMontagemRelatorio" type="tns:ErroMontagemRelatorio"/>
+  <xs:complexType name="ErroMontagemRelatorio">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="buscaServicosAdicionaisAtivos">
+    <wsdl:part element="tns:buscaServicosAdicionaisAtivos" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="fechaPlp">
     <wsdl:part element="tns:fechaPlp" name="parameters">
     </wsdl:part>
@@ -997,6 +1184,10 @@
   </wsdl:message>
   <wsdl:message name="obterMotivosPIResponse">
     <wsdl:part element="tns:obterMotivosPIResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="VerificaSeTodosObjetosCancelados">
+    <wsdl:part element="tns:VerificaSeTodosObjetosCancelados" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obterClienteAtualizacaoResponse">
@@ -1063,6 +1254,14 @@
     <wsdl:part element="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="buscaServicosValorDeclarado">
+    <wsdl:part element="tns:buscaServicosValorDeclarado" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaServicosValorDeclaradoResponse">
+    <wsdl:part element="tns:buscaServicosValorDeclaradoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="consultaCEP">
     <wsdl:part element="tns:consultaCEP" name="parameters">
     </wsdl:part>
@@ -1079,12 +1278,24 @@
     <wsdl:part element="tns:getStatusCartaoPostagem" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="calculaTarifaServicoResponse">
+    <wsdl:part element="tns:calculaTarifaServicoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="consultarPedidosInformacaoResponse">
     <wsdl:part element="tns:consultarPedidosInformacaoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="cancelarPedidoScolResponse">
     <wsdl:part element="tns:cancelarPedidoScolResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="atualizaRemessaAgrupadaResponse">
+    <wsdl:part element="tns:atualizaRemessaAgrupadaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaTarifaVale">
+    <wsdl:part element="tns:buscaTarifaVale" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="validarPostagemSimultanea">
@@ -1123,6 +1334,10 @@
     <wsdl:part element="tns:solicitaXmlPlp" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="buscaServicosAdicionaisAtivosResponse">
+    <wsdl:part element="tns:buscaServicosAdicionaisAtivosResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="buscaCliente">
     <wsdl:part element="tns:buscaCliente" name="parameters">
     </wsdl:part>
@@ -1147,6 +1362,10 @@
     <wsdl:part element="tns:getStatusPLPResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="calculaTarifaServico">
+    <wsdl:part element="tns:calculaTarifaServico" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="validaPlp">
     <wsdl:part element="tns:validaPlp" name="parameters">
     </wsdl:part>
@@ -1157,6 +1376,10 @@
   </wsdl:message>
   <wsdl:message name="cancelarObjeto">
     <wsdl:part element="tns:cancelarObjeto" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="atualizaPagamentoNaEntrega">
+    <wsdl:part element="tns:atualizaPagamentoNaEntrega" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obterClienteAtualizacao">
@@ -1175,6 +1398,10 @@
     <wsdl:part element="tns:validaEtiquetaPLPResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="VerificaSeTodosObjetosCanceladosResponse">
+    <wsdl:part element="tns:VerificaSeTodosObjetosCanceladosResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="validaEtiquetaPLP">
     <wsdl:part element="tns:validaEtiquetaPLP" name="parameters">
     </wsdl:part>
@@ -1187,8 +1414,20 @@
     <wsdl:part element="tns:registrarPedidosInformacaoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="atualizaPagamentoNaEntregaResponse">
+    <wsdl:part element="tns:atualizaPagamentoNaEntregaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaServicosXServicosAdicionaisResponse">
+    <wsdl:part element="tns:buscaServicosXServicosAdicionaisResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="solicitarPostagemScolResponse">
     <wsdl:part element="tns:solicitarPostagemScolResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaTarifaValeResponse">
+    <wsdl:part element="tns:buscaTarifaValeResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="solicitaPLPResponse">
@@ -1223,12 +1462,24 @@
     <wsdl:part element="tns:consultaCEPResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="atualizaRemessaAgrupada">
+    <wsdl:part element="tns:atualizaRemessaAgrupada" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="validaPlpResponse">
     <wsdl:part element="tns:validaPlpResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="solicitaPLP">
     <wsdl:part element="tns:solicitaPLP" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ErroMontagemRelatorio">
+    <wsdl:part element="tns:ErroMontagemRelatorio" name="ErroMontagemRelatorio">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaServicosXServicosAdicionais">
+    <wsdl:part element="tns:buscaServicosXServicosAdicionais" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obterAssuntosPI">
@@ -1252,6 +1503,16 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="AtendeCliente">
+    <wsdl:operation name="buscaServicosAdicionaisAtivos">
+      <wsdl:input message="tns:buscaServicosAdicionaisAtivos" name="buscaServicosAdicionaisAtivos">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaServicosAdicionaisAtivosResponse" name="buscaServicosAdicionaisAtivosResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SQLException" name="SQLException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="fechaPlp">
       <wsdl:input message="tns:fechaPlp" name="fechaPlp">
     </wsdl:input>
@@ -1270,6 +1531,18 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="calculaTarifaServico">
+      <wsdl:input message="tns:calculaTarifaServico" name="calculaTarifaServico">
+    </wsdl:input>
+      <wsdl:output message="tns:calculaTarifaServicoResponse" name="calculaTarifaServicoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="validaPlp">
       <wsdl:input message="tns:validaPlp" name="validaPlp">
     </wsdl:input>
@@ -1277,6 +1550,14 @@
     </wsdl:output>
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="VerificaSeTodosObjetosCancelados">
+      <wsdl:input message="tns:VerificaSeTodosObjetosCancelados" name="VerificaSeTodosObjetosCancelados">
+    </wsdl:input>
+      <wsdl:output message="tns:VerificaSeTodosObjetosCanceladosResponse" name="VerificaSeTodosObjetosCanceladosResponse">
+    </wsdl:output>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
@@ -1290,6 +1571,16 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
       <wsdl:fault message="tns:Exception" name="Exception">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="atualizaPagamentoNaEntrega">
+      <wsdl:input message="tns:atualizaPagamentoNaEntrega" name="atualizaPagamentoNaEntrega">
+    </wsdl:input>
+      <wsdl:output message="tns:atualizaPagamentoNaEntregaResponse" name="atualizaPagamentoNaEntregaResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SQLException" name="SQLException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obterClienteAtualizacao">
@@ -1370,6 +1661,16 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="buscaServicosValorDeclarado">
+      <wsdl:input message="tns:buscaServicosValorDeclarado" name="buscaServicosValorDeclarado">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaServicosValorDeclaradoResponse" name="buscaServicosValorDeclaradoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SQLException" name="SQLException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="consultaCEP">
       <wsdl:input message="tns:consultaCEP" name="consultaCEP">
     </wsdl:input>
@@ -1398,6 +1699,16 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="atualizaRemessaAgrupada">
+      <wsdl:input message="tns:atualizaRemessaAgrupada" name="atualizaRemessaAgrupada">
+    </wsdl:input>
+      <wsdl:output message="tns:atualizaRemessaAgrupadaResponse" name="atualizaRemessaAgrupadaResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SQLException" name="SQLException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="solicitaPLP">
       <wsdl:input message="tns:solicitaPLP" name="solicitaPLP">
     </wsdl:input>
@@ -1416,6 +1727,18 @@
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaTarifaVale">
+      <wsdl:input message="tns:buscaTarifaVale" name="buscaTarifaVale">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaTarifaValeResponse" name="buscaTarifaValeResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:Exception" name="Exception">
     </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="validarPostagemSimultanea">
@@ -1441,6 +1764,16 @@
     </wsdl:input>
       <wsdl:output message="tns:getStatusPLPResponse" name="getStatusPLPResponse">
     </wsdl:output>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaServicosXServicosAdicionais">
+      <wsdl:input message="tns:buscaServicosXServicosAdicionais" name="buscaServicosXServicosAdicionais">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaServicosXServicosAdicionaisResponse" name="buscaServicosXServicosAdicionaisResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SQLException" name="SQLException">
+    </wsdl:fault>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
@@ -1529,6 +1862,8 @@
     </wsdl:output>
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
+      <wsdl:fault message="tns:ErroMontagemRelatorio" name="ErroMontagemRelatorio">
+    </wsdl:fault>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
@@ -1555,6 +1890,21 @@
   </wsdl:portType>
   <wsdl:binding name="AtendeClienteServiceSoapBinding" type="tns:AtendeCliente">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="buscaServicosAdicionaisAtivos">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaServicosAdicionaisAtivos">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaServicosAdicionaisAtivosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SQLException">
+        <soap:fault name="SQLException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="fechaPlp">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="fechaPlp">
@@ -1597,6 +1947,36 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="calculaTarifaServico">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="calculaTarifaServico">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="calculaTarifaServicoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AutenticacaoException">
+        <soap:fault name="AutenticacaoException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="VerificaSeTodosObjetosCancelados">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="VerificaSeTodosObjetosCancelados">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="VerificaSeTodosObjetosCanceladosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="cancelarObjeto">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="cancelarObjeto">
@@ -1613,6 +1993,21 @@
       </wsdl:fault>
       <wsdl:fault name="Exception">
         <soap:fault name="Exception" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="atualizaPagamentoNaEntrega">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="atualizaPagamentoNaEntrega">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="atualizaPagamentoNaEntregaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SQLException">
+        <soap:fault name="SQLException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obterClienteAtualizacao">
@@ -1732,6 +2127,21 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="buscaServicosValorDeclarado">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaServicosValorDeclarado">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaServicosValorDeclaradoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SQLException">
+        <soap:fault name="SQLException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="consultaCEP">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="consultaCEP">
@@ -1774,6 +2184,21 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="atualizaRemessaAgrupada">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="atualizaRemessaAgrupada">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="atualizaRemessaAgrupadaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SQLException">
+        <soap:fault name="SQLException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="solicitaPLP">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="solicitaPLP">
@@ -1802,6 +2227,24 @@
       </wsdl:fault>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaTarifaVale">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaTarifaVale">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaTarifaValeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AutenticacaoException">
+        <soap:fault name="AutenticacaoException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="Exception">
+        <soap:fault name="Exception" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="validarPostagemSimultanea">
@@ -1839,6 +2282,21 @@
       <wsdl:output name="getStatusPLPResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaServicosXServicosAdicionais">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaServicosXServicosAdicionais">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaServicosXServicosAdicionaisResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SQLException">
+        <soap:fault name="SQLException" use="literal"/>
+      </wsdl:fault>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
@@ -1970,6 +2428,9 @@
       </wsdl:output>
       <wsdl:fault name="AutenticacaoException">
         <soap:fault name="AutenticacaoException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ErroMontagemRelatorio">
+        <soap:fault name="ErroMontagemRelatorio" use="literal"/>
       </wsdl:fault>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
