@@ -234,7 +234,47 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:element name="CalcPrazoObjeto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="codigoObjeto" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CalcPrazoObjetoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CalcPrazoObjetoResult" type="tns:cResultadoObjeto" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="cResultadoObjeto">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Objetos" type="tns:ArrayOfCObjeto" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCObjeto">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="cObjeto" type="tns:cObjeto" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="cObjeto">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="codigo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="servico" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="cepOrigem" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="cepDestino" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="prazoEntrega" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="dataPostagem" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dataPostagemCalculo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dataEntrega" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dataMaxEntrega" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="erro" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="msgErro" type="s:string" />
+        </s:sequence>
+      </s:complexType>
       <s:element name="cResultado" type="tns:cResultado" />
+      <s:element name="cResultadoObjeto" type="tns:cResultadoObjeto" />
     </s:schema>
   </wsdl:types>
   <wsdl:message name="CalcPrecoPrazoSoapIn">
@@ -290,6 +330,12 @@
   </wsdl:message>
   <wsdl:message name="CalcPrecoFACSoapOut">
     <wsdl:part name="parameters" element="tns:CalcPrecoFACResponse" />
+  </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoSoapIn">
+    <wsdl:part name="parameters" element="tns:CalcPrazoObjeto" />
+  </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoSoapOut">
+    <wsdl:part name="parameters" element="tns:CalcPrazoObjetoResponse" />
   </wsdl:message>
   <wsdl:message name="CalcPrecoPrazoHttpGetIn">
     <wsdl:part name="nCdEmpresa" type="s:string" />
@@ -423,6 +469,12 @@
   <wsdl:message name="CalcPrecoFACHttpGetOut">
     <wsdl:part name="Body" element="tns:cResultado" />
   </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoHttpGetIn">
+    <wsdl:part name="codigoObjeto" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoHttpGetOut">
+    <wsdl:part name="Body" element="tns:cResultadoObjeto" />
+  </wsdl:message>
   <wsdl:message name="CalcPrecoPrazoHttpPostIn">
     <wsdl:part name="nCdEmpresa" type="s:string" />
     <wsdl:part name="sDsSenha" type="s:string" />
@@ -555,6 +607,12 @@
   <wsdl:message name="CalcPrecoFACHttpPostOut">
     <wsdl:part name="Body" element="tns:cResultado" />
   </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoHttpPostIn">
+    <wsdl:part name="codigoObjeto" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CalcPrazoObjetoHttpPostOut">
+    <wsdl:part name="Body" element="tns:cResultadoObjeto" />
+  </wsdl:message>
   <wsdl:portType name="CalcPrecoPrazoWSSoap">
     <wsdl:operation name="CalcPrecoPrazo">
       <wsdl:input message="tns:CalcPrecoPrazoSoapIn" />
@@ -591,6 +649,11 @@
     <wsdl:operation name="CalcPrecoFAC">
       <wsdl:input message="tns:CalcPrecoFACSoapIn" />
       <wsdl:output message="tns:CalcPrecoFACSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula a data máxima de entrega de determinado objeto</wsdl:documentation>
+      <wsdl:input message="tns:CalcPrazoObjetoSoapIn" />
+      <wsdl:output message="tns:CalcPrazoObjetoSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="CalcPrecoPrazoWSHttpGet">
@@ -630,6 +693,11 @@
       <wsdl:input message="tns:CalcPrecoFACHttpGetIn" />
       <wsdl:output message="tns:CalcPrecoFACHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula a data máxima de entrega de determinado objeto</wsdl:documentation>
+      <wsdl:input message="tns:CalcPrazoObjetoHttpGetIn" />
+      <wsdl:output message="tns:CalcPrazoObjetoHttpGetOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="CalcPrecoPrazoWSHttpPost">
     <wsdl:operation name="CalcPrecoPrazo">
@@ -667,6 +735,11 @@
     <wsdl:operation name="CalcPrecoFAC">
       <wsdl:input message="tns:CalcPrecoFACHttpPostIn" />
       <wsdl:output message="tns:CalcPrecoFACHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula a data máxima de entrega de determinado objeto</wsdl:documentation>
+      <wsdl:input message="tns:CalcPrazoObjetoHttpPostIn" />
+      <wsdl:output message="tns:CalcPrazoObjetoHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CalcPrecoPrazoWSSoap" type="tns:CalcPrecoPrazoWSSoap">
@@ -745,6 +818,15 @@
     </wsdl:operation>
     <wsdl:operation name="CalcPrecoFAC">
       <soap:operation soapAction="http://tempuri.org/CalcPrecoFAC" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <soap:operation soapAction="http://tempuri.org/CalcPrazoObjeto" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -836,6 +918,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <soap12:operation soapAction="http://tempuri.org/CalcPrazoObjeto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="CalcPrecoPrazoWSHttpGet" type="tns:CalcPrecoPrazoWSHttpGet">
     <http:binding verb="GET" />
@@ -920,6 +1011,15 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <http:operation location="/CalcPrazoObjeto" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="CalcPrecoPrazoWSHttpPost" type="tns:CalcPrecoPrazoWSHttpPost">
     <http:binding verb="POST" />
@@ -997,6 +1097,15 @@
     </wsdl:operation>
     <wsdl:operation name="CalcPrecoFAC">
       <http:operation location="/CalcPrecoFAC" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CalcPrazoObjeto">
+      <http:operation location="/CalcPrazoObjeto" />
       <wsdl:input>
         <mime:content type="application/x-www-form-urlencoded" />
       </wsdl:input>
