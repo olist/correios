@@ -20,4 +20,4 @@ repos:
     - id: no-commit-to-branch
       args: ['-b master']
     - id: flake8
-args: ['--exclude=docs/*,*migrations*', '--ignore=E501']
+      args: ['--exclude=docs/*,*migrations*', '--ignore=E501']
