@@ -360,7 +360,7 @@ class Package:
         """
         SIGEP API and FreightResponse API different codes to identify package types:
 
-        SIGEP | FreightResponse | Type
+        SIGEP | Freight | Type
         ------+---------+----------
           1   |    3    | Envelope
           2   |    1    | Box
