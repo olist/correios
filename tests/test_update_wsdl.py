@@ -2,7 +2,7 @@ from unittest import mock
 
 import requests
 
-from correios.update_wsdl import MODULE_PATH, update_wsdl
+from correios.update_wsdl import WSDL_DIR, update_wsdl
 
 FILE_BODY = 'Whatever'
 
@@ -23,12 +23,12 @@ def test_update_wsdl_success(
 
     open_calls = [
         mock.call(
-            '/'.join((MODULE_PATH, 'AtendeCliente-production.wsdl')), 'w+'
+            '/'.join((WSDL_DIR, 'AtendeCliente-production.wsdl')), 'w+'
         ),
-        mock.call('/'.join((MODULE_PATH, 'AtendeCliente-test.wsdl')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'Rastro.wsdl')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'CalcPrecoPrazo.asmx')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'Rastro_schema1.xsd')), 'w+'),
+        mock.call('/'.join((WSDL_DIR, 'AtendeCliente-test.wsdl')), 'w+'),
+        mock.call('/'.join((WSDL_DIR, 'Rastro.wsdl')), 'w+'),
+        mock.call('/'.join((WSDL_DIR, 'CalcPrecoPrazo.asmx')), 'w+'),
+        mock.call('/'.join((WSDL_DIR, 'Rastro_schema1.xsd')), 'w+'),
     ]
 
     mock_open.assert_has_calls(open_calls, any_order=True)
