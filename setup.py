@@ -60,4 +60,5 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
     ],
+    scripts=['scripts/update-correios-wsdl'],
 )

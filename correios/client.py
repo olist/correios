@@ -330,30 +330,45 @@ class Correios:
     TEST = "test"
     MAX_TRACKING_CODES_PER_REQUEST = 50
 
-    # 'environment': ('url', 'ssl_verification')
-    sigep_urls = {
-        'production': (get_wsdl_path('AtendeCliente-production.wsdl'), True),
-        'test': (get_wsdl_path('AtendeCliente-test.wsdl'), False),
-    }
-    websro_url = get_wsdl_path('Rastro.wsdl')
-    freight_url = get_wsdl_path('CalcPrecoPrazo.asmx')
+    def __init__(
+        self,
+        username,
+        password,
+        timeout=8,
+        environment="production",
+        wsdl_path=None
+    ):
 
-    def __init__(self, username, password, timeout=8, environment="production"):
+        # 'environment': ('url', 'ssl_verification')
+        sigep_urls = {
+            'production': (
+                get_wsdl_path('AtendeCliente-production.wsdl', path=wsdl_path),
+                True
+            ),
+            'test': (
+                get_wsdl_path('AtendeCliente-test.wsdl', path=wsdl_path),
+                False
+            ),
+        }
+        websro_url = get_wsdl_path('Rastro.wsdl', path=wsdl_path)
+        freight_url = get_wsdl_path('CalcPrecoPrazo.asmx', path=wsdl_path)
+
         self.username = username
         self.password = password
         self.timeout = timeout
+        self.wsdl_path = wsdl_path
 
-        url, verify = self.sigep_urls[environment]
+        url, verify = sigep_urls[environment]
         self.sigep_url = url
         self.sigep_verify = verify
 
         self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify, timeout=self.timeout)
         self.sigep = self.sigep_client.service
 
-        self.websro_client = SoapClient(self.websro_url, timeout=self.timeout)
+        self.websro_client = SoapClient(websro_url, timeout=self.timeout)
         self.websro = self.websro_client.service
 
-        self.freight_client = SoapClient(self.freight_url, timeout=self.timeout)
+        self.freight_client = SoapClient(freight_url, timeout=self.timeout)
         self.freight = self.freight_client.service
 
         self.model_builder = ModelBuilder()
@@ -379,11 +394,13 @@ class Correios:
         zip_address_data = self._call("consultaCEP", str(zip_code))
         return self.model_builder.build_zip_address(zip_address_data)
 
-    def verify_service_availability(self,
-                                    posting_card: PostingCard,
-                                    service: Service,
-                                    from_zip_code: Union[ZipCode, str],
-                                    to_zip_code: Union[ZipCode, str]) -> bool:
+    def verify_service_availability(
+        self,
+        posting_card: PostingCard,
+        service: Service,
+        from_zip_code: Union[ZipCode, str],
+        to_zip_code: Union[ZipCode, str]
+    ) -> bool:
         from_zip_code = ZipCode.create(from_zip_code)
         to_zip_code = ZipCode.create(to_zip_code)
         result = self._auth_call("verificaDisponibilidadeServico",
@@ -443,13 +460,15 @@ class Correios:
                                                  tuple(tracking_codes.keys()))
         return self.model_builder.load_tracking_events(tracking_codes, response)
 
-    def calculate_freights(self,
-                           posting_card: PostingCard,
-                           services: List[Union[Service, int]],
-                           from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
-                           package: Package,
-                           value: Union[Decimal, float] = 0.00,
-                           extra_services: Optional[Sequence[Union[ExtraService, int]]] = None):
+    def calculate_freights(
+        self,
+        posting_card: PostingCard,
+        services: List[Union[Service, int]],
+        from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
+        package: Package,
+        value: Union[Decimal, float] = 0.00,
+        extra_services: Optional[Sequence[Union[ExtraService, int]]] = None
+    ):
 
         administrative_code = posting_card.administrative_code
         services = [Service.get(s) for s in services]
@@ -479,10 +498,12 @@ class Correios:
         )
         return self.model_builder.build_freights_list(response)
 
-    def calculate_delivery_time(self,
-                                service: Union[Service, int],
-                                from_zip: Union[ZipCode, int, str],
-                                to_zip: Union[ZipCode, int, str]):
+    def calculate_delivery_time(
+        self,
+        service: Union[Service, int],
+        from_zip: Union[ZipCode, int, str],
+        to_zip: Union[ZipCode, int, str]
+    ):
         service = Service.get(service)
         from_zip = ZipCode.create(from_zip)
         to_zip = ZipCode.create(to_zip)
