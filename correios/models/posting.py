@@ -14,16 +14,14 @@
 
 
 import math
-import os
 from datetime import datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
 
 from PIL import Image
 
-from correios import DATADIR, exceptions
-from correios.utils import to_decimal
-
+from .. import exceptions
+from ..utils import to_decimal, get_resource_path
 from .address import Address, ZipCode
 from .data import (
     INSURANCE_PERCENTUAL_COST,
@@ -32,7 +30,10 @@ from .data import (
     SERVICE_PAC,
     SERVICE_SEDEX,
     TRACKING_EVENT_TYPES,
-    TRACKING_STATUS
+    TRACKING_STATUS,
+    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
 )
 from .user import Contract  # noqa: F401
 from .user import ExtraService, PostingCard, Service
@@ -357,9 +358,9 @@ class Package:
     @property
     def freight_package_type(self) -> int:
         """
-        SIGEP API and Freight API different codes to identify package types:
+        SIGEP API and FreightResponse API different codes to identify package types:
 
-        SIGEP | Freight | Type
+        SIGEP | FreightResponse | Type
         ------+---------+----------
           1   |    3    | Envelope
           2   |    1    | Box
@@ -451,7 +452,7 @@ class Package:
             raise exceptions.InvalidMaxPackageDimensionsError(msg)
 
     @classmethod
-    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> None:
+    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]] = None) -> None:
         if weight <= 0:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
 
@@ -483,7 +484,7 @@ class ShippingLabel:
     receipt_template = ("Recebedor: ___________________________________________<br/>"
                         "Assinatura: __________________ Documento: _______________")
     sender_header = "DESTINATÁRIO"
-    carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
+    carrier_logo = str(get_resource_path("carrier_logo_bw.png"))
     receiver_data_template = ("{receiver.label_name!s:>.50}<br/>"
                               "{receiver.label_address!s:>.95}<br/>"
                               "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
@@ -515,7 +516,7 @@ class ShippingLabel:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
         if logo is None:
-            logo = os.path.join(DATADIR, "default_logo.png")
+            logo = get_resource_path("default_logo.png")
 
         if isinstance(logo, str):
             logo = Image.open(logo)
@@ -644,7 +645,7 @@ class PostingList:
         self.number = None  # type: Optional[int]
 
         if logo is None:
-            logo = os.path.join(DATADIR, "carrier_logo.png")
+            logo = get_resource_path("carrier_logo.png")
 
         if isinstance(logo, str):
             logo = Image.open(logo)
@@ -687,7 +688,7 @@ class PostingList:
         return self.number is not None
 
 
-class Freight:
+class FreightResponse:
     def __init__(self,
                  service: Union[Service, int],
                  delivery_time: Union[int, timedelta],
@@ -696,9 +697,7 @@ class Freight:
                  mp_value: Union[Decimal, float, int, str] = 0.00,
                  ar_value: Union[Decimal, float, int, str] = 0.00,
                  saturday: bool = False,
-                 home: bool = False,
-                 error_code: Union[int, str] = 0,
-                 error_message: str = None) -> None:
+                 home: bool = False) -> None:
 
         self.service = Service.get(service)
 
@@ -730,13 +729,28 @@ class Freight:
             home = (home == 'S')
         self.home = home
 
+        self.error_code = 0
+        self.error_message = ""
+
+    @property
+    def total(self) -> Decimal:
+        return self.value + self.declared_value + self.ar_value + self.mp_value
+
+    def is_restricted_address(self):
+        return False
+
+
+class FreightErrorResponse(FreightResponse):
+    restricted_address_error_code = (
+        FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
+        FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+        FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    )
+
+    def __init__(self, error_code: int, error_message: str, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self.error_code = error_code
         self.error_message = error_message
 
-    @property
-    def total(self):
-        return self.value + self.declared_value + self.ar_value + self.mp_value
-
-
-class FreightError(Freight):
-    pass
+    def is_restricted_address(self):
+        return self.error_code in self.restricted_address_error_code

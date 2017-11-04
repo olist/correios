@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 
-from correios.utils import RangeSet, capitalize_phrase, get_wsdl_path, rreplace, to_decimal, to_integer
+from correios.utils import RangeSet, capitalize_phrase, rreplace, to_decimal, to_integer, get_resource_path
 
 phrase = 'FOo bAr BAZ qux'
 
@@ -100,16 +100,13 @@ def test_to_integer(v, r):
 
 
 def test_get_wsdl_file_path():
-    filepath = get_wsdl_path('fake')
+    path = get_resource_path('fake')
+    assert str(path).endswith('correios/data/fake')
 
-    assert 'correios/wsdls/fake' in filepath
 
+@mock.patch("pkg_resources.resource_filename", return_value="/")
+def test_should_use_pkg_resources_to_get_wsdl_files(mock_resource):
+    path = get_resource_path('fake')
 
-def test_should_use_pkg_resources_to_get_wsdl_files():
-    """
-    The wsdl files should be load from installed packages
-    """
-    with mock.patch('pkg_resources.resource_filename') as mock_resouce:
-        get_wsdl_path('fake')
-
-    mock_resouce.assert_called_with('correios', 'wsdls/fake')
+    mock_resource.assert_called_with('correios', 'data/fake')
+    assert str(path) == "/"
