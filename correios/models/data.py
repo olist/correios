@@ -1904,7 +1904,8 @@ FREIGHT_ERROR_RESPONSES = {
     -37: 'Cliente não possui serviço ativo em seu contrato.',
     -38: 'Serviço indisponível para este código administrativo.',
     -39: 'Peso excedido para o formato envelope',
-    -40: 'Para definicao do preco deverao ser informados, tambem, o comprimento e a largura e altura do objeto em centimetros (cm).',
+    -40: ('Para definicao do preco deverao ser informados, tambem, o comprimento e a '
+          'largura e altura do objeto em centimetros (cm).'),
     -41: 'O comprimento nao pode ser maior que 60 cm.',
     -42: 'O comprimento nao pode ser inferior a 16 cm.',
     -43: 'A soma resultante do comprimento + largura nao deve superar a 120 cm.',

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+
 from typing import Optional
 
 from . import xml_utils
@@ -22,9 +22,9 @@ from .utils import get_resource_path
 
 
 class PostingListSerializer:
-    def __init__(self, xsd_path: Optional[str] = None):
+    def __init__(self, xsd_path: Optional[str] = None) -> None:
         if xsd_path is None:
-            xsd_path = os.path.join(get_resource_path("posting_list_schema.xsd"))
+            xsd_path = str(get_resource_path("posting_list_schema.xsd"))
         self.xsd_path = xsd_path
 
     def _get_posting_list_element(self, posting_list):
@@ -135,7 +135,7 @@ class PostingListSerializer:
         with open(self.xsd_path) as xsd:
             xsd_document = xml_utils.parse(xsd)
         schema = xml_utils.XMLSchema(xsd_document)
-        return schema.assert_(document)
+        return schema.assertValid(document)
 
     def get_xml(self, document) -> bytes:
         xmlstring = str(xml_utils.tostring(document, encoding="unicode"))

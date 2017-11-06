@@ -86,7 +86,7 @@ def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> dateti
     return date
 
 
-def to_decimal(value: Union[Decimal, str, float], precision=2):
+def to_decimal(value: Union[Decimal, str, float], precision=2) -> Decimal:
     if not isinstance(value, Decimal):
         value = rreplace(str(value), ",", ".", 1)
         if "." in value:

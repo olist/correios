@@ -61,7 +61,7 @@ class Correios:
         timeout: int = 8,
         environment: str = "production",
         local_wsdl_path: Optional[Path] = None
-    ):
+    ) -> None:
 
         if local_wsdl_path is None:
             local_wsdl_path = get_resource_path("wsdls")
