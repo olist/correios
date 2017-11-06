@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-import os
 from datetime import datetime, timedelta, timezone
 
 import pytest
