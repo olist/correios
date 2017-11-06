@@ -689,6 +689,12 @@ class PostingList:
 
 
 class FreightResponse:
+    restricted_address_error_code = (
+        FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
+        FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+        FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    )
+
     def __init__(self,
                  service: Union[Service, int],
                  delivery_time: Union[int, timedelta],
@@ -697,7 +703,9 @@ class FreightResponse:
                  mp_value: Union[Decimal, float, int, str] = 0.00,
                  ar_value: Union[Decimal, float, int, str] = 0.00,
                  saturday: bool = False,
-                 home: bool = False) -> None:
+                 home: bool = False,
+                 error_code: int = 0,
+                 error_message: str = "") -> None:
 
         self.service = Service.get(service)
 
@@ -729,28 +737,15 @@ class FreightResponse:
             home = (home == 'S')
         self.home = home
 
-        self.error_code = 0
-        self.error_message = ""
+        self.error_code = error_code
+        self.error_message = error_message
 
     @property
     def total(self) -> Decimal:
         return self.value + self.declared_value + self.ar_value + self.mp_value
 
+    def is_error(self):
+        return self.error_code != 0
+
     def is_restricted_address(self):
         return False
-
-
-class FreightErrorResponse(FreightResponse):
-    restricted_address_error_code = (
-        FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
-        FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
-        FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
-    )
-
-    def __init__(self, error_code: int, error_message: str, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.error_code = error_code
-        self.error_message = error_message
-
-    def is_restricted_address(self):
-        return self.error_code in self.restricted_address_error_code
