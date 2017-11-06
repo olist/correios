@@ -23,7 +23,6 @@ from .posting import (
     TrackingEvent,
     EventStatus,
     FreightResponse,
-    FreightErrorResponse,
 )
 from .user import Service, Contract, PostingCard, User, FederalTaxNumber, StateTaxNumber
 from ..utils import to_decimal, to_integer
@@ -160,25 +159,15 @@ class ModelBuilder:
         return result
 
     def build_freight(self, service_data) -> FreightResponse:
-        freight_response_data = {
-            'service': Service.get(service_data.Codigo),
-            'delivery_time': int(service_data.PrazoEntrega),
-            'value': to_decimal(service_data.ValorSemAdicionais),
-            'declared_value': to_decimal(service_data.ValorValorDeclarado),
-            'ar_value': to_decimal(service_data.ValorAvisoRecebimento),
-            'mp_value': to_decimal(service_data.ValorMaoPropria),
-            'saturday': service_data.EntregaSabado or "",
-            'home': service_data.EntregaDomiciliar or "",
-        }
-
-        error_code = to_integer(service_data.Erro)
-        if error_code:
-            freight_response = FreightErrorResponse(
-                error_code=error_code or 0,
-                error_message=service_data.MsgErro or "",
-                **freight_response_data,
-            )
-        else:
-            freight_response = FreightResponse(**freight_response_data)
-
-        return freight_response
+        return FreightResponse(
+            service=Service.get(service_data.Codigo),
+            delivery_time=int(service_data.PrazoEntrega),
+            value=to_decimal(service_data.ValorSemAdicionais),
+            declared_value=to_decimal(service_data.ValorValorDeclarado),
+            mp_value=to_decimal(service_data.ValorMaoPropria),
+            ar_value=to_decimal(service_data.ValorAvisoRecebimento),
+            saturday=service_data.EntregaSabado.lower() == "s" or False,
+            home=service_data.EntregaDomiciliar.lower() == "s" or False,
+            error_code=to_integer(service_data.Erro) or 0,
+            error_message=service_data.MsgErro or ""
+        )
