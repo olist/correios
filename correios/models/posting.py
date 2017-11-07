@@ -748,4 +748,4 @@ class FreightResponse:
         return self.error_code != 0
 
     def is_restricted_address(self):
-        return False
+        return self.error_code in self.restricted_address_error_code
