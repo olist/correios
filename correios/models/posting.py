@@ -310,7 +310,7 @@ class Package:
     def width(self, width):
         error = Package._validate_dimension("width", width, MAX_WIDTH)
         if error:
-            raise exceptions.InvalidPackageError([error])
+            raise exceptions.InvalidPackageMeasuresError([error])
 
         self.real_width = width
 
@@ -322,7 +322,7 @@ class Package:
     def height(self, height):
         error = Package._validate_dimension("height", height, MAX_HEIGHT)
         if error:
-            raise exceptions.InvalidPackageError([error])
+            raise exceptions.InvalidPackageMeasuresError([error])
 
         self.real_height = height
 
@@ -334,7 +334,7 @@ class Package:
     def length(self, length):
         error = Package._validate_dimension("length", length, MAX_LENGTH)
         if error:
-            raise exceptions.InvalidPackageError([error])
+            raise exceptions.InvalidPackageMeasuresError([error])
 
         self.real_length = length
 
@@ -346,7 +346,7 @@ class Package:
     def diameter(self, diameter):
         error = Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
         if error:
-            raise exceptions.InvalidPackageError([error])
+            raise exceptions.InvalidPackageMeasuresError([error])
 
         self.real_diameter = diameter
 
@@ -358,7 +358,7 @@ class Package:
     def weight(self, weight):
         error = Package._validate_weight(weight, self.service)
         if error:
-            raise exceptions.InvalidPackageError([error])
+            raise exceptions.InvalidPackageMeasuresError([error])
 
         self.real_weight = weight
 
@@ -440,7 +440,7 @@ class Package:
             error_list += Package._validate_cylinder(width, height, length, diameter)
 
         if error_list:
-            raise exceptions.InvalidPackageError(error_list)
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
     @classmethod
     def _validate_envelope(cls, width, height, length, diameter) -> list:
