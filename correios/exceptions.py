@@ -57,32 +57,18 @@ class InvalidPackageError(ModelError):
     pass
 
 
-class InvalidPackageDimensionsError(InvalidPackageError):
-    pass
-
-
-class InvalidMinPackageDimensionsError(InvalidPackageDimensionsError):
-    pass
-
-
-class InvalidMaxPackageDimensionsError(InvalidPackageDimensionsError):
-    pass
-
-
-class InvalidPackageWeightError(InvalidPackageError):
-    pass
-
-
-class InvalidMinPackageWeightError(InvalidPackageWeightError):
-    pass
-
-
-class InvalidMaxPackageWeightError(InvalidPackageWeightError):
-    pass
-
-
 class InvalidPackageSequenceError(InvalidPackageError):
     pass
+
+
+class InvalidPackageMeasuresError(InvalidPackageError):
+    def __init__(self, errors: list) -> None:
+        self.errors = errors
+
+    def __str__(self) -> str:
+        if len(self.errors) > 1:
+            return "Invalid Package Measures: {} and {}".format(", ".join(self.errors[:-1]), self.errors[-1])
+        return "Invalid Package Measures: {}".format(self.errors[0])
 
 
 class InvalidAddressesError(ModelError):
