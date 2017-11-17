@@ -504,7 +504,7 @@ class Package:
                          weight,
                          service: Optional[Union[Service, str, int]]=None) -> Union[errors.PackageError, None]:
         if weight <= 0:
-            return errors.PackageWeightError(None, weight, 0, None)
+            return errors.PackageWeightError('', weight, 0, 0)
 
         if not service:
             return None
@@ -515,7 +515,7 @@ class Package:
             return None
 
         if weight > service.max_weight:
-            return errors.PackageWeightError(service, weight, 0, service.max_weight)
+            return errors.PackageWeightError(service.code, weight, 0, service.max_weight)
 
         return None
 

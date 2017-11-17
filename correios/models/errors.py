@@ -14,39 +14,36 @@
 
 
 class PackageError:
+    def __init__(self, messages: str) -> None:
+        self.messages = messages
 
-    def __init__(self, msg):
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
+    def __str__(self) -> str:
+        return self.messages
 
 
 class PackageDimensionError(PackageError):
-
-    def __init__(self, name, value, min_value, max_value):
+    def __init__(self, name: str, value: int, min_value: int, max_value: int) -> None:
         self.name = name
         self.value = value
         self.min_value = min_value
         self.max_value = max_value
 
-    def __str__(self):
+    def __str__(self) -> str:
         msg = 'Invalid {} (range: {}-{}, value: {})'
         return msg.format(self.name, self.min_value, self.max_value, self.value)
 
 
 class PackageWeightError(PackageError):
-
-    def __init__(self, service, value, min_value, max_value):
-        self.service = service
+    def __init__(self, service_code: str, value: int, min_value: int, max_value: int) -> None:
+        self.service_code = service_code
         self.value = value
         self.min_value = min_value
         self.max_value = max_value
 
-    def __str__(self):
-        if self.service and self.max_value:
+    def __str__(self) -> str:
+        if self.service_code and self.max_value:
             msg = 'Invalid weight for the service {} (range: {}-{}, value: {})'
-            return msg.format(str(self.service), self.min_value, self.max_value, self.value)
+            return msg.format(self.service_code, self.min_value, self.max_value, self.value)
 
         msg = 'Invalid weight (min: {}, value: {})'
         return msg.format(self.min_value, self.value)

@@ -54,15 +54,13 @@ class InvalidShippingLabelError(ModelError):
 
 
 class InvalidPackageError(ModelError):
-
-    def __init__(self, errors):
+    def __init__(self, errors: list) -> None:
         self.errors = errors
 
-    def __str__(self):
+    def __str__(self) -> str:
         if len(self.errors) > 1:
             return "Invalid Package: {} and {}".format(", ".join(self.errors[:-1]), self.errors[-1])
-        else:
-            return "Invalid Package: {}".format(self.errors[0])
+        return "Invalid Package: {}".format(self.errors[0])
 
 
 class InvalidPackageSequenceError(ModelError):
