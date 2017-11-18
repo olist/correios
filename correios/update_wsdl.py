@@ -1,54 +1,86 @@
+# Copyright 2016 Osvaldo Santana Neto
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import argparse
-import logging
-import sys
-
 import os
-import requests
+import sys
+from io import StringIO
 
-logger = logging.getLogger(__name__)
+from requests import HTTPError, Session
 
-WSDL_DIR = os.path.join(os.path.dirname(__file__), 'wsdls')
+from .client import CORREIOS_WEBSERVICES
+from .utils import get_resource_path
 
-
-class WSDLDownloadError(Exception):
-    pass
+WSDL_DIR = get_resource_path("wsdls")
 
 
 class WSDLUpdater:
-    def __init__(self, wsdl_dir=WSDL_DIR):
-        self.wsdl_dir = wsdl_dir
+    webservices = CORREIOS_WEBSERVICES
 
+    def __init__(self, wsdl_path: str, session=None, output=None) -> None:
+        self.wsdl_path = wsdl_path
 
-def create_file(path, filename, body):
-    file_path = os.path.join(path, filename)
-    logger.debug('Creating file: {} Path: {}'.format(filename, path))
+        if session is None:
+            session = Session()
+        self.session = session
 
-    with open(file_path, 'w+') as file:
-        file.truncate()
-        file.write(body)
+        if output is None:
+            output = StringIO()
+        self.output = output
 
-    logger.debug('Successfully create file: {}'.format(filename))
+    def out(self, msg):
+        print(msg, file=self.output)
 
+    def save(self, path: str, content: str):
+        with open(path, 'w') as file:
+            file.write(content)
+        self.out('Successfully create file: {}'.format(path))
 
-def update_wsdl(path=WSDL_DIR):
-    for file_spec in SPECS:
-        url = file_spec['url']
-        filename = file_spec['filename']
+    def download_wsdl(self, url: str, filename: str):
+        path = os.path.join(self.wsdl_path, filename)
 
-        logger.debug('Updating File: {} URL: {}'.format(filename, url))
+        self.out('Updating file: {} URL: {}'.format(filename, url))
 
-        response = requests.get(url)
-        if response.status_code != 200:
-            raise WSDLDownloadError('Fail to download Correios: {}'.format(url))
+        response = self.session.get(url)
+        response.raise_for_status()
 
-        create_file(path=path, filename=file_spec['filename'], body=response.text)
+        self.save(path, response.text)
+        self.out('Updated with success')
+
+    def update_all(self):
+        self.out('Updating Correios Webservice WSDLs')
+        self.out('Files will be saved on: {}'.format(self.wsdl_path))
+
+        for webservice, args in self.webservices.items():
+            url, filename = args
+            try:
+                self.download_wsdl(url, filename)
+            except HTTPError as ex:
+                self.out("Error downloading {}: {}".format(url, ex))
 
 
 def cli():
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    update_wsdl()
-
     parser = argparse.ArgumentParser(description='Updates Correios WSDL files')
+    parser.add_argument(
+        '-q',
+        '--quiet',
+        dest='output',
+        action='store_const',
+        const=None,
+        default=sys.stdout,
+    )
     parser.add_argument(
         '-p',
         '--path',
@@ -58,14 +90,9 @@ def cli():
     )
     args = parser.parse_args()
 
-    print('Updating Correios WSDL')
-    print('Files will be saved on: {path}'.format(path=args.wsdl_path))
-    try:
-        update_wsdl(path=args.wsdl_path)
-        print('Updated with success')
-    except Exception as error:
-        print('Fail to update with error: {error}'.format(error=error))
+    updater = WSDLUpdater(wsdl_path=args.wsdl_path, output=args.output)
+    return updater.update_all()
 
 
 if __name__ == '__main__':
-    cli()
+    sys.exit(cli() or 0)
