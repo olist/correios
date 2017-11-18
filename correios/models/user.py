@@ -25,9 +25,10 @@ from correios.exceptions import (
     InvalidRegionalDirectionError,
     InvalidUserContractError,
     MaximumDeclaredValueError,
-    MinimumDeclaredValueError
+    MinimumDeclaredValueError,
 )
-from ..utils import to_datetime, to_integer, get_resource_path
+
+from ..utils import get_resource_path, to_datetime, to_integer
 from .data import EXTRA_SERVICE_VD, EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2

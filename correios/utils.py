@@ -14,13 +14,13 @@
 
 import os
 import re
-import pkg_resources
-
 from datetime import datetime
 from decimal import Decimal
 from itertools import chain
 from pathlib import Path
 from typing import Container, Iterable, Sized, Union
+
+import pkg_resources
 
 
 def capitalize_phrase(phrase: str) -> str:

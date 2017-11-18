@@ -25,7 +25,7 @@ flake:
 	flake8 --max-line-length=120 correios tests
 
 isort:  ## Check imports
-	isort --check --diff -rc correios tests
+	isort --check --diff -tc -rc correios tests
 
 fix-imports:  ## Fix imports
 	isort -rc .
@@ -33,7 +33,7 @@ fix-imports:  ## Fix imports
 lint: check-types flake isort ## Run code lint
 
 test: clean lint  ## Run tests
-	pytest -x
+	pytest -x -v
 
 cov-test: clean lint  ## Run coverage tests
 	pytest -x --cov=correios/ --cov-report=term-missing --cov-report=html:htmlcov

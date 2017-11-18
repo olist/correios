@@ -18,18 +18,18 @@ from decimal import Decimal
 import pytest
 
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
-from correios.models.builders import ModelBuilder
 from correios.models.address import ZipCode
+from correios.models.builders import ModelBuilder
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
     EXTRA_SERVICE_VD,
+    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
     SERVICE_PAC,
     SERVICE_SEDEX,
     SERVICE_SEDEX10,
-    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
-    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
-    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
 )
 from correios.models.posting import (
     FreightResponse,
@@ -39,10 +39,9 @@ from correios.models.posting import (
     ShippingLabel,
     TrackingCode,
 )
-
 from correios.models.user import ExtraService, PostingCard, Service
-from correios.utils import get_resource_path
 from correios.serializers import PostingListSerializer
+from correios.utils import get_resource_path
 
 from .vcr import vcr
 

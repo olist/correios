@@ -21,9 +21,12 @@ from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
 from PIL import Image
 
 from .. import exceptions
-from ..utils import to_decimal, get_resource_path
+from ..utils import get_resource_path, to_decimal
 from .address import Address, ZipCode
 from .data import (
+    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
     INSURANCE_PERCENTUAL_COST,
     INSURANCE_VALUE_THRESHOLD_PAC,
     INSURANCE_VALUE_THRESHOLD_SEDEX,
@@ -31,9 +34,6 @@ from .data import (
     SERVICE_SEDEX,
     TRACKING_EVENT_TYPES,
     TRACKING_STATUS,
-    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
-    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
-    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
 )
 from .user import Contract  # noqa: F401
 from .user import ExtraService, PostingCard, Service

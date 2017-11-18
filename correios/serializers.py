@@ -17,7 +17,7 @@ from typing import Optional
 
 from . import xml_utils
 from .exceptions import PostingListSerializerError
-from .models.posting import ShippingLabel, PostingList
+from .models.posting import PostingList, ShippingLabel
 from .utils import get_resource_path
 
 

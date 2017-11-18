@@ -16,16 +16,10 @@
 from datetime import datetime
 from typing import Dict
 
-from .address import ZipAddress
-from .posting import (
-    TrackingCode,
-    NotFoundTrackingEvent,
-    TrackingEvent,
-    EventStatus,
-    FreightResponse,
-)
-from .user import Service, Contract, PostingCard, User, FederalTaxNumber, StateTaxNumber
 from ..utils import to_decimal, to_integer
+from .address import ZipAddress
+from .posting import EventStatus, FreightResponse, NotFoundTrackingEvent, TrackingCode, TrackingEvent
+from .user import Contract, FederalTaxNumber, PostingCard, Service, StateTaxNumber, User
 
 
 class ModelBuilder:

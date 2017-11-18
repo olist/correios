@@ -18,14 +18,14 @@ from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
 from .exceptions import TrackingCodesLimitExceededError
-from .utils import get_resource_path
-from .serializers import PostingListSerializer
-from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
-from .models.builders import ModelBuilder
-from .models.user import ExtraService, PostingCard, Service, User
 from .models.address import ZipAddress, ZipCode
+from .models.builders import ModelBuilder
+from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
 from .models.posting import FreightResponse, Package, PostingList, TrackingCode
+from .models.user import ExtraService, PostingCard, Service, User
+from .serializers import PostingListSerializer
 from .soap import SoapClient
+from .utils import get_resource_path
 
 KG = 1000  # g
 # environ servico url filename
