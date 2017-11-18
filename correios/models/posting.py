@@ -516,7 +516,7 @@ class ShippingLabel:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
         if logo is None:
-            logo = get_resource_path("default_logo.png")
+            logo = str(get_resource_path("default_logo.png"))
 
         if isinstance(logo, str):
             logo = Image.open(logo)
@@ -651,7 +651,7 @@ class PostingList:
         self.number = None  # type: Optional[int]
 
         if logo is None:
-            logo = get_resource_path("carrier_logo.png")
+            logo = str(get_resource_path("carrier_logo.png"))
 
         if isinstance(logo, str):
             logo = Image.open(logo)

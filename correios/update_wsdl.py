@@ -85,7 +85,7 @@ def cli():
         '-p',
         '--path',
         dest='wsdl_path',
-        default=WSDL_DIR,
+        default=str(WSDL_DIR),
         help='Custom path where wsdl files will be saved.'
     )
     args = parser.parse_args()
