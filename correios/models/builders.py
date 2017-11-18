@@ -166,8 +166,8 @@ class ModelBuilder:
             declared_value=to_decimal(service_data.ValorValorDeclarado),
             mp_value=to_decimal(service_data.ValorMaoPropria),
             ar_value=to_decimal(service_data.ValorAvisoRecebimento),
-            saturday=service_data.EntregaSabado.lower() == "s" or False,
-            home=service_data.EntregaDomiciliar.lower() == "s" or False,
+            saturday=service_data.EntregaSabado and service_data.EntregaSabado.lower() == "s" or False,
+            home=service_data.EntregaDomiciliar and service_data.EntregaDomiciliar.lower() == "s" or False,
             error_code=to_integer(service_data.Erro) or 0,
             error_message=service_data.MsgErro or ""
         )

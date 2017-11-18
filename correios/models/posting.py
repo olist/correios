@@ -612,11 +612,17 @@ class ShippingLabel:
         return "".join(extra_services_numbers)
 
     def get_datamatrix_info(self):
+        receiver_number = self.receiver.number
+        if receiver_number.isnumeric():
+            receiver_number = receiver_number.rjust(5, "0")
+        else:
+            receiver_number = receiver_number.rjust(5)
+
         parts = [
             "{!s:>08}".format(self.receiver.zip_code),
-            "{!s:>05}".format(self.receiver.zip_complement),
+            "{}".format(self.receiver.zip_complement.rjust(5, "0")),
             "{!s:>08}".format(self.sender.zip_code),
-            "{!s:>05}".format(self.sender.zip_complement),
+            "{}".format(self.sender.zip_complement.rjust(5, "0")),
             "{!s:>01}".format(self.receiver.zip_code.digit),
             "{!s:>02}".format(self.variable_data_identifier),
             "{!s:>13}".format(self.tracking_code),
@@ -624,10 +630,10 @@ class ShippingLabel:
             "{!s:>010}".format(self.posting_card.number),
             "{!s:>05}".format(self.service.code),
             "{!s:>02}".format(self.posting_list_group),
-            "{!s:>05}".format(self.receiver.number),
+            "{}".format(receiver_number),
             "{!s:<20}".format(self.receiver.complement[:20]),
             "{!s:>05}".format(0 if self.value is None else int(self.value * 100)),
-            "{!s:>012}".format(str(self.receiver.phone)[:12] or "0" * 12),
+            "{}".format(str(self.receiver.phone)[:12].rjust(12, "0") or "0" * 12),
             "{:+010.6f}".format(self.latitude),
             "{:+010.6f}".format(self.longitude),
             "|",
@@ -748,4 +754,4 @@ class FreightResponse:
         return self.error_code != 0
 
     def is_restricted_address(self):
-        return False
+        return self.error_code in self.restricted_address_error_code

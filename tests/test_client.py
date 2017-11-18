@@ -29,9 +29,17 @@ from correios.models.data import (
     SERVICE_SEDEX10,
     FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
-    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED)
-from correios.models.posting import FreightResponse, NotFoundTrackingEvent, Package, PostingList, ShippingLabel, \
-    TrackingCode, FreightErrorResponse
+    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+)
+from correios.models.posting import (
+    FreightResponse,
+    NotFoundTrackingEvent,
+    Package,
+    PostingList,
+    ShippingLabel,
+    TrackingCode,
+)
+
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.utils import get_resource_path
 from correios.serializers import PostingListSerializer
@@ -407,7 +415,7 @@ def test_calculate_freight_with_error_code_9_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
-    assert isinstance(freight, FreightErrorResponse)
+    assert isinstance(freight, FreightResponse)
     assert freight.is_restricted_address()
     assert freight.error_code == FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED
     assert freight.value != 0
