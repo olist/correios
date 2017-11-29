@@ -1,55 +1,81 @@
+# Copyright 2016 Osvaldo Santana Neto
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+import tempfile
 from unittest import mock
+from unittest.mock import call
 
-import requests
+from requests import HTTPError
 
-from correios.update_wsdl import MODULE_PATH, update_wsdl
+from correios.update_wsdl import WSDLUpdater
 
-FILE_BODY = 'Whatever'
-
-
-@mock.patch('correios.update_wsdl.open', new_callable=mock.mock_open)
-@mock.patch('requests.Response')
-@mock.patch.object(requests, 'get')
-def test_update_wsdl_success(
-    mock_requests_get,
-    mock_requests_response,
-    mock_open
-):
-    mock_requests_response.text = FILE_BODY
-    mock_requests_response.status_code = 200
-    mock_requests_get.return_value = mock_requests_response
-
-    update_wsdl()
-
-    open_calls = [
-        mock.call(
-            '/'.join((MODULE_PATH, 'AtendeCliente-production.wsdl')), 'w+'
-        ),
-        mock.call('/'.join((MODULE_PATH, 'AtendeCliente-test.wsdl')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'Rastro.wsdl')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'CalcPrecoPrazo.asmx')), 'w+'),
-        mock.call('/'.join((MODULE_PATH, 'Rastro_schema1.xsd')), 'w+'),
-    ]
-
-    mock_open.assert_has_calls(open_calls, any_order=True)
-
-    mock_file = mock_open()
-
-    mock_file.write.assert_called_with(FILE_BODY)
-    assert mock_file.write.call_count == 5
+from .vcr import vcr
 
 
-@mock.patch('correios.update_wsdl.open', new_callable=mock.mock_open)
-@mock.patch('requests.Response')
-@mock.patch.object(requests, 'get')
-def test_update_wsdl_fail(
-    mock_requests_get,
-    mock_requests_response,
-    mock_open
-):
-    mock_requests_response.status_code = 500
-    mock_requests_get.return_value = mock_requests_response
+def get_wsdl_updater(path):
+    response_mock = mock.MagicMock()
+    response_mock.text = "response value"
+    session = mock.MagicMock()
+    session.get.return_value = response_mock
 
-    update_wsdl()
+    return WSDLUpdater(wsdl_path=path, session=session)
 
-    mock_open().assert_not_called()
+
+@vcr.use_cassette
+def test_basic_update():
+    with tempfile.TemporaryDirectory() as wsdl_path:
+        wsdl_updater = WSDLUpdater(wsdl_path=wsdl_path)
+        wsdl_updater.update_all()
+
+
+def test_wsdl_updater_download():
+    with tempfile.TemporaryDirectory() as wsdl_path:
+        wsdl_updater = get_wsdl_updater(wsdl_path)
+        wsdl_updater.download_wsdl('https://example.com/service.wsdl', 'service-production.wsdl')
+
+    wsdl_updater.session.get.assert_called_once_with('https://example.com/service.wsdl')
+
+    printed = wsdl_updater.output.getvalue()
+    assert 'Updating file: service-production.wsdl URL: https://example.com/service.wsdl' in printed
+    assert 'Successfully create file:' in printed
+    assert 'Updated with success' in printed
+
+
+def test_wsdl_update_all():
+    with tempfile.TemporaryDirectory() as wsdl_path:
+        wsdl_updater = get_wsdl_updater(wsdl_path)
+        wsdl_updater.update_all()
+        wsdl_updater.session.get.assert_has_calls([
+            call('https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'),
+            call('https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'),
+            call('https://webservice.correios.com.br/service/rastro/Rastro.wsdl'),
+            call('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL'),
+        ], any_order=True)
+
+
+def test_wsdl_download_error():
+    response_mock = mock.MagicMock()
+    response_mock.text = "response value"
+    session = mock.MagicMock()
+    session.get.side_effect = HTTPError("test error")
+
+    wsdl_updater = WSDLUpdater(wsdl_path="", session=session)
+    wsdl_updater.update_all()
+
+    printed = wsdl_updater.output.getvalue()
+    assert ('Updating file: AtendeCliente-production.wsdl '
+            'URL: https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl') in printed
+    assert ("Error downloading https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl: "
+            "test error") in printed

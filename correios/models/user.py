@@ -13,24 +13,22 @@
 # limitations under the License.
 
 
-import os
 from datetime import datetime  # noqa: F401
 from decimal import Decimal
 from typing import List, Optional, Sequence, Union  # noqa: F401
 
 from PIL import Image
 
-from correios import DATADIR
 from correios.exceptions import (
     InvalidExtraServiceError,
     InvalidFederalTaxNumberError,
     InvalidRegionalDirectionError,
     InvalidUserContractError,
     MaximumDeclaredValueError,
-    MinimumDeclaredValueError
+    MinimumDeclaredValueError,
 )
-from correios.utils import to_datetime, to_integer
 
+from ..utils import get_resource_path, to_datetime, to_integer
 from .data import EXTRA_SERVICE_VD, EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
@@ -174,9 +172,9 @@ class Service:
                                                                            self))
         return True
 
-    def get_symbol_filename(self, extension='gif'):
+    def get_symbol_filename(self, extension='gif') -> str:
         filename = "{}.{}".format(self.symbol, extension)
-        return os.path.join(DATADIR, filename)
+        return str(get_resource_path(filename))
 
     @property
     def symbol_image(self) -> Image.Image:

@@ -46,7 +46,7 @@ setup(
     author_email="correiospy@osantana.me",
 
     description="A client library for Brazilian Correios APIs and services",
-    long_description=open('README.rst').read(),
+    long_description=open("README.rst").read(),
 
     packages=find_packages(),
     include_package_data=True,
@@ -55,10 +55,13 @@ setup(
     extras_require=requirements,
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
+        "Development Status :: 2 - Pre-Alpha",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
     ],
-    scripts=['scripts/update-correios-wsdl'],
+
+    entry_points={
+        "console_scripts": ["update-correios-wsdl=correios.update_wsdl:cli"],
+    },
 )

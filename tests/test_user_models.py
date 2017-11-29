@@ -13,20 +13,18 @@
 # limitations under the License.
 
 
-import os
 from datetime import datetime, timedelta, timezone
 
 import pytest
 from PIL.Image import Image
 
-from correios import DATADIR
 from correios.exceptions import (
     InvalidExtraServiceError,
     InvalidFederalTaxNumberError,
     InvalidRegionalDirectionError,
     InvalidUserContractError,
     MaximumDeclaredValueError,
-    MinimumDeclaredValueError
+    MinimumDeclaredValueError,
 )
 from correios.models.data import EXTRA_SERVICE_AR, SERVICE_PAC, SERVICE_SEDEX
 from correios.models.user import (
@@ -37,7 +35,7 @@ from correios.models.user import (
     RegionalDirection,
     Service,
     StateTaxNumber,
-    User
+    User,
 )
 
 
@@ -217,8 +215,8 @@ def test_basic_service():
     assert service.display_name == "SEDEX 10"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
-    assert service.get_symbol_filename() == os.path.join(DATADIR, "premium.gif")
-    assert service.get_symbol_filename("png") == os.path.join(DATADIR, "premium.png")
+    assert service.get_symbol_filename().endswith("/premium.gif")
+    assert service.get_symbol_filename("png").endswith("/premium.png")
     assert isinstance(service.symbol_image, Image)
     assert service.max_weight == 10000
 

@@ -1,88 +1,98 @@
-import logging
+# Copyright 2016 Osvaldo Santana Neto
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+import argparse
 import os
+import sys
+from io import StringIO
 
-import requests
+from requests import HTTPError, Session
 
-logger = logging.getLogger(__name__)
+from .client import CORREIOS_WEBSERVICES
+from .utils import get_resource_path
 
-
-MODULE_PATH = os.path.join(os.path.dirname(__file__), 'wsdls')
-
-
-SPECS = [
-    {
-        'url': (
-            'https://apps.correios.com.br/'
-            'SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'
-        ),
-        'filename': 'AtendeCliente-production.wsdl'
-    },
-    {
-        'url': (
-            'https://apphom.correios.com.br/'
-            'SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'
-        ),
-        'filename': 'AtendeCliente-test.wsdl'
-    },
-    {
-        'url': (
-            'https://webservice.correios.com.br/'
-            'service/rastro/Rastro.wsdl'
-        ),
-        'filename': 'Rastro.wsdl'
-    },
-    {
-        'url': (
-            'http://ws.correios.com.br/'
-            'calculador/CalcPrecoPrazo.asmx?WSDL'
-        ),
-        'filename': 'CalcPrecoPrazo.asmx'
-    },
-    {
-        'url': (
-            'https://webservice.correios.com.br/'
-            'service/rastro/Rastro_schema1.xsd'
-        ),
-        'filename': 'Rastro_schema1.xsd'
-    },
-]
+WSDL_DIR = get_resource_path("wsdls")
 
 
-def create_file(filename, body, path):
-    file_path = os.path.join(path, filename)
-    logger.debug(
-        'Creating file: {filename}\n'
-        'Path: {path}'.format(filename=filename, path=path)
+class WSDLUpdater:
+    webservices = CORREIOS_WEBSERVICES
+
+    def __init__(self, wsdl_path: str, session=None, output=None) -> None:
+        self.wsdl_path = wsdl_path
+
+        if session is None:
+            session = Session()
+        self.session = session
+
+        if output is None:
+            output = StringIO()
+        self.output = output
+
+    def out(self, msg):
+        print(msg, file=self.output)
+
+    def save(self, path: str, content: str):
+        with open(path, 'w') as file:
+            file.write(content)
+        self.out('Successfully create file: {}'.format(path))
+
+    def download_wsdl(self, url: str, filename: str):
+        path = os.path.join(self.wsdl_path, filename)
+
+        self.out('Updating file: {} URL: {}'.format(filename, url))
+
+        response = self.session.get(url)
+        response.raise_for_status()
+
+        self.save(path, response.text)
+        self.out('Updated with success')
+
+    def update_all(self):
+        self.out('Updating Correios Webservice WSDLs')
+        self.out('Files will be saved on: {}'.format(self.wsdl_path))
+
+        for webservice, args in self.webservices.items():
+            url, filename = args
+            try:
+                self.download_wsdl(url, filename)
+            except HTTPError as ex:
+                self.out("Error downloading {}: {}".format(url, ex))
+
+
+def cli():
+    parser = argparse.ArgumentParser(description='Updates Correios WSDL files')
+    parser.add_argument(
+        '-q',
+        '--quiet',
+        dest='output',
+        action='store_const',
+        const=None,
+        default=sys.stdout,
     )
-
-    with open(file_path, 'w+') as file:
-        file.truncate()
-        file.write(body)
-
-    logger.debug(
-        'Successfully create file: {filename}'.format(filename=filename)
+    parser.add_argument(
+        '-p',
+        '--path',
+        dest='wsdl_path',
+        default=str(WSDL_DIR),
+        help='Custom path where wsdl files will be saved.'
     )
+    args = parser.parse_args()
 
-
-def update_wsdl(path=MODULE_PATH):
-    for file_spec in SPECS:
-        logger.debug(
-            'Updating File: {filename}'.format(**file_spec)
-        )
-
-        response = requests.get(file_spec['url'])
-
-        if response.status_code != 200:
-            logger.warning(
-                'Fail to access Correios: {url}'.format(**file_spec)
-            )
-            continue
-
-        create_file(file_spec['filename'], response.text, path=path)
+    updater = WSDLUpdater(wsdl_path=args.wsdl_path, output=args.output)
+    return updater.update_all()
 
 
 if __name__ == '__main__':
-    import sys
-
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    update_wsdl()
+    sys.exit(cli() or 0)

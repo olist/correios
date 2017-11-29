@@ -1,0 +1,1119 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl
+  response:
+    body:
+      string: !!binary |
+        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
+        H/GH/weHjbhqloMBAA==
+    headers:
+      Connection: [Keep-Alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['6910']
+      Content-Type: [text/xml;charset=UTF-8]
+      Date: ['Sat, 18 Nov 2017 03:24:21 GMT']
+      Keep-Alive: ['timeout=5, max=9999']
+      Set-Cookie: ['sto-id-%3FINTERNO%3Fpool_proxy_app_sigep_443=POCCAIAK; Expires=Sat,
+          18-Nov-2017 03:44:21 GMT; Path=/', 'sto-id-%3FEXTERNO_2%3Fpool_Proxy_reverso_Apps_443=KPABKIMA;
+          Expires=Sat, 18-Nov-2017 03:44:21 GMT; Path=/']
+      Vary: ['Accept-Encoding,User-Agent']
+      X-OPNET-Transaction-Trace: [a2_aca96591-b2cc-4d0f-80a4-98cf99d1ca92]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Connection: [Keep-Alive]
+      Content-Encoding: [gzip]
+      Content-Length: ['7964']
+      Content-Type: [text/xml;charset=UTF-8]
+      Date: ['Sat, 18 Nov 2017 03:24:19 GMT']
+      Keep-Alive: ['timeout=5, max=100']
+      Vary: ['Accept-Encoding,User-Agent']
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: https://webservice.correios.com.br/service/rastro/Rastro.wsdl
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<definitions name=\"\
+        rastro\" targetNamespace=\"http://resource.webservice.correios.com.br/\" xmlns:wsp1_2=\"\
+        http://schemas.xmlsoap.org/ws/2004/09/policy\" xmlns=\"http://schemas.xmlsoap.org/wsdl/\"\
+        \ xmlns:wsp=\"http://www.w3.org/ns/ws-policy\" xmlns:wsam=\"http://www.w3.org/2007/05/addressing/metadata\"\
+        \ xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"\
+        \ xmlns:tns=\"http://resource.webservice.correios.com.br/\" xmlns:soap=\"\
+        http://schemas.xmlsoap.org/wsdl/soap/\">\n  <types>\n    <xsd:schema>\n  \
+        \    <xsd:import namespace=\"http://resource.webservice.correios.com.br/\"\
+        \ schemaLocation=\"Rastro_schema1.xsd\"/>\n    </xsd:schema>\n  </types>\n\
+        \  <message name=\"buscaEventosListaResponse\">\n    <part name=\"parameters\"\
+        \ element=\"tns:buscaEventosListaResponse\">\n    </part>\n  </message>\n\
+        \  <message name=\"buscaEventosLista\">\n    <part name=\"parameters\" element=\"\
+        tns:buscaEventosLista\">\n    </part>\n  </message>\n  <message name=\"buscaEventosResponse\"\
+        >\n    <part name=\"parameters\" element=\"tns:buscaEventosResponse\">\n \
+        \   </part>\n  </message>\n  <message name=\"buscaEventos\">\n    <part name=\"\
+        parameters\" element=\"tns:buscaEventos\">\n    </part>\n  </message>\n  <portType\
+        \ name=\"Service\">\n    <operation name=\"buscaEventos\">\n      <input message=\"\
+        tns:buscaEventos\" wsam:Action=\"buscaEventos\">\n    </input>\n      <output\
+        \ message=\"tns:buscaEventosResponse\" wsam:Action=\"http://resource.webservice.correios.com.br/Service/buscaEventosResponse\"\
+        >\n    </output>\n    </operation>\n    <operation name=\"buscaEventosLista\"\
+        >\n      <input message=\"tns:buscaEventosLista\" wsam:Action=\"buscaEventosLista\"\
+        >\n    </input>\n      <output message=\"tns:buscaEventosListaResponse\" wsam:Action=\"\
+        http://resource.webservice.correios.com.br/Service/buscaEventosListaResponse\"\
+        >\n    </output>\n    </operation>\n  </portType>\n  <binding name=\"ServicePortBinding\"\
+        \ type=\"tns:Service\">\n    <soap:binding style=\"document\" transport=\"\
+        http://schemas.xmlsoap.org/soap/http\"/>\n    <operation name=\"buscaEventos\"\
+        >\n      <soap:operation soapAction=\"buscaEventos\"/>\n      <input>\n  \
+        \      <soap:body use=\"literal\"/>\n      </input>\n      <output>\n    \
+        \    <soap:body use=\"literal\"/>\n      </output>\n    </operation>\n   \
+        \ <operation name=\"buscaEventosLista\">\n      <soap:operation soapAction=\"\
+        buscaEventosLista\"/>\n      <input>\n        <soap:body use=\"literal\"/>\n\
+        \      </input>\n      <output>\n        <soap:body use=\"literal\"/>\n  \
+        \    </output>\n    </operation>\n  </binding>\n  <service name=\"rastro\"\
+        >\n    <port name=\"ServicePort\" binding=\"tns:ServicePortBinding\">\n  \
+        \    <soap:address location=\"http://webservice.correios.com.br:80/service/rastro\"\
+        />\n    </port>\n  </service>\n</definitions>\n"}
+    headers:
+      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
+      Connection: [Keep-Alive]
+      Content-Language: [pt-BR]
+      Content-Type: [text/xml]
+      Date: ['Sat, 18 Nov 2017 03:24:23 GMT']
+      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
+      Keep-Alive: ['timeout=2, max=99996']
+      Set-Cookie: [_op_aixPageId=a2_e1233132-3af6-40a4-90a3-9a0caeb3dd57; Path=/]
+      X-OPNET-Transaction-Trace: [a2_e1233132-3af6-40a4-90a3-9a0caeb3dd57]
+      X-Powered-By: [Servlet/3.0]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      User-Agent: [python-requests/2.18.4]
+    method: GET
+    uri: http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL
+  response:
+    body: {string: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<wsdl:definitions\
+        \ xmlns:s=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://schemas.xmlsoap.org/wsdl/soap12/\"\
+        \ xmlns:http=\"http://schemas.xmlsoap.org/wsdl/http/\" xmlns:mime=\"http://schemas.xmlsoap.org/wsdl/mime/\"\
+        \ xmlns:tns=\"http://tempuri.org/\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\"\
+        \ xmlns:tm=\"http://microsoft.com/wsdl/mime/textMatching/\" xmlns:soapenc=\"\
+        http://schemas.xmlsoap.org/soap/encoding/\" targetNamespace=\"http://tempuri.org/\"\
+        \ xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">\r\n  <wsdl:types>\r\n \
+        \   <s:schema elementFormDefault=\"qualified\" targetNamespace=\"http://tempuri.org/\"\
+        >\r\n      <s:element name=\"CalcPrecoPrazo\">\r\n        <s:complexType>\r\
+        \n          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdEmpresa\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sDsSenha\" type=\"s:string\" />\r\n           \
+        \ <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepOrigem\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"sCepDestino\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"nVlPeso\" type=\"s:string\" />\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"nCdFormato\" type=\"s:int\" />\r\n\
+        \            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlComprimento\"\
+        \ type=\"s:decimal\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"nVlAltura\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlLargura\" type=\"s:decimal\" />\r\n        \
+        \    <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlDiametro\" type=\"\
+        s:decimal\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        sCdMaoPropria\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlValorDeclarado\" type=\"s:decimal\" />\r\n \
+        \           <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCdAvisoRecebimento\"\
+        \ type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoPrazoResponse\">\r\
+        \n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoPrazoResult\" type=\"tns:cResultado\"\
+        \ />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\
+        \n      <s:complexType name=\"cResultado\">\r\n        <s:sequence>\r\n  \
+        \        <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"Servicos\" type=\"\
+        tns:ArrayOfCServico\" />\r\n        </s:sequence>\r\n      </s:complexType>\r\
+        \n      <s:complexType name=\"ArrayOfCServico\">\r\n        <s:sequence>\r\
+        \n          <s:element minOccurs=\"0\" maxOccurs=\"unbounded\" name=\"cServico\"\
+        \ type=\"tns:cServico\" />\r\n        </s:sequence>\r\n      </s:complexType>\r\
+        \n      <s:complexType name=\"cServico\">\r\n        <s:sequence>\r\n    \
+        \      <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"Codigo\" type=\"\
+        s:int\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        Valor\" type=\"s:string\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"PrazoEntrega\" type=\"s:string\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"ValorMaoPropria\" type=\"s:string\" />\r\n    \
+        \      <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"ValorAvisoRecebimento\"\
+        \ type=\"s:string\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"ValorValorDeclarado\" type=\"s:string\" />\r\n          <s:element\
+        \ minOccurs=\"0\" maxOccurs=\"1\" name=\"EntregaDomiciliar\" type=\"s:string\"\
+        \ />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"EntregaSabado\"\
+        \ type=\"s:string\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"Erro\" type=\"s:string\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"MsgErro\" type=\"s:string\" />\r\n          <s:element\
+        \ minOccurs=\"0\" maxOccurs=\"1\" name=\"ValorSemAdicionais\" type=\"s:string\"\
+        \ />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"obsFim\"\
+        \ type=\"s:string\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"DataMaxEntrega\" type=\"s:string\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"HoraMaxEntrega\" type=\"s:string\" />\r\n     \
+        \   </s:sequence>\r\n      </s:complexType>\r\n      <s:element name=\"CalcPrecoPrazoData\"\
+        >\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"0\" maxOccurs=\"1\" name=\"nCdEmpresa\" type=\"s:string\" />\r\
+        \n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sDsSenha\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdServico\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCepOrigem\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepDestino\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        nVlPeso\" type=\"s:string\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"nCdFormato\" type=\"s:int\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlComprimento\" type=\"s:decimal\" />\r\n    \
+        \        <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlAltura\" type=\"\
+        s:decimal\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"\
+        nVlLargura\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlDiametro\" type=\"s:decimal\" />\r\n       \
+        \     <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCdMaoPropria\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"\
+        nVlValorDeclarado\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n\
+        \            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sDtCalculo\"\
+        \ type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoPrazoDataResponse\"\
+        >\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoPrazoDataResult\" type=\"\
+        tns:cResultado\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoPrazoRestricao\"\
+        >\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"0\" maxOccurs=\"1\" name=\"nCdEmpresa\" type=\"s:string\" />\r\
+        \n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sDsSenha\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdServico\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCepOrigem\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepDestino\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        nVlPeso\" type=\"s:string\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"nCdFormato\" type=\"s:int\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlComprimento\" type=\"s:decimal\" />\r\n    \
+        \        <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlAltura\" type=\"\
+        s:decimal\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"\
+        nVlLargura\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlDiametro\" type=\"s:decimal\" />\r\n       \
+        \     <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCdMaoPropria\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"\
+        nVlValorDeclarado\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n\
+        \            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sDtCalculo\"\
+        \ type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoPrazoRestricaoResponse\"\
+        >\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoPrazoRestricaoResult\" type=\"\
+        tns:cResultado\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPreco\">\r\n        <s:complexType>\r\
+        \n          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdEmpresa\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sDsSenha\" type=\"s:string\" />\r\n           \
+        \ <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepOrigem\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"sCepDestino\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"nVlPeso\" type=\"s:string\" />\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"nCdFormato\" type=\"s:int\" />\r\n\
+        \            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlComprimento\"\
+        \ type=\"s:decimal\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"nVlAltura\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlLargura\" type=\"s:decimal\" />\r\n        \
+        \    <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlDiametro\" type=\"\
+        s:decimal\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        sCdMaoPropria\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlValorDeclarado\" type=\"s:decimal\" />\r\n \
+        \           <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCdAvisoRecebimento\"\
+        \ type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoResponse\">\r\n \
+        \       <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoResult\" type=\"tns:cResultado\"\
+        \ />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\
+        \n      <s:element name=\"CalcPrecoData\">\r\n        <s:complexType>\r\n\
+        \          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdEmpresa\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sDsSenha\" type=\"s:string\" />\r\n           \
+        \ <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepOrigem\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"sCepDestino\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"nVlPeso\" type=\"s:string\" />\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"nCdFormato\" type=\"s:int\" />\r\n\
+        \            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlComprimento\"\
+        \ type=\"s:decimal\" />\r\n            <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"nVlAltura\" type=\"s:decimal\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlLargura\" type=\"s:decimal\" />\r\n        \
+        \    <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"nVlDiametro\" type=\"\
+        s:decimal\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        sCdMaoPropria\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        1\" maxOccurs=\"1\" name=\"nVlValorDeclarado\" type=\"s:decimal\" />\r\n \
+        \           <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCdAvisoRecebimento\"\
+        \ type=\"s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"sDtCalculo\" type=\"s:string\" />\r\n          </s:sequence>\r\n\
+        \        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"\
+        CalcPrecoDataResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\
+        \n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoDataResult\"\
+        \ type=\"tns:cResultado\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrazo\">\r\n        <s:complexType>\r\
+        \n          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdServico\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCepOrigem\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepDestino\" type=\"\
+        s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\n \
+        \     </s:element>\r\n      <s:element name=\"CalcPrazoResponse\">\r\n   \
+        \     <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrazoResult\" type=\"tns:cResultado\"\
+        \ />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\
+        \n      <s:element name=\"CalcPrazoData\">\r\n        <s:complexType>\r\n\
+        \          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdServico\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCepOrigem\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepDestino\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        sDtCalculo\" type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrazoDataResponse\">\r\
+        \n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrazoDataResult\" type=\"tns:cResultado\"\
+        \ />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\
+        \n      <s:element name=\"CalcPrazoRestricao\">\r\n        <s:complexType>\r\
+        \n          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"nCdServico\" type=\"s:string\" />\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"sCepOrigem\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"sCepDestino\" type=\"\
+        s:string\" />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"\
+        sDtCalculo\" type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrazoRestricaoResponse\"\
+        >\r\n        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrazoRestricaoResult\" type=\"\
+        tns:cResultado\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoFAC\">\r\n      \
+        \  <s:complexType>\r\n          <s:sequence>\r\n            <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"nCdServico\" type=\"s:string\" />\r\n         \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"nVlPeso\" type=\"s:string\"\
+        \ />\r\n            <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"strDataCalculo\"\
+        \ type=\"s:string\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:element name=\"CalcPrecoFACResponse\">\r\n\
+        \        <s:complexType>\r\n          <s:sequence>\r\n            <s:element\
+        \ minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrecoFACResult\" type=\"tns:cResultado\"\
+        \ />\r\n          </s:sequence>\r\n        </s:complexType>\r\n      </s:element>\r\
+        \n      <s:element name=\"CalcPrazoObjeto\">\r\n        <s:complexType>\r\n\
+        \          <s:sequence>\r\n            <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"codigoObjeto\" type=\"s:string\" />\r\n          </s:sequence>\r\
+        \n        </s:complexType>\r\n      </s:element>\r\n      <s:element name=\"\
+        CalcPrazoObjetoResponse\">\r\n        <s:complexType>\r\n          <s:sequence>\r\
+        \n            <s:element minOccurs=\"1\" maxOccurs=\"1\" name=\"CalcPrazoObjetoResult\"\
+        \ type=\"tns:cResultadoObjeto\" />\r\n          </s:sequence>\r\n        </s:complexType>\r\
+        \n      </s:element>\r\n      <s:complexType name=\"cResultadoObjeto\">\r\n\
+        \        <s:sequence>\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"Objetos\" type=\"tns:ArrayOfCObjeto\" />\r\n        </s:sequence>\r\
+        \n      </s:complexType>\r\n      <s:complexType name=\"ArrayOfCObjeto\">\r\
+        \n        <s:sequence>\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        unbounded\" name=\"cObjeto\" type=\"tns:cObjeto\" />\r\n        </s:sequence>\r\
+        \n      </s:complexType>\r\n      <s:complexType name=\"cObjeto\">\r\n   \
+        \     <s:sequence>\r\n          <s:element minOccurs=\"0\" maxOccurs=\"1\"\
+        \ name=\"codigo\" type=\"s:string\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"servico\" type=\"s:string\" />\r\n          <s:element\
+        \ minOccurs=\"0\" maxOccurs=\"1\" name=\"cepOrigem\" type=\"s:string\" />\r\
+        \n          <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"cepDestino\"\
+        \ type=\"s:string\" />\r\n          <s:element minOccurs=\"1\" maxOccurs=\"\
+        1\" name=\"prazoEntrega\" type=\"s:int\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"dataPostagem\" type=\"s:string\" />\r\n       \
+        \   <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"dataPostagemCalculo\"\
+        \ type=\"s:string\" />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"\
+        1\" name=\"dataEntrega\" type=\"s:string\" />\r\n          <s:element minOccurs=\"\
+        0\" maxOccurs=\"1\" name=\"dataMaxEntrega\" type=\"s:string\" />\r\n     \
+        \     <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"erro\" type=\"s:string\"\
+        \ />\r\n          <s:element minOccurs=\"0\" maxOccurs=\"1\" name=\"msgErro\"\
+        \ type=\"s:string\" />\r\n        </s:sequence>\r\n      </s:complexType>\r\
+        \n      <s:element name=\"cResultado\" type=\"tns:cResultado\" />\r\n    \
+        \  <s:element name=\"cResultadoObjeto\" type=\"tns:cResultadoObjeto\" />\r\
+        \n    </s:schema>\r\n  </wsdl:types>\r\n  <wsdl:message name=\"CalcPrecoPrazoSoapIn\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazo\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoSoapOut\">\r\n\
+        \    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazoResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoDataSoapIn\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazoData\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoDataSoapOut\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazoDataResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoRestricaoSoapIn\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazoRestricao\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoRestricaoSoapOut\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoPrazoRestricaoResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoSoapIn\">\r\n\
+        \    <wsdl:part name=\"parameters\" element=\"tns:CalcPreco\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoSoapOut\">\r\n    <wsdl:part name=\"parameters\"\
+        \ element=\"tns:CalcPrecoResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoDataSoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"\
+        tns:CalcPrecoData\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoDataSoapOut\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoDataResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoSoapIn\">\r\n\
+        \    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazo\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoSoapOut\">\r\n    <wsdl:part name=\"parameters\"\
+        \ element=\"tns:CalcPrazoResponse\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoDataSoapIn\">\r\n    <wsdl:part name=\"parameters\" element=\"\
+        tns:CalcPrazoData\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoDataSoapOut\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazoDataResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoRestricaoSoapIn\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazoRestricao\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoRestricaoSoapOut\"\
+        >\r\n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazoRestricaoResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoFACSoapIn\">\r\
+        \n    <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoFAC\" />\r\n \
+        \ </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoFACSoapOut\">\r\n   \
+        \ <wsdl:part name=\"parameters\" element=\"tns:CalcPrecoFACResponse\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoObjetoSoapIn\">\r\n\
+        \    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazoObjeto\" />\r\n\
+        \  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoObjetoSoapOut\">\r\n\
+        \    <wsdl:part name=\"parameters\" element=\"tns:CalcPrazoObjetoResponse\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoHttpGetIn\"\
+        >\r\n    <wsdl:part name=\"nCdEmpresa\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sDsSenha\" type=\"s:string\" />\r\n    <wsdl:part name=\"nCdServico\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlPeso\" type=\"s:string\" />\r\n    <wsdl:part name=\"nCdFormato\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlComprimento\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlAltura\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlDiametro\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlValorDeclarado\" type=\"s:string\" />\r\n\
+        \    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoPrazoHttpGetOut\">\r\n    <wsdl:part name=\"\
+        Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoPrazoDataHttpGetIn\">\r\n    <wsdl:part name=\"nCdEmpresa\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlComprimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlAltura\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlLargura\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdMaoPropria\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlValorDeclarado\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sDtCalculo\" type=\"s:string\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoDataHttpGetOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoPrazoRestricaoHttpGetIn\">\r\n    <wsdl:part\
+        \ name=\"nCdEmpresa\" type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlComprimento\" type=\"s:string\" />\r\n  \
+        \  <wsdl:part name=\"nVlAltura\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"nVlValorDeclarado\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoPrazoRestricaoHttpGetOut\">\r\n    <wsdl:part name=\"Body\"\
+        \ element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"\
+        CalcPrecoHttpGetIn\">\r\n    <wsdl:part name=\"nCdEmpresa\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sDsSenha\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nCdFormato\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlComprimento\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlAltura\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlDiametro\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlValorDeclarado\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"s:string\"\
+        \ />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoHttpGetOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoDataHttpGetIn\">\r\n    <wsdl:part name=\"\
+        nCdEmpresa\" type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlComprimento\" type=\"s:string\" />\r\n  \
+        \  <wsdl:part name=\"nVlAltura\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"nVlValorDeclarado\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoDataHttpGetOut\">\r\n    <wsdl:part name=\"Body\" element=\"\
+        tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoHttpGetIn\"\
+        >\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\"\
+        \ type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoHttpGetOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoDataHttpGetIn\">\r\n    <wsdl:part name=\"\
+        nCdServico\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoDataHttpGetOut\">\r\n    <wsdl:part name=\"\
+        Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoRestricaoHttpGetIn\">\r\n    <wsdl:part name=\"nCdServico\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoRestricaoHttpGetOut\">\r\n    <wsdl:part name=\"Body\" element=\"\
+        tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoFACHttpGetIn\"\
+        >\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlPeso\" type=\"s:string\" />\r\n    <wsdl:part name=\"strDataCalculo\"\
+        \ type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoFACHttpGetOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoObjetoHttpGetIn\">\r\n    <wsdl:part name=\"\
+        codigoObjeto\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoObjetoHttpGetOut\">\r\n    <wsdl:part name=\"Body\" element=\"\
+        tns:cResultadoObjeto\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"\
+        CalcPrecoPrazoHttpPostIn\">\r\n    <wsdl:part name=\"nCdEmpresa\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"s:string\" />\r\n\
+        \    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlComprimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlAltura\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlLargura\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdMaoPropria\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlValorDeclarado\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"\
+        s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoHttpPostOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoPrazoDataHttpPostIn\">\r\n    <wsdl:part\
+        \ name=\"nCdEmpresa\" type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlComprimento\" type=\"s:string\" />\r\n  \
+        \  <wsdl:part name=\"nVlAltura\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"nVlValorDeclarado\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoPrazoDataHttpPostOut\">\r\n    <wsdl:part name=\"Body\"\
+        \ element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"\
+        CalcPrecoPrazoRestricaoHttpPostIn\">\r\n    <wsdl:part name=\"nCdEmpresa\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlComprimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlAltura\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlLargura\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdMaoPropria\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlValorDeclarado\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sDtCalculo\" type=\"s:string\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoPrazoRestricaoHttpPostOut\"\
+        >\r\n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoHttpPostIn\">\r\n    <wsdl:part name=\"\
+        nCdEmpresa\" type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlComprimento\" type=\"s:string\" />\r\n  \
+        \  <wsdl:part name=\"nVlAltura\" type=\"s:string\" />\r\n    <wsdl:part name=\"\
+        nVlLargura\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCdMaoPropria\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"nVlValorDeclarado\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdAvisoRecebimento\" type=\"s:string\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrecoHttpPostOut\">\r\n    <wsdl:part name=\"\
+        Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoDataHttpPostIn\">\r\n    <wsdl:part name=\"nCdEmpresa\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sDsSenha\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCepOrigem\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepDestino\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nCdFormato\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"nVlComprimento\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlAltura\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"nVlLargura\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlDiametro\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sCdMaoPropria\" type=\"s:string\" />\r\n    <wsdl:part name=\"nVlValorDeclarado\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCdAvisoRecebimento\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sDtCalculo\" type=\"s:string\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrecoDataHttpPostOut\">\r\
+        \n    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoHttpPostIn\">\r\n    <wsdl:part name=\"\
+        nCdServico\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\
+        \n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoHttpPostOut\">\r\n\
+        \    <wsdl:part name=\"Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoDataHttpPostIn\">\r\n    <wsdl:part name=\"\
+        nCdServico\" type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"\
+        s:string\" />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\
+        \n    <wsdl:part name=\"sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoDataHttpPostOut\">\r\n    <wsdl:part name=\"\
+        Body\" element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoRestricaoHttpPostIn\">\r\n    <wsdl:part name=\"nCdServico\"\
+        \ type=\"s:string\" />\r\n    <wsdl:part name=\"sCepOrigem\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"sCepDestino\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"sDtCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrazoRestricaoHttpPostOut\">\r\n    <wsdl:part name=\"Body\"\
+        \ element=\"tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"\
+        CalcPrecoFACHttpPostIn\">\r\n    <wsdl:part name=\"nCdServico\" type=\"s:string\"\
+        \ />\r\n    <wsdl:part name=\"nVlPeso\" type=\"s:string\" />\r\n    <wsdl:part\
+        \ name=\"strDataCalculo\" type=\"s:string\" />\r\n  </wsdl:message>\r\n  <wsdl:message\
+        \ name=\"CalcPrecoFACHttpPostOut\">\r\n    <wsdl:part name=\"Body\" element=\"\
+        tns:cResultado\" />\r\n  </wsdl:message>\r\n  <wsdl:message name=\"CalcPrazoObjetoHttpPostIn\"\
+        >\r\n    <wsdl:part name=\"codigoObjeto\" type=\"s:string\" />\r\n  </wsdl:message>\r\
+        \n  <wsdl:message name=\"CalcPrazoObjetoHttpPostOut\">\r\n    <wsdl:part name=\"\
+        Body\" element=\"tns:cResultadoObjeto\" />\r\n  </wsdl:message>\r\n  <wsdl:portType\
+        \ name=\"CalcPrecoPrazoWSSoap\">\r\n    <wsdl:operation name=\"CalcPrecoPrazo\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoSoapIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoPrazoSoapOut\" />\r\n    </wsdl:operation>\r\n  \
+        \  <wsdl:operation name=\"CalcPrecoPrazoData\">\r\n      <wsdl:input message=\"\
+        tns:CalcPrecoPrazoDataSoapIn\" />\r\n      <wsdl:output message=\"tns:CalcPrecoPrazoDataSoapOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoRestricao\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoRestricaoSoapIn\" />\r\n\
+        \      <wsdl:output message=\"tns:CalcPrecoPrazoRestricaoSoapOut\" />\r\n\
+        \    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPreco\">\r\n    \
+        \  <wsdl:input message=\"tns:CalcPrecoSoapIn\" />\r\n      <wsdl:output message=\"\
+        tns:CalcPrecoSoapOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoData\">\r\n      <wsdl:input message=\"tns:CalcPrecoDataSoapIn\"\
+        \ />\r\n      <wsdl:output message=\"tns:CalcPrecoDataSoapOut\" />\r\n   \
+        \ </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazo\">\r\n      <wsdl:input\
+        \ message=\"tns:CalcPrazoSoapIn\" />\r\n      <wsdl:output message=\"tns:CalcPrazoSoapOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoData\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrazoDataSoapIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrazoDataSoapOut\" />\r\n    </wsdl:operation>\r\n   \
+        \ <wsdl:operation name=\"CalcPrazoRestricao\">\r\n      <wsdl:input message=\"\
+        tns:CalcPrazoRestricaoSoapIn\" />\r\n      <wsdl:output message=\"tns:CalcPrazoRestricaoSoapOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoFAC\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoFACSoapIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoFACSoapOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrazoObjeto\">\r\n      <wsdl:documentation xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\"\
+        >Calcula a data m\xE1xima de entrega de determinado objeto</wsdl:documentation>\r\
+        \n      <wsdl:input message=\"tns:CalcPrazoObjetoSoapIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrazoObjetoSoapOut\" />\r\n    </wsdl:operation>\r\n \
+        \ </wsdl:portType>\r\n  <wsdl:portType name=\"CalcPrecoPrazoWSHttpGet\">\r\
+        \n    <wsdl:operation name=\"CalcPrecoPrazo\">\r\n      <wsdl:input message=\"\
+        tns:CalcPrecoPrazoHttpGetIn\" />\r\n      <wsdl:output message=\"tns:CalcPrecoPrazoHttpGetOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoData\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoDataHttpGetIn\" />\r\n\
+        \      <wsdl:output message=\"tns:CalcPrecoPrazoDataHttpGetOut\" />\r\n  \
+        \  </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoRestricao\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoRestricaoHttpGetIn\" />\r\
+        \n      <wsdl:output message=\"tns:CalcPrecoPrazoRestricaoHttpGetOut\" />\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPreco\">\r\n   \
+        \   <wsdl:input message=\"tns:CalcPrecoHttpGetIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoHttpGetOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoData\">\r\n      <wsdl:input message=\"tns:CalcPrecoDataHttpGetIn\"\
+        \ />\r\n      <wsdl:output message=\"tns:CalcPrecoDataHttpGetOut\" />\r\n\
+        \    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazo\">\r\n    \
+        \  <wsdl:input message=\"tns:CalcPrazoHttpGetIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrazoHttpGetOut\" />\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrazoData\">\r\n      <wsdl:input message=\"tns:CalcPrazoDataHttpGetIn\"\
+        \ />\r\n      <wsdl:output message=\"tns:CalcPrazoDataHttpGetOut\" />\r\n\
+        \    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoRestricao\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrazoRestricaoHttpGetIn\" />\r\n\
+        \      <wsdl:output message=\"tns:CalcPrazoRestricaoHttpGetOut\" />\r\n  \
+        \  </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoFAC\">\r\n   \
+        \   <wsdl:input message=\"tns:CalcPrecoFACHttpGetIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoFACHttpGetOut\" />\r\n    </wsdl:operation>\r\n \
+        \   <wsdl:operation name=\"CalcPrazoObjeto\">\r\n      <wsdl:documentation\
+        \ xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">Calcula a data m\xE1xima\
+        \ de entrega de determinado objeto</wsdl:documentation>\r\n      <wsdl:input\
+        \ message=\"tns:CalcPrazoObjetoHttpGetIn\" />\r\n      <wsdl:output message=\"\
+        tns:CalcPrazoObjetoHttpGetOut\" />\r\n    </wsdl:operation>\r\n  </wsdl:portType>\r\
+        \n  <wsdl:portType name=\"CalcPrecoPrazoWSHttpPost\">\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoPrazo\">\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoHttpPostIn\"\
+        \ />\r\n      <wsdl:output message=\"tns:CalcPrecoPrazoHttpPostOut\" />\r\n\
+        \    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoData\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoDataHttpPostIn\" />\r\n\
+        \      <wsdl:output message=\"tns:CalcPrecoPrazoDataHttpPostOut\" />\r\n \
+        \   </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoRestricao\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrecoPrazoRestricaoHttpPostIn\" />\r\
+        \n      <wsdl:output message=\"tns:CalcPrecoPrazoRestricaoHttpPostOut\" />\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPreco\">\r\n   \
+        \   <wsdl:input message=\"tns:CalcPrecoHttpPostIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoHttpPostOut\" />\r\n    </wsdl:operation>\r\n   \
+        \ <wsdl:operation name=\"CalcPrecoData\">\r\n      <wsdl:input message=\"\
+        tns:CalcPrecoDataHttpPostIn\" />\r\n      <wsdl:output message=\"tns:CalcPrecoDataHttpPostOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazo\">\r\
+        \n      <wsdl:input message=\"tns:CalcPrazoHttpPostIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrazoHttpPostOut\" />\r\n    </wsdl:operation>\r\n   \
+        \ <wsdl:operation name=\"CalcPrazoData\">\r\n      <wsdl:input message=\"\
+        tns:CalcPrazoDataHttpPostIn\" />\r\n      <wsdl:output message=\"tns:CalcPrazoDataHttpPostOut\"\
+        \ />\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoRestricao\"\
+        >\r\n      <wsdl:input message=\"tns:CalcPrazoRestricaoHttpPostIn\" />\r\n\
+        \      <wsdl:output message=\"tns:CalcPrazoRestricaoHttpPostOut\" />\r\n \
+        \   </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoFAC\">\r\n  \
+        \    <wsdl:input message=\"tns:CalcPrecoFACHttpPostIn\" />\r\n      <wsdl:output\
+        \ message=\"tns:CalcPrecoFACHttpPostOut\" />\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrazoObjeto\">\r\n      <wsdl:documentation\
+        \ xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">Calcula a data m\xE1xima\
+        \ de entrega de determinado objeto</wsdl:documentation>\r\n      <wsdl:input\
+        \ message=\"tns:CalcPrazoObjetoHttpPostIn\" />\r\n      <wsdl:output message=\"\
+        tns:CalcPrazoObjetoHttpPostOut\" />\r\n    </wsdl:operation>\r\n  </wsdl:portType>\r\
+        \n  <wsdl:binding name=\"CalcPrecoPrazoWSSoap\" type=\"tns:CalcPrecoPrazoWSSoap\"\
+        >\r\n    <soap:binding transport=\"http://schemas.xmlsoap.org/soap/http\"\
+        \ />\r\n    <wsdl:operation name=\"CalcPrecoPrazo\">\r\n      <soap:operation\
+        \ soapAction=\"http://tempuri.org/CalcPrecoPrazo\" style=\"document\" />\r\
+        \n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\
+        \n      <wsdl:output>\r\n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoData\"\
+        >\r\n      <soap:operation soapAction=\"http://tempuri.org/CalcPrecoPrazoData\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrecoPrazoRestricao\">\r\n      <soap:operation\
+        \ soapAction=\"http://tempuri.org/CalcPrecoPrazoRestricao\" style=\"document\"\
+        \ />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n  \
+        \    </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\"\
+        \ />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPreco\">\r\n      <soap:operation soapAction=\"http://tempuri.org/CalcPreco\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrecoData\">\r\n      <soap:operation soapAction=\"\
+        http://tempuri.org/CalcPrecoData\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazo\">\r\n      <soap:operation soapAction=\"\
+        http://tempuri.org/CalcPrazo\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazoData\">\r\n      <soap:operation soapAction=\"\
+        http://tempuri.org/CalcPrazoData\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazoRestricao\">\r\n      <soap:operation\
+        \ soapAction=\"http://tempuri.org/CalcPrazoRestricao\" style=\"document\"\
+        \ />\r\n      <wsdl:input>\r\n        <soap:body use=\"literal\" />\r\n  \
+        \    </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body use=\"literal\"\
+        \ />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoFAC\">\r\n      <soap:operation soapAction=\"http://tempuri.org/CalcPrecoFAC\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrazoObjeto\">\r\n      <soap:operation soapAction=\"\
+        http://tempuri.org/CalcPrazoObjeto\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <soap:body use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n  </wsdl:binding>\r\n  <wsdl:binding name=\"CalcPrecoPrazoWSSoap12\" type=\"\
+        tns:CalcPrecoPrazoWSSoap\">\r\n    <soap12:binding transport=\"http://schemas.xmlsoap.org/soap/http\"\
+        \ />\r\n    <wsdl:operation name=\"CalcPrecoPrazo\">\r\n      <soap12:operation\
+        \ soapAction=\"http://tempuri.org/CalcPrecoPrazo\" style=\"document\" />\r\
+        \n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\
+        \n      <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n     \
+        \ </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoData\"\
+        >\r\n      <soap12:operation soapAction=\"http://tempuri.org/CalcPrecoPrazoData\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrecoPrazoRestricao\">\r\n      <soap12:operation\
+        \ soapAction=\"http://tempuri.org/CalcPrecoPrazoRestricao\" style=\"document\"\
+        \ />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\" />\r\n\
+        \      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body use=\"\
+        literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPreco\">\r\n      <soap12:operation soapAction=\"http://tempuri.org/CalcPreco\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrecoData\">\r\n      <soap12:operation soapAction=\"\
+        http://tempuri.org/CalcPrecoData\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n     \
+        \ <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazo\">\r\n   \
+        \   <soap12:operation soapAction=\"http://tempuri.org/CalcPrazo\" style=\"\
+        document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"literal\"\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrazoData\">\r\n      <soap12:operation soapAction=\"\
+        http://tempuri.org/CalcPrazoData\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n     \
+        \ <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoRestricao\"\
+        >\r\n      <soap12:operation soapAction=\"http://tempuri.org/CalcPrazoRestricao\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \    <wsdl:operation name=\"CalcPrecoFAC\">\r\n      <soap12:operation soapAction=\"\
+        http://tempuri.org/CalcPrecoFAC\" style=\"document\" />\r\n      <wsdl:input>\r\
+        \n        <soap12:body use=\"literal\" />\r\n      </wsdl:input>\r\n     \
+        \ <wsdl:output>\r\n        <soap12:body use=\"literal\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoObjeto\">\r\
+        \n      <soap12:operation soapAction=\"http://tempuri.org/CalcPrazoObjeto\"\
+        \ style=\"document\" />\r\n      <wsdl:input>\r\n        <soap12:body use=\"\
+        literal\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <soap12:body\
+        \ use=\"literal\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n\
+        \  </wsdl:binding>\r\n  <wsdl:binding name=\"CalcPrecoPrazoWSHttpGet\" type=\"\
+        tns:CalcPrecoPrazoWSHttpGet\">\r\n    <http:binding verb=\"GET\" />\r\n  \
+        \  <wsdl:operation name=\"CalcPrecoPrazo\">\r\n      <http:operation location=\"\
+        /CalcPrecoPrazo\" />\r\n      <wsdl:input>\r\n        <http:urlEncoded />\r\
+        \n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml part=\"\
+        Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoPrazoData\">\r\n      <http:operation location=\"/CalcPrecoPrazoData\"\
+        \ />\r\n      <wsdl:input>\r\n        <http:urlEncoded />\r\n      </wsdl:input>\r\
+        \n      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoRestricao\"\
+        >\r\n      <http:operation location=\"/CalcPrecoPrazoRestricao\" />\r\n  \
+        \    <wsdl:input>\r\n        <http:urlEncoded />\r\n      </wsdl:input>\r\n\
+        \      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPreco\">\r\n   \
+        \   <http:operation location=\"/CalcPreco\" />\r\n      <wsdl:input>\r\n \
+        \       <http:urlEncoded />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrecoData\">\r\n      <http:operation location=\"\
+        /CalcPrecoData\" />\r\n      <wsdl:input>\r\n        <http:urlEncoded />\r\
+        \n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml part=\"\
+        Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrazo\">\r\n      <http:operation location=\"/CalcPrazo\" />\r\
+        \n      <wsdl:input>\r\n        <http:urlEncoded />\r\n      </wsdl:input>\r\
+        \n      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrazoData\">\r\n\
+        \      <http:operation location=\"/CalcPrazoData\" />\r\n      <wsdl:input>\r\
+        \n        <http:urlEncoded />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazoRestricao\">\r\n      <http:operation\
+        \ location=\"/CalcPrazoRestricao\" />\r\n      <wsdl:input>\r\n        <http:urlEncoded\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml\
+        \ part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  \
+        \  <wsdl:operation name=\"CalcPrecoFAC\">\r\n      <http:operation location=\"\
+        /CalcPrecoFAC\" />\r\n      <wsdl:input>\r\n        <http:urlEncoded />\r\n\
+        \      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml part=\"\
+        Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrazoObjeto\">\r\n      <http:operation location=\"/CalcPrazoObjeto\"\
+        \ />\r\n      <wsdl:input>\r\n        <http:urlEncoded />\r\n      </wsdl:input>\r\
+        \n      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n  </wsdl:binding>\r\n  <wsdl:binding name=\"CalcPrecoPrazoWSHttpPost\"\
+        \ type=\"tns:CalcPrecoPrazoWSHttpPost\">\r\n    <http:binding verb=\"POST\"\
+        \ />\r\n    <wsdl:operation name=\"CalcPrecoPrazo\">\r\n      <http:operation\
+        \ location=\"/CalcPrecoPrazo\" />\r\n      <wsdl:input>\r\n        <mime:content\
+        \ type=\"application/x-www-form-urlencoded\" />\r\n      </wsdl:input>\r\n\
+        \      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoPrazoData\"\
+        >\r\n      <http:operation location=\"/CalcPrecoPrazoData\" />\r\n      <wsdl:input>\r\
+        \n        <mime:content type=\"application/x-www-form-urlencoded\" />\r\n\
+        \      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml part=\"\
+        Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrecoPrazoRestricao\">\r\n      <http:operation location=\"/CalcPrecoPrazoRestricao\"\
+        \ />\r\n      <wsdl:input>\r\n        <mime:content type=\"application/x-www-form-urlencoded\"\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml\
+        \ part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  \
+        \  <wsdl:operation name=\"CalcPreco\">\r\n      <http:operation location=\"\
+        /CalcPreco\" />\r\n      <wsdl:input>\r\n        <mime:content type=\"application/x-www-form-urlencoded\"\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml\
+        \ part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  \
+        \  <wsdl:operation name=\"CalcPrecoData\">\r\n      <http:operation location=\"\
+        /CalcPrecoData\" />\r\n      <wsdl:input>\r\n        <mime:content type=\"\
+        application/x-www-form-urlencoded\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazo\">\r\n      <http:operation location=\"\
+        /CalcPrazo\" />\r\n      <wsdl:input>\r\n        <mime:content type=\"application/x-www-form-urlencoded\"\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml\
+        \ part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  \
+        \  <wsdl:operation name=\"CalcPrazoData\">\r\n      <http:operation location=\"\
+        /CalcPrazoData\" />\r\n      <wsdl:input>\r\n        <mime:content type=\"\
+        application/x-www-form-urlencoded\" />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\
+        \n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\
+        \n    <wsdl:operation name=\"CalcPrazoRestricao\">\r\n      <http:operation\
+        \ location=\"/CalcPrazoRestricao\" />\r\n      <wsdl:input>\r\n        <mime:content\
+        \ type=\"application/x-www-form-urlencoded\" />\r\n      </wsdl:input>\r\n\
+        \      <wsdl:output>\r\n        <mime:mimeXml part=\"Body\" />\r\n      </wsdl:output>\r\
+        \n    </wsdl:operation>\r\n    <wsdl:operation name=\"CalcPrecoFAC\">\r\n\
+        \      <http:operation location=\"/CalcPrecoFAC\" />\r\n      <wsdl:input>\r\
+        \n        <mime:content type=\"application/x-www-form-urlencoded\" />\r\n\
+        \      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml part=\"\
+        Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n    <wsdl:operation\
+        \ name=\"CalcPrazoObjeto\">\r\n      <http:operation location=\"/CalcPrazoObjeto\"\
+        \ />\r\n      <wsdl:input>\r\n        <mime:content type=\"application/x-www-form-urlencoded\"\
+        \ />\r\n      </wsdl:input>\r\n      <wsdl:output>\r\n        <mime:mimeXml\
+        \ part=\"Body\" />\r\n      </wsdl:output>\r\n    </wsdl:operation>\r\n  </wsdl:binding>\r\
+        \n  <wsdl:service name=\"CalcPrecoPrazoWS\">\r\n    <wsdl:port name=\"CalcPrecoPrazoWSSoap\"\
+        \ binding=\"tns:CalcPrecoPrazoWSSoap\">\r\n      <soap:address location=\"\
+        http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx\" />\r\n    </wsdl:port>\r\
+        \n    <wsdl:port name=\"CalcPrecoPrazoWSSoap12\" binding=\"tns:CalcPrecoPrazoWSSoap12\"\
+        >\r\n      <soap12:address location=\"http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx\"\
+        \ />\r\n    </wsdl:port>\r\n    <wsdl:port name=\"CalcPrecoPrazoWSHttpGet\"\
+        \ binding=\"tns:CalcPrecoPrazoWSHttpGet\">\r\n      <http:address location=\"\
+        http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx\" />\r\n    </wsdl:port>\r\
+        \n    <wsdl:port name=\"CalcPrecoPrazoWSHttpPost\" binding=\"tns:CalcPrecoPrazoWSHttpPost\"\
+        >\r\n      <http:address location=\"http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx\"\
+        \ />\r\n    </wsdl:port>\r\n  </wsdl:service>\r\n</wsdl:definitions>"}
+    headers:
+      Cache-Control: ['private, max-age=0']
+      Content-Length: ['52529']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Sat, 18 Nov 2017 03:24:25 GMT']
+      Server: [Microsoft-IIS/7.5]
+      X-AspNet-Version: [4.0.30319]
+      X-Powered-By: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1

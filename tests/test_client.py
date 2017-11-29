@@ -17,20 +17,31 @@ from decimal import Decimal
 
 import pytest
 
-from correios.client import ValidRestrictResponse
 from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
+from correios.models.builders import ModelBuilder
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
     EXTRA_SERVICE_VD,
+    FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
+    FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
     SERVICE_PAC,
     SERVICE_SEDEX,
-    SERVICE_SEDEX10
+    SERVICE_SEDEX10,
 )
-from correios.models.posting import Freight, NotFoundTrackingEvent, Package, PostingList, ShippingLabel, TrackingCode
+from correios.models.posting import (
+    FreightResponse,
+    NotFoundTrackingEvent,
+    Package,
+    PostingList,
+    ShippingLabel,
+    TrackingCode,
+)
 from correios.models.user import ExtraService, PostingCard, Service
-from correios.utils import get_wsdl_path
+from correios.serializers import PostingListSerializer
+from correios.utils import get_resource_path
 
 from .vcr import vcr
 
@@ -44,7 +55,7 @@ except ImportError:
 @vcr.use_cassette
 def test_basic_client():
     client = correios.Correios(username="sigep", password="XXXXXX", environment=correios.Correios.TEST)
-    assert client.sigep_url == get_wsdl_path('AtendeCliente-test.wsdl')
+    assert client.sigep_url == str(get_resource_path('wsdls/AtendeCliente-test.wsdl'))
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"
@@ -183,7 +194,7 @@ def test_get_tracking_codes_events_over_limit(client):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_builder_posting_card_status():
-    builder = correios.ModelBuilder()
+    builder = ModelBuilder()
     assert builder.build_posting_card_status("Normal") == PostingCard.ACTIVE
     assert builder.build_posting_card_status("Cancelado") == PostingCard.CANCELLED
 
@@ -191,7 +202,7 @@ def test_builder_posting_card_status():
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_posting_list_serialization(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
@@ -204,7 +215,7 @@ def test_posting_list_serialization(posting_list, shipping_label):
 def test_posting_list_serialization_with_crazy_utf8_character(posting_list, shipping_label):
     shipping_label.receiver.neighborhood = 'Olho D’Água'
     posting_list.add_shipping_label(shipping_label)
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
@@ -216,7 +227,7 @@ def test_declared_value(posting_list, shipping_label):
     shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
     shipping_label.real_value = 10.29
     posting_list.add_shipping_label(shipping_label)
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
@@ -227,7 +238,7 @@ def test_declared_value(posting_list, shipping_label):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_fail_empty_posting_list_serialization(posting_list):
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
         serializer.get_document(posting_list)
 
@@ -237,7 +248,7 @@ def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipp
     posting_list.add_shipping_label(shipping_label)
     posting_list.close_with_id(number=12345)
 
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
         serializer.get_document(posting_list)
 
@@ -247,7 +258,7 @@ def test_limit_size_city_name(posting_list, shipping_label):
     shipping_label.receiver.city = 'Porto Alegre (Rio Grande do Sul)'
     shipping_label.sender.city = 'Santa Maria (Rio Grande do Sul)'
     posting_list.add_shipping_label(shipping_label)
-    serializer = correios.PostingListSerializer()
+    serializer = PostingListSerializer()
     document = serializer.get_document(posting_list)
     serializer.validate(document)
     xml = serializer.get_xml(document)
@@ -332,11 +343,7 @@ def test_calculate_delivery_time_service_not_allowed_for_path(client):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_calculate_freight_with_error_code_10_restricted(
-    client,
-    posting_card,
-    package
-):
+def test_calculate_freight_with_error_code_10_restricted(client, posting_card, package):
     freights = client.calculate_freights(
         posting_card=posting_card,
         services=[SERVICE_SEDEX],
@@ -348,12 +355,11 @@ def test_calculate_freight_with_error_code_10_restricted(
     )
 
     assert len(freights) == 1
+    freight = freights[0]  # FreightResponse
 
-    freight = freights[0]
-
-    assert isinstance(freight, Freight)
-    assert len(freights) == 1
-    assert freight.error_code == ValidRestrictResponse.FINAL_ZIPCODE_RESTRICTED.value
+    assert isinstance(freight, FreightResponse)
+    assert freight.is_restricted_address()
+    assert freight.error_code == FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED
     assert freight.value != 0
     assert freight.delivery_time.days == 2
     assert freight.saturday
@@ -379,9 +385,10 @@ def test_calculate_freight_with_error_code_11_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
-    assert isinstance(freight, Freight)
+    assert isinstance(freight, FreightResponse)
     assert len(freights) == 1
-    assert freight.error_code == ValidRestrictResponse.INITIAL_AND_FINAL_ZIPCODE_RESTRICTED.value
+    assert freight.is_restricted_address()
+    assert freight.error_code == FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED
     assert freight.value != 0
     assert freight.delivery_time.days == 8
     assert freight.saturday
@@ -407,10 +414,9 @@ def test_calculate_freight_with_error_code_9_restricted(
     assert len(freights) == 1
 
     freight = freights[0]
-
-    assert isinstance(freight, Freight)
-    assert len(freights) == 1
-    assert freight.error_code == ValidRestrictResponse.INITIAL_ZIPCODE_RESTRICTED.value
+    assert isinstance(freight, FreightResponse)
+    assert freight.is_restricted_address()
+    assert freight.error_code == FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED
     assert freight.value != 0
     assert freight.delivery_time.days == 8
     assert freight.saturday

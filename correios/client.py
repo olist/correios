@@ -13,316 +13,40 @@
 # limitations under the License.
 
 
-import os
-from datetime import datetime
 from decimal import Decimal
-from enum import Enum
-from typing import Dict, List, Optional, Sequence, Union
+from pathlib import Path
+from typing import List, Optional, Sequence, Union
 
-from correios import DATADIR, xml_utils
-from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
-from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
-from correios.utils import get_wsdl_path, to_decimal, to_integer
-
+from .exceptions import TrackingCodesLimitExceededError
 from .models.address import ZipAddress, ZipCode
-from .models.posting import (
-    EventStatus,
-    Freight,
-    FreightError,
-    NotFoundTrackingEvent,
-    Package,
-    PostingList,
-    ShippingLabel,
-    TrackingCode,
-    TrackingEvent
-)
-from .models.user import Contract, ExtraService, FederalTaxNumber, PostingCard, Service, StateTaxNumber, User
+from .models.builders import ModelBuilder
+from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
+from .models.posting import FreightResponse, Package, PostingList, TrackingCode
+from .models.user import ExtraService, PostingCard, Service, User
+from .serializers import PostingListSerializer
 from .soap import SoapClient
+from .utils import get_resource_path
 
 KG = 1000  # g
-
-
-class ValidRestrictResponse(Enum):
-    INITIAL_ZIPCODE_RESTRICTED = 9
-    FINAL_ZIPCODE_RESTRICTED = 10
-    INITIAL_AND_FINAL_ZIPCODE_RESTRICTED = 11
-
-    @classmethod
-    def restricted_codes(cls):
-        return [
-            cls.FINAL_ZIPCODE_RESTRICTED.value,
-            cls.INITIAL_AND_FINAL_ZIPCODE_RESTRICTED.value,
-            cls.FINAL_ZIPCODE_RESTRICTED.value
-        ]
-
-
-class ModelBuilder:
-    def build_service(self, service_data):
-        service = Service(
-            code=service_data.codigo,
-            id=service_data.id,
-            description=service_data.descricao,
-            category=service_data.servicoSigep.categoriaServico
-        )
-        return service
-
-    def build_posting_card(self, contract: Contract, posting_card_data):
-        posting_card = PostingCard(
-            contract=contract,
-            number=posting_card_data.numero,
-            administrative_code=posting_card_data.codigoAdministrativo,
-        )
-
-        posting_card.start_date = posting_card_data.dataVigenciaInicio
-        posting_card.end_date = posting_card_data.dataVigenciaFim
-        posting_card.status = posting_card_data.statusCartaoPostagem
-        posting_card.status_code = posting_card_data.statusCodigo
-        posting_card.unit = posting_card_data.unidadeGenerica
-
-        for service_data in posting_card_data.servicos:
-            service = self.build_service(service_data)
-            posting_card.add_service(service)
-
-        return posting_card
-
-    def build_contract(self, user: User, contract_data):
-        contract = Contract(
-            user=user,
-            number=contract_data.contratoPK.numero,
-            regional_direction=contract_data.codigoDiretoria,
-        )
-
-        contract.customer_code = contract_data.codigoCliente
-        contract.status_code = contract_data.statusCodigo
-        contract.start_date = contract_data.dataVigenciaInicio
-        contract.end_date = contract_data.dataVigenciaFim
-
-        for posting_card_data in contract_data.cartoesPostagem:
-            self.build_posting_card(contract, posting_card_data)
-
-        return contract
-
-    def build_user(self, user_data):
-        user = User(
-            name=user_data.nome,
-            federal_tax_number=FederalTaxNumber(user_data.cnpj),
-            state_tax_number=StateTaxNumber(user_data.inscricaoEstadual),
-            status_number=user_data.statusCodigo,
-        )
-
-        for contract_data in user_data.contratos:
-            self.build_contract(user, contract_data)
-
-        return user
-
-    def build_zip_address(self, zip_address_data):
-        zip_address = ZipAddress(
-            id=zip_address_data.id,
-            zip_code=zip_address_data.cep,
-            state=zip_address_data.uf,
-            city=zip_address_data.cidade,
-            district=zip_address_data.bairro,
-            address=zip_address_data.end,
-            complements=[zip_address_data.complemento, zip_address_data.complemento2]
-        )
-        return zip_address
-
-    def build_posting_card_status(self, response):
-        if response.lower() != "normal":
-            return PostingCard.CANCELLED
-        return PostingCard.ACTIVE
-
-    def build_tracking_codes_list(self, response):
-        codes = response.split(",")
-        return TrackingCode.create_range(codes[0], codes[1])
-
-    def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
-        event = NotFoundTrackingEvent(
-            timestamp=datetime.now(),
-            comment=tracked_object.erro,
-        )
-        tracking_code.add_event(event)
-
-    def _load_events(self, tracking_code: TrackingCode, events):
-        for event in events:
-            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
-            event = TrackingEvent(
-                timestamp=timestamp,
-                status=EventStatus(event.tipo, event.status),
-                location_zip_code=getattr(event, "codigo", ""),
-                location=getattr(event, "local", ""),
-                city=getattr(event, "cidade", ""),
-                state=getattr(event, "uf", ""),
-                receiver=getattr(event, "recebedor", ""),
-                document=getattr(event, "documento", ""),
-                comment=getattr(event, "comentario", ""),
-                description=getattr(event, "descricao", ""),
-                details=getattr(event, "detalhes", ""),
-            )
-
-            tracking_code.add_event(event)
-
-    def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
-        result = []
-        for tracked_object in response.objeto:
-            tracking_code = tracking_codes[tracked_object.numero]
-
-            if 'erro' in tracked_object:
-                self._load_invalid_event(tracking_code, tracked_object)
-            else:
-                tracking_code.name = tracked_object.nome
-                tracking_code.initials = tracked_object.sigla
-                tracking_code.category = tracked_object.categoria
-                self._load_events(tracking_code, tracked_object.evento)
-
-            result.append(tracking_code)
-
-        return result
-
-    def build_freights_list(self, response):
-        result = []
-        for service_data in response.cServico:
-            freight = self.build_freight(service_data=service_data)
-            result.append(freight)
-        return result
-
-    def build_freight(self, service_data):
-        data = {
-            'service': Service.get(service_data.Codigo),
-            'error_code': to_integer(service_data.Erro),
-            'delivery_time': int(service_data.PrazoEntrega),
-            'value': to_decimal(service_data.ValorSemAdicionais),
-            'declared_value': to_decimal(service_data.ValorValorDeclarado),
-            'ar_value': to_decimal(service_data.ValorAvisoRecebimento),
-            'mp_value': to_decimal(service_data.ValorMaoPropria),
-            'saturday': service_data.EntregaSabado or "",
-            'home': service_data.EntregaDomiciliar or "",
-            'error_message': service_data.MsgErro or None
-        }
-
-        if (
-            data['error_code'] and
-            not data['error_code'] in ValidRestrictResponse.restricted_codes()
-        ):
-            return FreightError(**data)
-        return Freight(**data)
-
-
-class PostingListSerializer:
-    def _get_posting_list_element(self, posting_list):
-        element = xml_utils.Element("plp")
-        xml_utils.SubElement(element, "id_plp")
-        xml_utils.SubElement(element, "valor_global")
-        xml_utils.SubElement(element, "mcu_unidade_postagem")
-        xml_utils.SubElement(element, "nome_unidade_postagem")
-        xml_utils.SubElement(element, "cartao_postagem", text=str(posting_list.posting_card))
-        return element
-
-    def _get_sender_info_element(self, posting_list):
-        sender = posting_list.sender
-        posting_card = posting_list.posting_card
-        contract = posting_list.contract
-
-        sender_info = xml_utils.Element("remetente")
-        xml_utils.SubElement(sender_info, "numero_contrato", text=str(contract.number))
-        xml_utils.SubElement(sender_info, "numero_diretoria", text=str(contract.regional_direction_number))
-        xml_utils.SubElement(sender_info, "codigo_administrativo", text=str(posting_card.administrative_code))
-        xml_utils.SubElement(sender_info, "nome_remetente", cdata=sender.name)
-        xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=sender.street)
-        xml_utils.SubElement(sender_info, "numero_remetente", cdata=sender.number)
-        xml_utils.SubElement(sender_info, "complemento_remetente", cdata=sender.complement)
-        xml_utils.SubElement(sender_info, "bairro_remetente", cdata=sender.neighborhood)
-        xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
-        xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city)[:30])
-        xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
-        xml_utils.SubElement(sender_info, "telefone_remetente", cdata=sender.phone.short)
-        xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
-        xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
-        return sender_info
-
-    def _get_shipping_label_element(self, shipping_label: ShippingLabel):
-        item = xml_utils.Element("objeto_postal")
-        xml_utils.SubElement(item, "numero_etiqueta", text=str(shipping_label.tracking_code))
-        xml_utils.SubElement(item, "codigo_objeto_cliente")
-        xml_utils.SubElement(item, "codigo_servico_postagem", text=str(shipping_label.service))
-        xml_utils.SubElement(item, "cubagem", text=str(shipping_label.posting_weight).replace(".", ","))
-        xml_utils.SubElement(item, "peso", text=str(shipping_label.package.weight))
-        xml_utils.SubElement(item, "rt1")
-        xml_utils.SubElement(item, "rt2")
-
-        receiver = shipping_label.receiver
-        address = xml_utils.SubElement(item, "destinatario")
-        xml_utils.SubElement(address, "nome_destinatario", cdata=str(receiver.name))
-        xml_utils.SubElement(address, "telefone_destinatario", cdata=receiver.phone.short)
-        xml_utils.SubElement(address, "celular_destinatario", cdata=receiver.cellphone.short)
-        xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
-        xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
-        xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
-        xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number))
-
-        national = xml_utils.SubElement(item, "nacional")
-        xml_utils.SubElement(national, "bairro_destinatario", cdata=str(receiver.neighborhood))
-        xml_utils.SubElement(national, "cidade_destinatario", cdata=str(receiver.city)[:30])
-        xml_utils.SubElement(national, "uf_destinatario", text=str(receiver.state))
-        xml_utils.SubElement(national, "cep_destinatario", cdata=str(receiver.zip_code))
-        xml_utils.SubElement(national, "codigo_usuario_postal")
-        xml_utils.SubElement(national, "centro_custo_cliente")
-        xml_utils.SubElement(national, "numero_nota_fiscal", text=str(shipping_label.invoice_number))
-        xml_utils.SubElement(national, "serie_nota_fiscal", text=str(shipping_label.invoice_series))
-        xml_utils.SubElement(national, "valor_nota_fiscal", text=str(shipping_label.value).replace(".", ","))
-        xml_utils.SubElement(national, "natureza_nota_fiscal", text=str(shipping_label.invoice_type))
-        xml_utils.SubElement(national, "descricao_objeto", cdata=str(shipping_label.text)[:20])
-        xml_utils.SubElement(national, "valor_a_cobrar", text=str(shipping_label.billing).replace(".", ","))
-
-        extra_services = xml_utils.SubElement(item, "servico_adicional")
-        for extra_service in shipping_label.extra_services:
-            xml_utils.SubElement(extra_services, "codigo_servico_adicional",
-                                 text="{!s:>03}".format(extra_service.number))
-        xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
-
-        dimensions = xml_utils.SubElement(item, "dimensao_objeto")
-        xml_utils.SubElement(dimensions, "tipo_objeto", text="{!s:>03}".format(shipping_label.package.package_type))
-        xml_utils.SubElement(dimensions, "dimensao_altura", text=str(shipping_label.package.height))
-        xml_utils.SubElement(dimensions, "dimensao_largura", text=str(shipping_label.package.width))
-        xml_utils.SubElement(dimensions, "dimensao_comprimento", text=str(shipping_label.package.length))
-        xml_utils.SubElement(dimensions, "dimensao_diametro", text=str(shipping_label.package.diameter))
-
-        xml_utils.SubElement(item, "data_postagem_sara")
-        xml_utils.SubElement(item, "status_processamento", text="0")
-        xml_utils.SubElement(item, "numero_comprovante_postagem")
-        xml_utils.SubElement(item, "valor_cobrado")
-
-        return item
-
-    def get_document(self, posting_list: PostingList):
-        if not posting_list.shipping_labels:
-            raise PostingListSerializerError("Cannot serialize an empty posting list")
-
-        if posting_list.closed:
-            raise PostingListSerializerError("Cannot serialize a closed posting list")
-
-        root = xml_utils.Element("correioslog")
-        root.append(xml_utils.Element("tipo_arquivo", text="Postagem"))
-        root.append(xml_utils.Element("versao_arquivo", text="2.3"))
-        root.append(self._get_posting_list_element(posting_list))
-        root.append(self._get_sender_info_element(posting_list))
-        root.append(xml_utils.Element("forma_pagamento"))
-
-        for shipping_label in posting_list.shipping_labels.values():
-            root.append(self._get_shipping_label_element(shipping_label))
-
-        return root
-
-    def validate(self, document):
-        with open(os.path.join(DATADIR, "posting_list_schema.xsd")) as xsd:
-            xsd_document = xml_utils.parse(xsd)
-        schema = xml_utils.XMLSchema(xsd_document)
-        return schema.assert_(document)
-
-    def get_xml(self, document) -> bytes:
-        xmlstring = str(xml_utils.tostring(document, encoding="unicode"))
-        encoded_xmlstring = xmlstring.encode("iso-8859-1", errors='ignore')
-        return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + encoded_xmlstring
+# environ servico url filename
+CORREIOS_WEBSERVICES = {
+    'sigep-production': (
+        'https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl',
+        'AtendeCliente-production.wsdl',
+    ),
+    'sigep-test': (
+        'https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl',
+        'AtendeCliente-test.wsdl',
+    ),
+    'websro': (
+        'https://webservice.correios.com.br/service/rastro/Rastro.wsdl',
+        'Rastro.wsdl',
+    ),
+    'freight': (
+        'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL',
+        'CalcPrecoPrazo.asmx',
+    ),
+}
 
 
 class Correios:
@@ -332,35 +56,34 @@ class Correios:
 
     def __init__(
         self,
-        username,
-        password,
-        timeout=8,
-        environment="production",
-        wsdl_path=None
-    ):
+        username: str,
+        password: str,
+        timeout: int = 8,
+        environment: str = "production",
+        local_wsdl_path: Optional[Path] = None
+    ) -> None:
 
-        # 'environment': ('url', 'ssl_verification')
-        sigep_urls = {
-            'production': (
-                get_wsdl_path('AtendeCliente-production.wsdl', path=wsdl_path),
-                True
-            ),
-            'test': (
-                get_wsdl_path('AtendeCliente-test.wsdl', path=wsdl_path),
-                False
-            ),
-        }
-        websro_url = get_wsdl_path('Rastro.wsdl', path=wsdl_path)
-        freight_url = get_wsdl_path('CalcPrecoPrazo.asmx', path=wsdl_path)
+        if local_wsdl_path is None:
+            local_wsdl_path = get_resource_path("wsdls")
+        self.local_wsdl_path = local_wsdl_path
+
+        ssl_check = environment == "production"
+        sigep_key = "sigep-{}".format(environment)
+        if not self.local_wsdl_path:
+            sigep_url = (CORREIOS_WEBSERVICES[sigep_key][0], ssl_check)
+            websro_url = CORREIOS_WEBSERVICES["websro"][0]
+            freight_url = CORREIOS_WEBSERVICES["freight"][0]
+        else:
+            sigep_url = (str(self.local_wsdl_path / CORREIOS_WEBSERVICES[sigep_key][1]), ssl_check)
+            websro_url = str(self.local_wsdl_path / CORREIOS_WEBSERVICES["websro"][1])
+            freight_url = str(self.local_wsdl_path / CORREIOS_WEBSERVICES["freight"][1])
 
         self.username = username
         self.password = password
         self.timeout = timeout
-        self.wsdl_path = wsdl_path
 
-        url, verify = sigep_urls[environment]
-        self.sigep_url = url
-        self.sigep_verify = verify
+        self.sigep_url = sigep_url[0]
+        self.sigep_verify = sigep_url[1]
 
         self.sigep_client = SoapClient(self.sigep_url, verify=self.sigep_verify, timeout=self.timeout)
         self.sigep = self.sigep_client.service
@@ -427,9 +150,7 @@ class Correios:
 
     def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()
-        document = posting_list_serializer.get_document(posting_list)
-        posting_list_serializer.validate(document)
-        xml = posting_list_serializer.get_xml(document)
+        xml = posting_list_serializer.serialize(posting_list)
         return xml.decode("ISO-8859-1")
 
     def close_posting_list(self, posting_list: PostingList, posting_card: PostingCard) -> PostingList:
@@ -467,8 +188,8 @@ class Correios:
         from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
         package: Package,
         value: Union[Decimal, float] = 0.00,
-        extra_services: Optional[Sequence[Union[ExtraService, int]]] = None
-    ):
+        extra_services: Optional[Sequence[Union[ExtraService, int]]] = None,
+    ) -> List[FreightResponse]:
 
         administrative_code = posting_card.administrative_code
         services = [Service.get(s) for s in services]
@@ -498,12 +219,8 @@ class Correios:
         )
         return self.model_builder.build_freights_list(response)
 
-    def calculate_delivery_time(
-        self,
-        service: Union[Service, int],
-        from_zip: Union[ZipCode, int, str],
-        to_zip: Union[ZipCode, int, str]
-    ):
+    def calculate_delivery_time(self, service: Union[Service, int], from_zip: Union[ZipCode, int, str],
+                                to_zip: Union[ZipCode, int, str]) -> int:
         service = Service.get(service)
         from_zip = ZipCode.create(from_zip)
         to_zip = ZipCode.create(to_zip)

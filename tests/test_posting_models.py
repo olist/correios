@@ -20,7 +20,7 @@ from decimal import Decimal
 import pytest
 from PIL.Image import Image
 
-from correios import DATADIR, exceptions
+from correios import exceptions
 from correios.models import posting
 from correios.models.data import (
     EXTRA_SERVICE_AR,
@@ -28,7 +28,7 @@ from correios.models.data import (
     EXTRA_SERVICE_VD,
     SERVICE_PAC,
     SERVICE_SEDEX,
-    TRACKING_EVENT_TYPES
+    TRACKING_EVENT_TYPES,
 )
 from correios.models.user import ExtraService, Service
 
@@ -158,7 +158,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
 
     assert shipping_label.posting_list_group == 0
 
-    assert shipping_label.get_symbol_filename() == os.path.join(DATADIR, "express.gif")
+    assert shipping_label.get_symbol_filename().endswith("/express.gif")
     assert isinstance(shipping_label.symbol, Image)
 
     assert len(shipping_label.get_datamatrix_info()) == 164  # datamatrix info size accordingly with documentation
@@ -571,7 +571,7 @@ def test_invalid_event_status(event_type):
 
 
 def test_basic_freight():
-    freight = posting.Freight(SERVICE_SEDEX, timedelta(days=5), Decimal("10.00"))
+    freight = posting.FreightResponse(SERVICE_SEDEX, timedelta(days=5), Decimal("10.00"))
     assert freight.total == Decimal("10.00")
     assert freight.delivery_time == timedelta(days=5)
     assert freight.declared_value == Decimal("0.00")
@@ -580,6 +580,6 @@ def test_basic_freight():
 
 
 def test_basic_freight_conversion():
-    freight = posting.Freight(SERVICE_SEDEX, 5, 10.00)
+    freight = posting.FreightResponse(SERVICE_SEDEX, 5, 10.00)
     assert freight.delivery_time == timedelta(days=5)
     assert freight.total == Decimal("10.00")

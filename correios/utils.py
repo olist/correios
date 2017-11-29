@@ -17,6 +17,7 @@ import re
 from datetime import datetime
 from decimal import Decimal
 from itertools import chain
+from pathlib import Path
 from typing import Container, Iterable, Sized, Union
 
 import pkg_resources
@@ -85,7 +86,7 @@ def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> dateti
     return date
 
 
-def to_decimal(value: Union[Decimal, str, float], precision=2):
+def to_decimal(value: Union[Decimal, str, float], precision=2) -> Decimal:
     if not isinstance(value, Decimal):
         value = rreplace(str(value), ",", ".", 1)
         if "." in value:
@@ -99,10 +100,7 @@ def to_decimal(value: Union[Decimal, str, float], precision=2):
     return value.quantize(quantize)
 
 
-def get_wsdl_path(filename, path=None) -> str:
-    if not path:
-        resource_package = 'correios'
-        resource_path = '/'.join(('wsdls', filename))
-        return pkg_resources.resource_filename(resource_package, resource_path)
-
-    return os.path.join(path, filename)
+def get_resource_path(path) -> Path:
+    resource_package = 'correios'
+    resource_path = os.path.join("data", path)
+    return Path(pkg_resources.resource_filename(resource_package, resource_path))

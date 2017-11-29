@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 
 
 class SoapClient(Client):
-
     def __init__(self, wsdl, cert=None, verify=True, timeout=8, **kwargs):
         session = Session()
         session.cert = cert

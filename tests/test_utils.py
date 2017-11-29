@@ -1,9 +1,24 @@
+# Copyright 2016 Osvaldo Santana Neto
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 from decimal import Decimal
 from unittest import mock
 
 import pytest
 
-from correios.utils import RangeSet, capitalize_phrase, get_wsdl_path, rreplace, to_decimal, to_integer
+from correios.utils import RangeSet, capitalize_phrase, get_resource_path, rreplace, to_decimal, to_integer
 
 phrase = 'FOo bAr BAZ qux'
 
@@ -100,16 +115,13 @@ def test_to_integer(v, r):
 
 
 def test_get_wsdl_file_path():
-    filepath = get_wsdl_path('fake')
+    path = get_resource_path('fake')
+    assert str(path).endswith('correios/data/fake')
 
-    assert 'correios/wsdls/fake' in filepath
 
+@mock.patch("pkg_resources.resource_filename", return_value="/")
+def test_should_use_pkg_resources_to_get_wsdl_files(mock_resource):
+    path = get_resource_path('fake')
 
-def test_should_use_pkg_resources_to_get_wsdl_files():
-    """
-    The wsdl files should be load from installed packages
-    """
-    with mock.patch('pkg_resources.resource_filename') as mock_resouce:
-        get_wsdl_path('fake')
-
-    mock_resouce.assert_called_with('correios', 'wsdls/fake')
+    mock_resource.assert_called_with('correios', 'data/fake')
+    assert str(path) == "/"
