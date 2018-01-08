@@ -268,10 +268,18 @@ class ModelBuilder:
     def _load_package(self, data) -> Package:
         dimensions = data.dimensao_objeto
 
+        type_ = dimensions.tipo_objeto.text.strip()
+        type_ = int(type_) if type_.isdigit() else None
+
+        diameter = float(
+            dimensions.dimensao_diametro.text.replace(',', '.')
+        )
+
+        if type_ == Package.TYPE_BOX:
+            diameter = 0
+
         package = Package(
-            diameter=float(
-                dimensions.dimensao_diametro.text.replace(',', '.')
-            ),
+            diameter=diameter,
             height=float(dimensions.dimensao_altura.text.replace(',', '.')),
             length=float(
                 dimensions.dimensao_comprimento.text.replace(',', '.')
