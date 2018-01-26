@@ -258,7 +258,7 @@ EXTRA_SERVICES = {
     1: {'code': "AR", 'name': "Aviso de Recebimento"},
     2: {'code': "MP", 'name': "Mão Própria Nacional"},
     19: {'code': "VD", 'name': "Valor Declarado (Encomendas)"},
-    25: {'code': "RR", 'name': "Registro Nacional"},
+    25: {'code': "RR", 'name': "Registro Nacional", 'display_on_label': False},
 }
 
 EXTRA_SERVICE_AR = 1

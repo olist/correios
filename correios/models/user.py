@@ -196,7 +196,7 @@ class Service:
 
 
 class ExtraService:
-    def __init__(self, number: int, code: str, name: str) -> None:
+    def __init__(self, number: int, code: str, name: str, display_on_label: bool = True) -> None:
         if not number:
             raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
         self.number = number
@@ -208,6 +208,10 @@ class ExtraService:
         if not name:
             raise InvalidExtraServiceError("Invalid Extra Service Name {!r}".format(name))
         self.name = name
+
+        if type(display_on_label) is not bool:
+            raise InvalidExtraServiceError("Invalid Extra Service Display on Label {!r}".format(display_on_label))
+        self.display_on_label = display_on_label
 
     def __repr__(self):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)

@@ -267,6 +267,7 @@ def test_basic_extra_service():
     assert extra_service.number == 1
     assert extra_service.code == "AR"
     assert extra_service.name == "Aviso de Recebimento"
+    assert extra_service.display_on_label is True
     assert repr(extra_service) == "<ExtraService number=1, code='AR'>"
     assert extra_service == 1
 
@@ -276,15 +277,16 @@ def test_extra_service_sanitize_code():
     assert extra_service.code == "AR"
 
 
-@pytest.mark.parametrize("number,code,name", (
-    (0, "XY", "Invalid Number"),
-    (1, "XYZ", "Invalid Code"),
-    (1, "", "Invalid Code"),
-    (1, "XY", ""),  # Invalid Name
+@pytest.mark.parametrize("number,code,name,display_on_label", (
+    (0, "XY", "Invalid Number", True),
+    (1, "XYZ", "Invalid Code", False),
+    (1, "", "Invalid Code", True),
+    (1, "XY", "", False),  # Invalid Name
+    (1, "XY", "Invalid Display on Label", 'not_a_bool'),
 ))
-def test_fail_extra_service_invalid_data(number, code, name):
+def test_fail_extra_service_invalid_data(number, code, name, display_on_label):
     with pytest.raises(InvalidExtraServiceError):
-        ExtraService(number, code, name)
+        ExtraService(number, code, name, display_on_label)
 
 
 def test_fail_get_unknown_service():
