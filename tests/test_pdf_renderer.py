@@ -15,6 +15,8 @@
 
 import os
 
+from unittest import mock
+
 import pytest
 
 from correios.models.posting import PostingList
@@ -70,3 +72,20 @@ def test_render_all_posting_docs(posting_list: PostingList, posting_card: Postin
     shipping_labels_renderer.set_posting_list(posting_list)
     pdf = shipping_labels_renderer.render()
     assert bytes(pdf).startswith(b"%PDF-1.4")
+
+
+@pytest.mark.skipif(not PostingReportPDFRenderer, reason="PDF generation support disabled")
+@mock.patch('correios.renderers.pdf.Canvas.drawString')
+@pytest.mark.parametrize('display, count', (
+    (True, 2),
+    (False, 1),
+))
+def test_display_on_label_render_condition(mock_drawstring, display, count):
+    shipping_labels_renderer = PostingReportPDFRenderer()
+    shipping_labels = ShippingLabelFactory.build()
+
+    shipping_labels.extra_services[0].display_on_label = display
+    shipping_labels_renderer.add_shipping_label(shipping_labels)
+    shipping_labels_renderer.render_labels()
+
+    assert mock_drawstring.call_count == count
