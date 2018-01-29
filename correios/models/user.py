@@ -228,7 +228,7 @@ class ExtraService:
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
         if isinstance(number, cls):
             return number
-        return cls(number=number, **EXTRA_SERVICES[number])
+        return cls(number=number, **EXTRA_SERVICES[number])  # type: ignore
 
 
 class User:
