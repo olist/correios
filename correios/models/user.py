@@ -209,8 +209,6 @@ class ExtraService:
             raise InvalidExtraServiceError("Invalid Extra Service Name {!r}".format(name))
         self.name = name
 
-        if type(display_on_label) is not bool:
-            raise InvalidExtraServiceError("Invalid Extra Service Display on Label {!r}".format(display_on_label))
         self.display_on_label = display_on_label
 
     def __repr__(self):

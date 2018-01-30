@@ -277,16 +277,15 @@ def test_extra_service_sanitize_code():
     assert extra_service.code == "AR"
 
 
-@pytest.mark.parametrize("number,code,name,display_on_label", (
-    (0, "XY", "Invalid Number", True),
-    (1, "XYZ", "Invalid Code", False),
-    (1, "", "Invalid Code", True),
-    (1, "XY", "", False),  # Invalid Name
-    (1, "XY", "Invalid Display on Label", 'not_a_bool'),
+@pytest.mark.parametrize("number,code,name", (
+    (0, "XY", "Invalid Number"),
+    (1, "XYZ", "Invalid Code"),
+    (1, "", "Invalid Code"),
+    (1, "XY", ""),  # Invalid Name
 ))
-def test_fail_extra_service_invalid_data(number, code, name, display_on_label):
+def test_fail_extra_service_invalid_data(number, code, name):
     with pytest.raises(InvalidExtraServiceError):
-        ExtraService(number, code, name, display_on_label)
+        ExtraService(number, code, name)
 
 
 def test_fail_get_unknown_service():
