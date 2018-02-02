@@ -135,6 +135,9 @@ class ShippingLabelFlowable(Flowable):
         # extra services (first three)
         first_row = self.y2 - (40 * mm) - 10  # font-size=10pt
         for extra_service in self.shipping_label.extra_services:
+            if not extra_service.display_on_label:
+                continue
+
             canvas.drawString(self.x2 - (10 * mm), first_row, extra_service.code)
             first_row -= 14
 

@@ -15,7 +15,7 @@
 
 from datetime import datetime  # noqa: F401
 from decimal import Decimal
-from typing import List, Optional, Sequence, Union  # noqa: F401
+from typing import Any, Dict, List, Optional, Sequence, Union  # noqa: F401
 
 from PIL import Image
 
@@ -196,7 +196,7 @@ class Service:
 
 
 class ExtraService:
-    def __init__(self, number: int, code: str, name: str) -> None:
+    def __init__(self, number: int, code: str, name: str, display_on_label: bool = True) -> None:
         if not number:
             raise InvalidExtraServiceError("Invalid Extra Service Number {!r}".format(number))
         self.number = number
@@ -208,6 +208,8 @@ class ExtraService:
         if not name:
             raise InvalidExtraServiceError("Invalid Extra Service Name {!r}".format(name))
         self.name = name
+
+        self.display_on_label = display_on_label
 
     def __repr__(self):
         return "<ExtraService number={!r}, code={!r}>".format(self.number, self.code)
@@ -224,7 +226,8 @@ class ExtraService:
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
         if isinstance(number, cls):
             return number
-        return cls(number=number, **EXTRA_SERVICES[number])
+        attrs = EXTRA_SERVICES[number]  # type: Dict[str, Any]
+        return cls(number=number, **attrs)
 
 
 class User:
