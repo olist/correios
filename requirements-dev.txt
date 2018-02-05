@@ -3,3 +3,4 @@ bumpversion
 isort
 flake8
 mypy
+sphinx
