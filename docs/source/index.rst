@@ -61,6 +61,7 @@ That's it!
    :maxdepth: 4
    :caption: Contents:
 
+   zip_code
 
 
 Indices and tables
