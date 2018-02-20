@@ -233,7 +233,7 @@ def test_declared_value(posting_list, shipping_label):
     xml = serializer.get_xml(document)
     assert shipping_label.service == Service.get(SERVICE_PAC)
     assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" in xml
-    assert b"<valor_declarado>18,00</valor_declarado>" in xml
+    assert b"<valor_declarado>18,50</valor_declarado>" in xml
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
