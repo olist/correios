@@ -20,8 +20,8 @@ from typing import List, Optional, Sequence, Union
 from zeep.exceptions import Fault
 
 from .exceptions import (
-    ClientError,
     AuthenticationError,
+    ClientError,
     TrackingCodesLimitExceededError,
 )
 from .models.address import ZipAddress, ZipCode
@@ -117,7 +117,6 @@ class Correios:
             if 'autenticacao' in str(exc):
                 raise AuthenticationError
             raise ClientError(str(exc))
-
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)

@@ -107,8 +107,8 @@ class PostingListSerializerError(ClientError):
 
 class TrackingCodesLimitExceededError(ClientError):
     pass
-    
-    
+
+
 class AuthenticationError(ClientError):
     pass
 
