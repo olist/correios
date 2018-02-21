@@ -17,7 +17,13 @@ from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
-from .exceptions import TrackingCodesLimitExceededError
+from zeep.exceptions import Fault
+
+from .exceptions import (
+    ClientError,
+    AuthenticationError,
+    TrackingCodesLimitExceededError,
+)
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
@@ -105,7 +111,13 @@ class Correios:
 
     def _call(self, method_name, *args, **kwargs):
         method = getattr(self.sigep, method_name)
-        return method(*args, **kwargs)  # TODO: handle errors
+        try:
+            return method(*args, **kwargs)
+        except Fault as exc:
+            if 'autenticacao' in str(exc):
+                raise AuthenticationError
+            raise ClientError(str(exc))
+
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
