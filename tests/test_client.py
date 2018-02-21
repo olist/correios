@@ -17,7 +17,7 @@ from decimal import Decimal
 
 import pytest
 
-from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import AuthenticationError, PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.address import ZipCode
 from correios.models.builders import ModelBuilder
 from correios.models.data import (
@@ -59,6 +59,13 @@ def test_basic_client():
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_authentication_error(client):
+    with pytest.raises(AuthenticationError):
+        client.get_user(contract_number="9911222777", posting_card_number="0056789123")
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")

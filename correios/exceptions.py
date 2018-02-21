@@ -109,6 +109,10 @@ class TrackingCodesLimitExceededError(ClientError):
     pass
 
 
+class AuthenticationError(ClientError):
+    pass
+
+
 class RendererError(BaseCorreiosError):
     pass
 
