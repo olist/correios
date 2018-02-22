@@ -111,10 +111,10 @@ class Correios:
         try:
             return method(*args, **kwargs)
         except ConnectTimeout:
-            raise ConnectTimeoutError
+            raise ConnectTimeoutError(f"Timeout connection error ({self.timeout} seconds)")
         except Fault as exc:
-            if 'autenticacao' in str(exc):
-                raise AuthenticationError
+            if "autenticacao" in str(exc):
+                raise AuthenticationError(f"Authentication error for user {self.username}")
             raise ClientError(str(exc))
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
