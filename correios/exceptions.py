@@ -113,6 +113,10 @@ class AuthenticationError(ClientError):
     pass
 
 
+class ConnectTimeoutError(ClientError):
+    pass
+
+
 class RendererError(BaseCorreiosError):
     pass
 

@@ -17,9 +17,10 @@ from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
+from requests.exceptions import ConnectTimeout
 from zeep.exceptions import Fault
 
-from .exceptions import AuthenticationError, ClientError, TrackingCodesLimitExceededError
+from .exceptions import AuthenticationError, ClientError, ConnectTimeoutError, TrackingCodesLimitExceededError
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
@@ -109,6 +110,8 @@ class Correios:
         method = getattr(self.sigep, method_name)
         try:
             return method(*args, **kwargs)
+        except ConnectTimeout:
+            raise ConnectTimeoutError
         except Fault as exc:
             if 'autenticacao' in str(exc):
                 raise AuthenticationError

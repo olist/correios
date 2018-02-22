@@ -14,10 +14,17 @@
 
 
 from decimal import Decimal
+from unittest import mock
 
 import pytest
+from requests.exceptions import ConnectTimeout
 
-from correios.exceptions import AuthenticationError, PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import (
+    AuthenticationError,
+    ConnectTimeoutError,
+    PostingListSerializerError,
+    TrackingCodesLimitExceededError,
+)
 from correios.models.address import ZipCode
 from correios.models.builders import ModelBuilder
 from correios.models.data import (
@@ -59,6 +66,14 @@ def test_basic_client():
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@mock.patch('zeep.client.OperationProxy.__call__')
+def test_client_timeout_error(mock_soap_client, client):
+    mock_soap_client.side_effect = ConnectTimeout()
+    with pytest.raises(ConnectTimeoutError):
+        client.find_zipcode(ZipCode("70002-900"))
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
