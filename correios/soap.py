@@ -15,6 +15,7 @@
 import logging
 
 from requests import Session
+from requests.adapters import HTTPAdapter
 from zeep import Client, Transport
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,12 @@ class SoapClient(Client):
         session.cert = cert
         session.verify = verify
         session.timeout = timeout
-        session.headers.update({'Content-Type': 'text/xml;charset=UTF-8'})
+
+        session.mount('http', HTTPAdapter(max_retries=3))
+        session.mount('https', HTTPAdapter(max_retries=3))
+
+        session.headers['Content-Type'] = 'text/xml;charset=UTF-8'
+        session.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'  # noqa
 
         transport = Transport(
             operation_timeout=timeout,

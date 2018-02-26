@@ -167,6 +167,3 @@ texinfo_documents = [
      author, 'correios', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
