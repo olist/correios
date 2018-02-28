@@ -107,6 +107,24 @@ class Correios:
 
         self.model_builder = ModelBuilder()
 
+    def _exception_call(self, exception):
+        message = str(exception)
+        exception = ClientError(message)
+
+        if "autenticacao" in message:
+            message = "Authentication error for user {}".format(self.username)
+            exception = AuthenticationError(message)
+
+        if message.startswith("O Cartão de Postagem") and message.endswith("Cancelado."):
+            message = "The posting card is canceled"
+            exception = CanceledPostingCardError(message)
+
+        if message.startswith('Cartao de Postagem inexistente'):
+            message = "Nonexistent posting card"
+            exception = NonexistentPostingCardError(message)
+
+        return exception
+
     def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
             "usuario": self.username,
@@ -123,23 +141,7 @@ class Correios:
             raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
 
         except Fault as exc:
-            if "autenticacao" in str(exc):
-                message = "Authentication error for user {}".format(self.username)
-                raise AuthenticationError(message)
-
-            if str(exc).startswith("A PLP não será fechada"):
-                message = "Unable to close PLP. Tracking codes are already assigned to another PLP"
-                raise ClosePostingListError(message)
-
-            if str(exc).startswith("O Cartão de Postagem") and str(exc).endswith("Cancelado."):
-                message = "The posting card is canceled"
-                raise CanceledPostingCardError(message)
-
-            if str(exc).startswith('Cartao de Postagem inexistente'):
-                message = "Nonexistent posting card"
-                raise NonexistentPostingCardError(message)
-
-            raise ClientError(str(exc))
+            raise self._exception_call(exc)
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
@@ -191,10 +193,17 @@ class Correios:
         xml = self._generate_xml_string(posting_list)
         tracking_codes = posting_list.get_tracking_codes()
 
-        id_ = self._auth_call("fechaPlpVariosServicos", xml,
-                              posting_list.custom_id, posting_card.number, tracking_codes)
-        posting_list.close_with_id(id_)
+        try:
+            id_ = self._auth_call("fechaPlpVariosServicos", xml,
+                                  posting_list.custom_id, posting_card.number,
+                                  tracking_codes)
+        except ClientError as exc:
+            if str(exc).startswith("A PLP não será fechada"):
+                message = "Unable to close PLP. Tracking codes {} are already assigned to another PLP"
+                message = message.format(tracking_codes)
+                raise ClosePostingListError(message)
 
+        posting_list.close_with_id(id_)
         return posting_list
 
     def get_tracking_code_events(self, tracking_list):
