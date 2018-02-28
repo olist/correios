@@ -107,23 +107,19 @@ class Correios:
 
         self.model_builder = ModelBuilder()
 
-    def _exception_call(self, exception):
+    def _parse_exception(self, exception):
         message = str(exception)
-        exception = ClientError(message)
 
         if "autenticacao" in message:
-            message = "Authentication error for user {}".format(self.username)
-            exception = AuthenticationError(message)
+            return AuthenticationError("Authentication error for user {}".format(self.username))
 
         if message.startswith("O Cartão de Postagem") and message.endswith("Cancelado."):
-            message = "The posting card is canceled"
-            exception = CanceledPostingCardError(message)
+            return CanceledPostingCardError("The posting card is canceled")
 
         if message.startswith('Cartao de Postagem inexistente'):
-            message = "Nonexistent posting card"
-            exception = NonexistentPostingCardError(message)
+            return NonexistentPostingCardError("Nonexistent posting card")
 
-        return exception
+        return ClientError(message)
 
     def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
@@ -141,7 +137,7 @@ class Correios:
             raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
 
         except Fault as exc:
-            raise self._exception_call(exc)
+            raise self._parse_exception(exc)
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
