@@ -117,6 +117,18 @@ class ConnectTimeoutError(ClientError):
     pass
 
 
+class ClosePostingListError(ClientError):
+    pass
+
+
+class CanceledPostingCardError(ClientError):
+    pass
+
+
+class NonexistentPostingCardError(ClientError):
+    pass
+
+
 class RendererError(BaseCorreiosError):
     pass
 
