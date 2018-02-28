@@ -18,10 +18,14 @@ from unittest import mock
 
 import pytest
 from requests.exceptions import ConnectTimeout
+from zeep.exceptions import Fault
 
 from correios.exceptions import (
     AuthenticationError,
+    CanceledPostingCardError,
+    ClosePostingListError,
     ConnectTimeoutError,
+    NonexistentPostingCardError,
     PostingListSerializerError,
     TrackingCodesLimitExceededError,
 )
@@ -81,6 +85,20 @@ def test_client_timeout_error(mock_soap_client, client):
 def test_client_authentication_error(client):
     with pytest.raises(AuthenticationError):
         client.get_user(contract_number="9911222777", posting_card_number="0056789123")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_canceled_posting_card_error(client):
+    with pytest.raises(CanceledPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="0057018901")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_nonexistent_posting_card_error(client):
+    with pytest.raises(NonexistentPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="4444444444")
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -149,6 +167,25 @@ def test_close_posting_list(client, posting_card, posting_list: PostingList, shi
     posting_list = client.close_posting_list(posting_list, posting_card)
     assert posting_list.number is not None
     assert posting_list.closed
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@mock.patch('zeep.client.OperationProxy.__call__')
+def test_client_close_posting_list_error(
+    mock_soap_client,
+    client,
+    posting_card,
+    posting_list: PostingList,
+    shipping_label: ShippingLabel
+):
+    mock_soap_client.side_effect = Fault(
+        'A PLP não será fechada , o(s) objeto(s) [PP40233163BR] já estão '
+        'vinculados em outra PLP!'
+    )
+    shipping_label.posting_card = posting_card
+    posting_list.add_shipping_label(shipping_label)
+    with pytest.raises(ClosePostingListError):
+        client.close_posting_list(posting_list, posting_card)
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")

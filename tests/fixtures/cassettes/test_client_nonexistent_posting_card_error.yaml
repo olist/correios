@@ -1,0 +1,35 @@
+interactions:
+- request:
+    body: '<?xml version=''1.0'' encoding=''utf-8''?>
+
+      <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Body><ns0:buscaCliente
+      xmlns:ns0="http://cliente.bean.master.sigep.bsb.correios.com.br/"><idContrato>9911222777</idContrato><idCartaoPostagem>4444444444</idCartaoPostagem><usuario>sigep</usuario><senha>n5f9t8</senha></ns0:buscaCliente></soap-env:Body></soap-env:Envelope>'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Connection: [keep-alive]
+      Content-Length: ['398']
+      Content-Type: [text/xml; charset=utf-8]
+      SOAPAction: ['""']
+      User-Agent: [Zeep/2.5.0 (www.python-zeep.org)]
+    method: POST
+    uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA41RQW4DIQz8CsoDsJTjinJotD1HzQtY1t0gsRhhJ9r+vpDQNjlU6onReAbN2IbJ
+        5WFMV4yUUW1rTDw07mV3FskDAPszro51HTVeU1mgAcBugp01t19eaf7s8M1doljz0R5PM9obe8Jy
+        xWLgl74rWEpIiz24Io7UjOpILG7BVYWEW2DBJKgSqfH9qLu9e8yM4kK0JvF+OIUF8yGGJh83j1kC
+        pd6pzn8q+btET+iSrt0Ei+bm1RNP2lMpGIgrWPVUar3/BvszgzXwnRMe9wMPe4OnS9gvht0ZBZkB
+        AAA=
+    headers:
+      Connection: [close]
+      Content-Encoding: [gzip]
+      Content-Length: ['230']
+      Content-Type: [text/xml;charset=UTF-8]
+      Date: ['Wed, 28 Feb 2018 13:32:12 GMT']
+      Set-Cookie: [JSESSIONID=-PguPJ2EuGyA4fnoyd3iiDO0.39987725-7faa-3e86-8a45-e6c0e8576534;
+          Path=/SigepMasterJPA; Secure]
+      Vary: ['Accept-Encoding,User-Agent']
+    status: {code: 500, message: Internal Server Error}
+version: 1
