@@ -17,10 +17,18 @@ from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
-from requests.exceptions import ConnectTimeout
+from requests.exceptions import Timeout
 from zeep.exceptions import Fault
 
-from .exceptions import AuthenticationError, ClientError, ConnectTimeoutError, TrackingCodesLimitExceededError
+from .exceptions import (
+    AuthenticationError,
+    CanceledPostingCardError,
+    ClientError,
+    ClosePostingListError,
+    ConnectTimeoutError,
+    NonexistentPostingCardError,
+    TrackingCodesLimitExceededError,
+)
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
@@ -110,11 +118,27 @@ class Correios:
         method = getattr(self.sigep, method_name)
         try:
             return method(*args, **kwargs)
-        except ConnectTimeout:
+
+        except Timeout:
             raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
+
         except Fault as exc:
             if "autenticacao" in str(exc):
-                raise AuthenticationError("Authentication error for user {}".format(self.username))
+                message = "Authentication error for user {}".format(self.username)
+                raise AuthenticationError(message)
+
+            if str(exc).startswith("A PLP não será fechada"):
+                message = "Unable to close PLP. Tracking codes are already assigned to another PLP"
+                raise ClosePostingListError(message)
+
+            if str(exc).startswith("O Cartão de Postagem") and str(exc).endswith("Cancelado."):
+                message = "The posting card is canceled"
+                raise CanceledPostingCardError(message)
+
+            if str(exc).startswith('Cartao de Postagem inexistente'):
+                message = "Nonexistent posting card"
+                raise NonexistentPostingCardError(message)
+
             raise ClientError(str(exc))
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
