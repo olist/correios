@@ -111,21 +111,27 @@ class Correios:
     def _parse_exception(self, exception):
         message = str(exception)
 
-        ERRORS = (
-            (AuthenticationError, "Authentication error for user {}".format(self.username)),
-            (CanceledPostingCardError, "The posting card is canceled"),
-            (NonexistentPostingCardError, "Nonexistent posting card"),
+        ERROR_EXCEPTIONS = (
+            AuthenticationError,
+            CanceledPostingCardError,
+            NonexistentPostingCardError,
         )
 
-        ERROR_MESSAGES = {
-            re.compile(r"autenticacao"): ERRORS[0],
-            re.compile(r"^O Cartão de Postagem.*Cancelado.$"): ERRORS[1],
-            re.compile(r"^Cartao de Postagem inexistente"): ERRORS[2],
-        }
+        ERROR_MESSAGES = (
+            "Authentication error for user {}".format(self.username),
+            "The posting card is canceled",
+            "Nonexistent posting card",
+        )
 
-        for regex, (exc, error_message) in ERROR_MESSAGES.items():
+        ERROR_REGEXES = (
+            re.compile(r"autenticacao"),
+            re.compile(r"^O Cartão de Postagem.*Cancelado.$"),
+            re.compile(r"^Cartao de Postagem inexistente"),
+        )
+
+        for regex, exception, error_message in zip(ERROR_REGEXES, ERROR_EXCEPTIONS, ERROR_MESSAGES):
             if regex.search(message):
-                return exc(error_message)
+                return exception(error_message)
 
         return ClientError(message)
 
