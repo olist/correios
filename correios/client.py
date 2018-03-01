@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import re
 from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
@@ -110,14 +111,21 @@ class Correios:
     def _parse_exception(self, exception):
         message = str(exception)
 
-        if "autenticacao" in message:
-            return AuthenticationError("Authentication error for user {}".format(self.username))
+        ERRORS = (
+            (AuthenticationError, "Authentication error for user {}".format(self.username)),
+            (CanceledPostingCardError, "The posting card is canceled"),
+            (NonexistentPostingCardError, "Nonexistent posting card"),
+        )
 
-        if message.startswith("O Cartão de Postagem") and message.endswith("Cancelado."):
-            return CanceledPostingCardError("The posting card is canceled")
+        ERROR_MESSAGES = {
+            re.compile(r"autenticacao"): ERRORS[0],
+            re.compile(r"^O Cartão de Postagem.*Cancelado.$"): ERRORS[1],
+            re.compile(r"^Cartao de Postagem inexistente"): ERRORS[2],
+        }
 
-        if message.startswith('Cartao de Postagem inexistente'):
-            return NonexistentPostingCardError("Nonexistent posting card")
+        for regex, (exc, error_message) in ERROR_MESSAGES.items():
+            if regex.search(message):
+                return exc(error_message)
 
         return ClientError(message)
 
