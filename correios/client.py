@@ -14,7 +14,6 @@
 
 
 import re
-from collections import namedtuple
 from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
@@ -61,22 +60,11 @@ CORREIOS_WEBSERVICES = {
     ),
 }
 
-CorreiosAPIError = namedtuple('CorreiosAPIError', ['regex', 'exception'])
-
-ERRORS = (
-    CorreiosAPIError(
-        regex=re.compile(r"autenticacao"),
-        exception=AuthenticationError,
-    ),
-    CorreiosAPIError(
-        regex=re.compile(r"^O Cartão de Postagem.*Cancelado.$"),
-        exception=CanceledPostingCardError,
-    ),
-    CorreiosAPIError(
-        regex=re.compile(r"^Cartao de Postagem inexistente"),
-        exception=NonexistentPostingCardError,
-    ),
-)
+ERRORS = {
+    re.compile(r"autenticacao"): AuthenticationError,
+    re.compile(r"^O Cartão de Postagem.*Cancelado.$"): CanceledPostingCardError,
+    re.compile(r"^Cartao de Postagem inexistente"): NonexistentPostingCardError,
+}
 
 
 class Correios:
@@ -129,7 +117,7 @@ class Correios:
     def _handle_exception(self, exception):
         message = str(exception)
 
-        for regex, exception in ERRORS:
+        for regex, exception in ERRORS.items():
             if regex.search(message):
                 raise exception(message)
 
