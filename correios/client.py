@@ -61,6 +61,23 @@ CORREIOS_WEBSERVICES = {
     ),
 }
 
+CorreiosAPIError = namedtuple('CorreiosAPIError', ['regex', 'exception'])
+
+ERRORS = (
+    CorreiosAPIError(
+        regex=re.compile(r"autenticacao"),
+        exception=AuthenticationError,
+    ),
+    CorreiosAPIError(
+        regex=re.compile(r"^O Cartão de Postagem.*Cancelado.$"),
+        exception=CanceledPostingCardError,
+    ),
+    CorreiosAPIError(
+        regex=re.compile(r"^Cartao de Postagem inexistente"),
+        exception=NonexistentPostingCardError,
+    ),
+)
+
 
 class Correios:
     PRODUCTION = "production"
@@ -111,31 +128,12 @@ class Correios:
 
     def _parse_exception(self, exception):
         message = str(exception)
-        CorreiosAPIError = namedtuple('CorreiosAPIError', ['regex', 'exception', 'message'])
 
-        ERRORS = (
-            CorreiosAPIError(
-                regex=re.compile(r"autenticacao"),
-                exception=AuthenticationError,
-                message="Authentication error for user {}".format(self.username),
-            ),
-            CorreiosAPIError(
-                regex=re.compile(r"^O Cartão de Postagem.*Cancelado.$"),
-                exception=CanceledPostingCardError,
-                message="The posting card is canceled",
-            ),
-            CorreiosAPIError(
-                regex=re.compile(r"^Cartao de Postagem inexistente"),
-                exception=NonexistentPostingCardError,
-                message="Nonexistent posting card",
-            ),
-        )
-
-        for regex, exception, error_message in ERRORS:
+        for regex, exception in ERRORS:
             if regex.search(message):
-                return exception(error_message)
+                raise exception(message)
 
-        return ClientError(message)
+        raise ClientError(message)
 
     def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
@@ -153,7 +151,7 @@ class Correios:
             raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
 
         except Fault as exc:
-            raise self._parse_exception(exc)
+            self._parse_exception(exc)
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
