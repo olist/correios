@@ -13,14 +13,23 @@
 # limitations under the License.
 
 
+import re
 from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
-from requests.exceptions import ConnectTimeout
+from requests.exceptions import Timeout
 from zeep.exceptions import Fault
 
-from .exceptions import AuthenticationError, ClientError, ConnectTimeoutError, TrackingCodesLimitExceededError
+from .exceptions import (
+    AuthenticationError,
+    CanceledPostingCardError,
+    ClientError,
+    ClosePostingListError,
+    ConnectTimeoutError,
+    NonexistentPostingCardError,
+    TrackingCodesLimitExceededError,
+)
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
@@ -49,6 +58,12 @@ CORREIOS_WEBSERVICES = {
         'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL',
         'CalcPrecoPrazo.asmx',
     ),
+}
+
+ERRORS = {
+    re.compile(r"autenticacao"): AuthenticationError,
+    re.compile(r"^O Cartão de Postagem.*Cancelado.$"): CanceledPostingCardError,
+    re.compile(r"^Cartao de Postagem inexistente"): NonexistentPostingCardError,
 }
 
 
@@ -99,6 +114,15 @@ class Correios:
 
         self.model_builder = ModelBuilder()
 
+    def _handle_exception(self, exception):
+        message = str(exception)
+
+        for regex, exception in ERRORS.items():
+            if regex.search(message):
+                raise exception(message)
+
+        raise ClientError(message)
+
     def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
             "usuario": self.username,
@@ -110,12 +134,12 @@ class Correios:
         method = getattr(self.sigep, method_name)
         try:
             return method(*args, **kwargs)
-        except ConnectTimeout:
+
+        except Timeout:
             raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
+
         except Fault as exc:
-            if "autenticacao" in str(exc):
-                raise AuthenticationError("Authentication error for user {}".format(self.username))
-            raise ClientError(str(exc))
+            self._handle_exception(exc)
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
@@ -167,10 +191,18 @@ class Correios:
         xml = self._generate_xml_string(posting_list)
         tracking_codes = posting_list.get_tracking_codes()
 
-        id_ = self._auth_call("fechaPlpVariosServicos", xml,
-                              posting_list.custom_id, posting_card.number, tracking_codes)
-        posting_list.close_with_id(id_)
+        try:
+            id_ = self._auth_call("fechaPlpVariosServicos", xml,
+                                  posting_list.custom_id, posting_card.number,
+                                  tracking_codes)
+        except ClientError as exc:
+            if str(exc).startswith("A PLP não será fechada"):
+                message = "Unable to close PLP. Tracking codes {} are already assigned to another PLP"
+                message = message.format(tracking_codes)
+                raise ClosePostingListError(message)
+            raise
 
+        posting_list.close_with_id(id_)
         return posting_list
 
     def get_tracking_code_events(self, tracking_list):

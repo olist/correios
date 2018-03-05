@@ -18,10 +18,14 @@ from unittest import mock
 
 import pytest
 from requests.exceptions import ConnectTimeout
+from zeep.exceptions import Fault
 
 from correios.exceptions import (
     AuthenticationError,
+    CanceledPostingCardError,
+    ClosePostingListError,
     ConnectTimeoutError,
+    NonexistentPostingCardError,
     PostingListSerializerError,
     TrackingCodesLimitExceededError,
 )
@@ -38,14 +42,7 @@ from correios.models.data import (
     SERVICE_SEDEX,
     SERVICE_SEDEX10,
 )
-from correios.models.posting import (
-    FreightResponse,
-    NotFoundTrackingEvent,
-    Package,
-    PostingList,
-    ShippingLabel,
-    TrackingCode,
-)
+from correios.models.posting import FreightResponse, NotFoundTrackingEvent, TrackingCode
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.serializers import PostingListSerializer
 from correios.utils import get_resource_path
@@ -81,6 +78,20 @@ def test_client_timeout_error(mock_soap_client, client):
 def test_client_authentication_error(client):
     with pytest.raises(AuthenticationError):
         client.get_user(contract_number="9911222777", posting_card_number="0056789123")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_canceled_posting_card_error(client):
+    with pytest.raises(CanceledPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="0057018901")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_nonexistent_posting_card_error(client):
+    with pytest.raises(NonexistentPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="4444444444")
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -143,12 +154,31 @@ def test_generate_verification_digit(client):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_close_posting_list(client, posting_card, posting_list: PostingList, shipping_label: ShippingLabel):
+def test_close_posting_list(client, posting_card, posting_list, shipping_label):
     shipping_label.posting_card = posting_card
     posting_list.add_shipping_label(shipping_label)
     posting_list = client.close_posting_list(posting_list, posting_card)
     assert posting_list.number is not None
     assert posting_list.closed
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@mock.patch('zeep.client.OperationProxy.__call__')
+def test_client_close_posting_list_error(
+    mock_soap_client,
+    client,
+    posting_card,
+    posting_list,
+    shipping_label,
+):
+    mock_soap_client.side_effect = Fault(
+        'A PLP não será fechada , o(s) objeto(s) [PP40233163BR] já estão '
+        'vinculados em outra PLP!'
+    )
+    shipping_label.posting_card = posting_card
+    posting_list.add_shipping_label(shipping_label)
+    with pytest.raises(ClosePostingListError):
+        client.close_posting_list(posting_list, posting_card)
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -266,7 +296,7 @@ def test_fail_empty_posting_list_serialization(posting_list):
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipping_label):
+def test_fail_closed_posting_list_serialization(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
     posting_list.close_with_id(number=12345)
 
@@ -339,7 +369,7 @@ def test_calculate_freights_with_extra_services(client, posting_card, package):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_calculate_freight_with_error(client, posting_card, package: Package):
+def test_calculate_freight_with_error(client, posting_card, package):
     package.real_weight = 80000  # invalid weight (80kg)
     freights = client.calculate_freights(posting_card, [SERVICE_SEDEX], "99999000", "99999999", package)
     assert len(freights) == 1
