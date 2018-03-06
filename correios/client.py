@@ -314,15 +314,15 @@ class ModelBuilder:
             event = TrackingEvent(
                 timestamp=timestamp,
                 status=EventStatus(event.tipo, event.status),
-                location_zip_code=getattr(event, "codigo", ""),
-                location=getattr(event, "local", ""),
-                city=getattr(event, "cidade", ""),
-                state=getattr(event, "uf", ""),
-                receiver=getattr(event, "recebedor", ""),
-                document=getattr(event, "documento", ""),
-                comment=getattr(event, "comentario", ""),
-                description=getattr(event, "descricao", ""),
-                details=getattr(event, "detalhes", ""),
+                location_zip_code=getattr(event, "codigo", "") or "",
+                location=getattr(event, "local", "") or "",
+                city=getattr(event, "cidade", "") or "",
+                state=getattr(event, "uf", "") or "",
+                receiver=getattr(event, "recebedor", "") or "",
+                document=getattr(event, "documento", "") or "",
+                comment=getattr(event, "comentario", "") or "",
+                description=getattr(event, "descricao", "") or "",
+                details=getattr(event, "detalhes", "") or "",
             )
 
             tracking_code.add_event(event)
@@ -332,7 +332,7 @@ class ModelBuilder:
         for tracked_object in response.objeto:
             tracking_code = tracking_codes[tracked_object.numero]
 
-            if 'erro' in tracked_object:
+            if 'erro' in tracked_object and tracked_object.erro:
                 self._load_invalid_event(tracking_code, tracked_object)
             else:
                 tracking_code.name = tracked_object.nome
