@@ -297,6 +297,10 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
     assert posting.Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
 
 
+def test_package_zeroed_volumetric_weight(package):
+    assert package.zeroed_volumetric_weight == Decimal("0.00")
+
+
 @pytest.mark.parametrize("package_type,width,height,length,diameter,exc", [
     (posting.Package.TYPE_ENVELOPE, 1, 0, 0, 0, exceptions.InvalidPackageDimensionsError),
     (posting.Package.TYPE_ENVELOPE, 0, 1, 0, 0, exceptions.InvalidPackageDimensionsError),
