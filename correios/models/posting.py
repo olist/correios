@@ -352,6 +352,10 @@ class Package:
         return Package.calculate_volumetric_weight(self.width, self.height, self.length)
 
     @property
+    def posting_list_volumetric_weight(self) -> Decimal:
+        return Decimal("0.00")
+
+    @property
     def posting_weight(self) -> int:
         return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
 

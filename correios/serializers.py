@@ -63,7 +63,7 @@ class PostingListSerializer:
         xml_utils.SubElement(item, "numero_etiqueta", text=str(shipping_label.tracking_code))
         xml_utils.SubElement(item, "codigo_objeto_cliente")
         xml_utils.SubElement(item, "codigo_servico_postagem", text=str(shipping_label.service))
-        xml_utils.SubElement(item, "cubagem", text=str(shipping_label.posting_weight).replace(".", ","))
+        xml_utils.SubElement(item, "cubagem", text=str(shipping_label.package.posting_list_volumetric_weight))
         xml_utils.SubElement(item, "peso", text=str(shipping_label.package.weight))
         xml_utils.SubElement(item, "rt1")
         xml_utils.SubElement(item, "rt2")

@@ -150,6 +150,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_contract_number() == "9911222777"
     assert shipping_label.get_package_sequence() == "{}/{}".format(*shipping_label.package.sequence)
     assert shipping_label.get_weight() == "{}g".format(shipping_label.package.weight)
+    assert shipping_label.package.posting_list_volumetric_weight == Decimal("0.00")
 
     assert shipping_label.text == "Hello World!"
 
