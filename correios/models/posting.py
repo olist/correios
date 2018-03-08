@@ -352,7 +352,7 @@ class Package:
         return Package.calculate_volumetric_weight(self.width, self.height, self.length)
 
     @property
-    def zeroed_volumetric_weight(self) -> Decimal:
+    def posting_list_volumetric_weight(self) -> Decimal:
         return Decimal("0.00")
 
     @property

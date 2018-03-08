@@ -150,6 +150,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_contract_number() == "9911222777"
     assert shipping_label.get_package_sequence() == "{}/{}".format(*shipping_label.package.sequence)
     assert shipping_label.get_weight() == "{}g".format(shipping_label.package.weight)
+    assert shipping_label.package.posting_list_volumetric_weight == Decimal("0.00")
 
     assert shipping_label.text == "Hello World!"
 
@@ -295,10 +296,6 @@ def test_package_basic_envelop_dimensions_validation():
 def test_package_posting_weight_calculation(weight, width, height, length, posting_weight):
     volumetric_weight = posting.Package.calculate_volumetric_weight(width, height, length)
     assert posting.Package.calculate_posting_weight(weight, volumetric_weight) == posting_weight
-
-
-def test_package_zeroed_volumetric_weight(package):
-    assert package.zeroed_volumetric_weight == Decimal("0.00")
 
 
 @pytest.mark.parametrize("package_type,width,height,length,diameter,exc", [
