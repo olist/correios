@@ -331,7 +331,9 @@ class Package:
 
     @property
     def diameter(self) -> int:
-        return max(MIN_DIAMETER, int(math.ceil(self.real_diameter)))
+        if self.package_type == Package.TYPE_CYLINDER:
+            return max(MIN_DIAMETER, int(math.ceil(self.real_diameter)))
+        return 0
 
     @diameter.setter
     def diameter(self, diameter):
