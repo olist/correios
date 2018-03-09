@@ -359,13 +359,13 @@ def test_fix_bug_of_weight_using_diameter_information():
 
 
 @pytest.mark.parametrize('package_type,diameter,result', [
-    ('TYPE_ENVELOPE', 16, 0),
-    ('TYPE_BOX', 18, 0),
-    ('TYPE_CYLINDER', 3, 16),
-    ('TYPE_CYLINDER', 18, 18),
+    (posting.Package.TYPE_ENVELOPE, 16, 0),
+    (posting.Package.TYPE_BOX, 18, 0),
+    (posting.Package.TYPE_CYLINDER, 3, 16),
+    (posting.Package.TYPE_CYLINDER, 18, 18),
 ])
 def test_package_diameter(package, package_type, diameter, result):
-    package.package_type = getattr(package, package_type)
+    package.package_type = package_type
     package.real_diameter = diameter
     assert package.diameter == result
 
