@@ -330,7 +330,10 @@ class ModelBuilder:
     def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
         result = []
         for tracked_object in response.objeto:
-            tracking_code = tracking_codes[tracked_object.numero]
+            try:
+                tracking_code = tracking_codes[tracked_object.numero]
+            except KeyError:
+                continue
 
             if 'erro' in tracked_object and tracked_object.erro:
                 self._load_invalid_event(tracking_code, tracked_object)
