@@ -14,6 +14,7 @@
 
 
 import os
+from contextlib import suppress
 from datetime import datetime
 from decimal import Decimal
 from enum import Enum
@@ -330,17 +331,19 @@ class ModelBuilder:
     def load_tracking_events(self, tracking_codes: Dict[str, TrackingCode], response):
         result = []
         for tracked_object in response.objeto:
-            tracking_code = tracking_codes[tracked_object.numero]
 
-            if 'erro' in tracked_object and tracked_object.erro:
-                self._load_invalid_event(tracking_code, tracked_object)
-            else:
-                tracking_code.name = tracked_object.nome
-                tracking_code.initials = tracked_object.sigla
-                tracking_code.category = tracked_object.categoria
-                self._load_events(tracking_code, tracked_object.evento)
+            with suppress(KeyError):
+                tracking_code = tracking_codes[tracked_object.numero]
 
-            result.append(tracking_code)
+                if 'erro' in tracked_object and tracked_object.erro:
+                    self._load_invalid_event(tracking_code, tracked_object)
+                else:
+                    tracking_code.name = tracked_object.nome
+                    tracking_code.initials = tracked_object.sigla
+                    tracking_code.category = tracked_object.categoria
+                    self._load_events(tracking_code, tracked_object.evento)
+
+                result.append(tracking_code)
 
         return result
 
