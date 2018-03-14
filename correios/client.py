@@ -21,7 +21,7 @@ from enum import Enum
 from typing import Dict, List, Optional, Sequence, Union
 
 from correios import DATADIR, xml_utils
-from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import InvalidEventStatusError, PostingListSerializerError, TrackingCodesLimitExceededError
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
 from correios.utils import get_wsdl_path, to_decimal, to_integer
 
@@ -312,19 +312,23 @@ class ModelBuilder:
     def _load_events(self, tracking_code: TrackingCode, events):
         for event in events:
             timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
-            event = TrackingEvent(
-                timestamp=timestamp,
-                status=EventStatus(event.tipo, event.status),
-                location_zip_code=getattr(event, "codigo", "") or "",
-                location=getattr(event, "local", "") or "",
-                city=getattr(event, "cidade", "") or "",
-                state=getattr(event, "uf", "") or "",
-                receiver=getattr(event, "recebedor", "") or "",
-                document=getattr(event, "documento", "") or "",
-                comment=getattr(event, "comentario", "") or "",
-                description=getattr(event, "descricao", "") or "",
-                details=getattr(event, "detalhes", "") or "",
-            )
+            try:
+                event = TrackingEvent(
+                    timestamp=timestamp,
+                    status=EventStatus(event.tipo, event.status),
+                    location_zip_code=getattr(event, "codigo", "") or "",
+                    location=getattr(event, "local", "") or "",
+                    city=getattr(event, "cidade", "") or "",
+                    state=getattr(event, "uf", "") or "",
+                    receiver=getattr(event, "recebedor", "") or "",
+                    document=getattr(event, "documento", "") or "",
+                    comment=getattr(event, "comentario", "") or "",
+                    description=getattr(event, "descricao", "") or "",
+                    details=getattr(event, "detalhes", "") or "",
+                )
+            except InvalidEventStatusError:
+                tracking_code.events = []
+                return
 
             tracking_code.add_event(event)
 

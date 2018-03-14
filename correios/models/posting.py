@@ -14,6 +14,7 @@
 
 
 import collections
+import logging
 import math
 import os
 from datetime import date, datetime, timedelta
@@ -37,6 +38,8 @@ from .data import (
 )
 from .user import Contract  # noqa: F401
 from .user import ExtraService, PostingCard, Service
+
+logger = logging.getLogger(__name__)
 
 TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
@@ -75,12 +78,28 @@ class EventStatus:
 
     def _get_event_status_data(self, event_type, status_code):
         if event_type not in TRACKING_EVENT_TYPES:
-            raise exceptions.InvalidEventStatusError("{} is not valid".format(event_type))
+            logger.critical(
+                'Event type not mapped: {} status code:{}'.format(
+                    event_type,
+                    status_code
+                )
+            )
+            raise exceptions.InvalidEventStatusError(
+                "{} is not valid".format(event_type)
+            )
 
         try:
             return TRACKING_STATUS[event_type, status_code]
         except KeyError:
-            raise exceptions.InvalidEventStatusError("{} is not valid".format(event_type))
+            logger.critical(
+                'Event type not mapped: {} status code:{}'.format(
+                    event_type,
+                    status_code
+                )
+            )
+            raise exceptions.InvalidEventStatusError(
+                "{} is not valid".format(event_type)
+            )
 
     @property
     def display_event_type(self):
