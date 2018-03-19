@@ -144,7 +144,7 @@ class TrackingEvent:
         self.details = details
 
         if location_zip_code:
-            location_zip_code = ZipCode.create(location_zip_code)
+            location_zip_code = ZipCode.create(location_zip_code, validate=False)
         self.location_zip_code = location_zip_code
 
         if isinstance(status, tuple):

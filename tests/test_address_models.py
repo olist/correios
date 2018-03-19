@@ -198,6 +198,20 @@ def test_zip_code_creation(zip_code):
     assert ZipCode.create(zip_code) == ZipCode("71010050")
 
 
+@pytest.mark.parametrize("zip_code", [
+    99999000,
+    "99999000",
+    ZipCode("99999000", validate=False),
+])
+def test_zip_code_creation_with_no_validation(zip_code):
+    assert ZipCode.create(zip_code, validate=False) == ZipCode("99999000")
+
+
+def test_zip_code_creation_zipocode_not_mapped():
+    with pytest.raises(InvalidZipCodeError):
+        ZipCode("78999999")
+
+
 def test_basic_phone():
     phone = Phone("+1 (212) 555-1234")
     assert phone == "+12125551234"

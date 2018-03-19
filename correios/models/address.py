@@ -34,8 +34,11 @@ class ZipCode:
     ALL = 0
     CAPITAL = 1
 
-    def __init__(self, code: str) -> None:
-        self._code = self._validate(code)
+    def __init__(self, code: str, validate=True) -> None:
+
+        self._code = code
+        if validate:
+            self._code = self._validate(code)
 
     @property
     def code(self) -> str:
@@ -97,14 +100,14 @@ class ZipCode:
         return self.REGION_INTERIOR
 
     @classmethod
-    def create(cls, code: Union['ZipCode', int, str]) -> 'ZipCode':
+    def create(cls, code: Union['ZipCode', int, str], validate=True) -> 'ZipCode':
         if isinstance(code, ZipCode):
             return code
 
         if isinstance(code, int):
             code = str(code)
 
-        return ZipCode(code)
+        return ZipCode(code, validate)
 
 
 class State:
