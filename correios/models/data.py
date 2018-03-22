@@ -528,7 +528,7 @@ TRACKING_EVENT_TYPES = {
     "BDI": "Baixa de distribuição interna",
     "BDR": "Baixa corretiva",
     "BLQ": "Bloqueio de objetos",
-    # "CAR": "Conferência de lista de registro",  # usage not found in SRO documentation
+    "CAR": "Conferência de lista de registro",  # usage not found in SRO documentation
     "CD": "Conferência de nota de despacho",
     "CMT": "Chegada de um meio de transporte",
     "CO": "Coleta de objetos",
@@ -650,6 +650,12 @@ TRACKING_STATUS = {
         'shipped',
         'Entrega de objeto bloqueada a pedido do remetente',
         'Objeto em análise de destinação',
+        'Acompanhar',
+    ),
+    ('CAR', 1): (
+        'shipped',
+        'Objeto postado após o horário limite da unidade',
+        'Objeto sujeito a encaminhamento no próximo dia útil',
         'Acompanhar',
     ),
     ('CD', 1): (
