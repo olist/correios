@@ -1768,6 +1768,12 @@ TRACKING_STATUS = {
         '',
         'Acompanhar',
     ),
+    ('BDE', 80): (
+        'shipped',
+        'Objeto não localizado no fluxo postal',
+        '',
+        'Acompanhar',
+    ),
     ('BDR', 80): (
         'shipped_delayed',
         'Objeto ainda não chegou à unidade',
