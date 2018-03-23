@@ -1,5 +1,5 @@
 -r requirements.txt
-factory-boy==2.8.1
+factory-boy==2.10.0
 pytest
 pytest-cov
 pytest-factoryboy

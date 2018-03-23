@@ -33,17 +33,15 @@ class PackageDimensionError(PackageError):
         return msg.format(self.name, self.min_value, self.max_value, self.value)
 
 
-class PackageWeightError(PackageError):
-    def __init__(self, service_code: str, value: int, min_value: int, max_value: int) -> None:
-        self.service_code = service_code
-        self.value = value
-        self.min_value = min_value
-        self.max_value = max_value
+class PackageWeightError(PackageDimensionError):
+    def __init__(self, service: str, value: int, min_value: int, max_value: int) -> None:
+        super().__init__("weight", value, min_value, max_value)
+        self.service = service
 
     def __str__(self) -> str:
-        if self.service_code and self.max_value:
+        if self.service and self.max_value:
             msg = 'Invalid weight for the service {} (range: {}-{}, value: {})'
-            return msg.format(self.service_code, self.min_value, self.max_value, self.value)
+            return msg.format(self.service, self.min_value, self.max_value, self.value)
 
         msg = 'Invalid weight (min: {}, value: {})'
         return msg.format(self.min_value, self.value)
