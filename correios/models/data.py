@@ -545,7 +545,7 @@ TRACKING_EVENT_TYPES = {
     "PO": "Postagem (exceção)",
     "RO": "Expedição de Lista de Registro",
     "TRI": "Triagem",
-    # "CMR": "Evento Desconhecido",  # usage not found in SRO documentation
+    "CMR": "Evento Desconhecido",  # usage not found in SRO documentation
 }
 
 TRACKING_STATUS = {
@@ -662,6 +662,12 @@ TRACKING_STATUS = {
         'shipped',
         'Objeto recebido na Unidade dos Correios',
         '',
+        'Acompanhar',
+    ),
+    ('CMR', 1): (
+        'shipped',
+        'Conferido',
+        'Recebido na unidade de destino',
         'Acompanhar',
     ),
     ('CO', 1): (
@@ -1760,6 +1766,12 @@ TRACKING_STATUS = {
         'shipped_delayed',
         'Objeto com atraso na entrega',
         '',
+        'Acompanhar',
+    ),
+    ('BDR', 80): (
+        'shipped_delayed',
+        'Objeto ainda não chegou à unidade',
+        'Por favor, aguarde',
         'Acompanhar',
     ),
 }
