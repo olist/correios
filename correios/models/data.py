@@ -652,6 +652,12 @@ TRACKING_STATUS = {
         'Objeto em análise de destinação',
         'Acompanhar',
     ),
+    ('BLQ', 2): (
+        'shipped',
+        'Tentativa de suspensão da entrega',
+        'Objeto em análise de destinação',
+        'Acompanhar',
+    ),
     ('CAR', 1): (
         'shipped',
         'Objeto postado após o horário limite da unidade',
@@ -1070,6 +1076,12 @@ TRACKING_STATUS = {
         'waiting_retrieval',
         'Remetente não retirou objeto na Unidade dos Correios',
         'Objeto em análise de destinação',
+        'Acionar atendimento dos Correios.',
+    ),
+    ('BDR', 13): (
+        'waiting_retrieval',
+        'Objeto atingido por incêndio em unidade operacional',
+        '',
         'Acionar atendimento dos Correios.',
     ),
     ('LDI', 14): (
