@@ -28,7 +28,7 @@ from .exceptions import (
     ClosePostingListError,
     ConnectTimeoutError,
     NonexistentPostingCardError,
-    TrackingCodesLimitExceededError
+    TrackingCodesLimitExceededError,
 )
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder

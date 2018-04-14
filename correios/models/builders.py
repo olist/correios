@@ -29,7 +29,7 @@ from .posting import (
     Receipt,
     ShippingLabel,
     TrackingCode,
-    TrackingEvent
+    TrackingEvent,
 )
 from .user import Contract, ExtraService, FederalTaxNumber, PostingCard, Service, StateTaxNumber, User
 

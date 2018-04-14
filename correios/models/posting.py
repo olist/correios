@@ -34,7 +34,7 @@ from .data import (
     SERVICE_PAC,
     SERVICE_SEDEX,
     TRACKING_EVENT_TYPES,
-    TRACKING_STATUS
+    TRACKING_STATUS,
 )
 from .user import Contract  # noqa: F401
 from .user import ExtraService, PostingCard, Service

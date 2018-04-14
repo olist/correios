@@ -27,7 +27,7 @@ from correios.exceptions import (
     ConnectTimeoutError,
     NonexistentPostingCardError,
     PostingListSerializerError,
-    TrackingCodesLimitExceededError
+    TrackingCodesLimitExceededError,
 )
 from correios.models.address import ZipCode
 from correios.models.builders import ModelBuilder
@@ -40,7 +40,7 @@ from correios.models.data import (
     FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
     SERVICE_PAC,
     SERVICE_SEDEX,
-    SERVICE_SEDEX10
+    SERVICE_SEDEX10,
 )
 from correios.models.posting import (
     FreightResponse,
@@ -48,7 +48,7 @@ from correios.models.posting import (
     PostalUnit,
     PostInfo,
     PostingList,
-    TrackingCode
+    TrackingCode,
 )
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.serializers import PostingListSerializer

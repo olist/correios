@@ -31,7 +31,7 @@ from correios.models.posting import (
     Receipt,
     ShippingLabel,
     TrackingCode,
-    TrackingEvent
+    TrackingEvent,
 )
 from correios.models.user import Contract, FederalTaxNumber, PostingCard, StateTaxNumber, User
 
