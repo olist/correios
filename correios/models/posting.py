@@ -50,7 +50,7 @@ MIN_LENGTH, MAX_LENGTH = 16, 105  # cm
 MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
-MAX_CYLINDER_SIZE = 28
+MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 0, 28
 
 INSURANCE_VALUE_THRESHOLDS = {
     Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
@@ -308,9 +308,9 @@ class Package:
 
     @width.setter
     def width(self, width):
-        error = Package._validate_dimension("width", width, MAX_WIDTH)
-        if error:
-            raise exceptions.InvalidPackageMeasuresError([error])
+        error_list = Package._validate_dimension("width", width, MAX_WIDTH)
+        if error_list:
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
         self.real_width = width
 
@@ -320,9 +320,9 @@ class Package:
 
     @height.setter
     def height(self, height):
-        error = Package._validate_dimension("height", height, MAX_HEIGHT)
-        if error:
-            raise exceptions.InvalidPackageMeasuresError([error])
+        error_list = Package._validate_dimension("height", height, MAX_HEIGHT)
+        if error_list:
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
         self.real_height = height
 
@@ -332,9 +332,9 @@ class Package:
 
     @length.setter
     def length(self, length):
-        error = Package._validate_dimension("length", length, MAX_LENGTH)
-        if error:
-            raise exceptions.InvalidPackageMeasuresError([error])
+        error_list = Package._validate_dimension("length", length, MAX_LENGTH)
+        if error_list:
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
         self.real_length = length
 
@@ -344,9 +344,9 @@ class Package:
 
     @diameter.setter
     def diameter(self, diameter):
-        error = Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
-        if error:
-            raise exceptions.InvalidPackageMeasuresError([error])
+        error_list = Package._validate_dimension("diameter", diameter, MAX_DIAMETER)
+        if error_list:
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
         self.real_diameter = diameter
 
@@ -356,9 +356,9 @@ class Package:
 
     @weight.setter
     def weight(self, weight):
-        error = Package._validate_weight(weight, self.service)
-        if error:
-            raise exceptions.InvalidPackageMeasuresError([error])
+        error_list = Package._validate_weight(weight, self.service)
+        if error_list:
+            raise exceptions.InvalidPackageMeasuresError(error_list)
 
         self.real_weight = weight
 
@@ -423,14 +423,10 @@ class Package:
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
 
-        error_list = []
-
         if service:
             service = Service.get(service)
 
-        error = Package._validate_weight(weight, service)
-        if error:
-            error_list.append(error)
+        error_list = Package._get_weight_errors(weight, service)
 
         if package_type == Package.TYPE_ENVELOPE:
             error_list += Package._validate_envelope(width, height, length, diameter)
@@ -459,15 +455,13 @@ class Package:
             error_list.append(error)
 
         call_args = [
-            ("width", width, MAX_WIDTH),
-            ("height", height, MAX_HEIGHT),
-            ("length", length, MAX_LENGTH),
-            ("sum of dimensions", width + height + length, MAX_SIZE)
+            ("width", width, MIN_WIDTH, MAX_WIDTH),
+            ("height", height, MIN_HEIGHT, MAX_HEIGHT),
+            ("length", length, MIN_LENGTH, MAX_LENGTH),
+            ("sum of dimensions", width + height + length, MIN_SIZE, MAX_SIZE)
         ]
         for args in call_args:
-            error = cls._validate_dimension(*args)
-            if error:
-                error_list.append(error)
+            error_list += cls._get_dimension_errors(*args)
 
         return error_list
 
@@ -481,43 +475,41 @@ class Package:
             error_list.append(error)
 
         call_args = [
-            ("length", length, MAX_CYLINDER_LENGTH),
-            ("diameter", diameter, MAX_DIAMETER),
-            ("cylinder size", length + 2 * diameter, MAX_CYLINDER_SIZE),
+            ("length", length, MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH),
+            ("diameter", diameter, MIN_DIAMETER, MAX_DIAMETER),
+            ("cylinder size", length + 2 * diameter, MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE),
         ]
         for args in call_args:
-            error = cls._validate_dimension(*args)
-            if error:
-                error_list.append(error)
+            error_list += cls._get_dimension_errors(*args)
 
         return error_list
 
     @classmethod
-    def _validate_dimension(cls, name, value, maximum) -> Union[errors.PackageError, None]:
-        if value <= 0 or value > maximum:
-            return errors.PackageDimensionError(name, value, 0, maximum)
+    def _get_dimension_errors(cls, name, value, minimum, maximum) -> List[errors.PackageError]:
+        if value <= minimum or value > maximum:
+            return [errors.PackageDimensionError(name, value, minimum, maximum)]
 
-        return None
+        return []
 
     @classmethod
-    def _validate_weight(cls,
-                         weight,
-                         service: Optional[Union[Service, str, int]]=None) -> Union[errors.PackageError, None]:
+    def _get_weight_errors(cls,
+                           weight,
+                           service: Optional[Union[Service, str, int]]=None) -> Union[errors.PackageError, None]:
         if weight <= 0:
-            return errors.PackageWeightError('', weight, 0, 0)
+            return [errors.PackageWeightError('', weight, 0, 0)]
 
         if not service:
-            return None
+            return []
 
         service = Service.get(service)
 
         if service.max_weight is None:
-            return None
+            return []
 
         if weight > service.max_weight:
-            return errors.PackageWeightError(service.code, weight, 0, service.max_weight)
+            return [errors.PackageWeightError(service.code, weight, 0, service.max_weight)]
 
-        return None
+        return []
 
 
 class ShippingLabel:
