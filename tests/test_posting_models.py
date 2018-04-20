@@ -313,7 +313,7 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
     (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
     (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
     (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
-    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=28
+    (posting.Package.TYPE_CYLINDER, 0, 0, 30, 90, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=200
 ])
 def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
     with pytest.raises(exc):
@@ -361,7 +361,7 @@ def test_fix_bug_of_weight_using_diameter_information():
 @pytest.mark.parametrize('package_type,diameter,result', [
     (posting.Package.TYPE_ENVELOPE, 16, 0),
     (posting.Package.TYPE_BOX, 18, 0),
-    (posting.Package.TYPE_CYLINDER, 3, 16),
+    (posting.Package.TYPE_CYLINDER, 3, 5),
     (posting.Package.TYPE_CYLINDER, 18, 18),
 ])
 def test_package_diameter(package, package_type, diameter, result):
