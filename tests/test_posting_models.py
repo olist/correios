@@ -599,28 +599,15 @@ def test_basic_freight_conversion():
 
 
 @pytest.mark.parametrize('package_type,width,height,length,diameter,result', [
-    (posting.Package.TYPE_BOX, 11, 10, 16, 0, Decimal('0.00')),
-    (posting.Package.TYPE_BOX, 70, 10, 10, 0, Decimal('0.00')),
-    (posting.Package.TYPE_BOX, 10, 70, 10, 0, Decimal('0.00')),
-    (posting.Package.TYPE_BOX, 10, 10, 70, 0, Decimal('0.00')),
-    (posting.Package.TYPE_BOX, 71, 10, 10, 0, posting.NON_MECHANIZABLE_COST),
-    (posting.Package.TYPE_BOX, 10, 71, 10, 0, posting.NON_MECHANIZABLE_COST),
-    (posting.Package.TYPE_BOX, 10, 10, 71, 0, posting.NON_MECHANIZABLE_COST),
-    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, True),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, True),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, False),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, False),
 ])
-def test_non_mechanizable_cost(package_type, width, height, length, diameter, result):
+def test_package_is_mechanizable(package_type, width, height, length, diameter, result):
     package = posting.Package(package_type, width, height, length, diameter, weight=1)
-    assert package.non_mechanizable_cost == result
-
-
-@pytest.mark.parametrize('width,height,length,result', [
-    (11, 10, 16, Decimal('0.00')),
-    (70, 10, 10, Decimal('0.00')),
-    (10, 70, 10, Decimal('0.00')),
-    (10, 10, 70, Decimal('0.00')),
-    (71, 10, 10, posting.NON_MECHANIZABLE_COST),
-    (10, 71, 10, posting.NON_MECHANIZABLE_COST),
-    (10, 10, 71, posting.NON_MECHANIZABLE_COST),
-])
-def test_non_mechanizable_additional_cost(width, height, length, result):
-    assert posting.Package.non_mechanizable_additional_cost(width, height, length) == result
+    assert package.is_mechanizable == result
