@@ -596,3 +596,18 @@ def test_basic_freight_conversion():
     freight = posting.FreightResponse(SERVICE_SEDEX, 5, 10.00)
     assert freight.delivery_time == timedelta(days=5)
     assert freight.total == Decimal("10.00")
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,result', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, True),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, True),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, False),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, False),
+])
+def test_package_is_mechanizable(package_type, width, height, length, diameter, result):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.is_mechanizable == result

@@ -51,6 +51,8 @@ MIN_DIAMETER, MAX_DIAMETER = 5, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 28, 200  # cm
+MAX_MECHANIZABLE_PACKAGE_SIZE = 70  # cm
+
 
 INSURANCE_VALUE_THRESHOLDS = {
     Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
@@ -373,6 +375,12 @@ class Package:
           3   |    2    | Cylinder
         """
         return self.freight_package_types[self.package_type]
+
+    @property
+    def is_mechanizable(self) -> bool:
+        if self.package_type == Package.TYPE_CYLINDER:
+            return False
+        return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
