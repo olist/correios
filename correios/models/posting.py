@@ -380,7 +380,7 @@ class Package:
     def is_mechanizable(self) -> bool:
         if self.package_type == Package.TYPE_CYLINDER:
             return False
-        return MAX_MECHANIZABLE_PACKAGE_SIZE >= max(self.width, self.height, self.length)
+        return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
