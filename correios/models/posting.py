@@ -395,11 +395,12 @@ class Package:
     @classmethod
     def calculate_insurance(cls,
                             per_unit_value: Union[int, float, Decimal],
-                            quantity: int = 1,
-                            service: Union[Service, int] = None) -> Decimal:
+                            service: Union[Service, int, str],
+                            quantity: int = 1) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(Service.get(service).code, per_unit_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
 
         if per_unit_value > insurance_value_threshold:
             value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
@@ -517,14 +518,14 @@ class ShippingLabel:
                  extra_services: Optional[List[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
-                 invoice_number: Optional[str] = "",
-                 invoice_series: Optional[str] = "",
-                 invoice_type: Optional[str] = "",
-                 value: Optional[Decimal] = Decimal("0.00"),
-                 billing: Optional[Decimal] = Decimal("0.00"),
-                 text: Optional[str] = "",
-                 latitude: Optional[float] = 0.0,
-                 longitude: Optional[float] = 0.0) -> None:
+                 invoice_number: str = "",
+                 invoice_series: str = "",
+                 invoice_type: str = "",
+                 value: Decimal = Decimal("0.00"),
+                 billing: Decimal = Decimal("0.00"),
+                 text: str = "",
+                 latitude: float = 0.0,
+                 longitude: float = 0.0) -> None:
 
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
@@ -676,9 +677,9 @@ class PostingList:
 
         # filled by the first shipping label
         self.initial_shipping_label = None  # type: Optional[ShippingLabel]
-        self.posting_card = None  # type: PostingCard
-        self.contract = None  # type: Contract
-        self.sender = None  # type: Address
+        self.posting_card = None  # type: Optional[PostingCard]
+        self.contract = None  # type: Optional[Contract]
+        self.sender = None  # type: Optional[Address]
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
         if not self.initial_shipping_label:

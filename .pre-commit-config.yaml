@@ -22,7 +22,6 @@ repos:
 
 - repo: local
   hooks:
-
   - id: check-datetime-now
     name: check_datetime_now
     description: Prefer datetime.utcnow()
