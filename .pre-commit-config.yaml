@@ -1,6 +1,6 @@
 repos:
 -   repo: git@github.com:pre-commit/pre-commit-hooks
-    sha: v1.1.1
+    sha: v1.2.3
     hooks:
     - id: debug-statements
     - id: trailing-whitespace
@@ -19,3 +19,19 @@ repos:
     - id: forbid-new-submodules
     - id: flake8
       args: ['--exclude=docs/*,*migrations*', '--ignore=E501']
+
+- repo: local
+  hooks:
+  - id: check-datetime-now
+    name: check_datetime_now
+    description: Prefer datetime.utcnow()
+    language: pygrep
+    entry: 'datetime\.now\(\)'
+    types: [python]
+
+- repo: git@github.com:olist/hulks.git
+  rev: 0.0.2
+  hooks:
+  - id: check-filename
+  - id: check-logger
+  - id: check-invalid-domains
