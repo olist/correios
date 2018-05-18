@@ -42,8 +42,11 @@ TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
 TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
+
 IATA_COEFICIENT = 6.0
+
 VOLUMETRIC_WEIGHT_THRESHOLD = 10000  # g
+
 MIN_WIDTH, MAX_WIDTH = 11, 105  # cm
 MIN_HEIGHT, MAX_HEIGHT = 2, 105  # cm
 MIN_LENGTH, MAX_LENGTH = 16, 105  # cm
@@ -51,7 +54,9 @@ MIN_DIAMETER, MAX_DIAMETER = 5, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 28, 200  # cm
+
 MAX_MECHANIZABLE_PACKAGE_SIZE = 70  # cm
+NON_MECHANIZABLE_COST = Decimal('20.0')
 
 
 INSURANCE_VALUE_THRESHOLDS = {
@@ -381,6 +386,10 @@ class Package:
         if self.package_type == Package.TYPE_CYLINDER:
             return False
         return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
+
+    @property
+    def non_mechanizable_cost(self):
+        return Decimal('0.0') if self.is_mechanizable else NON_MECHANIZABLE_COST
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:

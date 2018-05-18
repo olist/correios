@@ -611,3 +611,18 @@ def test_basic_freight_conversion():
 def test_package_is_mechanizable(package_type, width, height, length, diameter, result):
     package = posting.Package(package_type, width, height, length, diameter, weight=1)
     assert package.is_mechanizable == result
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,cost', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, 0),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, 0),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, posting.NON_MECHANIZABLE_COST),
+])
+def test_package_non_mechanizable_cost(package_type, width, height, length, diameter, cost):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.non_mechanizable_cost == cost
