@@ -844,6 +844,12 @@ TRACKING_STATUS = {
         'Endereço:',
         'Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.',
     ),
+    ('LDI', 4): (
+        'waiting_retrieval',
+        'Objeto aguardando retirada no endereço indicado',
+        'Para retirá-lo, é preciso informar o código do objeto.',
+        'Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.',
+    ),
     ('BDE', 4): (
         'delivery_rejected',
         'A entrega não pode ser efetuada - Cliente recusou-se a receber',

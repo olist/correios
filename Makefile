@@ -30,7 +30,7 @@ isort:  ## Check imports
 fix-imports:  ## Fix imports
 	isort -rc .
 
-lint: check-types flake isort ## Run code lint
+lint: flake isort ## Run code lint
 
 test: clean lint  ## Run tests
 	pytest -x
