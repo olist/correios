@@ -462,7 +462,7 @@ def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
 
 
 def test_calculate_insurance_when_not_applicable():
-    value = posting.Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
+    value = posting.Package.calculate_insurance(per_unit_value=18.50, quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal(0)
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
@@ -471,21 +471,21 @@ def test_calculate_insurance_when_not_applicable():
 
 def test_calculate_insurance_pac():
     value = posting.Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
-    assert value == Decimal(1)
+    assert value == Decimal('1.22')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal(2)
+    assert value == Decimal('2.44')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal('6.30')
+    assert value == Decimal('6.74')
 
 
 def test_calculate_insurance_sedex():
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), service=SERVICE_SEDEX)
-    assert value == Decimal('2.98')
+    assert value == Decimal('3.37')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
-    assert value == Decimal('5.95')
+    assert value == Decimal('6.74')
 
 
 def test_event_status():
