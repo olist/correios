@@ -435,7 +435,7 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
     (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
     (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
     (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
-    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=28
+    (posting.Package.TYPE_CYLINDER, 0, 0, 30, 90, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=200
 ])
 def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
     with pytest.raises(exc):
@@ -483,7 +483,7 @@ def test_fix_bug_of_weight_using_diameter_information():
 @pytest.mark.parametrize('package_type,diameter,result', [
     (posting.Package.TYPE_ENVELOPE, 16, 0),
     (posting.Package.TYPE_BOX, 18, 0),
-    (posting.Package.TYPE_CYLINDER, 3, 16),
+    (posting.Package.TYPE_CYLINDER, 3, 5),
     (posting.Package.TYPE_CYLINDER, 18, 18),
 ])
 def test_package_diameter(package, package_type, diameter, result):
@@ -584,7 +584,7 @@ def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
 
 
 def test_calculate_insurance_when_not_applicable():
-    value = posting.Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
+    value = posting.Package.calculate_insurance(per_unit_value=18.50, quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal(0)
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
@@ -593,21 +593,21 @@ def test_calculate_insurance_when_not_applicable():
 
 def test_calculate_insurance_pac():
     value = posting.Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
-    assert value == Decimal(1)
+    assert value == Decimal('1.22')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal(2)
+    assert value == Decimal('2.44')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal('6.30')
+    assert value == Decimal('6.74')
 
 
 def test_calculate_insurance_sedex():
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), service=SERVICE_SEDEX)
-    assert value == Decimal('2.98')
+    assert value == Decimal('3.37')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
-    assert value == Decimal('5.95')
+    assert value == Decimal('6.74')
 
 
 def test_event_status():
@@ -718,3 +718,33 @@ def test_basic_freight_conversion():
     freight = posting.FreightResponse(SERVICE_SEDEX, 5, 10.00)
     assert freight.delivery_time == timedelta(days=5)
     assert freight.total == Decimal("10.00")
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,result', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, True),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, True),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, False),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, False),
+])
+def test_package_is_mechanizable(package_type, width, height, length, diameter, result):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.is_mechanizable == result
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,cost', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, 0),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, 0),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, posting.NON_MECHANIZABLE_COST),
+])
+def test_package_non_mechanizable_cost(package_type, width, height, length, diameter, cost):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.non_mechanizable_cost == cost

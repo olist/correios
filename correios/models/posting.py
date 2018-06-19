@@ -43,15 +43,22 @@ TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
 TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
+
 IATA_COEFICIENT = 6.0
-VOLUMETRIC_WEIGHT_THRESHOLD = 10000  # g
+
+VOLUMETRIC_WEIGHT_THRESHOLD = 5000  # g
+
 MIN_WIDTH, MAX_WIDTH = 11, 105  # cm
 MIN_HEIGHT, MAX_HEIGHT = 2, 105  # cm
 MIN_LENGTH, MAX_LENGTH = 16, 105  # cm
-MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
+MIN_DIAMETER, MAX_DIAMETER = 5, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
-MAX_CYLINDER_SIZE = 28
+MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 28, 200  # cm
+
+MAX_MECHANIZABLE_PACKAGE_SIZE = 70  # cm
+NON_MECHANIZABLE_COST = Decimal('20.0')
+
 
 INSURANCE_VALUE_THRESHOLDS = {
     Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
@@ -375,6 +382,16 @@ class Package:
         """
         return self.freight_package_types[self.package_type]
 
+    @property
+    def is_mechanizable(self) -> bool:
+        if self.package_type == Package.TYPE_CYLINDER:
+            return False
+        return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
+
+    @property
+    def non_mechanizable_cost(self):
+        return Decimal('0.0') if self.is_mechanizable else NON_MECHANIZABLE_COST
+
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
         return int(math.ceil((width * height * length) / IATA_COEFICIENT))
@@ -388,11 +405,12 @@ class Package:
     @classmethod
     def calculate_insurance(cls,
                             per_unit_value: Union[int, float, Decimal],
-                            quantity: int = 1,
-                            service: Union[Service, int] = None) -> Decimal:
+                            service: Union[Service, int, str],
+                            quantity: int = 1) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(Service.get(service).code, per_unit_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
 
         if per_unit_value > insurance_value_threshold:
             value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
@@ -565,7 +583,6 @@ class ShippingLabel:
                  latitude: Optional[float] = 0.0,
                  longitude: Optional[float] = 0.0,
                  receipt: Receipt = None) -> None:
-
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
@@ -721,9 +738,9 @@ class PostingList:
 
         # filled by the first shipping label
         self.initial_shipping_label = None  # type: Optional[ShippingLabel]
-        self.posting_card = None  # type: PostingCard
-        self.contract = None  # type: Contract
-        self.sender = None  # type: Address
+        self.posting_card = None  # type: Optional[PostingCard]
+        self.contract = None  # type: Optional[Contract]
+        self.sender = None  # type: Optional[Address]
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
         if not self.initial_shipping_label:
