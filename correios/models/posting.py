@@ -579,7 +579,7 @@ class ShippingLabel:
                  text: Optional[str] = "",
                  latitude: Optional[float] = 0.0,
                  longitude: Optional[float] = 0.0,
-                 receipt: Receipt = None) -> None:
+                 receipt: Optional[Receipt] = None) -> None:
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
@@ -634,7 +634,7 @@ class ShippingLabel:
 
     @property
     def value(self) -> Decimal:
-        return max(self.service.min_declared_value, self.real_value)
+        return max(self.service.min_declared_value, self.real_value)  # type: ignore
 
     @property
     def symbol(self):
