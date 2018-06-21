@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import collections
 import math
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -499,7 +497,6 @@ class Package:
 
 
 class Receipt:
-
     def __init__(
         self,
         number: Union[int, str],
@@ -770,11 +767,13 @@ class PostingList:
         return self.number is not None
 
 
-PostalUnit = collections.namedtuple('PostalUnit', 'code description')
+class PostalUnit:
+    def __init__(self, code: str, description: str) -> None:
+        self.code = code
+        self.description = description
 
 
 class PostInfo:
-
     def __init__(
         self,
         postal_unit: PostalUnit,
@@ -782,14 +781,10 @@ class PostInfo:
         value: Union[Decimal, float, str]
     ) -> None:
         self.postal_unit = postal_unit
-
         self.posting_list = posting_list
-
         self.real_value = value
-
         if not isinstance(value, Decimal):
             value = to_decimal(value)
-
         self.value = value
 
     def __repr__(self):
