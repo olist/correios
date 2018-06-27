@@ -288,13 +288,9 @@ class Package:
                  length: Union[float, int] = 0,  # cm
                  diameter: Union[float, int] = 0,  # cm
                  weight: Union[float, int] = 0,  # g
-                 sequence=(1, 1),
-                 service: Optional[Union[Service, str, int]] = None) -> None:
+                 sequence=(1, 1)) -> None:
 
-        if service:
-            service = Service.get(service)
-
-        Package.validate(package_type, width, height, length, diameter, service, weight)
+        Package.validate(package_type, width, height, length, diameter, weight)
 
         if len(sequence) != 2 or sequence[0] > sequence[1]:
             raise exceptions.InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
@@ -307,7 +303,6 @@ class Package:
         self.real_diameter = diameter  # cm
         self.real_weight = weight  # g
         self.sequence = sequence
-        self.service = service
 
     @property
     def width(self) -> int:
@@ -353,7 +348,7 @@ class Package:
 
     @weight.setter
     def weight(self, weight):
-        Package._validate_weight(weight, self.service)
+        Package._validate_weight(weight)
         self.real_weight = weight
 
     @property
@@ -402,28 +397,12 @@ class Package:
         return int(math.ceil(max(volumetric_weight, weight)))
 
     @classmethod
-    def calculate_insurance(cls,
-                            per_unit_value: Union[int, float, Decimal],
-                            service: Union[Service, int, str],
-                            quantity: int = 1) -> Decimal:
-        value = Decimal("0.00")
-        per_unit_value = Decimal(per_unit_value)
-        service_code = Service.get(service).code
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
-
-        if per_unit_value > insurance_value_threshold:
-            value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
-
-        return to_decimal(value * quantity)
-
-    @classmethod
     def validate(cls,
                  package_type: int,
                  width: Union[float, int] = 0,
                  height: Union[float, int] = 0,
                  length: Union[float, int] = 0,
                  diameter: Union[float, int] = 0,
-                 service: Optional[Union[Service, str, int]] = None,
                  weight: Union[float, int] = 0) -> None:
 
         width = int(math.ceil(width))
@@ -432,10 +411,7 @@ class Package:
         diameter = int(math.ceil(diameter))
         weight = int(math.ceil(weight))
 
-        if service:
-            service = Service.get(service)
-
-        Package._validate_weight(weight, service)
+        Package._validate_weight(weight)
 
         if package_type == Package.TYPE_ENVELOPE:
             if any([width, height, length, diameter]):
@@ -476,25 +452,9 @@ class Package:
             raise exceptions.InvalidMaxPackageDimensionsError(msg)
 
     @classmethod
-    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]] = None) -> None:
+    def _validate_weight(cls, weight) -> None:
         if weight <= 0:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
-
-        if not service:
-            return
-
-        service = Service.get(service)
-
-        if service.max_weight is None:
-            return
-
-        if weight > service.max_weight:
-            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
-                weight,
-                str(service),
-                service.max_weight,
-            )
-            raise exceptions.InvalidMaxPackageWeightError(message)
 
 
 class ShippingLabel:
@@ -779,3 +739,63 @@ class FreightResponse:
 
     def is_restricted_address(self):
         return self.error_code in self.restricted_address_error_code
+
+
+class PostalObject:
+    def __init__(self,
+                 package: Package,
+                 shippingLabel: ShippingLabel,
+                 trackingCode: TrackingCode,
+                 service: Optional[Union[Service, str, int]] = None) -> None:
+        if service:
+            service = Service.get(service)
+
+        PostalObject.validate(package, service)
+
+        self.package = package
+        self.shippingLabel = shippingLabel
+        self.trackingCode = trackingCode
+        self.service = service
+
+    @classmethod
+    def calculate_insurance(cls,
+                            per_unit_value: Union[int, float, Decimal],
+                            service: Union[Service, int, str],
+                            quantity: int = 1) -> Decimal:
+        value = Decimal("0.00")
+        per_unit_value = Decimal(per_unit_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
+
+        if per_unit_value > insurance_value_threshold:
+            value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
+
+        return to_decimal(value * quantity)
+
+    @classmethod
+    def validate(cls,
+                 package: Package,
+                 service: Optional[Union[Service, str, int]] = None) -> None:
+
+        if service:
+            service = Service.get(service)
+
+        Package._validate_package_weight_by_service(package.weight, service)
+
+    @classmethod
+    def _validate_package_weight_by_service(cls, weight, service: Optional[Union[Service, str, int]] = None) -> None:
+        if not service:
+            return
+
+        service = Service.get(service)
+
+        if service.max_weight is None:
+            return
+
+        if weight > service.max_weight:
+            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
+                weight,
+                str(service),
+                service.max_weight,
+            )
+            raise exceptions.InvalidMaxPackageWeightError(message)
