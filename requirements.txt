@@ -7,5 +7,5 @@ hubarcode
 
 # api
 requests
-zeep==2.5.0
+zeep==2.5.0  # the new version is incompatible with the current code
 lxml
