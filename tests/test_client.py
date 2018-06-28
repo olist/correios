@@ -66,7 +66,7 @@ def test_basic_client():
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-@mock.patch('zeep.client.OperationProxy.__call__')
+@mock.patch('zeep.proxy.OperationProxy.__call__')
 def test_client_timeout_error(mock_soap_client, client):
     mock_soap_client.side_effect = ConnectTimeout()
     with pytest.raises(ConnectTimeoutError):
@@ -163,7 +163,7 @@ def test_close_posting_list(client, posting_card, posting_list, shipping_label):
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-@mock.patch('zeep.client.OperationProxy.__call__')
+@mock.patch('zeep.proxy.OperationProxy.__call__')
 def test_client_close_posting_list_error(
     mock_soap_client,
     client,
