@@ -33,11 +33,12 @@ from .exceptions import (
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
-from .models.posting import FreightResponse, Package, PostingList, TrackingCode
+from .models.posting import FreightResponse, Package, PostInfo, PostingList, TrackingCode
 from .models.user import ExtraService, PostingCard, Service, User
 from .serializers import PostingListSerializer
 from .soap import SoapClient
 from .utils import get_resource_path
+from .xml_utils import fromstring
 
 KG = 1000  # g
 # environ servico url filename
@@ -181,6 +182,20 @@ class Correios:
                                  tracking_codes)
 
         return result
+
+    def get_post_info(self, number: int) -> PostInfo:
+        result = self._auth_call('solicitaXmlPlp', number)
+
+        data = fromstring(result.encode('iso-8859-1'))
+        contract_number = data.remetente.numero_contrato.text  # type: ignore
+        posting_card_number = data.plp.cartao_postagem.text  # type: ignore
+
+        user = self.get_user(
+            contract_number=contract_number,
+            posting_card_number=posting_card_number
+        )
+
+        return self.model_builder.build_post_info(data=data, user=user)
 
     def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()

@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import math
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
 
@@ -497,6 +496,51 @@ class Package:
             raise exceptions.InvalidMaxPackageWeightError(message)
 
 
+class Receipt:
+    def __init__(
+        self,
+        number: Union[int, str],
+        post_date: Union[str, date],
+        value: Union[str, Decimal]
+    ) -> None:
+        self.number = int(number)
+
+        self.real_post_date = post_date
+
+        if not isinstance(post_date, date):
+            post_date = datetime.strptime(post_date, '%Y%m%d').date()
+
+        self.post_date = post_date
+
+        self.real_value = value
+
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+
+        self.value = value
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Receipt)
+            and self.number == other.number
+            and self.post_date == other.post_date
+            and self.value == other.value
+        )
+
+    def __repr__(self):
+        return (
+            '<Receipt('
+            'number={number}, '
+            'post_date={post_date}, '
+            'value={value}'
+            ')>'.format(
+                number=self.number,
+                post_date=self.post_date,
+                value=self.value
+            )
+        )
+
+
 class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"
@@ -527,15 +571,15 @@ class ShippingLabel:
                  extra_services: Optional[List[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
-                 invoice_number: str = "",
-                 invoice_series: str = "",
-                 invoice_type: str = "",
-                 value: Decimal = Decimal("0.00"),
-                 billing: Decimal = Decimal("0.00"),
-                 text: str = "",
-                 latitude: float = 0.0,
-                 longitude: float = 0.0) -> None:
-
+                 invoice_number: Optional[str] = "",
+                 invoice_series: Optional[str] = "",
+                 invoice_type: Optional[str] = "",
+                 value: Optional[Decimal] = Decimal("0.00"),
+                 billing: Optional[Decimal] = Decimal("0.00"),
+                 text: Optional[str] = "",
+                 latitude: Optional[float] = 0.0,
+                 longitude: Optional[float] = 0.0,
+                 receipt: Optional[Receipt] = None) -> None:
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
@@ -569,6 +613,7 @@ class ShippingLabel:
 
         self.posting_list = None  # type: Optional[PostingList]
         self.posting_list_group = 0
+        self.receipt = receipt
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
@@ -584,8 +629,12 @@ class ShippingLabel:
         self.extra_services.append(extra_service)
 
     @property
+    def posted(self) -> bool:
+        return self.receipt is not None
+
+    @property
     def value(self) -> Decimal:
-        return max(self.service.min_declared_value, self.real_value)
+        return max(self.service.min_declared_value, self.real_value)  # type: ignore
 
     @property
     def symbol(self):
@@ -716,6 +765,36 @@ class PostingList:
     @property
     def closed(self):
         return self.number is not None
+
+
+class PostalUnit:
+    def __init__(self, code: str, description: str) -> None:
+        self.code = code
+        self.description = description
+
+
+class PostInfo:
+    def __init__(
+        self,
+        postal_unit: PostalUnit,
+        posting_list: PostingList,
+        value: Union[Decimal, float, str]
+    ) -> None:
+        self.postal_unit = postal_unit
+        self.posting_list = posting_list
+        self.real_value = value
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+        self.value = value
+
+    def __repr__(self):
+        return (
+            '<PostInfo('
+            'postal_unit={self.postal_unit}, '
+            'posting_list={self.posting_list}, '
+            'value={self.value}'
+            ')>'.format(self=self)
+        )
 
 
 class FreightResponse:
