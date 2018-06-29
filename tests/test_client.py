@@ -14,10 +14,21 @@
 
 
 from decimal import Decimal
+from unittest import mock
 
 import pytest
+from requests.exceptions import ConnectTimeout
+from zeep.exceptions import Fault
 
-from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import (
+    AuthenticationError,
+    CanceledPostingCardError,
+    ClosePostingListError,
+    ConnectTimeoutError,
+    NonexistentPostingCardError,
+    PostingListSerializerError,
+    TrackingCodesLimitExceededError,
+)
 from correios.models.address import ZipCode
 from correios.models.builders import ModelBuilder
 from correios.models.data import (
@@ -34,14 +45,15 @@ from correios.models.data import (
 from correios.models.posting import (
     FreightResponse,
     NotFoundTrackingEvent,
-    Package,
+    PostalUnit,
+    PostInfo,
     PostingList,
-    ShippingLabel,
     TrackingCode,
 )
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.serializers import PostingListSerializer
-from correios.utils import get_resource_path
+from correios.utils import get_resource_path, to_decimal
+from correios.xml_utils import fromstring
 
 from .vcr import vcr
 
@@ -59,6 +71,35 @@ def test_basic_client():
     assert not client.sigep_verify
     assert client.username == "sigep"
     assert client.password == "XXXXXX"
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@mock.patch('zeep.proxy.OperationProxy.__call__')
+def test_client_timeout_error(mock_soap_client, client):
+    mock_soap_client.side_effect = ConnectTimeout()
+    with pytest.raises(ConnectTimeoutError):
+        client.find_zipcode(ZipCode("70002-900"))
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_authentication_error(client):
+    with pytest.raises(AuthenticationError):
+        client.get_user(contract_number="9911222777", posting_card_number="0056789123")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_canceled_posting_card_error(client):
+    with pytest.raises(CanceledPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="0057018901")
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@vcr.use_cassette
+def test_client_nonexistent_posting_card_error(client):
+    with pytest.raises(NonexistentPostingCardError):
+        client.get_user(contract_number="9911222777", posting_card_number="4444444444")
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -119,14 +160,159 @@ def test_generate_verification_digit(client):
     assert result[0] == 6
 
 
+@vcr.use_cassette
+def test_get_post_info(client):
+    result = client._auth_call('solicitaXmlPlp', 875057)
+
+    data = fromstring(result.encode('iso-8859-1'))
+
+    user = client.get_user(
+        contract_number=data.remetente.numero_contrato.text,
+        posting_card_number=data.plp.cartao_postagem.text
+    )
+
+    post_info = client.get_post_info(number=875057)
+    assert isinstance(post_info, PostInfo)
+    assert str(post_info.value) == data.plp.valor_global.text
+
+    postal_unit = post_info.postal_unit
+    assert isinstance(postal_unit, PostalUnit)
+    assert postal_unit.code == data.plp.mcu_unidade_postagem
+    assert postal_unit.description == data.plp.nome_unidade_postagem
+
+    posting_list = post_info.posting_list
+    assert isinstance(posting_list, PostingList)
+    assert posting_list.number == data.plp.id_plp
+
+    shipping_labels = posting_list.shipping_labels
+    assert len(shipping_labels) == len(data.objeto_postal)
+
+    for obj in data.objeto_postal:
+        tracking_code = TrackingCode.create(obj.numero_etiqueta.text)
+        assert tracking_code.short in shipping_labels
+        label = shipping_labels[tracking_code.short]
+
+        extra_info = obj.nacional
+        billing = getattr(extra_info, 'valor_a_cobrar', None) or '0.00'
+        assert label.billing == to_decimal(billing)
+        assert label.invoice_number == extra_info.numero_nota_fiscal
+        assert label.invoice_series == extra_info.serie_nota_fiscal
+
+        extra_services = obj.servico_adicional
+
+        declared_value = getattr(extra_services, 'valor_declarado', None)
+
+        invoice_value = getattr(extra_info, 'valor_nota_fiscal', None)
+
+        assert label.real_value == to_decimal(
+            declared_value or invoice_value or '0.00'
+        )
+
+        assert label.text == extra_info.descricao_objeto
+        posting_card_number = user.contracts[0].posting_cards[0].number
+        assert label.posting_card.number == posting_card_number
+
+        sender = data.remetente
+
+        assert label.sender.email == sender.email_remetente.text
+        assert label.sender.name == sender.nome_remetente.text
+        assert label.sender.street == sender.logradouro_remetente.text
+        assert label.sender.number == sender.numero_remetente.text
+        assert label.sender.complement == sender.complemento_remetente.text
+        assert label.sender.neighborhood == sender.bairro_remetente.text
+        assert label.sender.zip_code == sender.cep_remetente.text
+        assert label.sender.city == sender.cidade_remetente.text
+        assert label.sender.state == sender.uf_remetente.text
+        assert (
+            label.sender.phone.number == (sender.telefone_remetente.text or '')
+        )
+
+        receiver = obj.destinatario
+
+        assert label.receiver.email == (receiver.email_destinatario.text or '')
+
+        assert label.receiver.name == receiver.nome_destinatario.text
+        assert label.receiver.street == receiver.logradouro_destinatario.text
+        assert label.receiver.number == receiver.numero_end_destinatario.text
+        assert (
+            label.receiver.complement ==
+            (receiver.complemento_destinatario.text or '')
+        )
+        assert (
+            label.receiver.neighborhood == extra_info.bairro_destinatario.text
+        )
+        assert label.receiver.zip_code == extra_info.cep_destinatario.text
+        assert label.receiver.city == extra_info.cidade_destinatario.text
+        assert label.receiver.state == extra_info.uf_destinatario.text
+        assert (
+            label.receiver.phone.number ==
+            (receiver.celular_destinatario.text or '')
+        )
+
+        assert len(label.extra_services) == len(extra_services)
+
+        for service in extra_services.codigo_servico_adicional:
+            assert service in label.extra_services
+
+        package = label.package
+
+        assert package.service == obj.codigo_servico_postagem
+
+        dimensions = obj.dimensao_objeto
+
+        assert package.package_type == dimensions.tipo_objeto
+
+        assert package.real_diameter == float(
+            dimensions.dimensao_diametro.text.replace(',', '.')
+        )
+
+        assert package.real_height == float(
+            dimensions.dimensao_altura.text.replace(',', '.')
+        )
+
+        assert package.real_length == float(
+            dimensions.dimensao_comprimento.text.replace(',', '.')
+        )
+
+        assert package.real_weight == float(obj.peso.text.replace(',', '.'))
+        assert package.real_width == float(
+            dimensions.dimensao_largura.text.replace(',', '.')
+        )
+
+        receipt = label.receipt
+
+        assert receipt.number == obj.numero_comprovante_postagem
+        assert receipt.real_post_date == obj.data_postagem_sara.text
+        assert receipt.real_value == obj.valor_cobrado.text
+
+
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_close_posting_list(client, posting_card, posting_list: PostingList, shipping_label: ShippingLabel):
+def test_close_posting_list(client, posting_card, posting_list, shipping_label):
     shipping_label.posting_card = posting_card
     posting_list.add_shipping_label(shipping_label)
     posting_list = client.close_posting_list(posting_list, posting_card)
     assert posting_list.number is not None
     assert posting_list.closed
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@mock.patch('zeep.proxy.OperationProxy.__call__')
+def test_client_close_posting_list_error(
+    mock_soap_client,
+    client,
+    posting_card,
+    posting_list,
+    shipping_label,
+):
+    mock_soap_client.side_effect = Fault(
+        'A PLP não será fechada , o(s) objeto(s) [PP40233163BR] já estão '
+        'vinculados em outra PLP!'
+    )
+    shipping_label.posting_card = posting_card
+    posting_list.add_shipping_label(shipping_label)
+    with pytest.raises(ClosePostingListError):
+        client.close_posting_list(posting_list, posting_card)
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -233,7 +419,7 @@ def test_declared_value(posting_list, shipping_label):
     xml = serializer.get_xml(document)
     assert shipping_label.service == Service.get(SERVICE_PAC)
     assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" in xml
-    assert b"<valor_declarado>18,00</valor_declarado>" in xml
+    assert b"<valor_declarado>18,50</valor_declarado>" in xml
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -244,7 +430,7 @@ def test_fail_empty_posting_list_serialization(posting_list):
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-def test_fail_closed_posting_list_serialization(posting_list: PostingList, shipping_label):
+def test_fail_closed_posting_list_serialization(posting_list, shipping_label):
     posting_list.add_shipping_label(shipping_label)
     posting_list.close_with_id(number=12345)
 
@@ -317,7 +503,7 @@ def test_calculate_freights_with_extra_services(client, posting_card, package):
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
-def test_calculate_freight_with_error(client, posting_card, package: Package):
+def test_calculate_freight_with_error(client, posting_card, package):
     package.real_weight = 80000  # invalid weight (80kg)
     freights = client.calculate_freights(posting_card, [SERVICE_SEDEX], "99999000", "99999999", package)
     assert len(freights) == 1

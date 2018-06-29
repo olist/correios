@@ -14,7 +14,7 @@
 
 
 import os
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -104,6 +104,107 @@ def test_fail_tracking_code_invalid_range_generator():
         posting.TrackingCode.create_range("DL74668654 BR", "DL74668650 BR")  # end < start
 
 
+def test_receipt_basic():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt.number == 1234
+    assert receipt.real_post_date == '20160812'
+    assert receipt.real_value == '18.00'
+    assert isinstance(receipt.post_date, date)
+    assert receipt.post_date.day == 12
+    assert receipt.post_date.month == 8
+    assert receipt.post_date.year == 2016
+    fake_date = date(year=2016, month=8, day=12)
+    assert isinstance(
+        posting.Receipt(
+            number=1234,
+            post_date=fake_date,
+            value='18.00'
+        ).post_date, date
+    )
+    assert isinstance(
+        posting.Receipt(
+            number=1234,
+            post_date=fake_date,
+            value='18.00'
+        ).value, Decimal
+    )
+
+
+def test_receipt_representation(receipt):
+    repr_ = (
+        '<Receipt('
+        'number={number}, '
+        'post_date={post_date}, '
+        'value={value}'
+        ')>'.format(
+            number=receipt.number,
+            post_date=receipt.post_date,
+            value=receipt.value
+        )
+    )
+    assert repr(receipt) == repr_
+
+
+def test_receipt_should_equals():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt == posting.Receipt(
+        number=1234,
+        post_date='20160812',
+        value='18.00'
+    )
+
+
+def test_receipt_should_different():
+    receipt = posting.Receipt(number=1234, post_date='20160812', value='18.00')
+    assert receipt != posting.Receipt(
+        number=1235,
+        post_date='20160812',
+        value='18.00'
+    )
+    assert receipt != posting.Receipt(
+        number=1234,
+        post_date='20160813',
+        value='18.00'
+    )
+    assert receipt != posting.Receipt(
+        number=1235,
+        post_date='20160813',
+        value='19.00'
+    )
+
+
+def test_postal_unit_basic(postal_unit):
+    assert hasattr(postal_unit, 'code')
+    assert hasattr(postal_unit, 'description')
+
+
+def test_post_info_basic(postal_unit, posting_list):
+    post_info = posting.PostInfo(
+        postal_unit=postal_unit,
+        posting_list=posting_list,
+        value='18.00'
+    )
+    assert post_info.postal_unit == postal_unit
+    assert post_info.posting_list == posting_list
+    assert post_info.real_value == '18.00'
+    assert isinstance(post_info.value, Decimal)
+
+
+def test_post_info_representation(post_info):
+    repr_ = (
+        '<PostInfo('
+        'postal_unit={postal_unit}, '
+        'posting_list={posting_list}, '
+        'value={value}'
+        ')>'.format(
+            postal_unit=post_info.postal_unit,
+            posting_list=post_info.posting_list,
+            value=post_info.value
+        )
+    )
+    assert repr(post_info) == repr_
+
+
 def test_basic_shipping_label(posting_card, sender_address, receiver_address, tracking_code, package):
     shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
@@ -150,6 +251,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
     assert shipping_label.get_contract_number() == "9911222777"
     assert shipping_label.get_package_sequence() == "{}/{}".format(*shipping_label.package.sequence)
     assert shipping_label.get_weight() == "{}g".format(shipping_label.package.weight)
+    assert shipping_label.package.posting_list_volumetric_weight == Decimal("0.00")
 
     assert shipping_label.text == "Hello World!"
 
@@ -210,7 +312,7 @@ def test_shipping_label_with_min_declared_value_pac(posting_card, sender_address
         value=Decimal("0"),
         extra_services=[EXTRA_SERVICE_VD],
     )
-    assert shipping_label.value == Decimal("18.00")
+    assert shipping_label.value == Decimal("18.50")
 
 
 def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_address, receiver_address, package):
@@ -225,7 +327,28 @@ def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_addre
         value=Decimal("0"),
         extra_services=[EXTRA_SERVICE_VD],
     )
-    assert shipping_label.value == Decimal("18.00")
+    assert shipping_label.value == Decimal("18.50")
+
+
+def test_posted_shipping_label(
+    posting_card,
+    sender_address,
+    receiver_address,
+    package,
+    receipt
+):
+    service = Service.get(SERVICE_SEDEX)
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=service,
+        package=package,
+        tracking_code="PD12345678 BR",
+        receipt=receipt
+    )
+    assert shipping_label.receipt is not None
+    assert shipping_label.posted
 
 
 def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_address, receiver_address, package):
@@ -312,7 +435,7 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
     (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
     (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
     (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
-    (posting.Package.TYPE_CYLINDER, 0, 0, 18, 16, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=28
+    (posting.Package.TYPE_CYLINDER, 0, 0, 30, 90, exceptions.InvalidMaxPackageDimensionsError),  # max cylinder size=200
 ])
 def test_fail_package_dimensions_validation(package_type, width, height, length, diameter, exc):
     with pytest.raises(exc):
@@ -355,6 +478,18 @@ def test_fix_bug_of_weight_using_diameter_information():
     )
     assert package.real_weight == 10000
     assert package.real_diameter == 2
+
+
+@pytest.mark.parametrize('package_type,diameter,result', [
+    (posting.Package.TYPE_ENVELOPE, 16, 0),
+    (posting.Package.TYPE_BOX, 18, 0),
+    (posting.Package.TYPE_CYLINDER, 3, 5),
+    (posting.Package.TYPE_CYLINDER, 18, 18),
+])
+def test_package_diameter(package, package_type, diameter, result):
+    package.package_type = package_type
+    package.real_diameter = diameter
+    assert package.diameter == result
 
 
 @pytest.mark.parametrize("sequence", [
@@ -449,7 +584,7 @@ def test_fail_add_same_shipping_label_twice_in_posting_list(shipping_label):
 
 
 def test_calculate_insurance_when_not_applicable():
-    value = posting.Package.calculate_insurance(per_unit_value=50, quantity=2, service=SERVICE_SEDEX)
+    value = posting.Package.calculate_insurance(per_unit_value=18.50, quantity=2, service=SERVICE_SEDEX)
     assert value == Decimal(0)
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(10), service=SERVICE_PAC)
@@ -458,21 +593,21 @@ def test_calculate_insurance_when_not_applicable():
 
 def test_calculate_insurance_pac():
     value = posting.Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
-    assert value == Decimal(1)
+    assert value == Decimal('1.22')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal(2)
+    assert value == Decimal('2.44')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal('6.30')
+    assert value == Decimal('6.74')
 
 
 def test_calculate_insurance_sedex():
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), service=SERVICE_SEDEX)
-    assert value == Decimal('2.98')
+    assert value == Decimal('3.37')
 
     value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
-    assert value == Decimal('5.95')
+    assert value == Decimal('6.74')
 
 
 def test_event_status():
@@ -583,3 +718,33 @@ def test_basic_freight_conversion():
     freight = posting.FreightResponse(SERVICE_SEDEX, 5, 10.00)
     assert freight.delivery_time == timedelta(days=5)
     assert freight.total == Decimal("10.00")
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,result', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, True),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, True),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, True),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, False),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, False),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, False),
+])
+def test_package_is_mechanizable(package_type, width, height, length, diameter, result):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.is_mechanizable == result
+
+
+@pytest.mark.parametrize('package_type,width,height,length,diameter,cost', [
+    (posting.Package.TYPE_BOX, 11, 10, 16, 0, 0),
+    (posting.Package.TYPE_BOX, 70, 10, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 70, 10, 0, 0),
+    (posting.Package.TYPE_BOX, 10, 10, 70, 0, 0),
+    (posting.Package.TYPE_BOX, 71, 10, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 71, 10, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_BOX, 10, 10, 71, 0, posting.NON_MECHANIZABLE_COST),
+    (posting.Package.TYPE_CYLINDER, 0, 0, 14, 2, posting.NON_MECHANIZABLE_COST),
+])
+def test_package_non_mechanizable_cost(package_type, width, height, length, diameter, cost):
+    package = posting.Package(package_type, width, height, length, diameter, weight=1)
+    assert package.non_mechanizable_cost == cost

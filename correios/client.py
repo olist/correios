@@ -13,19 +13,32 @@
 # limitations under the License.
 
 
+import re
 from decimal import Decimal
 from pathlib import Path
 from typing import List, Optional, Sequence, Union
 
-from .exceptions import TrackingCodesLimitExceededError
+from requests.exceptions import Timeout
+from zeep.exceptions import Fault
+
+from .exceptions import (
+    AuthenticationError,
+    CanceledPostingCardError,
+    ClientError,
+    ClosePostingListError,
+    ConnectTimeoutError,
+    NonexistentPostingCardError,
+    TrackingCodesLimitExceededError,
+)
 from .models.address import ZipAddress, ZipCode
 from .models.builders import ModelBuilder
 from .models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
-from .models.posting import FreightResponse, Package, PostingList, TrackingCode
+from .models.posting import FreightResponse, Package, PostInfo, PostingList, TrackingCode
 from .models.user import ExtraService, PostingCard, Service, User
 from .serializers import PostingListSerializer
 from .soap import SoapClient
 from .utils import get_resource_path
+from .xml_utils import fromstring
 
 KG = 1000  # g
 # environ servico url filename
@@ -46,6 +59,12 @@ CORREIOS_WEBSERVICES = {
         'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL',
         'CalcPrecoPrazo.asmx',
     ),
+}
+
+ERRORS = {
+    re.compile(r"autenticacao"): AuthenticationError,
+    re.compile(r"^O Cartão de Postagem.*Cancelado.$"): CanceledPostingCardError,
+    re.compile(r"^Cartao de Postagem inexistente"): NonexistentPostingCardError,
 }
 
 
@@ -96,6 +115,15 @@ class Correios:
 
         self.model_builder = ModelBuilder()
 
+    def _handle_exception(self, exception):
+        message = str(exception)
+
+        for regex, exception in ERRORS.items():
+            if regex.search(message):
+                raise exception(message)
+
+        raise ClientError(message)
+
     def _auth_call(self, method_name, *args, **kwargs):
         kwargs.update({
             "usuario": self.username,
@@ -105,7 +133,14 @@ class Correios:
 
     def _call(self, method_name, *args, **kwargs):
         method = getattr(self.sigep, method_name)
-        return method(*args, **kwargs)  # TODO: handle errors
+        try:
+            return method(*args, **kwargs)
+
+        except Timeout:
+            raise ConnectTimeoutError("Timeout connection error ({} seconds)".format(self.timeout))
+
+        except Fault as exc:
+            self._handle_exception(exc)
 
     def get_user(self, contract_number: Union[int, str], posting_card_number: Union[int, str]) -> User:
         contract_number = str(contract_number)
@@ -148,6 +183,20 @@ class Correios:
 
         return result
 
+    def get_post_info(self, number: int) -> PostInfo:
+        result = self._auth_call('solicitaXmlPlp', number)
+
+        data = fromstring(result.encode('iso-8859-1'))
+        contract_number = data.remetente.numero_contrato.text  # type: ignore
+        posting_card_number = data.plp.cartao_postagem.text  # type: ignore
+
+        user = self.get_user(
+            contract_number=contract_number,
+            posting_card_number=posting_card_number
+        )
+
+        return self.model_builder.build_post_info(data=data, user=user)
+
     def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()
         xml = posting_list_serializer.serialize(posting_list)
@@ -157,10 +206,18 @@ class Correios:
         xml = self._generate_xml_string(posting_list)
         tracking_codes = posting_list.get_tracking_codes()
 
-        id_ = self._auth_call("fechaPlpVariosServicos", xml,
-                              posting_list.custom_id, posting_card.number, tracking_codes)
-        posting_list.close_with_id(id_)
+        try:
+            id_ = self._auth_call("fechaPlpVariosServicos", xml,
+                                  posting_list.custom_id, posting_card.number,
+                                  tracking_codes)
+        except ClientError as exc:
+            if str(exc).startswith("A PLP não será fechada"):
+                message = "Unable to close PLP. Tracking codes {} are already assigned to another PLP"
+                message = message.format(tracking_codes)
+                raise ClosePostingListError(message)
+            raise
 
+        posting_list.close_with_id(id_)
         return posting_list
 
     def get_tracking_code_events(self, tracking_list):

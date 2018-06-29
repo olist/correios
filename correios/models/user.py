@@ -130,8 +130,8 @@ class Service:
                  display_name: Optional[str] = "",
                  symbol: Optional[str] = None,
                  max_weight: Optional[int] = None,
-                 min_declared_value: Optional[Decimal] = Decimal("0.00"),
-                 max_declared_value: Optional[Decimal] = Decimal("0.00"),
+                 min_declared_value: Decimal = Decimal("0.00"),
+                 max_declared_value: Decimal = Decimal("0.00"),
                  default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None) -> None:
         self.id = id
         self.code = Service.sanitize_code(code)

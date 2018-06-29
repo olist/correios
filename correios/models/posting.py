@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import math
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
 
@@ -42,15 +41,22 @@ TRACKING_CODE_SIZE = 13
 TRACKING_CODE_NUMBER_SIZE = 8
 TRACKING_CODE_PREFIX_SIZE = 2
 TRACKING_CODE_SUFFIX_SIZE = 2
+
 IATA_COEFICIENT = 6.0
-VOLUMETRIC_WEIGHT_THRESHOLD = 10000  # g
+
+VOLUMETRIC_WEIGHT_THRESHOLD = 5000  # g
+
 MIN_WIDTH, MAX_WIDTH = 11, 105  # cm
 MIN_HEIGHT, MAX_HEIGHT = 2, 105  # cm
 MIN_LENGTH, MAX_LENGTH = 16, 105  # cm
-MIN_DIAMETER, MAX_DIAMETER = 16, 91  # cm
+MIN_DIAMETER, MAX_DIAMETER = 5, 91  # cm
 MIN_CYLINDER_LENGTH, MAX_CYLINDER_LENGTH = 18, 105  # cm
 MIN_SIZE, MAX_SIZE = 29, 200  # cm
-MAX_CYLINDER_SIZE = 28
+MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 28, 200  # cm
+
+MAX_MECHANIZABLE_PACKAGE_SIZE = 70  # cm
+NON_MECHANIZABLE_COST = Decimal('20.0')
+
 
 INSURANCE_VALUE_THRESHOLDS = {
     Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
@@ -331,6 +337,8 @@ class Package:
 
     @property
     def diameter(self) -> int:
+        if self.package_type != Package.TYPE_CYLINDER:
+            return 0
         return max(MIN_DIAMETER, int(math.ceil(self.real_diameter)))
 
     @diameter.setter
@@ -352,6 +360,10 @@ class Package:
         return Package.calculate_volumetric_weight(self.width, self.height, self.length)
 
     @property
+    def posting_list_volumetric_weight(self) -> Decimal:
+        return Decimal("0.00")
+
+    @property
     def posting_weight(self) -> int:
         return Package.calculate_posting_weight(self.weight, self.volumetric_weight)
 
@@ -368,6 +380,16 @@ class Package:
         """
         return self.freight_package_types[self.package_type]
 
+    @property
+    def is_mechanizable(self) -> bool:
+        if self.package_type == Package.TYPE_CYLINDER:
+            return False
+        return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
+
+    @property
+    def non_mechanizable_cost(self):
+        return Decimal('0.0') if self.is_mechanizable else NON_MECHANIZABLE_COST
+
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
         return int(math.ceil((width * height * length) / IATA_COEFICIENT))
@@ -381,11 +403,12 @@ class Package:
     @classmethod
     def calculate_insurance(cls,
                             per_unit_value: Union[int, float, Decimal],
-                            quantity: int = 1,
-                            service: Union[Service, int] = None) -> Decimal:
+                            service: Union[Service, int, str],
+                            quantity: int = 1) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(Service.get(service).code, per_unit_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
 
         if per_unit_value > insurance_value_threshold:
             value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
@@ -473,6 +496,51 @@ class Package:
             raise exceptions.InvalidMaxPackageWeightError(message)
 
 
+class Receipt:
+    def __init__(
+        self,
+        number: Union[int, str],
+        post_date: Union[str, date],
+        value: Union[str, Decimal]
+    ) -> None:
+        self.number = int(number)
+
+        self.real_post_date = post_date
+
+        if not isinstance(post_date, date):
+            post_date = datetime.strptime(post_date, '%Y%m%d').date()
+
+        self.post_date = post_date
+
+        self.real_value = value
+
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+
+        self.value = value
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Receipt)
+            and self.number == other.number
+            and self.post_date == other.post_date
+            and self.value == other.value
+        )
+
+    def __repr__(self):
+        return (
+            '<Receipt('
+            'number={number}, '
+            'post_date={post_date}, '
+            'value={value}'
+            ')>'.format(
+                number=self.number,
+                post_date=self.post_date,
+                value=self.value
+            )
+        )
+
+
 class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"
@@ -510,8 +578,8 @@ class ShippingLabel:
                  billing: Optional[Decimal] = Decimal("0.00"),
                  text: Optional[str] = "",
                  latitude: Optional[float] = 0.0,
-                 longitude: Optional[float] = 0.0) -> None:
-
+                 longitude: Optional[float] = 0.0,
+                 receipt: Optional[Receipt] = None) -> None:
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
@@ -545,6 +613,7 @@ class ShippingLabel:
 
         self.posting_list = None  # type: Optional[PostingList]
         self.posting_list_group = 0
+        self.receipt = receipt
 
     def __repr__(self):
         return "<ShippingLabel tracking={!r}>".format(str(self.tracking_code))
@@ -560,8 +629,12 @@ class ShippingLabel:
         self.extra_services.append(extra_service)
 
     @property
+    def posted(self) -> bool:
+        return self.receipt is not None
+
+    @property
     def value(self) -> Decimal:
-        return max(self.service.min_declared_value, self.real_value)
+        return max(self.service.min_declared_value, self.real_value)  # type: ignore
 
     @property
     def symbol(self):
@@ -662,9 +735,9 @@ class PostingList:
 
         # filled by the first shipping label
         self.initial_shipping_label = None  # type: Optional[ShippingLabel]
-        self.posting_card = None  # type: PostingCard
-        self.contract = None  # type: Contract
-        self.sender = None  # type: Address
+        self.posting_card = None  # type: Optional[PostingCard]
+        self.contract = None  # type: Optional[Contract]
+        self.sender = None  # type: Optional[Address]
 
     def add_shipping_label(self, shipping_label: ShippingLabel):
         if not self.initial_shipping_label:
@@ -692,6 +765,36 @@ class PostingList:
     @property
     def closed(self):
         return self.number is not None
+
+
+class PostalUnit:
+    def __init__(self, code: str, description: str) -> None:
+        self.code = code
+        self.description = description
+
+
+class PostInfo:
+    def __init__(
+        self,
+        postal_unit: PostalUnit,
+        posting_list: PostingList,
+        value: Union[Decimal, float, str]
+    ) -> None:
+        self.postal_unit = postal_unit
+        self.posting_list = posting_list
+        self.real_value = value
+        if not isinstance(value, Decimal):
+            value = to_decimal(value)
+        self.value = value
+
+    def __repr__(self):
+        return (
+            '<PostInfo('
+            'postal_unit={self.postal_unit}, '
+            'posting_list={self.posting_list}, '
+            'value={self.value}'
+            ')>'.format(self=self)
+        )
 
 
 class FreightResponse:
