@@ -1,5 +1,4 @@
 -r requirements.txt
-factory-boy
 pytest
 pytest-cov
 pytest-factoryboy==2.0.1
