@@ -131,12 +131,13 @@ class ModelBuilder:
         )
         return zip_address
 
-    def build_post_info(self, data, user: User) -> PostInfo:
+    def build_post_info(self, data, user: User, validate_package: bool = True) -> PostInfo:
         post_info = PostInfo(
             postal_unit=self.build_postal_unit(data.plp),
             posting_list=self._load_posting_list(
                 data=data,
-                user=user
+                user=user,
+                validate_package=validate_package
             ),
             value=data.plp.valor_global
         )
@@ -157,7 +158,7 @@ class ModelBuilder:
         )
         return postal_unit
 
-    def _load_posting_list(self, data, user: User) -> PostingList:
+    def _load_posting_list(self, data, user: User, validate_package: bool = True) -> PostingList:
         contract_number = to_integer(data.remetente.numero_contrato)
 
         contract = next(
@@ -179,6 +180,7 @@ class ModelBuilder:
                 data=postal_object,
                 posting_card=posting_card,
                 sender_address=self._load_sender_address(data.remetente),
+                validate_package=validate_package
             ))
 
         posting_list.close_with_id(data.plp.id_plp)
@@ -190,6 +192,7 @@ class ModelBuilder:
         data,
         posting_card: PostingCard,
         sender_address: SenderAddress,
+        validate_package: bool = True
     ) -> ShippingLabel:
 
         declared_value = getattr(
@@ -217,7 +220,7 @@ class ModelBuilder:
             posting_card=posting_card,
             sender=sender_address,
             receiver=self._load_receiver_address(data),
-            package=self._load_package(data),
+            package=self._load_package(data, validate_package=validate_package),
             service=Service.get(data.codigo_servico_postagem.text),
             tracking_code=data.numero_etiqueta.text,
             receipt=self.build_receipt(data)
@@ -266,7 +269,7 @@ class ModelBuilder:
 
         return receiver_address
 
-    def _load_package(self, data) -> Package:
+    def _load_package(self, data, validate_package) -> Package:
         dimensions = data.dimensao_objeto
 
         type_ = dimensions.tipo_objeto.text.strip()
@@ -288,7 +291,8 @@ class ModelBuilder:
             weight=float(data.peso.text.replace(',', '.')),
             width=float(dimensions.dimensao_largura.text.replace(',', '.')),
             package_type=dimensions.tipo_objeto,
-            service=data.codigo_servico_postagem.text
+            service=data.codigo_servico_postagem.text,
+            validate_package=validate_package
         )
 
         return package
@@ -609,7 +613,7 @@ class Correios:
             posting_card_number=posting_card_number
         )
 
-        return self.model_builder.build_post_info(data=data, user=user)
+        return self.model_builder.build_post_info(data=data, user=user, validate_package=False)
 
     def _generate_xml_string(self, posting_list: PostingList) -> str:
         posting_list_serializer = PostingListSerializer()

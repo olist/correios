@@ -301,12 +301,14 @@ class Package:
                  diameter: Union[float, int] = 0,  # cm
                  weight: Union[float, int] = 0,  # g
                  sequence=(1, 1),
-                 service: Optional[Union[Service, str, int]] = None) -> None:
+                 service: Optional[Union[Service, str, int]] = None,
+                 validate_package: bool = True) -> None:
 
         if service:
             service = Service.get(service)
 
-        Package.validate(package_type, width, height, length, diameter, service, weight)
+        if validate_package:
+            Package.validate(package_type, width, height, length, diameter, service, weight)
 
         if len(sequence) != 2 or sequence[0] > sequence[1]:
             raise exceptions.InvalidPackageSequenceError("Package must be a tuple with 2 elements: (number, total)")
