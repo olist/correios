@@ -1420,6 +1420,12 @@ TRACKING_STATUS = {
         'Objeto em análise de destinação',
         'Acompanhar.',
     ),
+    ('BDR', 39): (
+        'customs_control',
+        'A entrega não pode ser efetuada',
+        'Objeto em análise de destinação',
+        'Acompanhar.',
+    ),
     ('BDE', 40): (
         'customs_control',
         'A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores',
