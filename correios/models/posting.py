@@ -745,18 +745,31 @@ class PostalObject:
         if service:
             service = Service.get(service)
 
-        PostalObject.validate(package, service)
-
         self.package = package
         self.shipping_label = shipping_label
         self.service = service
 
-    @property
+        self._validate()
+
+    def _validate(self) -> None:
+        if self.service:
+            self._validate_package_weight()
+
+    def _validate_package_weight(self) -> None:
+        if self.service.max_weight is None:
+            return
+
+        if self.package.weight > self.service.max_weight:
+            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
+                self.package.weight,
+                str(self.service),
+                self.service.max_weight,
+            )
+            raise exceptions.InvalidMaxPackageWeightError(message)
+
     def additional_costs(self,
-                         per_unit_value: Union[int, float, Decimal],
-                         service: Union[Service, int, str],
-                         quantity: int = 1) -> Decimal:
-        insurance_cost = PostalObject.calculate_insurance(per_unit_value, service, quantity)
+                         per_unit_value: Union[int, float, Decimal]) -> Decimal:
+        insurance_cost = PostalObject.calculate_insurance(per_unit_value, self.service)
         return self.non_mechanizable_cost + insurance_cost
 
     @property
@@ -766,8 +779,7 @@ class PostalObject:
     @classmethod
     def calculate_insurance(cls,
                             per_unit_value: Union[int, float, Decimal],
-                            service: Union[Service, int, str],
-                            quantity: int = 1) -> Decimal:
+                            service: Union[Service, int, str]) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
         service_code = Service.get(service).code
@@ -776,32 +788,4 @@ class PostalObject:
         if per_unit_value > insurance_value_threshold:
             value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
 
-        return to_decimal(value * quantity)
-
-    @classmethod
-    def validate(cls,
-                 package: Package,
-                 service: Optional[Union[Service, str, int]] = None) -> None:
-
-        if service:
-            service = Service.get(service)
-
-        Package._validate_package_weight_by_service(package.weight, service)
-
-    @classmethod
-    def _validate_package_weight_by_service(cls, weight, service: Optional[Union[Service, str, int]] = None) -> None:
-        if not service:
-            return
-
-        service = Service.get(service)
-
-        if service.max_weight is None:
-            return
-
-        if weight > service.max_weight:
-            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
-                weight,
-                str(service),
-                service.max_weight,
-            )
-            raise exceptions.InvalidMaxPackageWeightError(message)
+        return value
