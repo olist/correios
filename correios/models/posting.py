@@ -757,6 +757,15 @@ class PostalObject:
         self.trackingCode = trackingCode
         self.service = service
 
+    @property
+    def additional_costs(self,
+                         per_unit_value: Union[int, float, Decimal],
+                         service: Union[Service, int, str],
+                         quantity: int = 1) -> Decimal:
+        non_mechanizable_cost = self.package.non_mechanizable_cost
+        insurance_cost = PostalObject.calculate_insurance(per_unit_value, service, quantity)
+        return non_mechanizable_cost + insurance_cost
+
     @classmethod
     def calculate_insurance(cls,
                             per_unit_value: Union[int, float, Decimal],
