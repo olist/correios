@@ -744,8 +744,7 @@ class FreightResponse:
 class PostalObject:
     def __init__(self,
                  package: Package,
-                 shippingLabel: ShippingLabel,
-                 trackingCode: TrackingCode,
+                 shipping_label: ShippingLabel,
                  service: Optional[Union[Service, str, int]] = None) -> None:
         if service:
             service = Service.get(service)
@@ -753,8 +752,7 @@ class PostalObject:
         PostalObject.validate(package, service)
 
         self.package = package
-        self.shippingLabel = shippingLabel
-        self.trackingCode = trackingCode
+        self.shipping_label = shipping_label
         self.service = service
 
     @property
