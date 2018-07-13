@@ -382,10 +382,6 @@ class Package:
             return False
         return max(self.width, self.height, self.length) <= MAX_MECHANIZABLE_PACKAGE_SIZE
 
-    @property
-    def non_mechanizable_cost(self):
-        return Decimal('0.0') if self.is_mechanizable else NON_MECHANIZABLE_COST
-
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
         return int(math.ceil((width * height * length) / IATA_COEFICIENT))
@@ -760,9 +756,12 @@ class PostalObject:
                          per_unit_value: Union[int, float, Decimal],
                          service: Union[Service, int, str],
                          quantity: int = 1) -> Decimal:
-        non_mechanizable_cost = self.package.non_mechanizable_cost
         insurance_cost = PostalObject.calculate_insurance(per_unit_value, service, quantity)
-        return non_mechanizable_cost + insurance_cost
+        return self.non_mechanizable_cost + insurance_cost
+
+    @property
+    def non_mechanizable_cost(self):
+        return Decimal('0.0') if self.package.is_mechanizable else NON_MECHANIZABLE_COST
 
     @classmethod
     def calculate_insurance(cls,
