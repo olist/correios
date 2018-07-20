@@ -301,7 +301,7 @@ class ModelBuilder:
         for tracked_object in response.objeto:
             tracking_code = tracking_codes[tracked_object.numero]
 
-            if 'erro' in tracked_object:
+            if 'erro' in tracked_object and tracked_object.erro:
                 self._load_invalid_event(tracking_code, tracked_object)
             else:
                 tracking_code.name = tracked_object.nome
