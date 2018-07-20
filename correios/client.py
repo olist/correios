@@ -235,7 +235,7 @@ class Correios:
             tracking_codes[tracking_code.code] = tracking_code
 
         response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101",
-                                                 tuple(tracking_codes.keys()))
+                                                 list(tracking_codes.keys()))
         return self.model_builder.load_tracking_events(tracking_codes, response)
 
     def calculate_freights(
