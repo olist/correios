@@ -14,16 +14,32 @@
 
 
 import os
+import re
 
 from vcr import VCR
 
-FIXTURES_DIR = os.path.join(os.path.dirname(__file__), "fixtures")
+USER_REGEX = re.compile('<usuario>\w+</usuario>')
+PASS_REGEX = re.compile('<senha>.*</senha>')
 
+
+def replace_auth(request):
+    if not request.body:
+        return request
+
+    body = request.body.decode()
+    body = USER_REGEX.sub(r'<usuario>teste</usuario>', body)
+    body = PASS_REGEX.sub(r'<senha>****</senha>', body)
+    request.body = body.encode()
+    return request
+
+
+FIXTURES_DIR = os.path.join(os.path.dirname(__file__), "fixtures")
 
 vcr = VCR(
     record_mode='once',
     serializer='yaml',
     cassette_library_dir=os.path.join(FIXTURES_DIR, 'cassettes'),
     path_transformer=VCR.ensure_suffix('.yaml'),
-    match_on=['method']
+    match_on=['method'],
+    before_record_request=replace_auth,
 )
