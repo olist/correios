@@ -1,42 +1,60 @@
 interactions:
 - request:
-    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:ns1="http://resource.webservice.correios.com.br/"
-      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:buscaEventosLista><usuario>sigep</usuario><senha>XXXXXX</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>FJ064849483BR</objetos></ns1:buscaEventosLista></ns0:Body></SOAP-ENV:Envelope>
+    body: '<?xml version=''1.0'' encoding=''utf-8''?>
+
+      <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Body><ns0:buscaEventosLista
+      xmlns:ns0="http://resource.webservice.correios.com.br/"><usuario>teste</usuario><senha>****</senha><tipo>L</tipo><resultado>T</resultado><lingua>101</lingua><objetos>BE058714266BR</objetos></ns0:buscaEventosLista></soap-env:Body></soap-env:Envelope>'
     headers:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      Content-Length: ['527']
-      Content-Type: [text/xml;charset=UTF-8]
-      SOAPAction: ['']
-      User-Agent: [python-requests/2.10.0]
+      Content-Length: ['418']
+      Content-Type: [text/xml; charset=utf-8]
+      SOAPAction: ['"buscaEventosLista"']
+      User-Agent: [Zeep/3.0.0 (www.python-zeep.org)]
     method: POST
     uri: http://webservice.correios.com.br/service/rastro
   response:
-    body: {string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?><soapenv:Envelope xmlns:soapenv=\"\
+    body: {string: "<?xml version=\"1.0\" encoding=\"utf-8\"?><soapenv:Envelope xmlns:soapenv=\"\
         http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header><X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace\
-        \ xmlns:X-OPNET-Transaction-Trace=\"http://opnet.com\">pid=15937,requestid=a377a550329bb1a2ede883c659b49b68ad1fe5de37e8dbbd</X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace></soapenv:Header><soapenv:Body><ns2:buscaEventosListaResponse\
-        \ xmlns:ns2=\"http://resource.webservice.correios.com.br/\"><return><versao>2.0</versao><qtd>1</qtd><objeto><numero>FJ064849483BR</numero><sigla>FJ</sigla><nome>REMESSA\
-        \ ECON\xD4MICA C/ AR DIGITAL</nome><categoria>REMESSA ECON\xD4MICA TAL\xC3\
-        O/CART\xC3O</categoria><evento><tipo>BDE</tipo><status>01</status><data>14/07/2016</data><hora>16:24</hora><descricao>Objeto\
-        \ entregue ao destinat\xE1rio</descricao><recebedor>                     \
-        \                                                   </recebedor><documento>\
-        \                         </documento><comentario>                       \
-        \  </comentario><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>14/07/2016</data><hora>09:46</hora><descricao>Objeto\
-        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD CAPAO DA IMBUIA</local><codigo>82801970</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento><evento><tipo>PO</tipo><status>01</status><data>13/07/2016</data><hora>17:58</hora><descricao>Objeto\
-        \ postado</descricao><local>CTC CURITIBA/GCCAP</local><codigo>80235971</codigo><cidade>CURITIBA</cidade><uf>PR</uf></evento></objeto></return></ns2:buscaEventosListaResponse></soapenv:Body></soapenv:Envelope>"}
+        \ xmlns:X-OPNET-Transaction-Trace=\"http://opnet.com\">pid=176308,requestid=5e7589c677ed683211a041a00a99936284fd2d9448ada79d</X-OPNET-Transaction-Trace:X-OPNET-Transaction-Trace></soapenv:Header><soapenv:Body><ns2:buscaEventosListaResponse\
+        \ xmlns:ns2=\"http://resource.webservice.correios.com.br/\"><return><versao>2.0</versao><qtd>1</qtd><objeto><numero>BE058714266BR</numero><sigla>BE</sigla><nome>REMESSA\
+        \ ECON\xD4MICA S/ AR DIGITAL</nome><categoria>REMESSA ECON\xD4MICA TAL\xC3\
+        O/CART\xC3O</categoria><evento><tipo>BDE</tipo><status>23</status><data>23/07/2018</data><hora>09:48</hora><descricao>Objeto\
+        \ devolvido ao remetente</descricao><local>CDD PARQUE SAO LUIZ</local><codigo>07170970</codigo><cidade>GUARULHOS</cidade><uf>SP</uf></evento><evento><tipo>OEC</tipo><status>09</status><data>23/07/2018</data><hora>07:49</hora><descricao>Objeto\
+        \ saiu para entrega ao remetente</descricao><local>CDD PARQUE SAO LUIZ</local><codigo>07170970</codigo><cidade>GUARULHOS</cidade><uf>SP</uf></evento><evento><tipo>RO</tipo><status>01</status><data>17/07/2018</data><hora>13:34</hora><descricao>Objeto\
+        \ encaminhado </descricao><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf><destino><local>CTCE VILA MARIA</local><codigo>02170970</codigo><cidade>SAO\
+        \ PAULO</cidade><bairro>VILA MARIA</bairro><uf>SP</uf></destino></evento><evento><tipo>BDE</tipo><status>21</status><data>16/07/2018</data><hora>17:02</hora><descricao>A\
+        \ entrega n\xE3o pode ser efetuada - Carteiro n\xE3o atendido</descricao><detalhe>Objeto\
+        \ ser\xE1 devolvido ao remetente</detalhe><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>BDE</tipo><status>20</status><data>16/07/2018</data><hora>16:53</hora><descricao>A\
+        \ entrega n\xE3o pode ser efetuada - Carteiro n\xE3o atendido</descricao><detalhe>Ser\xE1\
+        \ realizada nova tentativa de entrega</detalhe><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>16/07/2018</data><hora>11:43</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>BDE</tipo><status>20</status><data>13/07/2018</data><hora>15:21</hora><descricao>A\
+        \ entrega n\xE3o pode ser efetuada - Carteiro n\xE3o atendido</descricao><detalhe>Ser\xE1\
+        \ realizada nova tentativa de entrega</detalhe><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>13/07/2018</data><hora>11:16</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>BDE</tipo><status>20</status><data>12/07/2018</data><hora>17:42</hora><descricao>A\
+        \ entrega n\xE3o pode ser efetuada - Carteiro n\xE3o atendido</descricao><detalhe>Ser\xE1\
+        \ realizada nova tentativa de entrega</detalhe><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>OEC</tipo><status>01</status><data>12/07/2018</data><hora>11:24</hora><descricao>Objeto\
+        \ saiu para entrega ao destinat\xE1rio</descricao><local>CDD IMIRIM</local><codigo>02464970</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento><evento><tipo>PO</tipo><status>09</status><data>10/07/2018</data><hora>19:40</hora><descricao>Objeto\
+        \ postado ap\xF3s o hor\xE1rio limite da unidade</descricao><detalhe>Objeto\
+        \ sujeito a encaminhamento no pr\xF3ximo dia \xFAtil</detalhe><local>CTC JAGUARE/GCCAP4</local><codigo>05311976</codigo><cidade>SAO\
+        \ PAULO</cidade><uf>SP</uf></evento></objeto></return></ns2:buscaEventosListaResponse></soapenv:Body></soapenv:Envelope>"}
     headers:
-      Cache-Control: ['no-cache="set-cookie, set-cookie2"']
       Connection: [Keep-Alive]
       Content-Language: [pt-BR]
-      Content-Length: ['1665']
-      Content-Type: [text/xml; charset=UTF-8]
-      Date: ['Thu, 04 Aug 2016 20:56:11 GMT']
-      Expires: ['Thu, 01 Dec 1994 16:00:00 GMT']
-      Keep-Alive: ['timeout=10, max=82']
-      Set-Cookie: [_op_aixPageId=a2_c6bc3973-e396-4af2-84de-8c8e9622d9d7; Path=/]
-      X-OPNET-Transaction-Trace: [a2_c6bc3973-e396-4af2-84de-8c8e9622d9d7]
+      Content-Length: ['3941']
+      Content-Type: [text/xml; charset=utf-8]
+      Date: ['Thu, 26 Jul 2018 12:48:30 GMT']
+      Keep-Alive: ['timeout=2, max=99997']
+      X-OPNET-Transaction-Trace: [a2_36e9a49d-1fbc-492d-beed-559b02d0b959]
       X-Powered-By: [Servlet/3.0]
     status: {code: 200, message: OK}
 version: 1
