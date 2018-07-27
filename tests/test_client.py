@@ -318,44 +318,45 @@ def test_client_close_posting_list_error(
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_codes_events(client):
-    result = client.get_tracking_code_events(["FJ064849483BR", "DU477828695BR"])
+    codes = ["BE058714266BR", "JT365572014BR"]
+    result = client.get_tracking_code_events(codes)
 
     assert len(result) == 2
     assert result[0] != result[1]
 
     assert isinstance(result[0], TrackingCode)
-    assert result[0].code in ("FJ064849483BR", "DU477828695BR")
+    assert result[0].code in codes
 
     assert isinstance(result[1], TrackingCode)
-    assert result[1].code in ("FJ064849483BR", "DU477828695BR")
+    assert result[1].code in codes
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_events(client):
-    result = client.get_tracking_code_events("FJ064849483BR")
+    result = client.get_tracking_code_events("BE058714266BR")
 
     assert isinstance(result[0], TrackingCode)
-    assert result[0].code == "FJ064849483BR"
+    assert result[0].code == "BE058714266BR"
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_events_without_city_field(client):
-    result = client.get_tracking_code_events("PJ651329640BR")
+    result = client.get_tracking_code_events("FJ064849483BR")
 
     assert isinstance(result[0], TrackingCode)
-    assert result[0].code == "PJ651329640BR"
+    assert result[0].code == "FJ064849483BR"
     assert result[0].events[0].city == ""
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @vcr.use_cassette
 def test_get_tracking_code_with_no_verification_digitevents(client):
-    result = client.get_tracking_code_events("FJ06484948BR")
+    result = client.get_tracking_code_events("BE05871426BR")
 
     assert isinstance(result[0], TrackingCode)
-    assert result[0].code == "FJ064849483BR"
+    assert result[0].code == "BE058714266BR"
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
