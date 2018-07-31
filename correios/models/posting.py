@@ -741,19 +741,15 @@ class PostalObject:
     def __init__(self,
                  package: Package,
                  shipping_label: ShippingLabel,
-                 service: Optional[Union[Service, str, int]] = None) -> None:
-        if service:
-            service = Service.get(service)
-
+                 service: Union[Service, str, int]) -> None:
         self.package = package
         self.shipping_label = shipping_label
-        self.service = service
+        self.service = Service.get(service)
 
         self._validate()
 
     def _validate(self) -> None:
-        if self.service:
-            self._validate_package_weight()
+        self._validate_package_weight()
 
     def _validate_package_weight(self) -> None:
         if self.service.max_weight is None:
