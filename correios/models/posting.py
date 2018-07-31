@@ -739,11 +739,13 @@ class FreightResponse:
 
 class PostalObject:
     def __init__(self,
-                 package: Package,
                  shipping_label: ShippingLabel,
+                 package: Package,
+                 declared_value: Union[int, float, Decimal],
                  service: Union[Service, str, int]) -> None:
-        self.package = package
         self.shipping_label = shipping_label
+        self.package = package
+        self.declared_value = declared_value
         self.service = Service.get(service)
 
         self._validate()
@@ -763,25 +765,41 @@ class PostalObject:
             )
             raise exceptions.InvalidMaxPackageWeightError(message)
 
-    def additional_costs(self,
-                         per_unit_value: Union[int, float, Decimal]) -> Decimal:
-        insurance_cost = PostalObject.calculate_insurance(per_unit_value, self.service)
-        return self.non_mechanizable_cost + insurance_cost
+    @property
+    def additional_costs(self) -> Decimal:
+        return PostalObject.calculate_additional_costs(self.package, self.declared_value, self.service)
 
     @property
-    def non_mechanizable_cost(self):
-        return Decimal('0.0') if self.package.is_mechanizable else NON_MECHANIZABLE_COST
+    def non_mechanizable_cost(self) -> Decimal:
+        return PostalObject.calculate_non_mechanizable_cost(self.package)
+
+    @property
+    def insurance_cost(self) -> Decimal:
+        return PostalObject.calculate_insurance_cost(self.declared_value, self.service)
 
     @classmethod
-    def calculate_insurance(cls,
-                            per_unit_value: Union[int, float, Decimal],
-                            service: Union[Service, int, str]) -> Decimal:
-        value = Decimal("0.00")
-        per_unit_value = Decimal(per_unit_value)
-        service_code = Service.get(service).code
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, per_unit_value)
+    def calculate_additional_costs(cls,
+                                   package: Package,
+                                   declared_value: Union[int, float, Decimal],
+                                   service: Union[Service, str, int]) -> Decimal:
+        non_mechanizable_cost = PostalObject.calculate_non_mechanizable_cost(package)
+        insurance_cost = PostalObject.calculate_insurance(declared_value, service)
+        return non_mechanizable_cost + insurance_cost
 
-        if per_unit_value > insurance_value_threshold:
-            value = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
+    @classmethod
+    def calculate_non_mechanizable_cost(cls, package: Package) -> Decimal:
+        return Decimal('0.0') if package.is_mechanizable else NON_MECHANIZABLE_COST
+
+    @classmethod
+    def calculate_insurance_cost(cls,
+                                 declared_value: Union[int, float, Decimal],
+                                 service: Union[Service, str, int]) -> Decimal:
+        value = Decimal("0.00")
+        declared_value = Decimal(declared_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, declared_value)
+
+        if declared_value > insurance_value_threshold:
+            value = (declared_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
 
         return value
