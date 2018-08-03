@@ -296,8 +296,8 @@ def test_fail_get_unknown_service():
 @pytest.mark.parametrize("number,extra_service_code", (
     (1, "AR"),
     (2, "MP"),
-    (19, "VD"),
     (25, "RR"),
+    (64, "VD"),
     (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
 ))
 def test_extra_service_getter(number, extra_service_code):
