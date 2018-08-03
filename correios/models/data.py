@@ -1749,6 +1749,24 @@ TRACKING_STATUS = {
         '',
         'Acompanhar',
     ),
+    ('BDE', 80): (
+        'lost',
+        'Objeto extraviado',
+        '',
+        'Acionar a CAC dos Correios',
+    ),
+    ('BDI', 80): (
+        'lost',
+        'Objeto extraviado',
+        '',
+        'Acionar a CAC dos Correios',
+    ),
+    ('BDR', 80): (
+        'lost',
+        'Objeto extraviado',
+        '',
+        'Acionar a CAC dos Correios',
+    ),
 }
 
 ZIP_CODE_MAP = {
