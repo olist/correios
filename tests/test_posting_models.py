@@ -687,6 +687,9 @@ def test_basic_not_found_tracking_event():
     ("RO", 0),
     ("TRI", 0),
     # ("CMR", 0),
+    ("BDE", 80),
+    ("BDI", 80),
+    ("BDR", 80),
 ])
 def test_basic_event_status(status_type, status_number):
     event_status = posting.EventStatus(status_type, status_number)
