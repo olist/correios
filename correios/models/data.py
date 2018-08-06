@@ -544,7 +544,7 @@ TRACKING_EVENT_TYPES = {
     "PO": "Postagem (exceção)",
     "RO": "Expedição de Lista de Registro",
     "TRI": "Triagem",
-    # "CMR": "Evento Desconhecido",  # usage not found in SRO documentation
+    # "CMR": "Evento Desconhecido",  # event type not found in SRO documentation from 2017-05-02
 }
 
 TRACKING_STATUS = {
