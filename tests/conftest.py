@@ -211,7 +211,12 @@ class ShippingLabelFactory(Factory):
     longitude = 0.0
 
 
+class ShippingLabelSedexFactory(ShippingLabelFactory):
+    service = data.SERVICE_SEDEX
+
+
 register(ShippingLabelFactory, "shipping_label")
+register(ShippingLabelSedexFactory, "shipping_label_sedex")
 
 
 class PostedShippingLabelFactory(ShippingLabelFactory):

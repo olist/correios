@@ -25,7 +25,7 @@ from correios.models import posting
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_RR,
-    EXTRA_SERVICE_VD,
+    EXTRA_SERVICE_VD_PAC,
     SERVICE_PAC,
     SERVICE_SEDEX,
     TRACKING_EVENT_TYPES
@@ -294,9 +294,9 @@ def test_shipping_label_with_declared_value(posting_card, sender_address, receiv
         package=package,
         tracking_code="PD12345678 BR",
         value=service.max_declared_value - Decimal("1.00"),
-        extra_services=[EXTRA_SERVICE_VD],
+        extra_services=[EXTRA_SERVICE_VD_PAC],
     )
-    assert ExtraService.get(EXTRA_SERVICE_VD) in shipping_label.extra_services
+    assert ExtraService.get(EXTRA_SERVICE_VD_PAC) in shipping_label.extra_services
 
 
 def test_shipping_label_with_min_declared_value_pac(posting_card, sender_address, receiver_address, package):
@@ -309,7 +309,7 @@ def test_shipping_label_with_min_declared_value_pac(posting_card, sender_address
         package=package,
         tracking_code="PD12345678 BR",
         value=Decimal("0"),
-        extra_services=[EXTRA_SERVICE_VD],
+        extra_services=[EXTRA_SERVICE_VD_PAC],
     )
     assert shipping_label.value == Decimal("18.00")
 
@@ -324,7 +324,7 @@ def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_addre
         package=package,
         tracking_code="PD12345678 BR",
         value=Decimal("0"),
-        extra_services=[EXTRA_SERVICE_VD],
+        extra_services=[EXTRA_SERVICE_VD_PAC],
     )
     assert shipping_label.value == Decimal("18.00")
 
@@ -363,7 +363,7 @@ def test_fail_shipping_label_with_invalid_declared_value(posting_card, sender_ad
     )
 
     with pytest.raises(exceptions.MaximumDeclaredValueError):
-        shipping_label.add_extra_service(ExtraService.get(EXTRA_SERVICE_VD))
+        shipping_label.add_extra_service(ExtraService.get(EXTRA_SERVICE_VD_PAC))
 
 
 def test_fail_shipping_label_same_addresses(posting_card, sender_address, tracking_code, package):

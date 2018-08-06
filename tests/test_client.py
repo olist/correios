@@ -22,7 +22,8 @@ from correios.models.address import ZipCode
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
-    EXTRA_SERVICE_VD,
+    EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_SEDEX,
     SERVICE_PAC,
     SERVICE_SEDEX,
     SERVICE_SEDEX10
@@ -347,8 +348,8 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-def test_declared_value(posting_list, shipping_label):
-    shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
+def test_declared_value_pac(posting_list, shipping_label):
+    shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD_PAC))
     shipping_label.real_value = 10.29
     posting_list.add_shipping_label(shipping_label)
     serializer = correios.PostingListSerializer()
@@ -357,6 +358,22 @@ def test_declared_value(posting_list, shipping_label):
     xml = serializer.get_xml(document)
     assert shipping_label.service == Service.get(SERVICE_PAC)
     assert b"<codigo_servico_adicional>064</codigo_servico_adicional>" in xml
+    assert b"<valor_declarado>18,00</valor_declarado>" in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+def test_declared_value_sedex(posting_list, shipping_label_sedex):
+    shipping_label_sedex.extra_services.append(
+        ExtraService.get(EXTRA_SERVICE_VD_SEDEX)
+    )
+    shipping_label_sedex.real_value = 10.29
+    posting_list.add_shipping_label(shipping_label_sedex)
+    serializer = correios.PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+    assert shipping_label_sedex.service == Service.get(SERVICE_SEDEX)
+    assert b"<codigo_servico_adicional>019</codigo_servico_adicional>" in xml
     assert b"<valor_declarado>18,00</valor_declarado>" in xml
 
 
