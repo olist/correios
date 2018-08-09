@@ -522,12 +522,12 @@ class Receipt:
         self.value = value
 
     def __eq__(self, other):
-        return (
-            isinstance(other, Receipt) and
-            self.number == other.number and
-            self.post_date == other.post_date and
-            self.value == other.value
-        )
+        return all([
+            isinstance(other, Receipt),
+            self.number == other.number,
+            self.post_date == other.post_date,
+            self.value == other.value,
+        ])
 
     def __repr__(self):
         return (
@@ -650,7 +650,6 @@ class ShippingLabel:
     def posting_weight(self):
         return self.package.posting_weight
 
-    @property
     def has_declared_value(self):
         return any([
             ExtraService.get(EXTRA_SERVICE_VD_PAC) in self,

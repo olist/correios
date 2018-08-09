@@ -761,4 +761,4 @@ def test_package_non_mechanizable_cost(package_type, width, height, length, diam
 def test_shipping_label_has_declared_value(extra_services, result):
     shipping_label = ShippingLabelFactory.build(extra_services=extra_services)
 
-    assert shipping_label.has_declared_value == result
+    assert shipping_label.has_declared_value() == result
