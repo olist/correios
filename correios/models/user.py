@@ -29,7 +29,7 @@ from correios.exceptions import (
 )
 
 from ..utils import get_resource_path, to_datetime, to_integer
-from .data import EXTRA_SERVICES, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX, REGIONAL_DIRECTIONS, SERVICES
+from .data import EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
