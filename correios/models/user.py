@@ -220,7 +220,7 @@ class ExtraService:
         return self.number == other.number
 
     def is_declared_value(self):
-        return self == EXTRA_SERVICE_VD_PAC or self == EXTRA_SERVICE_VD_SEDEX
+        return self in (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX)
 
     @classmethod
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
