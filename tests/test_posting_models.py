@@ -751,3 +751,14 @@ def test_package_is_mechanizable(package_type, width, height, length, diameter, 
 def test_package_non_mechanizable_cost(package_type, width, height, length, diameter, cost):
     package = posting.Package(package_type, width, height, length, diameter, weight=1)
     assert package.non_mechanizable_cost == cost
+
+
+@pytest.mark.parametrize('extra_services,result', [
+    ([EXTRA_SERVICE_AR, EXTRA_SERVICE_RR, EXTRA_SERVICE_VD_PAC], True),
+    ([EXTRA_SERVICE_AR, EXTRA_SERVICE_RR, EXTRA_SERVICE_VD_SEDEX], True),
+    ([EXTRA_SERVICE_AR, EXTRA_SERVICE_RR], False),
+])
+def test_shipping_label_has_declared_value(extra_services, result):
+    shipping_label = ShippingLabelFactory.build(extra_services=extra_services)
+
+    assert shipping_label.has_declared_value == result
