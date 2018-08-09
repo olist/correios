@@ -29,7 +29,7 @@ from correios.exceptions import (
 )
 
 from ..utils import get_resource_path, to_datetime, to_integer
-from .data import EXTRA_SERVICE_VD, EXTRA_SERVICES, REGIONAL_DIRECTIONS, SERVICES
+from .data import EXTRA_SERVICES, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX, REGIONAL_DIRECTIONS, SERVICES
 
 EXTRA_SERVICE_CODE_SIZE = 2
 
@@ -220,7 +220,7 @@ class ExtraService:
         return self.number == other.number
 
     def is_declared_value(self):
-        return self == EXTRA_SERVICE_VD
+        return self == EXTRA_SERVICE_VD_PAC or self == EXTRA_SERVICE_VD_SEDEX
 
     @classmethod
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':

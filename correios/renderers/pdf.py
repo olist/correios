@@ -27,7 +27,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Flowable, Paragraph, Table, TableStyle
 
 from correios.exceptions import RendererError
-from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX
 from correios.models.posting import PostingList, ShippingLabel
 from correios.models.user import ExtraService
 
@@ -348,7 +348,10 @@ class PostingReportPDFRenderer:
                 str(shipping_label.package.posting_weight),
                 self.yes if ExtraService.get(EXTRA_SERVICE_AR) in shipping_label else self.no,
                 self.yes if ExtraService.get(EXTRA_SERVICE_MP) in shipping_label else self.no,
-                self.yes if ExtraService.get(EXTRA_SERVICE_VD) in shipping_label else self.no,
+                self.yes if any([
+                    ExtraService.get(EXTRA_SERVICE_VD_PAC) in shipping_label,
+                    ExtraService.get(EXTRA_SERVICE_VD_SEDEX) in shipping_label
+                ]) else self.no,
                 str(shipping_label.value).replace(".", ",") if shipping_label.value is not None else "",
                 str(shipping_label.invoice_number),
                 shipping_label.get_package_sequence(),
