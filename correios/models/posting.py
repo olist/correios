@@ -23,6 +23,8 @@ from .. import exceptions
 from ..utils import get_resource_path, to_decimal
 from .address import Address, ZipCode
 from .data import (
+    EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_SEDEX,
     FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
@@ -520,12 +522,12 @@ class Receipt:
         self.value = value
 
     def __eq__(self, other):
-        return (
-            isinstance(other, Receipt)
-            and self.number == other.number
-            and self.post_date == other.post_date
-            and self.value == other.value
-        )
+        return all([
+            isinstance(other, Receipt),
+            self.number == other.number,
+            self.post_date == other.post_date,
+            self.value == other.value,
+        ])
 
     def __repr__(self):
         return (
@@ -647,6 +649,12 @@ class ShippingLabel:
     @property
     def posting_weight(self):
         return self.package.posting_weight
+
+    def has_declared_value(self):
+        return any([
+            ExtraService.get(EXTRA_SERVICE_VD_PAC) in self,
+            ExtraService.get(EXTRA_SERVICE_VD_SEDEX) in self,
+        ])
 
     def get_order(self):
         return self.order_template.format(self.order)

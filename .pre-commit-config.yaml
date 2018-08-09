@@ -1,6 +1,6 @@
 repos:
 -   repo: git@github.com:pre-commit/pre-commit-hooks
-    sha: v1.2.3
+    rev: v1.4.0
     hooks:
     - id: debug-statements
     - id: trailing-whitespace
@@ -30,7 +30,7 @@ repos:
     types: [python]
 
 - repo: git@github.com:olist/hulks.git
-  rev: 0.0.2
+  rev: 0.1.0
   hooks:
   - id: check-filename
   - id: check-logger

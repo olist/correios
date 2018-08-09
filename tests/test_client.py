@@ -34,7 +34,8 @@ from correios.models.builders import ModelBuilder
 from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
-    EXTRA_SERVICE_VD,
+    EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_SEDEX,
     FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_ZIPCODE_RESTRICTED,
@@ -410,8 +411,12 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
-def test_declared_value(posting_list, shipping_label):
-    shipping_label.extra_services.append(ExtraService.get(EXTRA_SERVICE_VD))
+@pytest.mark.parametrize('extra_service_vd,code', [
+    (EXTRA_SERVICE_VD_PAC, b'064'),
+    (EXTRA_SERVICE_VD_SEDEX, b'019'),
+])
+def test_declared_value(extra_service_vd, code, posting_list, shipping_label):
+    shipping_label.extra_services.append(ExtraService.get(extra_service_vd))
     shipping_label.real_value = 10.29
     posting_list.add_shipping_label(shipping_label)
     serializer = PostingListSerializer()
@@ -419,8 +424,8 @@ def test_declared_value(posting_list, shipping_label):
     serializer.validate(document)
     xml = serializer.get_xml(document)
     assert shipping_label.service == Service.get(SERVICE_PAC)
-    assert b"<codigo_servico_adicional>064</codigo_servico_adicional>" in xml
-    assert b"<valor_declarado>18,50</valor_declarado>" in xml
+    assert b'<codigo_servico_adicional>%b</codigo_servico_adicional>' % code in xml
+    assert b'<valor_declarado>18,50</valor_declarado>' in xml
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
