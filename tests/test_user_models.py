@@ -288,16 +288,16 @@ def test_fail_extra_service_invalid_data(number, code, name):
         ExtraService(number, code, name)
 
 
-@pytest.mark.parametrize('invalid_code', (0, 19))
-def test_fail_get_unknown_service(invalid_code):
+def test_fail_get_unknown_service():
     with pytest.raises(KeyError):
-        ExtraService.get(invalid_code)
+        ExtraService.get(0)
 
 
 @pytest.mark.parametrize("number,extra_service_code", (
     (1, "AR"),
     (2, "MP"),
     (25, "RR"),
+    (19, "VD"),
     (64, "VD"),
     (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
 ))
