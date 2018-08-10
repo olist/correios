@@ -543,6 +543,72 @@ class Receipt:
         )
 
 
+class PostalObject:
+    def __init__(self,
+                 package: Package,
+                 declared_value: Union[int, float, Decimal],
+                 service: Union[Service, str, int]) -> None:
+        self.package = package
+        self.declared_value = declared_value
+        self.service = Service.get(service)
+
+        self._validate()
+
+    def _validate(self) -> None:
+        self._validate_package_weight()
+
+    def _validate_package_weight(self) -> None:
+        if self.service.max_weight is None:
+            return
+
+        if self.package.weight > self.service.max_weight:
+            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
+                self.package.weight,
+                str(self.service),
+                self.service.max_weight,
+            )
+            raise exceptions.InvalidMaxPackageWeightError(message)
+
+    @property
+    def additional_costs(self) -> Decimal:
+        return PostalObject.calculate_additional_costs(self.package, self.declared_value, self.service)
+
+    @property
+    def non_mechanizable_cost(self) -> Decimal:
+        return PostalObject.calculate_non_mechanizable_cost(self.package)
+
+    @property
+    def insurance_cost(self) -> Decimal:
+        return PostalObject.calculate_insurance_cost(self.declared_value, self.service)
+
+    @classmethod
+    def calculate_additional_costs(cls,
+                                   package: Package,
+                                   declared_value: Union[int, float, Decimal],
+                                   service: Union[Service, str, int]) -> Decimal:
+        non_mechanizable_cost = PostalObject.calculate_non_mechanizable_cost(package)
+        insurance_cost = PostalObject.calculate_insurance_cost(declared_value, service)
+        return non_mechanizable_cost + insurance_cost
+
+    @classmethod
+    def calculate_non_mechanizable_cost(cls, package: Package) -> Decimal:
+        return Decimal('0.0') if package.is_mechanizable else NON_MECHANIZABLE_COST
+
+    @classmethod
+    def calculate_insurance_cost(cls,
+                                 declared_value: Union[int, float, Decimal],
+                                 service: Union[Service, str, int]) -> Decimal:
+        value = Decimal("0.00")
+        declared_value = Decimal(declared_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, declared_value)
+
+        if declared_value > insurance_value_threshold:
+            value = (declared_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
+
+        return to_decimal(value)
+
+
 class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"

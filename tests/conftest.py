@@ -25,6 +25,7 @@ from correios.models.address import Address, ReceiverAddress, SenderAddress
 from correios.models.data import TRACKING_PREFIX
 from correios.models.posting import (
     Package,
+    PostalObject,
     PostalUnit,
     PostInfo,
     PostingList,
@@ -192,6 +193,23 @@ class ReceiptFactory(Factory):
 
 
 register(ReceiptFactory, 'receipt')
+
+
+class PostalObjectFactory(Factory):
+    class Meta:
+        model = PostalObject
+
+    package = SubFactory(PackageFactory)
+    declared_value = faker.Faker(
+        'pydecimal',
+        left_digits=2,
+        right_digits=2,
+        positive=True
+    )
+    service = LazyFunction(lambda: random.choice(_services))
+
+
+register(PostalObjectFactory, "postal_object")
 
 
 class ShippingLabelFactory(Factory):

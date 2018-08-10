@@ -16,6 +16,7 @@
 import os
 from datetime import date, datetime, timedelta
 from decimal import Decimal
+from unittest import mock
 
 import pytest
 from PIL.Image import Image
@@ -762,3 +763,96 @@ def test_shipping_label_has_declared_value(extra_services, result):
     shipping_label = ShippingLabelFactory.build(extra_services=extra_services)
 
     assert shipping_label.has_declared_value() == result
+
+
+def test_basic_postal_object(package):
+    declared_value = 18.50
+    postal_object = posting.PostalObject(
+        package=package,
+        declared_value=declared_value,
+        service=4162,  # SERVICE_SEDEX_CODE
+    )
+
+    assert postal_object.package == package
+    assert postal_object.declared_value == declared_value
+    assert postal_object.service == Service.get(SERVICE_SEDEX)
+
+
+def test_postal_object_invalid_package_weight(package):
+    with pytest.raises(exceptions.InvalidMaxPackageWeightError):
+        package.weight = 50000
+        posting.PostalObject(
+            package=package,
+            declared_value=18.50,
+            service=4162,  # SERVICE_SEDEX_CODE
+        )
+
+
+@mock.patch('correios.models.posting.PostalObject.calculate_additional_costs')
+def test_postal_object_additional_costs_property(mock_calculate_additional_costs, postal_object):
+    mock_calculate_additional_costs.return_value = 10.0
+    result = postal_object.additional_costs
+    assert result == 10.0
+    assert mock_calculate_additional_costs.called is True
+
+
+@mock.patch('correios.models.posting.PostalObject.calculate_non_mechanizable_cost')
+def test_postal_object_non_mechanizable_cost_property(mock_calculate_non_mechanizable_cost, postal_object):
+    mock_calculate_non_mechanizable_cost.return_value = 10.0
+    result = postal_object.non_mechanizable_cost
+    assert result == 10.0
+    assert mock_calculate_non_mechanizable_cost.called is True
+
+
+@mock.patch('correios.models.posting.PostalObject.calculate_insurance_cost')
+def test_postal_object_insurance_cost_property(mock_calculate_insurance_cost, postal_object):
+    mock_calculate_insurance_cost.return_value = 10.0
+    result = postal_object.insurance_cost
+    assert result == 10.0
+    assert mock_calculate_insurance_cost.called is True
+
+
+@mock.patch('correios.models.posting.PostalObject.calculate_insurance_cost')
+@mock.patch('correios.models.posting.PostalObject.calculate_non_mechanizable_cost')
+def test_postal_object_calculate_additional_costs(
+        mock_calculate_non_mechanizable_cost, mock_calculate_insurance_cost, postal_object
+):
+    mock_calculate_non_mechanizable_cost.return_value = 10.0
+    mock_calculate_insurance_cost.return_value = 5.0
+    result = posting.PostalObject.calculate_additional_costs(
+        postal_object.package,
+        postal_object.declared_value,
+        postal_object.service
+    )
+    assert result == 15.0
+    assert mock_calculate_non_mechanizable_cost.called is True
+    assert mock_calculate_insurance_cost.called is True
+
+
+def test_postal_object_calculate_non_mechanizable_cost(package):
+    package.package_type = posting.Package.TYPE_CYLINDER
+    result = posting.PostalObject.calculate_non_mechanizable_cost(package)
+    assert result == posting.NON_MECHANIZABLE_COST
+
+
+def test_postal_object_calculate_non_mechanizable_cost_for_mechanizable(package):
+    result = posting.PostalObject.calculate_non_mechanizable_cost(package)
+    assert result == 0.0
+
+
+def test_postal_object_calculate_insurance_cost_when_not_applicable():
+    value = posting.PostalObject.calculate_insurance_cost(declared_value=18.50, service=SERVICE_SEDEX)
+    assert value == Decimal(0)
+
+    value = posting.PostalObject.calculate_insurance_cost(declared_value=Decimal(10), service=SERVICE_PAC)
+    assert value == Decimal(0)
+
+
+def test_postal_object_calculate_insurance_cost_pac():
+    value = posting.PostalObject.calculate_insurance_cost(declared_value=193, service=SERVICE_PAC)
+    assert value == Decimal('1.22')
+
+
+def test_postal_object_calculate_insurance_cost_sedex():
+    value = posting.PostalObject.calculate_insurance_cost(declared_value=Decimal(500), service=SERVICE_SEDEX)
+    assert value == Decimal('3.37')
