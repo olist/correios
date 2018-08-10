@@ -453,6 +453,72 @@ class Package:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
 
 
+class PostalObject:
+    def __init__(self,
+                 package: Package,
+                 declared_value: Union[int, float, Decimal],
+                 service: Union[Service, str, int]) -> None:
+        self.package = package
+        self.declared_value = declared_value
+        self.service = Service.get(service)
+
+        self._validate()
+
+    def _validate(self) -> None:
+        self._validate_package_weight()
+
+    def _validate_package_weight(self) -> None:
+        if self.service.max_weight is None:
+            return
+
+        if self.package.weight > self.service.max_weight:
+            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
+                self.package.weight,
+                str(self.service),
+                self.service.max_weight,
+            )
+            raise exceptions.InvalidMaxPackageWeightError(message)
+
+    @property
+    def additional_costs(self) -> Decimal:
+        return PostalObject.calculate_additional_costs(self.package, self.declared_value, self.service)
+
+    @property
+    def non_mechanizable_cost(self) -> Decimal:
+        return PostalObject.calculate_non_mechanizable_cost(self.package)
+
+    @property
+    def insurance_cost(self) -> Decimal:
+        return PostalObject.calculate_insurance_cost(self.declared_value, self.service)
+
+    @classmethod
+    def calculate_additional_costs(cls,
+                                   package: Package,
+                                   declared_value: Union[int, float, Decimal],
+                                   service: Union[Service, str, int]) -> Decimal:
+        non_mechanizable_cost = PostalObject.calculate_non_mechanizable_cost(package)
+        insurance_cost = PostalObject.calculate_insurance(declared_value, service)
+        return non_mechanizable_cost + insurance_cost
+
+    @classmethod
+    def calculate_non_mechanizable_cost(cls, package: Package) -> Decimal:
+        return Decimal('0.0') if package.is_mechanizable else NON_MECHANIZABLE_COST
+
+    @classmethod
+    def calculate_insurance_cost(cls,
+                                 declared_value: Union[int, float, Decimal],
+                                 service: Union[Service, str, int]) -> Decimal:
+        value = Decimal("0.00")
+        declared_value = Decimal(declared_value)
+        service_code = Service.get(service).code
+        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, declared_value)
+
+        if declared_value > insurance_value_threshold:
+            value = (declared_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
+
+        return value
+
+
 class ShippingLabel:
     variable_data_identifier = 51  # Variable data identifier for package
     invoice_template = "{!s}"
@@ -477,9 +543,8 @@ class ShippingLabel:
                  posting_card: PostingCard,
                  sender: Address,
                  receiver: Address,
-                 service: Union[Service, int],
                  tracking_code: Union[TrackingCode, str],
-                 package: Package,
+                 postal_object: PostalObject,
                  extra_services: Optional[List[Union[ExtraService, int]]] = None,
                  logo: Optional[Union[str, Image.Image]] = None,
                  order: Optional[str] = "",
@@ -504,9 +569,8 @@ class ShippingLabel:
         self.posting_card = posting_card
         self.sender = sender
         self.receiver = receiver
-        self.service = Service.get(service)
         self.tracking_code = TrackingCode.create(tracking_code)
-        self.package = package
+        self.postal_object = postal_object
         self.logo = logo
         self.order = order
         self.invoice_number = invoice_number
@@ -519,7 +583,7 @@ class ShippingLabel:
         self.longitude = longitude
         self.carrier_logo = Image.open(self.carrier_logo)
 
-        self.extra_services = self.service.default_extra_services[:]
+        self.extra_services = self.postal_object.service.default_extra_services[:]
         if extra_services:
             self.add_extra_services(extra_services)
 
@@ -536,16 +600,16 @@ class ShippingLabel:
     def add_extra_service(self, extra_service: Union["ExtraService", int]):
         extra_service = ExtraService.get(extra_service)
         if extra_service.is_declared_value():
-            self.service.validate_declared_value(self.value)
+            self.postal_object.service.validate_declared_value(self.value)
         self.extra_services.append(extra_service)
 
     @property
     def value(self) -> Decimal:
-        return max(self.service.min_declared_value, self.real_value)
+        return max(self.postal_object.service.min_declared_value, self.real_value)
 
     @property
     def symbol(self):
-        return self.service.symbol_image
+        return self.postal_object.service.symbol_image
 
     @property
     def contract(self):
@@ -553,7 +617,7 @@ class ShippingLabel:
 
     @property
     def posting_weight(self):
-        return self.package.posting_weight
+        return self.postal_object.package.posting_weight
 
     def get_order(self):
         return self.order_template.format(self.order)
@@ -565,16 +629,16 @@ class ShippingLabel:
         return self.contract_number_template.format(self.posting_card.get_contract_number())
 
     def get_service_name(self):
-        return self.service_name_template.format(self.service.display_name)
+        return self.service_name_template.format(self.postal_object.service.display_name)
 
     def get_package_sequence(self):
-        return self.package_template.format(*self.package.sequence)
+        return self.package_template.format(*self.postal_object.package.sequence)
 
     def get_weight(self):
-        return self.weight_template.format(self.package.weight)
+        return self.weight_template.format(self.postal_object.package.weight)
 
     def get_symbol_filename(self, extension="gif"):
-        return self.service.get_symbol_filename(extension)
+        return self.postal_object.service.get_symbol_filename(extension)
 
     def get_tracking_code(self):
         return self.tracking_code.splitted
@@ -608,7 +672,7 @@ class ShippingLabel:
             "{!s:>13}".format(self.tracking_code),
             "{!s:>12}".format(self._get_extra_service_info()),
             "{!s:>010}".format(self.posting_card.number),
-            "{!s:>05}".format(self.service.code),
+            "{!s:>05}".format(self.postal_object.service.code),
             "{!s:>02}".format(self.posting_list_group),
             "{}".format(receiver_number),
             "{!s:<20}".format(self.receiver.complement[:20]),
@@ -735,69 +799,3 @@ class FreightResponse:
 
     def is_restricted_address(self):
         return self.error_code in self.restricted_address_error_code
-
-
-class PostalObject:
-    def __init__(self,
-                 package: Package,
-                 declared_value: Union[int, float, Decimal],
-                 service: Union[Service, str, int]) -> None:
-        self.package = package
-        self.declared_value = declared_value
-        self.service = Service.get(service)
-
-        self._validate()
-
-    def _validate(self) -> None:
-        self._validate_package_weight()
-
-    def _validate_package_weight(self) -> None:
-        if self.service.max_weight is None:
-            return
-
-        if self.package.weight > self.service.max_weight:
-            message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
-                self.package.weight,
-                str(self.service),
-                self.service.max_weight,
-            )
-            raise exceptions.InvalidMaxPackageWeightError(message)
-
-    @property
-    def additional_costs(self) -> Decimal:
-        return PostalObject.calculate_additional_costs(self.package, self.declared_value, self.service)
-
-    @property
-    def non_mechanizable_cost(self) -> Decimal:
-        return PostalObject.calculate_non_mechanizable_cost(self.package)
-
-    @property
-    def insurance_cost(self) -> Decimal:
-        return PostalObject.calculate_insurance_cost(self.declared_value, self.service)
-
-    @classmethod
-    def calculate_additional_costs(cls,
-                                   package: Package,
-                                   declared_value: Union[int, float, Decimal],
-                                   service: Union[Service, str, int]) -> Decimal:
-        non_mechanizable_cost = PostalObject.calculate_non_mechanizable_cost(package)
-        insurance_cost = PostalObject.calculate_insurance(declared_value, service)
-        return non_mechanizable_cost + insurance_cost
-
-    @classmethod
-    def calculate_non_mechanizable_cost(cls, package: Package) -> Decimal:
-        return Decimal('0.0') if package.is_mechanizable else NON_MECHANIZABLE_COST
-
-    @classmethod
-    def calculate_insurance_cost(cls,
-                                 declared_value: Union[int, float, Decimal],
-                                 service: Union[Service, str, int]) -> Decimal:
-        value = Decimal("0.00")
-        declared_value = Decimal(declared_value)
-        service_code = Service.get(service).code
-        insurance_value_threshold = INSURANCE_VALUE_THRESHOLDS.get(service_code, declared_value)
-
-        if declared_value > insurance_value_threshold:
-            value = (declared_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
-
-        return value
