@@ -814,7 +814,9 @@ def test_postal_object_insurance_cost_property(mock_calculate_insurance_cost, po
 
 @mock.patch('correios.models.posting.PostalObject.calculate_insurance_cost')
 @mock.patch('correios.models.posting.PostalObject.calculate_non_mechanizable_cost')
-def test_postal_object_calculate_additional_costs(mock_calculate_non_mechanizable_cost, mock_calculate_insurance_cost, postal_object):
+def test_postal_object_calculate_additional_costs(
+        mock_calculate_non_mechanizable_cost, mock_calculate_insurance_cost, postal_object
+):
     mock_calculate_non_mechanizable_cost.return_value = 10.0
     mock_calculate_insurance_cost.return_value = 5.0
     result = posting.PostalObject.calculate_additional_costs(
