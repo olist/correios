@@ -587,7 +587,7 @@ class PostalObject:
                                    declared_value: Union[int, float, Decimal],
                                    service: Union[Service, str, int]) -> Decimal:
         non_mechanizable_cost = PostalObject.calculate_non_mechanizable_cost(package)
-        insurance_cost = PostalObject.calculate_insurance(declared_value, service)
+        insurance_cost = PostalObject.calculate_insurance_cost(declared_value, service)
         return non_mechanizable_cost + insurance_cost
 
     @classmethod
@@ -606,7 +606,7 @@ class PostalObject:
         if declared_value > insurance_value_threshold:
             value = (declared_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST
 
-        return value
+        return to_decimal(value)
 
 
 class ShippingLabel:
