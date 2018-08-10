@@ -739,11 +739,9 @@ class FreightResponse:
 
 class PostalObject:
     def __init__(self,
-                 shipping_label: ShippingLabel,
                  package: Package,
                  declared_value: Union[int, float, Decimal],
                  service: Union[Service, str, int]) -> None:
-        self.shipping_label = shipping_label
         self.package = package
         self.declared_value = declared_value
         self.service = Service.get(service)
