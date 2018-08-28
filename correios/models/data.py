@@ -1068,6 +1068,12 @@ TRACKING_STATUS = {
         'Objeto será devolvido ao remetente',
         'Acompanhar o retorno do objeto ao remetente.',
     ),
+    ('FC', 10): (
+        'customs_control',
+        'Objeto recebido na unidade de distribuição',
+        'Entrega prevista para o próximo dia útil',
+        'Acompanhar',
+    ),
     ('BDE', 12): (
         'waiting_retrieval',
         'Remetente não retirou objeto na Unidade dos Correios',
