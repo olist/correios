@@ -339,6 +339,9 @@ def test_get_tracking_code_events(client):
 
     assert isinstance(result[0], TrackingCode)
     assert result[0].code == "BE058714266BR"
+    event = result[0].events[0]
+    assert event
+    assert event.timestamp.tzinfo
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
@@ -369,6 +372,7 @@ def test_get_tracking_code_object_not_found_by_correios(client):
     event = tracking_code.events[0]
     assert isinstance(event, NotFoundTrackingEvent)
     assert event.timestamp
+    assert event.timestamp.tzinfo
     assert event.status.type == "ERROR"
     assert event.status.status == 0
 

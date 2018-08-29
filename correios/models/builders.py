@@ -14,6 +14,7 @@
 
 
 from datetime import datetime
+from pytz import timezone
 from typing import Dict
 
 from ..utils import to_decimal, to_integer
@@ -32,6 +33,8 @@ from .posting import (
     TrackingEvent,
 )
 from .user import Contract, ExtraService, FederalTaxNumber, PostingCard, Service, StateTaxNumber, User
+
+CORREIOS_TIMEZONE = timezone('America/Sao_Paulo')
 
 
 class ModelBuilder:
@@ -272,14 +275,18 @@ class ModelBuilder:
 
     def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
         event = NotFoundTrackingEvent(
-            timestamp=datetime.now(),
+            timestamp=datetime.now(tz=CORREIOS_TIMEZONE),
             comment=tracked_object.erro,
         )
         tracking_code.add_event(event)
 
     def _load_events(self, tracking_code: TrackingCode, events):
         for event in events:
-            timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
+            unaware_timestamp = datetime.strptime(
+                "{} {}".format(event.data, event.hora),
+                TrackingEvent.timestamp_format,
+            )
+            timestamp = CORREIOS_TIMEZONE.localize(unaware_timestamp)
             event = TrackingEvent(
                 timestamp=timestamp,
                 status=EventStatus(event.tipo, event.status),
