@@ -1104,6 +1104,12 @@ TRACKING_STATUS = {
         'Endereço:',
         'Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.',
     ),
+    ('BDR', 15): (
+        'shipped',
+        'Recebido na unidade de distribuição ',
+        'Por determinação judicial o objeto será entregue em até 7 dias',
+        'Acompanhar',
+    ),
     ('PAR', 15): (
         'delivered',
         'Objeto recebido em <destino>',
