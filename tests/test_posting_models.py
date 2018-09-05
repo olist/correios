@@ -27,11 +27,13 @@ from correios.models.data import (
     EXTRA_SERVICE_RR,
     EXTRA_SERVICE_VD_PAC,
     EXTRA_SERVICE_VD_SEDEX,
+    INSURANCE_PERCENTUAL_COST,
     SERVICE_PAC,
     SERVICE_SEDEX,
     TRACKING_EVENT_TYPES,
 )
 from correios.models.user import ExtraService, Service
+from correios.utils import to_decimal
 
 from .conftest import ShippingLabelFactory
 
@@ -593,23 +595,19 @@ def test_calculate_insurance_when_not_applicable():
     assert value == Decimal(0)
 
 
-def test_calculate_insurance_pac():
-    value = posting.Package.calculate_insurance(per_unit_value=193, service=SERVICE_PAC)
-    assert value == Decimal('1.22')
+@pytest.mark.parametrize('service,per_unit_value,quantity', (
+    (SERVICE_PAC, Decimal(500), 1),
+    (SERVICE_PAC, Decimal(500), 2),
+    (SERVICE_SEDEX, Decimal(500), 1),
+    (SERVICE_SEDEX, Decimal(500), 2),
 
-    value = posting.Package.calculate_insurance(per_unit_value=Decimal(193), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal('2.44')
+))
+def test_calculate_insurance_pac_and_sedex(service, per_unit_value, quantity):
+    insurance_value_threshold = posting.INSURANCE_VALUE_THRESHOLDS.get(service)
+    result = (per_unit_value - insurance_value_threshold) * INSURANCE_PERCENTUAL_COST * quantity
+    value = posting.Package.calculate_insurance(per_unit_value=per_unit_value, quantity=quantity, service=service)
 
-    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_PAC)
-    assert value == Decimal('6.74')
-
-
-def test_calculate_insurance_sedex():
-    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), service=SERVICE_SEDEX)
-    assert value == Decimal('3.37')
-
-    value = posting.Package.calculate_insurance(per_unit_value=Decimal(500), quantity=2, service=SERVICE_SEDEX)
-    assert value == Decimal('6.74')
+    assert value == to_decimal(result)
 
 
 def test_event_status():
