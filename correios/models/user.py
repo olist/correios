@@ -15,7 +15,7 @@
 
 from datetime import datetime  # noqa: F401
 from decimal import Decimal
-from typing import Any, Dict, List, Optional, Sequence, Union  # noqa: F401
+from typing import Any, Dict, List, Optional, Sequence, Union, cast  # noqa: F401
 
 from PIL import Image
 
@@ -191,6 +191,7 @@ class Service:
     def get(cls, service: Union['Service', int, str]) -> 'Service':
         if isinstance(service, cls):
             return service
+        service = cast(Union[int, str], service)
         code = cls.sanitize_code(service)
         return cls(code=code, **SERVICES[code])
 
@@ -226,6 +227,7 @@ class ExtraService:
     def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
         if isinstance(number, cls):
             return number
+        number = cast(int, number)
         attrs = EXTRA_SERVICES[number]  # type: Dict[str, Any]
         return cls(number=number, **attrs)
 

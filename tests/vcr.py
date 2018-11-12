@@ -18,8 +18,8 @@ import re
 
 from vcr import VCR
 
-USER_REGEX = re.compile('<usuario>\w+</usuario>')
-PASS_REGEX = re.compile('<senha>.*</senha>')
+USER_REGEX = re.compile(r'<usuario>\w+</usuario>')
+PASS_REGEX = re.compile(r'<senha>.*</senha>')
 
 
 def replace_auth(request):
