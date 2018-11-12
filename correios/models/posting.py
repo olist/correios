@@ -15,7 +15,7 @@
 import math
 from datetime import date, datetime, timedelta
 from decimal import Decimal
-from typing import Dict, List, Optional, Tuple, Union  # noqa: F401
+from typing import Dict, List, Optional, Tuple, Union, cast  # noqa: F401
 
 from PIL import Image
 
@@ -192,6 +192,7 @@ class TrackingCode:
     def create(cls, tracking_code: Union[str, 'TrackingCode']):
         if isinstance(tracking_code, cls):
             return tracking_code
+        tracking_code = cast(str, tracking_code)
         return cls(tracking_code)
 
     @classmethod
