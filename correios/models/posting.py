@@ -473,7 +473,7 @@ class Package:
             raise exceptions.InvalidMaxPackageDimensionsError(msg)
 
     @classmethod
-    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]]=None) -> None:
+    def _validate_weight(cls, weight, service: Optional[Union[Service, str, int]] = None) -> None:
         if weight <= 0:
             raise exceptions.InvalidMinPackageWeightError("Invalid weight {!r}g".format(weight))
 
@@ -578,7 +578,7 @@ class ShippingLabel:
                  text: Optional[str] = "",
                  latitude: Optional[float] = 0.0,
                  longitude: Optional[float] = 0.0,
-                 receipt: Receipt=None) -> None:
+                 receipt: Receipt = None) -> None:
 
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
