@@ -1098,6 +1098,12 @@ TRACKING_STATUS = {
         '',
         'Acionar atendimento dos Correios.',
     ),
+    ('BDI', 14): (
+        'returned',
+        'Desistência de postagem pelo remetente',
+        '',
+        'Acompanhar o retorno do objeto ao remetente.',
+    ),
     ('LDI', 14): (
         'waiting_retrieval',
         'Objeto aguardando retirada no endereço indicado',
