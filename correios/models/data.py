@@ -1098,6 +1098,12 @@ TRACKING_STATUS = {
         '',
         'Acionar atendimento dos Correios.',
     ),
+    ('BDR', 14): (
+        'returned',
+        'Desistência de postagem pelo remetente',
+        '',
+        'Acompanhar o retorno do objeto ao remetente.',
+    ),
     ('BDI', 14): (
         'returned',
         'Desistência de postagem pelo remetente',
@@ -1781,6 +1787,12 @@ TRACKING_STATUS = {
         'Revisão de tributo concluída - Tributo mantido',
         'Poderá haver incidência de juros e multa.',
         'Acompanhar',
+    ),
+    ('BDI', 60): (
+        'waiting_retrieval',
+        'O objeto encontra-se aguardando prazo para refugo',
+        '',
+        'Acompanhar.',
     ),
     ('BDR', 59): (
         'customs_control',
