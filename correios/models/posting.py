@@ -88,7 +88,7 @@ class EventStatus:
         try:
             return TRACKING_STATUS[event_type, status_code]
         except KeyError:
-            raise exceptions.InvalidEventStatusError("{} is not valid".format(event_type))
+            raise exceptions.InvalidEventStatusError("{}/{} is not valid".format(event_type, status_code))
 
     @property
     def display_event_type(self):

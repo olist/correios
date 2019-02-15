@@ -979,6 +979,12 @@ TRACKING_STATUS = {
         'Objeto será devolvido ao remetente',
         'Acompanhar o retorno do objeto ao remetente.',
     ),
+    ('FC', 8): (
+        'shipped',
+        'Área com distribuição sujeita a prazo diferenciado',
+        'Restrição de entrega domiciliar temporária',
+        'Acompanhar',
+    ),
     ('BDE', 9): (
         'lost',
         'Objeto não localizado',
@@ -1000,6 +1006,12 @@ TRACKING_STATUS = {
     ('EST', 9): (
         'ignore_last_entry',
         'Favor desconsiderar a informação anterior',
+        '',
+        'Acompanhar',
+    ),
+    ('FC', 9): (
+        'delivery_unsuccessful',
+        'Remetente não retirou objeto na Unidade dos Correios',
         '',
         'Acompanhar',
     ),
