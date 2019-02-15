@@ -1009,6 +1009,12 @@ TRACKING_STATUS = {
         '',
         'Acompanhar',
     ),
+    ('FC', 9): (
+        'delivery_unsuccessful',
+        'Remetente não retirou objeto na Unidade dos Correios',
+        '',
+        'Acompanhar',
+    ),
     ('LDE', 9): (
         'shipped',
         'Objeto saiu para entrega ao remetente',
