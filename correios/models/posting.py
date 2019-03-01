@@ -713,7 +713,7 @@ class ShippingLabel:
             "{!s:>05}".format(self.service.code),
             "{!s:>02}".format(self.posting_list_group),
             "{}".format(receiver_number),
-            "{!s:<20}".format(self.receiver.complement[:20]),
+            "{!s:<20}".format(self.receiver.complement_safe_display[:20].rjust(20, "0")),
             "{!s:>05}".format(0 if self.value is None else int(self.value * 100)),
             "{}".format(str(self.receiver.phone)[:12].rjust(12, "0") or "0" * 12),
             "{:+010.6f}".format(self.latitude),

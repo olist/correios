@@ -276,6 +276,10 @@ class Address:
         self.longitude = longitude
 
     @property
+    def complement_safe_display(self) -> str:
+        return ''.join(c for c in str(self.complement) if c.isalnum())
+
+    @property
     def zip_code_display(self) -> str:
         return self.zip_code.display()
 

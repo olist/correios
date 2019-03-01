@@ -288,6 +288,21 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert len(shipping_label.extra_services) == 1
 
 
+def test_shipping_label_get_datamatrix_info_with_compliment_display(
+    posting_card, sender_address, receiver_address, package
+):
+    receiver_address.complement = '15 • andar'
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=4162,
+        package=package,
+        tracking_code="PD12345678 BR",
+    )
+    datamatrix = shipping_label.get_datamatrix_info()
+    assert '000000000000015andar' in datamatrix
+
 @pytest.mark.parametrize('extra_service_vd', (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX))
 def test_shipping_label_with_declared_value(extra_service_vd, posting_card, sender_address, receiver_address, package):
     service = Service.get(SERVICE_SEDEX)
