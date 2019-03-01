@@ -303,6 +303,7 @@ def test_shipping_label_get_datamatrix_info_with_compliment_display(
     datamatrix = shipping_label.get_datamatrix_info()
     assert '000000000000015andar' in datamatrix
 
+
 @pytest.mark.parametrize('extra_service_vd', (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX))
 def test_shipping_label_with_declared_value(extra_service_vd, posting_card, sender_address, receiver_address, package):
     service = Service.get(SERVICE_SEDEX)
