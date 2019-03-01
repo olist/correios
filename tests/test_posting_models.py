@@ -288,7 +288,7 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert len(shipping_label.extra_services) == 1
 
 
-def test_shipping_label_get_datamatrix_info_with_compliment_display(
+def test_shipping_label_get_datamatrix_info_with_complement_display(
     posting_card, sender_address, receiver_address, package
 ):
     receiver_address.complement = '15 • andar'
