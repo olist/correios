@@ -548,7 +548,7 @@ TRACKING_EVENT_TYPES = {
     "PO": "Postagem (exceção)",
     "RO": "Expedição de Lista de Registro",
     "TRI": "Triagem",
-    # "CMR": "Evento Desconhecido",  # event type not found in SRO documentation (issued on may, 2017)
+    "CMR": "Conferência de lista de registro",
 }
 
 TRACKING_STATUS = {
@@ -1782,6 +1782,12 @@ TRACKING_STATUS = {
         'Objeto extraviado',
         '',
         'Acionar a CAC dos Correios',
+    ),
+    ('CMR', 1): (
+        'shipped',
+        'Conferido',
+        '',
+        'Acompanhar',
     ),
 }
 
