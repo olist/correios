@@ -120,7 +120,7 @@ class Correios:
 
     def _handle_exception(self, exception):
         message = str(exception)
-        logger.error("Caught error: {!r}".format(message))
+        logger.debug("Caught error: {!r}".format(message))
 
         for regex, exception in ERRORS.items():
             if regex.search(message):
