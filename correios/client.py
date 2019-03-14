@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import logging
 import re
 from decimal import Decimal
 from pathlib import Path
@@ -39,6 +40,8 @@ from .serializers import PostingListSerializer
 from .soap import SoapClient
 from .utils import get_resource_path
 from .xml_utils import fromstring
+
+logger = logging.getLogger(__name__)
 
 KG = 1000  # g
 # environ servico url filename
@@ -117,6 +120,7 @@ class Correios:
 
     def _handle_exception(self, exception):
         message = str(exception)
+        logger.debug("Caught error: {!r}".format(message))
 
         for regex, exception in ERRORS.items():
             if regex.search(message):
