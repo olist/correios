@@ -1393,6 +1393,12 @@ TRACKING_STATUS = {
         'Objeto será encaminhado para entrega ao administrador judicial',
         'Acompanhar',
     ),
+    ('BDI', 39): (
+        'delivery_unsuccessful',
+        'A entrega não pode ser efetuada',
+        'Objeto em análise de destinação',
+        'Acompanhar',
+    ),
     ('BDE', 40): (
         'customs_control',
         'A importação do objeto/conteúdo não foi autorizada pelos órgãos fiscalizadores',
