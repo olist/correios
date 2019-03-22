@@ -531,7 +531,7 @@ TRACKING_EVENT_TYPES = {
     "BDI": "Baixa de distribuição interna",
     "BDR": "Baixa corretiva",
     "BLQ": "Bloqueio de objetos",
-    # "CAR": "Conferência de lista de registro",  # usage not found in SRO documentation
+    "CAR": "Conferência de lista de registro",
     "CD": "Conferência de nota de despacho",
     "CMT": "Chegada de um meio de transporte",
     "CO": "Coleta de objetos",
@@ -570,6 +570,12 @@ TRACKING_STATUS = {
         'Objeto entregue ao destinatário',
         'Recebido por:',
         'Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.',
+    ),
+    ('CAR', 1): (
+        'shipped',
+        'Conferido',
+        'Recebido na unidade de destino',
+        'Acompanhar',
     ),
     ('CD', 0): (
         'shipped',
@@ -1394,6 +1400,12 @@ TRACKING_STATUS = {
         'Acompanhar',
     ),
     ('BDI', 39): (
+        'delivery_unsuccessful',
+        'A entrega não pode ser efetuada',
+        'Objeto em análise de destinação',
+        'Acompanhar',
+    ),
+    ('BDR', 39): (
         'delivery_unsuccessful',
         'A entrega não pode ser efetuada',
         'Objeto em análise de destinação',
