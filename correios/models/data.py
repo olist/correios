@@ -697,6 +697,12 @@ TRACKING_STATUS = {
         '',
         'Acompanhar o retorno do objeto ao remetente.',
     ),
+    ('FC', 10): (
+        'shipped',
+        'Objeto recebido na unidade de distribuição',
+        'Entrega prevista para o próximo dia útil',
+        'Acompanhar',
+    ),
     ('IDC', 1): (
         'lost',
         'Objeto não localizado',
