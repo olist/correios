@@ -1117,6 +1117,18 @@ TRACKING_STATUS = {
         '',
         'Acompanhar',
     ),
+    ('BDE', 18): (
+        'shipped',
+        'A entrega não pode ser efetuada - Carteiro não atendido',
+        'Será realizada nova tentativa de entrega no sábado',
+        'Acompanhar',
+    ),
+    ('BDR', 18): (
+        'shipped',
+        'A entrega não pode ser efetuada - Carteiro não atendido',
+        'Será realizada nova tentativa de entrega no sábado',
+        'Acompanhar',
+    ),
     ('BDE', 19): (
         'delivery_unsuccessful',
         'A entrega não pode ser efetuada - Endereço incorreto',
