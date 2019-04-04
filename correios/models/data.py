@@ -1843,10 +1843,16 @@ TRACKING_STATUS = {
         'Acompanhar',
     ),
     ('BDE', 80): (
-        'shipped',
+        'lost',
         'Objeto não localizado no fluxo postal',
         '',
-        'Acompanhar',
+        'Acionar atendimento dos Correios.',
+    ),
+    ('BDI', 80): (
+        'lost',
+        'Objeto não localizado no fluxo postal',
+        '',
+        'Acionar atendimento dos Correios.',
     ),
     ('BDR', 80): (
         'shipped_delayed',
