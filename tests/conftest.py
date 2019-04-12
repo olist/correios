@@ -93,7 +93,8 @@ class TrackingEventFactory(Factory):
         model = TrackingEvent
 
     timestamp = datetime(2016, 1, 1, 12)
-    status = ('PO', '1')
+    status = '1'
+    event_type = 'PO'
     location_zip_code = "07192-100"
     location = "CEE"
     city = faker.Faker("city", locale="pt_BR")

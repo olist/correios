@@ -27,10 +27,8 @@ from correios.utils import get_wsdl_path, to_decimal, to_integer
 
 from .models.address import ReceiverAddress, SenderAddress, ZipAddress, ZipCode
 from .models.posting import (
-    EventStatus,
     Freight,
     FreightError,
-    NotFoundTrackingEvent,
     Package,
     PostalUnit,
     PostInfo,
@@ -306,20 +304,19 @@ class ModelBuilder:
         codes = response.split(",")
         return TrackingCode.create_range(codes[0], codes[1])
 
-    def _load_invalid_event(self, tracking_code: TrackingCode, tracked_object):
-        event = NotFoundTrackingEvent(
-            timestamp=datetime.now(),
-            comment=tracked_object.erro,
-        )
-        tracking_code.add_event(event)
-
     def _load_events(self, tracking_code: TrackingCode, events):
         for event in events:
             timestamp = datetime.strptime("{} {}".format(event.data, event.hora), TrackingEvent.timestamp_format)
+            cidade_destino = ""
+            uf_destino = ""
+            if len(event['destino']) > 0:
+                cidade_destino = getattr(event['destino'][0], "cidade", "") or ""
+                uf_destino = getattr(event['destino'][0], "uf", "") or ""
             try:
                 event = TrackingEvent(
                     timestamp=timestamp,
-                    status=EventStatus(event.tipo, event.status),
+                    status=getattr(event, "status", "") or "",
+                    event_type=getattr(event, "tipo", "") or "",
                     location_zip_code=getattr(event, "codigo", "") or "",
                     location=getattr(event, "local", "") or "",
                     city=getattr(event, "cidade", "") or "",
@@ -328,7 +325,14 @@ class ModelBuilder:
                     document=getattr(event, "documento", "") or "",
                     comment=getattr(event, "comentario", "") or "",
                     description=getattr(event, "descricao", "") or "",
-                    details=getattr(event, "detalhes", "") or "",
+                    detail=getattr(event, "detalhe", "") or "",
+                    address=getattr(event.endereco, "logradouro", "") or "",
+                    address_number=getattr(event['endereco'], "numero", "") or "",
+                    address_district=getattr(event['endereco'], "bairro", "") or "",
+                    address_city=getattr(event['endereco'], "localidade", "") or "",
+                    address_uf=getattr(event['endereco'], "uf", "") or "",
+                    destiny_city=cidade_destino,
+                    destiny_uf=uf_destino
                 )
             except InvalidEventStatusError:
                 tracking_code.events = []
@@ -343,13 +347,10 @@ class ModelBuilder:
             with suppress(KeyError):
                 tracking_code = tracking_codes[tracked_object.numero]
 
-                if 'erro' in tracked_object and tracked_object.erro:
-                    self._load_invalid_event(tracking_code, tracked_object)
-                else:
-                    tracking_code.name = tracked_object.nome
-                    tracking_code.initials = tracked_object.sigla
-                    tracking_code.category = tracked_object.categoria
-                    self._load_events(tracking_code, tracked_object.evento)
+                tracking_code.name = tracked_object.nome
+                tracking_code.initials = tracked_object.sigla
+                tracking_code.category = tracked_object.categoria
+                self._load_events(tracking_code, tracked_object.evento)
 
                 result.append(tracking_code)
 
