@@ -661,6 +661,12 @@ TRACKING_STATUS = {
         'Objeto em análise de destinação',
         'Acompanhar',
     ),
+    ('BLQ', 2): (
+        'shipped',
+        'Tentativa de suspensão da entrega',
+        'Objeto em análise de destinação',
+        'Acompanhar',
+    ),
     ('CD', 1): (
         'shipped',
         'Objeto recebido na Unidade dos Correios',
@@ -1086,6 +1092,12 @@ TRACKING_STATUS = {
         'Objeto aguardando retirada no endereço indicado',
         'Endereço:',
         'Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.',
+    ),
+    ('BDI', 14): (
+        'shipped',
+        'Desistência de postagem pelo remetente',
+        '',
+        'Acompanhar',
     ),
     ('BDR', 15): (
         'shipped',
@@ -1769,6 +1781,18 @@ TRACKING_STATUS = {
         'customs_control',
         'Revisão de tributo concluída - Tributo mantido',
         'Poderá haver incidência de juros e multa.',
+        'Acompanhar',
+    ),
+    ('BDR', 60): (
+        'shipped',
+        'O objeto encontra-se aguardando prazo para refugo',
+        '',
+        'Acompanhar',
+    ),
+    ('BDI', 60): (
+        'shipped',
+        'O objeto encontra-se aguardando prazo para refugo',
+        '',
         'Acompanhar',
     ),
     ('BDE', 66): (
