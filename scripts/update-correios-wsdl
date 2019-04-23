@@ -2,8 +2,7 @@
 
 import argparse
 
-from correios.update_wsdl import update_wsdl, MODULE_PATH
-
+from correios.update_wsdl import MODULE_PATH, update_wsdl
 
 parser = argparse.ArgumentParser(description='Updates Correios WSDL files')
 parser.add_argument(
