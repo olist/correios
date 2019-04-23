@@ -590,16 +590,11 @@ def test_calculate_insurance_sedex():
     assert value == Decimal('5.95')
 
 
-def test_event_status():
-    event_status = posting.EventStatus('BDE', 1)
-    assert repr(event_status) == "<EventStatus('BDE', 1)>"
-
-
-@pytest.mark.parametrize("status", (posting.EventStatus("BDE", "01"), ("BDE", "01")))
-def test_basic_tracking_event(status):
+def test_basic_tracking_event():
     tracking_event = posting.TrackingEvent(
         timestamp=datetime(2010, 1, 2, 1, 2),
-        status=status,
+        status="23",
+        event_type="BDE",
         location_zip_code="82940150",
         location="Correios",
         receiver="José",
@@ -608,12 +603,15 @@ def test_basic_tracking_event(status):
         document="XYZ",
         comment="The comment",
         description="The description",
-        details="The details",
+        detail="The details",
+        destination_location="CTE-Curitiba",
+        destination_city="Curitiba",
+        destination_uf="PR"
     )
 
     assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
-    assert tracking_event.status.type == "BDE"
-    assert tracking_event.status.status == 1
+    assert tracking_event.event_type == "BDE"
+    assert tracking_event.status == "23"
     assert tracking_event.location_zip_code == "82940150"
     assert tracking_event.location == "Correios"
     assert tracking_event.receiver == "José"
@@ -622,9 +620,12 @@ def test_basic_tracking_event(status):
     assert tracking_event.document == "XYZ"
     assert tracking_event.comment == "The comment"
     assert tracking_event.description == "The description"
-    assert tracking_event.details == "The details"
+    assert tracking_event.detail == "The details"
+    assert tracking_event.destination_location == "CTE-Curitiba"
+    assert tracking_event.destination_city == "Curitiba"
+    assert tracking_event.destination_uf == "PR"
 
-    assert repr(tracking_event) == "<TrackingEvent((BDE, 1), 02/01/2010 01:02)>"
+    assert repr(tracking_event) == "<TrackingEvent(BDE, 23, 02/01/2010 01:02)>"
     assert str(tracking_event) == "The description - Correios - Curitiba/PR"
 
 

@@ -74,8 +74,17 @@ class TrackingEvent:
                  document: str = "",
                  comment: str = "",
                  description: str = "",
-                 details: str = "",
-                 ) -> None:
+                 detail: str = "",
+                 destination_location: str = "",
+                 destination_city: str = "",
+                 destination_uf: str = "",
+                 address_street: str = "",
+                 address_number: str = "",
+                 address_district: str = "",
+                 address_city: str = "",
+                 address_state: str = "") -> None:
+        self.status = status
+        self.event_type = event_type
         self.timestamp = timestamp
         self.location = location
         self.receiver = receiver
@@ -84,27 +93,25 @@ class TrackingEvent:
         self.document = document
         self.comment = comment
         self.description = description
-        self.details = details
-
+        self.detail = detail
+        self.destination_location = destination_location
+        self.destination_city = destination_city
+        self.destination_uf = destination_uf
+        self.address_street = address_street
+        self.address_number = address_number
+        self.address_district = address_district
+        self.address_city = address_city
+        self.address_state = address_state
         if location_zip_code:
             location_zip_code = ZipCode.create(location_zip_code, validate=False)
         self.location_zip_code = location_zip_code
-
-        if isinstance(status, tuple):
-            status = EventStatus(*status)
-        self.status = status
 
     def __str__(self):
         return '{} - {} - {}/{}'.format(self.description, self.location, self.city, self.state)
 
     def __repr__(self):
         timestamp = self.timestamp.strftime(self.timestamp_format)
-        return '<TrackingEvent({!s}, {!s})>'.format(self.status, timestamp)
-
-
-class NotFoundTrackingEvent(TrackingEvent):
-    def __init__(self, timestamp: datetime, comment) -> None:
-        super().__init__(timestamp=timestamp, status=ErrorEventStatus(), comment=comment)
+        return '<TrackingEvent({!s}, {!s}, {!s})>'.format(self.event_type, self.status, timestamp)
 
 
 class TrackingCode:
