@@ -32,9 +32,7 @@ from .data import (
     INSURANCE_VALUE_THRESHOLD_PAC,
     INSURANCE_VALUE_THRESHOLD_SEDEX,
     SERVICE_PAC,
-    SERVICE_SEDEX,
-    TRACKING_EVENT_TYPES,
-    TRACKING_STATUS
+    SERVICE_SEDEX
 )
 from .user import Contract  # noqa: F401
 from .user import ExtraService, PostingCard, Service
@@ -61,68 +59,13 @@ INSURANCE_VALUE_THRESHOLDS = {
 }
 
 
-class EventStatus:
-    def __init__(self,
-                 event_type: str,
-                 status_code: Union[str, int]) -> None:
-        event_type = event_type.upper()
-        status_code = int(status_code)
-        event_status_data = self._get_event_status_data(event_type, status_code)
-
-        self.type = event_type
-        self.status = status_code
-        self.category = event_status_data[0]
-        self.description = event_status_data[1]
-        self.detail = event_status_data[2]
-        self.action = event_status_data[3]
-
-    def _get_event_status_data(self, event_type, status_code):
-        if event_type not in TRACKING_EVENT_TYPES:
-            logger.critical(
-                'Event type not mapped: {} status code:{}'.format(
-                    event_type,
-                    status_code
-                )
-            )
-            raise exceptions.InvalidEventStatusError(
-                "{} is not valid".format(event_type)
-            )
-
-        try:
-            return TRACKING_STATUS[event_type, status_code]
-        except KeyError:
-            logger.critical(
-                'Event type not mapped: {} status code:{}'.format(
-                    event_type,
-                    status_code
-                )
-            )
-            raise exceptions.InvalidEventStatusError(
-                "{} is not valid".format(event_type)
-            )
-
-    @property
-    def display_event_type(self):
-        return TRACKING_EVENT_TYPES[self.type]
-
-    def __str__(self):
-        return '({}, {})'.format(self.type, self.status)
-
-    def __repr__(self):
-        return '<EventStatus({!r}, {!r})>'.format(self.type, self.status)
-
-
-class ErrorEventStatus(EventStatus):
-    def __init__(self):
-        super().__init__("ERROR", 0)
-
-
 class TrackingEvent:
     timestamp_format = "%d/%m/%Y %H:%M"
 
     def __init__(self,
                  timestamp: datetime,
-                 status: Union[Tuple[str, Union[str, int]], EventStatus],
+                 status: str = "",
+                 event_type: str = "",
                  location_zip_code: Union[str, ZipCode] = "",
                  location: str = "",
                  receiver: str = "",

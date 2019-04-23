@@ -22,14 +22,7 @@ from PIL.Image import Image
 
 from correios import DATADIR, exceptions
 from correios.models import posting
-from correios.models.data import (
-    EXTRA_SERVICE_AR,
-    EXTRA_SERVICE_RR,
-    EXTRA_SERVICE_VD_PAC,
-    SERVICE_PAC,
-    SERVICE_SEDEX,
-    TRACKING_EVENT_TYPES
-)
+from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_RR, EXTRA_SERVICE_VD_PAC, SERVICE_PAC, SERVICE_SEDEX
 from correios.models.user import ExtraService, Service
 
 from .conftest import ShippingLabelFactory
@@ -638,58 +631,6 @@ def test_basic_tracking_event(status):
 def test_tracking_event_timestamp_format(tracking_event):
     expected_date = "01/01/2016 12:00"
     assert tracking_event.timestamp.strftime(posting.TrackingEvent.timestamp_format) == expected_date
-
-
-def test_basic_not_found_tracking_event():
-    tracking_event = posting.NotFoundTrackingEvent(
-        timestamp=datetime(2010, 1, 2, 1, 2),
-        comment="Not found",
-    )
-    assert tracking_event.timestamp == datetime(2010, 1, 2, 1, 2)
-    assert tracking_event.status.type == "ERROR"
-    assert tracking_event.status.status == 0
-    assert tracking_event.comment == "Not found"
-
-
-@pytest.mark.parametrize("status_type,status_number", [
-    ("BDE", 0),
-    ("BDI", 0),
-    ("BDR", 0),
-    ("BLQ", 1),
-    # ("CAR", 0),
-    ("CD", 0),
-    ("CMT", 0),
-    ("CO", 1),
-    ("CUN", 0),
-    ("DO", 0),
-    ("EST", 1),
-    ("FC", 1),
-    ("IDC", 1),
-    ("LDI", 0),
-    ("LDE", 0),
-    ("OEC", 0),
-    ("PAR", 15),
-    ("PMT", 1),
-    ("PO", 0),
-    ("RO", 0),
-    ("TRI", 0),
-    # ("CMR", 0),
-])
-def test_basic_event_status(status_type, status_number):
-    event_status = posting.EventStatus(status_type, status_number)
-
-    assert event_status.type == status_type
-    assert event_status.status == status_number
-    assert event_status.display_event_type == TRACKING_EVENT_TYPES[status_type]
-
-    assert str(event_status) == "({}, {})".format(status_type, status_number)
-    assert repr(event_status) == "<EventStatus({!r}, {!r})>".format(status_type, status_number)
-
-
-@pytest.mark.parametrize("event_type", ("XYZ", "ABC", "XXX", "WTF", "BD", "ERROR"))
-def test_invalid_event_status(event_type):
-    with pytest.raises(exceptions.InvalidEventStatusError):
-        posting.EventStatus(event_type, 1)
 
 
 def test_basic_freight():

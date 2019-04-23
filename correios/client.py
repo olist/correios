@@ -27,10 +27,8 @@ from correios.utils import get_wsdl_path, to_decimal, to_integer
 
 from .models.address import ReceiverAddress, SenderAddress, ZipAddress, ZipCode
 from .models.posting import (
-    EventStatus,
     Freight,
     FreightError,
-    NotFoundTrackingEvent,
     Package,
     PostalUnit,
     PostInfo,

@@ -28,16 +28,7 @@ from correios.models.data import (
     SERVICE_SEDEX,
     SERVICE_SEDEX10
 )
-from correios.models.posting import (
-    Freight,
-    NotFoundTrackingEvent,
-    Package,
-    PostalUnit,
-    PostInfo,
-    PostingList,
-    ShippingLabel,
-    TrackingCode
-)
+from correios.models.posting import Freight, Package, PostalUnit, PostInfo, PostingList, ShippingLabel, TrackingCode
 from correios.models.user import ExtraService, PostingCard, Service
 from correios.utils import get_wsdl_path, to_decimal
 from correios.xml_utils import fromstring
@@ -295,19 +286,6 @@ def test_get_tracking_code_with_no_verification_digitevents(client):
 
     assert isinstance(result[0], TrackingCode)
     assert result[0].code == "FJ064849483BR"
-
-
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
-@vcr.use_cassette
-def test_get_tracking_code_object_not_found_by_correios(client):
-    tracking_code = client.get_tracking_code_events("DU05508759BR")[0]
-    assert tracking_code.events
-
-    event = tracking_code.events[0]
-    assert isinstance(event, NotFoundTrackingEvent)
-    assert event.timestamp
-    assert event.status.type == "ERROR"
-    assert event.status.status == 0
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
