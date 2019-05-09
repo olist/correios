@@ -1099,6 +1099,12 @@ TRACKING_STATUS = {
         '',
         'Acompanhar',
     ),
+    ('BDR', 14): (
+        'shipped',
+        'Desistência de postagem pelo remetente',
+        '',
+        'Acompanhar',
+    ),
     ('BDR', 15): (
         'shipped',
         'Recebido na unidade de distribuição',
