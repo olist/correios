@@ -1087,6 +1087,12 @@ TRACKING_STATUS = {
         'Objeto em análise de destinação',
         'Acionar atendimento dos Correios.',
     ),
+    ('LDI', 4): (
+        'waiting_retrieval',
+        'Objeto aguardando retirada no endereço indicado',
+        'Endereço:',
+        'Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.',
+    ),
     ('LDI', 14): (
         'waiting_retrieval',
         'Objeto aguardando retirada no endereço indicado',
