@@ -29,6 +29,11 @@ repos:
     entry: 'datetime\.now\(\)'
     types: [python]
 
+- repo: https://github.com/python/black
+  rev: stable
+  hooks:
+    - id: black
+
 - repo: git@github.com:olist/hulks.git
   rev: 0.1.0
   hooks:
