@@ -22,11 +22,8 @@ class SoapClient(Client):
         session.cert = cert
         session.verify = verify
         session.timeout = timeout
-        session.headers.update({'Content-Type': 'text/xml;charset=UTF-8'})
+        session.headers.update({"Content-Type": "text/xml;charset=UTF-8"})
 
-        transport = Transport(
-            operation_timeout=timeout,
-            session=session
-        )
+        transport = Transport(operation_timeout=timeout, session=session)
 
         super().__init__(wsdl=wsdl, transport=transport, **kwargs)

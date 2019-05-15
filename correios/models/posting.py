@@ -57,19 +57,17 @@ MIN_SIZE, MAX_SIZE = 29, 200  # cm
 MIN_CYLINDER_SIZE, MAX_CYLINDER_SIZE = 28, 200  # cm
 
 MAX_MECHANIZABLE_PACKAGE_SIZE = 70  # cm
-NON_MECHANIZABLE_COST = Decimal('79.0')
+NON_MECHANIZABLE_COST = Decimal("79.0")
 
 
 INSURANCE_VALUE_THRESHOLDS = {
     Service.get(SERVICE_PAC).code: INSURANCE_VALUE_THRESHOLD_PAC,
-    Service.get(SERVICE_SEDEX).code: INSURANCE_VALUE_THRESHOLD_SEDEX
+    Service.get(SERVICE_SEDEX).code: INSURANCE_VALUE_THRESHOLD_SEDEX,
 }
 
 
 class EventStatus:
-    def __init__(self,
-                 event_type: str,
-                 status_code: Union[str, int]) -> None:
+    def __init__(self, event_type: str, status_code: Union[str, int]) -> None:
         event_type = event_type.upper()
         status_code = int(status_code)
         event_status_data = self._get_event_status_data(event_type, status_code)
@@ -95,10 +93,10 @@ class EventStatus:
         return TRACKING_EVENT_TYPES[self.type]
 
     def __str__(self):
-        return '({}, {})'.format(self.type, self.status)
+        return "({}, {})".format(self.type, self.status)
 
     def __repr__(self):
-        return '<EventStatus({!r}, {!r})>'.format(self.type, self.status)
+        return "<EventStatus({!r}, {!r})>".format(self.type, self.status)
 
 
 class ErrorEventStatus(EventStatus):
@@ -109,19 +107,20 @@ class ErrorEventStatus(EventStatus):
 class TrackingEvent:
     timestamp_format = "%d/%m/%Y %H:%M"
 
-    def __init__(self,
-                 timestamp: datetime,
-                 status: Union[Tuple[str, Union[str, int]], EventStatus],
-                 location_zip_code: Union[str, ZipCode] = "",
-                 location: str = "",
-                 receiver: str = "",
-                 city: str = "",
-                 state: str = "",
-                 document: str = "",
-                 comment: str = "",
-                 description: str = "",
-                 details: str = "",
-                 ) -> None:
+    def __init__(
+        self,
+        timestamp: datetime,
+        status: Union[Tuple[str, Union[str, int]], EventStatus],
+        location_zip_code: Union[str, ZipCode] = "",
+        location: str = "",
+        receiver: str = "",
+        city: str = "",
+        state: str = "",
+        document: str = "",
+        comment: str = "",
+        description: str = "",
+        details: str = "",
+    ) -> None:
         self.timestamp = timestamp
         self.location = location
         self.receiver = receiver
@@ -141,11 +140,11 @@ class TrackingEvent:
         self.status = status
 
     def __str__(self):
-        return '{} - {} - {}/{}'.format(self.description, self.location, self.city, self.state)
+        return "{} - {} - {}/{}".format(self.description, self.location, self.city, self.state)
 
     def __repr__(self):
         timestamp = self.timestamp.strftime(self.timestamp_format)
-        return '<TrackingEvent({!s}, {!s})>'.format(self.status, timestamp)
+        return "<TrackingEvent({!s}, {!s})>".format(self.status, timestamp)
 
 
 class NotFoundTrackingEvent(TrackingEvent):
@@ -182,14 +181,14 @@ class TrackingCode:
             raise exceptions.InvalidTrackingCodeError("Invalid tracking code number {}".format(self.number))
 
         if self._digit is not None and self._digit != self.calculate_digit(self.number):
-            raise exceptions.InvalidTrackingCodeError("Invalid tracking code number {} or digit {} (must be {})".format(
-                self.number,
-                self._digit,
-                self.calculate_digit(self.number))
+            raise exceptions.InvalidTrackingCodeError(
+                "Invalid tracking code number {} or digit {} (must be {})".format(
+                    self.number, self._digit, self.calculate_digit(self.number)
+                )
             )
 
     @classmethod
-    def create(cls, tracking_code: Union[str, 'TrackingCode']):
+    def create(cls, tracking_code: Union[str, "TrackingCode"]):
         if isinstance(tracking_code, cls):
             return tracking_code
         tracking_code = cast(str, tracking_code)
@@ -211,7 +210,7 @@ class TrackingCode:
         return 11 - mod
 
     @classmethod
-    def create_range(cls, start: Union[str, 'TrackingCode'], end: Union[str, 'TrackingCode']):
+    def create_range(cls, start: Union[str, "TrackingCode"], end: Union[str, "TrackingCode"]):
         if not isinstance(start, TrackingCode):
             start = TrackingCode(start)
 
@@ -232,9 +231,7 @@ class TrackingCode:
         end_number = int(end.number)
 
         if start_number > end_number:
-            raise exceptions.InvalidTrackingCodeError(
-                "Invalid range numbers: {} > {}".format(start_number, end_number)
-            )
+            raise exceptions.InvalidTrackingCodeError("Invalid range numbers: {} > {}".format(start_number, end_number))
 
         code_range = range(int(start.number), int(end.number) + 1)
         return [TrackingCode(start.prefix + "{:08}".format(n) + start.suffix) for n in code_range]
@@ -277,21 +274,19 @@ class Package:
     TYPE_BOX = 2  # type: int
     TYPE_CYLINDER = 3  # type: int
 
-    freight_package_types = {
-        TYPE_BOX: 1,
-        TYPE_CYLINDER: 2,
-        TYPE_ENVELOPE: 3,
-    }  # type: Dict[int, int]
+    freight_package_types = {TYPE_BOX: 1, TYPE_CYLINDER: 2, TYPE_ENVELOPE: 3}  # type: Dict[int, int]
 
-    def __init__(self,
-                 package_type: int = TYPE_BOX,
-                 width: Union[float, int] = 0,  # cm
-                 height: Union[float, int] = 0,  # cm
-                 length: Union[float, int] = 0,  # cm
-                 diameter: Union[float, int] = 0,  # cm
-                 weight: Union[float, int] = 0,  # g
-                 sequence=(1, 1),
-                 service: Optional[Union[Service, str, int]] = None) -> None:
+    def __init__(
+        self,
+        package_type: int = TYPE_BOX,
+        width: Union[float, int] = 0,  # cm
+        height: Union[float, int] = 0,  # cm
+        length: Union[float, int] = 0,  # cm
+        diameter: Union[float, int] = 0,  # cm
+        weight: Union[float, int] = 0,  # g
+        sequence=(1, 1),
+        service: Optional[Union[Service, str, int]] = None,
+    ) -> None:
 
         if service:
             service = Service.get(service)
@@ -391,7 +386,7 @@ class Package:
 
     @property
     def non_mechanizable_cost(self):
-        return Decimal('0.0') if self.is_mechanizable else NON_MECHANIZABLE_COST
+        return Decimal("0.0") if self.is_mechanizable else NON_MECHANIZABLE_COST
 
     @classmethod
     def calculate_volumetric_weight(cls, width, height, length) -> int:
@@ -404,10 +399,9 @@ class Package:
         return int(math.ceil(max(volumetric_weight, weight)))
 
     @classmethod
-    def calculate_insurance(cls,
-                            per_unit_value: Union[int, float, Decimal],
-                            service: Union[Service, int, str],
-                            quantity: int = 1) -> Decimal:
+    def calculate_insurance(
+        cls, per_unit_value: Union[int, float, Decimal], service: Union[Service, int, str], quantity: int = 1
+    ) -> Decimal:
         value = Decimal("0.00")
         per_unit_value = Decimal(per_unit_value)
         service_code = Service.get(service).code
@@ -419,14 +413,16 @@ class Package:
         return to_decimal(value * quantity)
 
     @classmethod
-    def validate(cls,
-                 package_type: int,
-                 width: Union[float, int] = 0,
-                 height: Union[float, int] = 0,
-                 length: Union[float, int] = 0,
-                 diameter: Union[float, int] = 0,
-                 service: Optional[Union[Service, str, int]] = None,
-                 weight: Union[float, int] = 0) -> None:
+    def validate(
+        cls,
+        package_type: int,
+        width: Union[float, int] = 0,
+        height: Union[float, int] = 0,
+        length: Union[float, int] = 0,
+        diameter: Union[float, int] = 0,
+        service: Optional[Union[Service, str, int]] = None,
+        weight: Union[float, int] = 0,
+    ) -> None:
 
         width = int(math.ceil(width))
         height = int(math.ceil(height))
@@ -448,9 +444,7 @@ class Package:
 
         if package_type == Package.TYPE_BOX:
             if diameter:
-                raise exceptions.InvalidPackageDimensionsError(
-                    "Package does not use diameter: {}".format(diameter)
-                )
+                raise exceptions.InvalidPackageDimensionsError("Package does not use diameter: {}".format(diameter))
 
             cls._validate_dimension("width", width, MAX_WIDTH)
             cls._validate_dimension("height", height, MAX_HEIGHT)
@@ -492,26 +486,19 @@ class Package:
 
         if weight > service.max_weight:
             message = "Max weight exceeded for service {!r}: {!r}g (max. {!r}g)".format(
-                weight,
-                str(service),
-                service.max_weight,
+                weight, str(service), service.max_weight
             )
             raise exceptions.InvalidMaxPackageWeightError(message)
 
 
 class Receipt:
-    def __init__(
-        self,
-        number: Union[int, str],
-        post_date: Union[str, date],
-        value: Union[str, Decimal]
-    ) -> None:
+    def __init__(self, number: Union[int, str], post_date: Union[str, date], value: Union[str, Decimal]) -> None:
         self.number = int(number)
 
         self.real_post_date = post_date
 
         if not isinstance(post_date, date):
-            post_date = datetime.strptime(post_date, '%Y%m%d').date()
+            post_date = datetime.strptime(post_date, "%Y%m%d").date()
 
         self.post_date = post_date
 
@@ -523,24 +510,22 @@ class Receipt:
         self.value = value
 
     def __eq__(self, other):
-        return all([
-            isinstance(other, Receipt),
-            self.number == other.number,
-            self.post_date == other.post_date,
-            self.value == other.value,
-        ])
+        return all(
+            [
+                isinstance(other, Receipt),
+                self.number == other.number,
+                self.post_date == other.post_date,
+                self.value == other.value,
+            ]
+        )
 
     def __repr__(self):
         return (
-            '<Receipt('
-            'number={number}, '
-            'post_date={post_date}, '
-            'value={value}'
-            ')>'.format(
-                number=self.number,
-                post_date=self.post_date,
-                value=self.value
-            )
+            "<Receipt("
+            "number={number}, "
+            "post_date={post_date}, "
+            "value={value}"
+            ")>".format(number=self.number, post_date=self.post_date, value=self.value)
         )
 
 
@@ -552,37 +537,45 @@ class ShippingLabel:
     service_name_template = "{!s}"
     package_template = "{!s}/{!s}"
     weight_template = "{!s}g"
-    receipt_template = ("Recebedor: ___________________________________________<br/>"
-                        "Assinatura: __________________ Documento: _______________")
+    receipt_template = (
+        "Recebedor: ___________________________________________<br/>"
+        "Assinatura: __________________ Documento: _______________"
+    )
     sender_header = "DESTINATÁRIO"
     carrier_logo = str(get_resource_path("carrier_logo_bw.png"))
-    receiver_data_template = ("{receiver.label_name!s:>.50}<br/>"
-                              "{receiver.label_address!s:>.95}<br/>"
-                              "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
+    receiver_data_template = (
+        "{receiver.label_name!s:>.50}<br/>"
+        "{receiver.label_address!s:>.95}<br/>"
+        "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}"
+    )
 
-    sender_data_template = ("<b>Remetente:</b> {sender.label_name!s:>.40}<br/>"
-                            "{sender.label_address!s:>.95}<br/>"
-                            "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
+    sender_data_template = (
+        "<b>Remetente:</b> {sender.label_name!s:>.40}<br/>"
+        "{sender.label_address!s:>.95}<br/>"
+        "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}"
+    )
 
-    def __init__(self,
-                 posting_card: PostingCard,
-                 sender: Address,
-                 receiver: Address,
-                 service: Union[Service, int],
-                 tracking_code: Union[TrackingCode, str],
-                 package: Package,
-                 extra_services: Optional[List[Union[ExtraService, int]]] = None,
-                 logo: Optional[Union[str, Image.Image]] = None,
-                 order: Optional[str] = "",
-                 invoice_number: Optional[str] = "",
-                 invoice_series: Optional[str] = "",
-                 invoice_type: Optional[str] = "",
-                 value: Optional[Decimal] = Decimal("0.00"),
-                 billing: Optional[Decimal] = Decimal("0.00"),
-                 text: Optional[str] = "",
-                 latitude: Optional[float] = 0.0,
-                 longitude: Optional[float] = 0.0,
-                 receipt: Optional[Receipt] = None) -> None:
+    def __init__(
+        self,
+        posting_card: PostingCard,
+        sender: Address,
+        receiver: Address,
+        service: Union[Service, int],
+        tracking_code: Union[TrackingCode, str],
+        package: Package,
+        extra_services: Optional[List[Union[ExtraService, int]]] = None,
+        logo: Optional[Union[str, Image.Image]] = None,
+        order: Optional[str] = "",
+        invoice_number: Optional[str] = "",
+        invoice_series: Optional[str] = "",
+        invoice_type: Optional[str] = "",
+        value: Optional[Decimal] = Decimal("0.00"),
+        billing: Optional[Decimal] = Decimal("0.00"),
+        text: Optional[str] = "",
+        latitude: Optional[float] = 0.0,
+        longitude: Optional[float] = 0.0,
+        receipt: Optional[Receipt] = None,
+    ) -> None:
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
 
@@ -652,10 +645,7 @@ class ShippingLabel:
         return self.package.posting_weight
 
     def has_declared_value(self):
-        return any([
-            ExtraService.get(EXTRA_SERVICE_VD_PAC) in self,
-            ExtraService.get(EXTRA_SERVICE_VD_SEDEX) in self,
-        ])
+        return any([ExtraService.get(EXTRA_SERVICE_VD_PAC) in self, ExtraService.get(EXTRA_SERVICE_VD_SEDEX) in self])
 
     def get_order(self):
         return self.order_template.format(self.order)
@@ -783,12 +773,7 @@ class PostalUnit:
 
 
 class PostInfo:
-    def __init__(
-        self,
-        postal_unit: PostalUnit,
-        posting_list: PostingList,
-        value: Union[Decimal, float, str]
-    ) -> None:
+    def __init__(self, postal_unit: PostalUnit, posting_list: PostingList, value: Union[Decimal, float, str]) -> None:
         self.postal_unit = postal_unit
         self.posting_list = posting_list
         self.real_value = value
@@ -798,11 +783,11 @@ class PostInfo:
 
     def __repr__(self):
         return (
-            '<PostInfo('
-            'postal_unit={self.postal_unit}, '
-            'posting_list={self.posting_list}, '
-            'value={self.value}'
-            ')>'.format(self=self)
+            "<PostInfo("
+            "postal_unit={self.postal_unit}, "
+            "posting_list={self.posting_list}, "
+            "value={self.value}"
+            ")>".format(self=self)
         )
 
 
@@ -813,17 +798,19 @@ class FreightResponse:
         FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
     )
 
-    def __init__(self,
-                 service: Union[Service, int],
-                 delivery_time: Union[int, timedelta],
-                 value: Union[Decimal, float, int, str],
-                 declared_value: Union[Decimal, float, int, str] = 0.00,
-                 mp_value: Union[Decimal, float, int, str] = 0.00,
-                 ar_value: Union[Decimal, float, int, str] = 0.00,
-                 saturday: bool = False,
-                 home: bool = False,
-                 error_code: int = 0,
-                 error_message: str = "") -> None:
+    def __init__(
+        self,
+        service: Union[Service, int],
+        delivery_time: Union[int, timedelta],
+        value: Union[Decimal, float, int, str],
+        declared_value: Union[Decimal, float, int, str] = 0.00,
+        mp_value: Union[Decimal, float, int, str] = 0.00,
+        ar_value: Union[Decimal, float, int, str] = 0.00,
+        saturday: bool = False,
+        home: bool = False,
+        error_code: int = 0,
+        error_message: str = "",
+    ) -> None:
 
         self.service = Service.get(service)
 
@@ -848,11 +835,11 @@ class FreightResponse:
         self.ar_value = ar_value
 
         if not isinstance(saturday, bool):
-            saturday = (saturday == 'S')
+            saturday = saturday == "S"
         self.saturday = saturday
 
         if not isinstance(home, bool):
-            home = (home == 'S')
+            home = home == "S"
         self.home = home
 
         self.error_code = error_code

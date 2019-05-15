@@ -30,6 +30,9 @@ isort:  ## Check imports
 fix-imports:  ## Fix imports
 	isort -rc .
 
+pyformat:
+	black correios tests samples docs
+
 lint: check-types flake isort ## Run code lint
 
 test: clean lint  ## Run tests

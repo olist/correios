@@ -96,8 +96,7 @@ class FederalTaxNumber(AbstractTaxNumber):
         raw_number = self._sanitize(raw_number)
 
         if len(raw_number) != FederalTaxNumber.FEDERAL_TAX_NUMBER_SIZE:
-            raise InvalidFederalTaxNumberError(
-                "Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
+            raise InvalidFederalTaxNumberError("Tax Number must have {} digits".format(self.FEDERAL_TAX_NUMBER_SIZE))
 
         if not self._check_verification_digits(raw_number):
             raise InvalidFederalTaxNumberError("Invalid Federal Tax Number verification digits")
@@ -105,11 +104,9 @@ class FederalTaxNumber(AbstractTaxNumber):
         return raw_number
 
     def display(self) -> str:
-        return "{}.{}.{}/{}-{}".format(self.number[:2],
-                                       self.number[2:5],
-                                       self.number[5:8],
-                                       self.number[8:12],
-                                       self.number[12:])
+        return "{}.{}.{}/{}-{}".format(
+            self.number[:2], self.number[2:5], self.number[5:8], self.number[8:12], self.number[12:]
+        )
 
 
 class StateTaxNumber(AbstractTaxNumber):
@@ -122,17 +119,19 @@ class StateTaxNumber(AbstractTaxNumber):
 
 class Service:
     # noinspection PyShadowingBuiltins
-    def __init__(self,
-                 code: Union[int, str],
-                 id: int,
-                 description: str,
-                 category: str,
-                 display_name: Optional[str] = "",
-                 symbol: Optional[str] = None,
-                 max_weight: Optional[int] = None,
-                 min_declared_value: Decimal = Decimal("0.00"),
-                 max_declared_value: Decimal = Decimal("0.00"),
-                 default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None) -> None:
+    def __init__(
+        self,
+        code: Union[int, str],
+        id: int,
+        description: str,
+        category: str,
+        display_name: Optional[str] = "",
+        symbol: Optional[str] = None,
+        max_weight: Optional[int] = None,
+        min_declared_value: Decimal = Decimal("0.00"),
+        max_declared_value: Decimal = Decimal("0.00"),
+        default_extra_services: Optional[Sequence[Union["ExtraService", int]]] = None,
+    ) -> None:
         self.id = id
         self.code = Service.sanitize_code(code)
         self.description = description.strip()
@@ -161,18 +160,18 @@ class Service:
 
     def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
         if value > self.max_declared_value:
-            raise MaximumDeclaredValueError("Declared value {!r} is greater than maximum "
-                                            "{!r} for service {!r}".format(value,
-                                                                           self.max_declared_value,
-                                                                           self))
+            raise MaximumDeclaredValueError(
+                "Declared value {!r} is greater than maximum "
+                "{!r} for service {!r}".format(value, self.max_declared_value, self)
+            )
         if value < self.min_declared_value:
-            raise MinimumDeclaredValueError("Declared value {!r} is less than minimum "
-                                            "{!r} for service {!r}".format(value,
-                                                                           self.min_declared_value,
-                                                                           self))
+            raise MinimumDeclaredValueError(
+                "Declared value {!r} is less than minimum "
+                "{!r} for service {!r}".format(value, self.min_declared_value, self)
+            )
         return True
 
-    def get_symbol_filename(self, extension='gif') -> str:
+    def get_symbol_filename(self, extension="gif") -> str:
         filename = "{}.{}".format(self.symbol, extension)
         return str(get_resource_path(filename))
 
@@ -188,7 +187,7 @@ class Service:
         return "{:05}".format(code)
 
     @classmethod
-    def get(cls, service: Union['Service', int, str]) -> 'Service':
+    def get(cls, service: Union["Service", int, str]) -> "Service":
         if isinstance(service, cls):
             return service
         service = cast(Union[int, str], service)
@@ -224,7 +223,7 @@ class ExtraService:
         return self in (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX)
 
     @classmethod
-    def get(cls, number: Union['ExtraService', int]) -> 'ExtraService':
+    def get(cls, number: Union["ExtraService", int]) -> "ExtraService":
         if isinstance(number, cls):
             return number
         number = cast(int, number)
@@ -233,11 +232,13 @@ class ExtraService:
 
 
 class User:
-    def __init__(self,
-                 name: str,
-                 federal_tax_number: Union[str, FederalTaxNumber],
-                 state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
-                 status_number: Optional[Union[int, str]] = None) -> None:
+    def __init__(
+        self,
+        name: str,
+        federal_tax_number: Union[str, FederalTaxNumber],
+        state_tax_number: Optional[Union[str, StateTaxNumber]] = None,
+        status_number: Optional[Union[int, str]] = None,
+    ) -> None:
         self.name = name.strip()
         self.federal_tax_number = _to_federal_tax_number(federal_tax_number)
 
@@ -251,17 +252,16 @@ class User:
 
         self.contracts = []  # type: List[Contract]
 
-    def add_contract(self, contract: 'Contract'):
+    def add_contract(self, contract: "Contract"):
         if contract in self.contracts:
             raise InvalidUserContractError("Contract {!r} already added".format(contract))
         self.contracts.append(contract)
 
 
 class Contract:
-    def __init__(self,
-                 user: User,
-                 number: Union[int, str],
-                 regional_direction: Union[str, int, 'RegionalDirection']) -> None:
+    def __init__(
+        self, user: User, number: Union[int, str], regional_direction: Union[str, int, "RegionalDirection"]
+    ) -> None:
 
         self.user = user
         user.add_contract(self)
@@ -306,7 +306,7 @@ class Contract:
     def end_date(self, date):
         self._end_date = to_datetime(date)
 
-    def add_posting_card(self, posting_card: 'PostingCard'):
+    def add_posting_card(self, posting_card: "PostingCard"):
         posting_card.contract = self
         self.posting_cards.append(posting_card)
 
@@ -329,10 +329,9 @@ class PostingCard:
     ACTIVE = True
     CANCELLED = False
 
-    def __init__(self,
-                 contract: Contract,
-                 number: Union[int, str],  # 10 digits
-                 administrative_code: Union[int, str]) -> None:  # 8 digits
+    def __init__(
+        self, contract: Contract, number: Union[int, str], administrative_code: Union[int, str]  # 10 digits
+    ) -> None:  # 8 digits
         self.contract = contract
         self._number = to_integer(number)
         self._administrative_code = to_integer(administrative_code)
@@ -415,7 +414,7 @@ class RegionalDirection:
         self.name = name
 
     @classmethod
-    def get(cls, number: Union['RegionalDirection', int]) -> 'RegionalDirection':
+    def get(cls, number: Union["RegionalDirection", int]) -> "RegionalDirection":
         if isinstance(number, RegionalDirection):
             return number
 

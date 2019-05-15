@@ -44,24 +44,24 @@ class WSDLUpdater:
         print(msg, file=self.output)
 
     def save(self, path: str, content: str):
-        with open(path, 'w') as file:
+        with open(path, "w") as file:
             file.write(content)
-        self.out('Successfully create file: {}'.format(path))
+        self.out("Successfully create file: {}".format(path))
 
     def download_wsdl(self, url: str, filename: str):
         path = os.path.join(self.wsdl_path, filename)
 
-        self.out('Updating file: {} URL: {}'.format(filename, url))
+        self.out("Updating file: {} URL: {}".format(filename, url))
 
         response = self.session.get(url)
         response.raise_for_status()
 
         self.save(path, response.text)
-        self.out('Updated with success')
+        self.out("Updated with success")
 
     def update_all(self):
-        self.out('Updating Correios Webservice WSDLs')
-        self.out('Files will be saved on: {}'.format(self.wsdl_path))
+        self.out("Updating Correios Webservice WSDLs")
+        self.out("Files will be saved on: {}".format(self.wsdl_path))
 
         for webservice, args in self.webservices.items():
             url, filename = args
@@ -72,21 +72,10 @@ class WSDLUpdater:
 
 
 def cli():
-    parser = argparse.ArgumentParser(description='Updates Correios WSDL files')
+    parser = argparse.ArgumentParser(description="Updates Correios WSDL files")
+    parser.add_argument("-q", "--quiet", dest="output", action="store_const", const=None, default=sys.stdout)
     parser.add_argument(
-        '-q',
-        '--quiet',
-        dest='output',
-        action='store_const',
-        const=None,
-        default=sys.stdout,
-    )
-    parser.add_argument(
-        '-p',
-        '--path',
-        dest='wsdl_path',
-        default=str(WSDL_DIR),
-        help='Custom path where wsdl files will be saved.'
+        "-p", "--path", dest="wsdl_path", default=str(WSDL_DIR), help="Custom path where wsdl files will be saved."
     )
     args = parser.parse_args()
 
@@ -94,5 +83,5 @@ def cli():
     return updater.update_all()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(cli() or 0)

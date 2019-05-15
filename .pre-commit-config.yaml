@@ -1,6 +1,6 @@
 repos:
 -   repo: git@github.com:pre-commit/pre-commit-hooks
-    rev: v1.4.0
+    rev: v2.2.1
     hooks:
     - id: debug-statements
     - id: trailing-whitespace
@@ -18,7 +18,7 @@ repos:
     - id: detect-private-key
     - id: forbid-new-submodules
     - id: flake8
-      args: ['--exclude=docs/*,*migrations*', '--ignore=E501']
+      args: ['--exclude=docs/*,*migrations*', '--ignore=E501,W503']
 
 - repo: local
   hooks:
@@ -29,8 +29,13 @@ repos:
     entry: 'datetime\.now\(\)'
     types: [python]
 
+- repo: https://github.com/python/black
+  rev: 19.3b0
+  hooks:
+    - id: black
+
 - repo: git@github.com:olist/hulks.git
-  rev: 0.1.0
+  rev: 0.4.0
   hooks:
   - id: check-filename
   - id: check-logger
