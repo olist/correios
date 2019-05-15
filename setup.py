@@ -41,27 +41,19 @@ setup(
     name="correios",
     version="6.1.14",
     url="https://github.com/osantana/correios",
-
     author="Osvaldo Santana Neto",
     author_email="correiospy@osantana.me",
-
     description="A client library for Brazilian Correios APIs and services",
     long_description=open("README.rst").read(),
-
     packages=find_packages(),
     include_package_data=True,
-
     install_requires=requirements.pop("install_requires"),
     extras_require=requirements,
-
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
     ],
-
-    entry_points={
-        "console_scripts": ["update-correios-wsdl=correios.update_wsdl:cli"],
-    },
+    entry_points={"console_scripts": ["update-correios-wsdl=correios.update_wsdl:cli"]},
 )

@@ -24,5 +24,5 @@ def get_tracking_codes(service, quantity):
     print(tracking_codes)
 
 
-get_tracking_codes('41068', 1)  # Request 1 PAC Tracking Code
-get_tracking_codes('40068', 1)  # Request 1 SEDEX Tracking Code
+get_tracking_codes("41068", 1)  # Request 1 PAC Tracking Code
+get_tracking_codes("40068", 1)  # Request 1 SEDEX Tracking Code

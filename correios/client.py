@@ -46,22 +46,16 @@ logger = logging.getLogger(__name__)
 KG = 1000  # g
 # environ servico url filename
 CORREIOS_WEBSERVICES = {
-    'sigep-production': (
-        'https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl',
-        'AtendeCliente-production.wsdl',
+    "sigep-production": (
+        "https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl",
+        "AtendeCliente-production.wsdl",
     ),
-    'sigep-test': (
-        'https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl',
-        'AtendeCliente-test.wsdl',
+    "sigep-test": (
+        "https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl",
+        "AtendeCliente-test.wsdl",
     ),
-    'websro': (
-        'https://webservice.correios.com.br/service/rastro/Rastro.wsdl',
-        'Rastro.wsdl',
-    ),
-    'freight': (
-        'http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL',
-        'CalcPrecoPrazo.asmx',
-    ),
+    "websro": ("https://webservice.correios.com.br/service/rastro/Rastro.wsdl", "Rastro.wsdl"),
+    "freight": ("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL", "CalcPrecoPrazo.asmx"),
 }
 
 ERRORS = {
@@ -82,7 +76,7 @@ class Correios:
         password: str,
         timeout: int = 8,
         environment: str = "production",
-        local_wsdl_path: Optional[Path] = None
+        local_wsdl_path: Optional[Path] = None,
     ) -> None:
 
         if local_wsdl_path is None:
@@ -129,10 +123,7 @@ class Correios:
         raise ClientError(message)
 
     def _auth_call(self, method_name, *args, **kwargs):
-        kwargs.update({
-            "usuario": self.username,
-            "senha": self.password,
-        })
+        kwargs.update({"usuario": self.username, "senha": self.password})
         return self._call(method_name, *args, **kwargs)
 
     def _call(self, method_name, *args, **kwargs):
@@ -161,13 +152,17 @@ class Correios:
         posting_card: PostingCard,
         service: Service,
         from_zip_code: Union[ZipCode, str],
-        to_zip_code: Union[ZipCode, str]
+        to_zip_code: Union[ZipCode, str],
     ) -> bool:
         from_zip_code = ZipCode.create(from_zip_code)
         to_zip_code = ZipCode.create(to_zip_code)
-        result = self._auth_call("verificaDisponibilidadeServico",
-                                 posting_card.administrative_code, str(service),
-                                 str(from_zip_code), str(to_zip_code))
+        result = self._auth_call(
+            "verificaDisponibilidadeServico",
+            posting_card.administrative_code,
+            str(service),
+            str(from_zip_code),
+            str(to_zip_code),
+        )
         return result
 
     def get_posting_card_status(self, posting_card: PostingCard) -> bool:
@@ -175,29 +170,23 @@ class Correios:
         return self.model_builder.build_posting_card_status(result)
 
     def request_tracking_codes(self, user: User, service: Service, quantity=1, receiver_type="C") -> list:
-        result = self._auth_call("solicitaEtiquetas",
-                                 receiver_type, str(user.federal_tax_number),
-                                 service.id, quantity)
+        result = self._auth_call("solicitaEtiquetas", receiver_type, str(user.federal_tax_number), service.id, quantity)
         return self.model_builder.build_tracking_codes_list(result)
 
     def generate_verification_digit(self, tracking_codes: Sequence[str]) -> List[int]:
         tracking_codes = [TrackingCode(tc).nodigit for tc in tracking_codes]
-        result = self._auth_call("geraDigitoVerificadorEtiquetas",
-                                 tracking_codes)
+        result = self._auth_call("geraDigitoVerificadorEtiquetas", tracking_codes)
 
         return result
 
     def get_post_info(self, number: int) -> PostInfo:
-        result = self._auth_call('solicitaXmlPlp', number)
+        result = self._auth_call("solicitaXmlPlp", number)
 
-        data = fromstring(result.encode('iso-8859-1'))
+        data = fromstring(result.encode("iso-8859-1"))
         contract_number = data.remetente.numero_contrato.text  # type: ignore
         posting_card_number = data.plp.cartao_postagem.text  # type: ignore
 
-        user = self.get_user(
-            contract_number=contract_number,
-            posting_card_number=posting_card_number
-        )
+        user = self.get_user(contract_number=contract_number, posting_card_number=posting_card_number)
 
         return self.model_builder.build_post_info(data=data, user=user)
 
@@ -211,9 +200,9 @@ class Correios:
         tracking_codes = posting_list.get_tracking_codes()
 
         try:
-            id_ = self._auth_call("fechaPlpVariosServicos", xml,
-                                  posting_list.custom_id, posting_card.number,
-                                  tracking_codes)
+            id_ = self._auth_call(
+                "fechaPlpVariosServicos", xml, posting_list.custom_id, posting_card.number, tracking_codes
+            )
         except ClientError as exc:
             if str(exc).startswith("A PLP não será fechada"):
                 message = "Unable to close PLP. Tracking codes {} are already assigned to another PLP"
@@ -229,7 +218,7 @@ class Correios:
             tracking_list = [tracking_list]
 
         if len(tracking_list) > Correios.MAX_TRACKING_CODES_PER_REQUEST:
-            msg = '{} tracking codes requested exceeds the limit of {} stabilished by the Correios'
+            msg = "{} tracking codes requested exceeds the limit of {} stabilished by the Correios"
             msg = msg.format(len(tracking_list), Correios.MAX_TRACKING_CODES_PER_REQUEST)
             raise TrackingCodesLimitExceededError(msg)
 
@@ -238,15 +227,17 @@ class Correios:
             tracking_code = TrackingCode.create(tracking_code)
             tracking_codes[tracking_code.code] = tracking_code
 
-        response = self.websro.buscaEventosLista(self.username, self.password, "L", "T", "101",
-                                                 list(tracking_codes.keys()))
+        response = self.websro.buscaEventosLista(
+            self.username, self.password, "L", "T", "101", list(tracking_codes.keys())
+        )
         return self.model_builder.load_tracking_events(tracking_codes, response)
 
     def calculate_freights(
         self,
         posting_card: PostingCard,
         services: List[Union[Service, int]],
-        from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str],
+        from_zip: Union[ZipCode, int, str],
+        to_zip: Union[ZipCode, int, str],
         package: Package,
         value: Union[Decimal, float] = 0.00,
         extra_services: Optional[Sequence[Union[ExtraService, int]]] = None,
@@ -280,8 +271,9 @@ class Correios:
         )
         return self.model_builder.build_freights_list(response)
 
-    def calculate_delivery_time(self, service: Union[Service, int], from_zip: Union[ZipCode, int, str],
-                                to_zip: Union[ZipCode, int, str]) -> int:
+    def calculate_delivery_time(
+        self, service: Union[Service, int], from_zip: Union[ZipCode, int, str], to_zip: Union[ZipCode, int, str]
+    ) -> int:
         service = Service.get(service)
         from_zip = ZipCode.create(from_zip)
         to_zip = ZipCode.create(to_zip)

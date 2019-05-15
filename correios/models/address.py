@@ -29,8 +29,8 @@ STATE_LENGTH = 2
 
 
 class ZipCode:
-    REGION_CAPITAL = 'CAPITAL'
-    REGION_INTERIOR = 'INTERIOR'
+    REGION_CAPITAL = "CAPITAL"
+    REGION_INTERIOR = "INTERIOR"
     ALL = 0
     CAPITAL = 1
 
@@ -97,7 +97,7 @@ class ZipCode:
         return self.REGION_INTERIOR
 
     @classmethod
-    def create(cls, code: Union['ZipCode', int, str]) -> 'ZipCode':
+    def create(cls, code: Union["ZipCode", int, str]) -> "ZipCode":
         if isinstance(code, ZipCode):
             return code
 
@@ -109,33 +109,33 @@ class ZipCode:
 
 class State:
     STATES = {
-        'AC': 'Acre',
-        'AL': 'Alagoas',
-        'AP': 'Amapá',
-        'AM': 'Amazonas',
-        'BA': 'Bahia',
-        'CE': 'Ceará',
-        'DF': 'Distrito Federal',
-        'ES': 'Espírito Santo',
-        'GO': 'Goiás',
-        'MA': 'Maranhão',
-        'MT': 'Mato Grosso',
-        'MS': 'Mato Grosso do Sul',
-        'MG': 'Minas Gerais',
-        'PA': 'Pará',
-        'PB': 'Paraíba',
-        'PR': 'Paraná',
-        'PE': 'Pernambuco',
-        'PI': 'Piauí',
-        'RJ': 'Rio de Janeiro',
-        'RN': 'Rio Grande do Norte',
-        'RS': 'Rio Grande do Sul',
-        'RO': 'Rondônia',
-        'RR': 'Roraima',
-        'SC': 'Santa Catarina',
-        'SP': 'São Paulo',
-        'SE': 'Sergipe',
-        'TO': 'Tocantins',
+        "AC": "Acre",
+        "AL": "Alagoas",
+        "AP": "Amapá",
+        "AM": "Amazonas",
+        "BA": "Bahia",
+        "CE": "Ceará",
+        "DF": "Distrito Federal",
+        "ES": "Espírito Santo",
+        "GO": "Goiás",
+        "MA": "Maranhão",
+        "MT": "Mato Grosso",
+        "MS": "Mato Grosso do Sul",
+        "MG": "Minas Gerais",
+        "PA": "Pará",
+        "PB": "Paraíba",
+        "PR": "Paraná",
+        "PE": "Pernambuco",
+        "PI": "Piauí",
+        "RJ": "Rio de Janeiro",
+        "RN": "Rio Grande do Norte",
+        "RS": "Rio Grande do Sul",
+        "RO": "Rondônia",
+        "RR": "Roraima",
+        "SC": "Santa Catarina",
+        "SP": "São Paulo",
+        "SE": "Sergipe",
+        "TO": "Tocantins",
     }
     _name_map = {v.lower(): k for k, v in STATES.items()}
 
@@ -170,14 +170,16 @@ class State:
 
 class ZipAddress:
     # noinspection PyShadowingBuiltins
-    def __init__(self,
-                 id: int,
-                 zip_code: Union[ZipCode, str],
-                 state: Union[State, str],
-                 city: str,
-                 district: str,
-                 address: str,
-                 complements: List[str]) -> None:
+    def __init__(
+        self,
+        id: int,
+        zip_code: Union[ZipCode, str],
+        state: Union[State, str],
+        city: str,
+        district: str,
+        address: str,
+        complements: List[str],
+    ) -> None:
         self.id = id
         self.zip_code = ZipCode(str(zip_code))
         self.state = State(str(state))
@@ -228,21 +230,22 @@ class Phone:
 
 
 class Address:
-    def __init__(self,
-                 name: str,
-                 street: str,
-                 number: Union[int, str],
-                 city: str,
-                 state: Union[State, str],
-                 zip_code: Union[ZipCode, str],
-                 complement: str = "",
-                 neighborhood: str = "",
-                 phone: Union[Phone, str] = "",
-                 cellphone: Union[Phone, str] = "",
-                 email: str = "",
-                 latitude: Union[Decimal, str] = "0.0",
-                 longitude: Union[Decimal, str] = "0.0",
-                 ) -> None:
+    def __init__(
+        self,
+        name: str,
+        street: str,
+        number: Union[int, str],
+        city: str,
+        state: Union[State, str],
+        zip_code: Union[ZipCode, str],
+        complement: str = "",
+        neighborhood: str = "",
+        phone: Union[Phone, str] = "",
+        cellphone: Union[Phone, str] = "",
+        email: str = "",
+        latitude: Union[Decimal, str] = "0.0",
+        longitude: Union[Decimal, str] = "0.0",
+    ) -> None:
         self.name = name
         self.street = street
         self.city = city
@@ -277,7 +280,7 @@ class Address:
 
     @property
     def complement_safe_display(self) -> str:
-        return ''.join(c for c in str(self.complement) if c.isalnum())
+        return "".join(c for c in str(self.complement) if c.isalnum())
 
     @property
     def zip_code_display(self) -> str:
@@ -298,8 +301,10 @@ class Address:
         msg = "{}.label_address is going to be deprecated. Make sure you use SendAddress or ReceiverAddress"
         warnings.warn(msg.format(type(self).__name__), DeprecationWarning)
 
-        template = ("{address.street!s:>.40} {address.number!s:>.8}<br/> "
-                    "{address.complement!s:>.20} {address.neighborhood!s:>.28}")
+        template = (
+            "{address.street!s:>.40} {address.number!s:>.8}<br/> "
+            "{address.complement!s:>.20} {address.neighborhood!s:>.28}"
+        )
         return capitalize_phrase(template.format(address=self))
 
     @property
@@ -331,7 +336,7 @@ class ReceiverAddress(Address):
         label_address = self.basic_address
 
         if len(label_address) <= 55:
-            label_address = rreplace(label_address, ',', '<br/>', count=1)
+            label_address = rreplace(label_address, ",", "<br/>", count=1)
 
         return label_address
 
@@ -342,6 +347,6 @@ class SenderAddress(Address):
         label_address = self.basic_address
 
         if len(label_address) <= 60:
-            label_address = rreplace(label_address, ',', '<br/>', count=1)
+            label_address = rreplace(label_address, ",", "<br/>", count=1)
 
         return label_address

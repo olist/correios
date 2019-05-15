@@ -43,26 +43,29 @@ def test_basic_update():
 def test_wsdl_updater_download():
     with tempfile.TemporaryDirectory() as wsdl_path:
         wsdl_updater = get_wsdl_updater(wsdl_path)
-        wsdl_updater.download_wsdl('https://example.com/service.wsdl', 'service-production.wsdl')
+        wsdl_updater.download_wsdl("https://example.com/service.wsdl", "service-production.wsdl")
 
-    wsdl_updater.session.get.assert_called_once_with('https://example.com/service.wsdl')
+    wsdl_updater.session.get.assert_called_once_with("https://example.com/service.wsdl")
 
     printed = wsdl_updater.output.getvalue()
-    assert 'Updating file: service-production.wsdl URL: https://example.com/service.wsdl' in printed
-    assert 'Successfully create file:' in printed
-    assert 'Updated with success' in printed
+    assert "Updating file: service-production.wsdl URL: https://example.com/service.wsdl" in printed
+    assert "Successfully create file:" in printed
+    assert "Updated with success" in printed
 
 
 def test_wsdl_update_all():
     with tempfile.TemporaryDirectory() as wsdl_path:
         wsdl_updater = get_wsdl_updater(wsdl_path)
         wsdl_updater.update_all()
-        wsdl_updater.session.get.assert_has_calls([
-            call('https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'),
-            call('https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl'),
-            call('https://webservice.correios.com.br/service/rastro/Rastro.wsdl'),
-            call('http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL'),
-        ], any_order=True)
+        wsdl_updater.session.get.assert_has_calls(
+            [
+                call("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"),
+                call("https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"),
+                call("https://webservice.correios.com.br/service/rastro/Rastro.wsdl"),
+                call("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?WSDL"),
+            ],
+            any_order=True,
+        )
 
 
 def test_wsdl_download_error():
@@ -75,7 +78,11 @@ def test_wsdl_download_error():
     wsdl_updater.update_all()
 
     printed = wsdl_updater.output.getvalue()
-    assert ('Updating file: AtendeCliente-production.wsdl '
-            'URL: https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl') in printed
-    assert ("Error downloading https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl: "
-            "test error") in printed
+    assert (
+        "Updating file: AtendeCliente-production.wsdl "
+        "URL: https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl"
+    ) in printed
+    assert (
+        "Error downloading https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl: "
+        "test error"
+    ) in printed

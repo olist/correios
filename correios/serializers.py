@@ -94,8 +94,9 @@ class PostingListSerializer:
 
         extra_services = xml_utils.SubElement(item, "servico_adicional")
         for extra_service in shipping_label.extra_services:
-            xml_utils.SubElement(extra_services, "codigo_servico_adicional",
-                                 text="{!s:>03}".format(extra_service.number))
+            xml_utils.SubElement(
+                extra_services, "codigo_servico_adicional", text="{!s:>03}".format(extra_service.number)
+            )
         xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
 
         dimensions = xml_utils.SubElement(item, "dimensao_objeto")
@@ -139,7 +140,7 @@ class PostingListSerializer:
 
     def get_xml(self, document) -> bytes:
         xmlstring = str(xml_utils.tostring(document, encoding="unicode"))
-        encoded_xmlstring = xmlstring.encode("iso-8859-1", errors='ignore')
+        encoded_xmlstring = xmlstring.encode("iso-8859-1", errors="ignore")
         return b'<?xml version="1.0" encoding="ISO-8859-1"?>' + encoded_xmlstring
 
     def serialize(self, posting_list: PostingList) -> bytes:

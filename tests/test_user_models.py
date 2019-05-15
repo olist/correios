@@ -101,10 +101,12 @@ def test_state_tax_number_repr():
 
 
 def test_basic_user(valid_federal_tax_number, valid_state_tax_number):
-    user = User(name="ECT",
-                federal_tax_number=valid_federal_tax_number,
-                state_tax_number=valid_state_tax_number,
-                status_number=1)
+    user = User(
+        name="ECT",
+        federal_tax_number=valid_federal_tax_number,
+        state_tax_number=valid_state_tax_number,
+        status_number=1,
+    )
 
     assert user.name == "ECT"
     assert user.federal_tax_number == "73119555000120"
@@ -113,20 +115,24 @@ def test_basic_user(valid_federal_tax_number, valid_state_tax_number):
 
 
 def test_sanitize_user_data(valid_federal_tax_number, valid_state_tax_number):
-    user = User(name="    NAME WITH TRAILLING WHITESPACES      ",
-                federal_tax_number=valid_federal_tax_number,
-                state_tax_number=valid_state_tax_number,
-                status_number="1  ")
+    user = User(
+        name="    NAME WITH TRAILLING WHITESPACES      ",
+        federal_tax_number=valid_federal_tax_number,
+        state_tax_number=valid_state_tax_number,
+        status_number="1  ",
+    )
 
     assert user.name == "NAME WITH TRAILLING WHITESPACES"
     assert user.status_number == 1
 
 
 def test_fail_add_contract_twice(contract, valid_federal_tax_number, valid_state_tax_number):
-    user = User(name="ECT",
-                federal_tax_number=valid_federal_tax_number,
-                state_tax_number=valid_state_tax_number,
-                status_number=1)
+    user = User(
+        name="ECT",
+        federal_tax_number=valid_federal_tax_number,
+        state_tax_number=valid_state_tax_number,
+        status_number=1,
+    )
     user.add_contract(contract)
 
     with pytest.raises(InvalidUserContractError):
@@ -134,10 +140,7 @@ def test_fail_add_contract_twice(contract, valid_federal_tax_number, valid_state
 
 
 def test_basic_contract(user):
-    contract = Contract(
-        user=user,
-        number=9911222777,
-        regional_direction=10)
+    contract = Contract(user=user, number=9911222777, regional_direction=10)
 
     assert contract.number == 9911222777
     assert contract.regional_direction.number == 10
@@ -147,11 +150,7 @@ def test_basic_contract(user):
 
 
 def test_sanitize_contract_data(user):
-    contract = Contract(
-        user=user,
-        number="9911222777  ",
-        regional_direction="   10",
-    )
+    contract = Contract(user=user, number="9911222777  ", regional_direction="   10")
     contract.customer_code = "279311"
     contract.status_code = "A"
     contract.start_date = "2014-05-09 00:00:00-03:00"
@@ -166,11 +165,7 @@ def test_sanitize_contract_data(user):
 
 
 def test_basic_posting_card(contract):
-    posting_card = PostingCard(
-        contract=contract,
-        number=56789123,
-        administrative_code=8888888,
-    )
+    posting_card = PostingCard(contract=contract, number=56789123, administrative_code=8888888)
 
     assert posting_card.number == "0056789123"
     assert posting_card.administrative_code == "08888888"
@@ -180,11 +175,7 @@ def test_basic_posting_card(contract):
 
 
 def test_sanitize_posting_card_data(contract):
-    posting_card = PostingCard(
-        contract=contract,
-        number="0056789123",
-        administrative_code=8888888,
-    )
+    posting_card = PostingCard(contract=contract, number="0056789123", administrative_code=8888888)
     posting_card.start_date = "2014-05-09 00:00:00-03:00"
     posting_card.end_date = "2018-05-16 00:00:00-03:00"
     posting_card.status = "01"
@@ -211,7 +202,7 @@ def test_basic_service():
     )
 
     assert service.id == 104707
-    assert service.code == '40215'
+    assert service.code == "40215"
     assert service.display_name == "SEDEX 10"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
@@ -230,7 +221,7 @@ def test_sanitize_service():
     )
 
     assert service.id == 104707
-    assert service.code == '40215'
+    assert service.code == "40215"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
 
@@ -238,7 +229,7 @@ def test_sanitize_service():
 def test_service_getter():
     service = Service.get(40215)
     assert service.id == 104707
-    assert service.code == '40215'
+    assert service.code == "40215"
     assert service.description == "SEDEX 10"
     assert service.category == "SERVICO_COM_RESTRICAO"
     assert Service.get(service) == service
@@ -277,12 +268,10 @@ def test_extra_service_sanitize_code():
     assert extra_service.code == "AR"
 
 
-@pytest.mark.parametrize("number,code,name", (
-    (0, "XY", "Invalid Number"),
-    (1, "XYZ", "Invalid Code"),
-    (1, "", "Invalid Code"),
-    (1, "XY", ""),  # Invalid Name
-))
+@pytest.mark.parametrize(
+    "number,code,name",
+    ((0, "XY", "Invalid Number"), (1, "XYZ", "Invalid Code"), (1, "", "Invalid Code"), (1, "XY", "")),  # Invalid Name
+)
 def test_fail_extra_service_invalid_data(number, code, name):
     with pytest.raises(InvalidExtraServiceError):
         ExtraService(number, code, name)
@@ -293,14 +282,10 @@ def test_fail_get_unknown_service():
         ExtraService.get(0)
 
 
-@pytest.mark.parametrize("number,extra_service_code", (
-    (1, "AR"),
-    (2, "MP"),
-    (25, "RR"),
-    (19, "VD"),
-    (64, "VD"),
-    (ExtraService.get(EXTRA_SERVICE_AR), "AR"),
-))
+@pytest.mark.parametrize(
+    "number,extra_service_code",
+    ((1, "AR"), (2, "MP"), (25, "RR"), (19, "VD"), (64, "VD"), (ExtraService.get(EXTRA_SERVICE_AR), "AR")),
+)
 def test_extra_service_getter(number, extra_service_code):
     assert ExtraService.get(number).code == extra_service_code
 
@@ -318,11 +303,9 @@ def test_regional_direction_sanitize_code():
     assert regional_direction.code == "AC"
 
 
-@pytest.mark.parametrize("number,code,name", (
-    (0, "XY", "Invalid Number"),
-    (1, "", "Invalid Code"),
-    (1, "XY", ""),  # Invalid Name
-))
+@pytest.mark.parametrize(
+    "number,code,name", ((0, "XY", "Invalid Number"), (1, "", "Invalid Code"), (1, "XY", ""))  # Invalid Name
+)
 def test_fail_regional_direction_invalid_data(number, code, name):
     with pytest.raises(InvalidRegionalDirectionError):
         RegionalDirection(number, code, name)

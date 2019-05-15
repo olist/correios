@@ -24,7 +24,7 @@ import pkg_resources
 
 
 def capitalize_phrase(phrase: str) -> str:
-    return ' '.join(word.capitalize() for word in phrase.split(' '))
+    return " ".join(word.capitalize() for word in phrase.split(" "))
 
 
 def rreplace(string: str, old: str, new: str, count: int = 0) -> str:
@@ -81,7 +81,7 @@ def to_integer(number: Union[int, str]) -> int:
 def to_datetime(date: Union[datetime, str], fmt="%Y-%m-%d %H:%M:%S%z") -> datetime:
     if isinstance(date, str):
         last_colon_pos = date.rindex(":")
-        date = date[:last_colon_pos] + date[last_colon_pos + 1:]
+        date = date[:last_colon_pos] + date[last_colon_pos + 1 :]  # noqa: E203
         return datetime.strptime(date, fmt)
     return date
 
@@ -101,6 +101,6 @@ def to_decimal(value: Union[Decimal, str, float], precision=2) -> Decimal:
 
 
 def get_resource_path(path) -> Path:
-    resource_package = 'correios'
+    resource_package = "correios"
     resource_path = os.path.join("data", path)
     return Path(pkg_resources.resource_filename(resource_package, resource_path))

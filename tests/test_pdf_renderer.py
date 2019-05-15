@@ -74,11 +74,8 @@ def test_render_all_posting_docs(posting_list: PostingList, posting_card: Postin
 
 
 @pytest.mark.skipif(not PostingReportPDFRenderer, reason="PDF generation support disabled")
-@mock.patch('correios.renderers.pdf.Canvas.drawString')
-@pytest.mark.parametrize('display, count', (
-    (True, 2),
-    (False, 1),
-))
+@mock.patch("correios.renderers.pdf.Canvas.drawString")
+@pytest.mark.parametrize("display, count", ((True, 2), (False, 1)))
 def test_display_on_label_render_condition(mock_drawstring, display, count):
     shipping_labels_renderer = PostingReportPDFRenderer()
     shipping_labels = ShippingLabelFactory.build()

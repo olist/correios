@@ -16,32 +16,20 @@ with open(sys.argv[1]) as csvfile:
         detalhe = detalhe.strip().replace("\n", " ")
         cliente = cliente.strip().replace("\n", " ")
         if status:
-            row = {
-                'tipo': tipo.split(),
-                'status': status,
-                'descr': descr,
-                'detalhe': detalhe,
-                'cliente': cliente,
-            }
+            row = {"tipo": tipo.split(), "status": status, "descr": descr, "detalhe": detalhe, "cliente": cliente}
             result.append(row)
         else:
             if tipo:
-                row['tipo'].append(tipo)
-            row['descr'] = "{} {}".format(row['descr'], descr).strip()
-            row['detalhe'] = "{} {}".format(row['detalhe'], detalhe).strip()
-            row['cliente'] = "{} {}".format(row['cliente'], cliente).strip()
+                row["tipo"].append(tipo)
+            row["descr"] = "{} {}".format(row["descr"], descr).strip()
+            row["detalhe"] = "{} {}".format(row["detalhe"], detalhe).strip()
+            row["cliente"] = "{} {}".format(row["cliente"], cliente).strip()
 
 writer = csv.writer(sys.stdout)
 for res in result:
     for tipo in res["tipo"]:
-        detalhe = res["detalhe"].replace('F avor', 'Favor')
+        detalhe = res["detalhe"].replace("F avor", "Favor")
         detalhe = re.sub("<.*?>", "", detalhe).strip()
 
-        row = [
-            tipo,
-            res["status"],
-            res["descr"],
-            detalhe,
-            res["cliente"],
-        ]
+        row = [tipo, res["status"], res["descr"], detalhe, res["cliente"]]
         writer.writerow(row)

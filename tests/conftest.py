@@ -93,7 +93,7 @@ class TrackingEventFactory(Factory):
         model = TrackingEvent
 
     timestamp = datetime(2016, 1, 1, 12)
-    status = ('PO', '1')
+    status = ("PO", "1")
     location_zip_code = "07192-100"
     location = "CEE"
     city = faker.Faker("city", locale="pt_BR")
@@ -153,12 +153,7 @@ register(AddressFactory, "address")
 register(ReceiverAddressFactory, "receiver_address")
 register(SenderAddressFactory, "sender_address")
 
-_services = [
-    data.SERVICE_PAC,
-    data.SERVICE_SEDEX,
-    data.SERVICE_SEDEX10,
-    data.SERVICE_SEDEX12,
-]
+_services = [data.SERVICE_PAC, data.SERVICE_SEDEX, data.SERVICE_SEDEX10, data.SERVICE_SEDEX12]
 
 
 class PackageFactory(Factory):
@@ -181,17 +176,12 @@ class ReceiptFactory(Factory):
     class Meta:
         model = Receipt
 
-    number = faker.Faker('pyint')
-    post_date = faker.Faker('date', pattern='%Y%m%d')
-    value = faker.Faker(
-        'pydecimal',
-        left_digits=2,
-        right_digits=2,
-        positive=True
-    )
+    number = faker.Faker("pyint")
+    post_date = faker.Faker("date", pattern="%Y%m%d")
+    value = faker.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
 
 
-register(ReceiptFactory, 'receipt')
+register(ReceiptFactory, "receipt")
 
 
 class ShippingLabelFactory(Factory):
@@ -218,7 +208,7 @@ class PostedShippingLabelFactory(ShippingLabelFactory):
     receipt = SubFactory(ReceiptFactory)
 
 
-register(PostedShippingLabelFactory, 'posted_shipping_label')
+register(PostedShippingLabelFactory, "posted_shipping_label")
 
 
 class PostingListFactory(Factory):
@@ -228,18 +218,18 @@ class PostingListFactory(Factory):
     custom_id = Sequence(lambda n: n)
 
 
-register(PostingListFactory, 'posting_list')
+register(PostingListFactory, "posting_list")
 
 
 class PostalUnitFactory(Factory):
     class Meta:
         model = PostalUnit
 
-    code = faker.Faker('random_number', digits=4)
-    description = Faker('company', locale='pt_BR')
+    code = faker.Faker("random_number", digits=4)
+    description = Faker("company", locale="pt_BR")
 
 
-register(PostalUnitFactory, 'postal_unit')
+register(PostalUnitFactory, "postal_unit")
 
 
 class PostInfoFactory(Factory):
@@ -248,15 +238,10 @@ class PostInfoFactory(Factory):
 
     postal_unit = SubFactory(PostalUnitFactory)
     posting_list = SubFactory(PostingListFactory)
-    value = faker.Faker(
-        'pydecimal',
-        left_digits=2,
-        right_digits=2,
-        positive=True
-    )
+    value = faker.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
 
 
-register(PostInfoFactory, 'post_info')
+register(PostInfoFactory, "post_info")
 
 
 @pytest.fixture
