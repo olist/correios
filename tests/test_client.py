@@ -17,7 +17,7 @@ from decimal import Decimal
 import pytest
 
 from correios.client import ValidRestrictResponse
-from correios.exceptions import PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import PostingListSerializerError
 from correios.models.address import ZipCode
 from correios.models.data import (
     EXTRA_SERVICE_AR,
@@ -286,13 +286,6 @@ def test_get_tracking_code_with_no_verification_digitevents(client):
 
     assert isinstance(result[0], TrackingCode)
     assert result[0].code == "FJ064849483BR"
-
-
-@pytest.mark.skipif(not correios, reason="API Client support disabled")
-def test_get_tracking_codes_events_over_limit(client):
-    codes = ["DU05508759BR"] * 51
-    with pytest.raises(TrackingCodesLimitExceededError):
-        client.get_tracking_code_events(codes)
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")

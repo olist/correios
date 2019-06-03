@@ -21,7 +21,7 @@ from enum import Enum
 from typing import Dict, List, Optional, Sequence, Union
 
 from correios import DATADIR, xml_utils
-from correios.exceptions import InvalidEventStatusError, PostingListSerializerError, TrackingCodesLimitExceededError
+from correios.exceptions import InvalidEventStatusError, PostingListSerializerError
 from correios.models.data import EXTRA_SERVICE_AR, EXTRA_SERVICE_MP
 from correios.utils import get_wsdl_path, to_decimal, to_integer
 
@@ -519,7 +519,6 @@ class PostingListSerializer:
 class Correios:
     PRODUCTION = "production"
     TEST = "test"
-    MAX_TRACKING_CODES_PER_REQUEST = 50
 
     def __init__(
         self,
@@ -650,11 +649,6 @@ class Correios:
     def get_tracking_code_events(self, tracking_list):
         if isinstance(tracking_list, (str, TrackingCode)):
             tracking_list = [tracking_list]
-
-        if len(tracking_list) > Correios.MAX_TRACKING_CODES_PER_REQUEST:
-            msg = '{} tracking codes requested exceeds the limit of {} stabilished by the Correios'
-            msg = msg.format(len(tracking_list), Correios.MAX_TRACKING_CODES_PER_REQUEST)
-            raise TrackingCodesLimitExceededError(msg)
 
         tracking_codes = {}
         for tracking_code in tracking_list:

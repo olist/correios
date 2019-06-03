@@ -105,10 +105,6 @@ class PostingListSerializerError(ClientError):
     pass
 
 
-class TrackingCodesLimitExceededError(ClientError):
-    pass
-
-
 class RendererError(BaseCorreiosError):
     pass
 
