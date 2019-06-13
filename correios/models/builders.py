@@ -215,19 +215,32 @@ class ModelBuilder:
 
         return receiver_address
 
-    def _load_package(self, data) -> Package:
+    def _build_package_data(self, data):
         dimensions = data.dimensao_objeto
 
-        package = Package(
-            diameter=float(dimensions.dimensao_diametro.text.replace(",", ".")),
-            height=float(dimensions.dimensao_altura.text.replace(",", ".")),
-            length=float(dimensions.dimensao_comprimento.text.replace(",", ".")),
-            weight=float(data.peso.text.replace(",", ".")),
-            width=float(dimensions.dimensao_largura.text.replace(",", ".")),
-            package_type=dimensions.tipo_objeto,
-            service=data.codigo_servico_postagem.text,
-        )
+        if dimensions.tipo_objeto == Package.TYPE_BOX:
+            package_data = {
+                "height": dimensions.dimensao_altura.text,
+                "length": dimensions.dimensao_comprimento.text,
+                "weight": data.peso.text,
+                "width": dimensions.dimensao_largura.text,
+            }
+        elif dimensions.tipo_objeto == Package.TYPE_CYLINDER:
+            package_data = {
+                "diameter": dimensions.dimensao_diametro.text,
+                "length": dimensions.dimensao_comprimento.text,
+                "weight": data.peso.text,
+            }
+        else:
+            package_data = {"weight": data.peso.text}
 
+        package_data = {k: float(v.replace(",", ".")) for (k, v) in package_data.items()}
+        package_data["package_type"] = dimensions.tipo_objeto
+        return package_data
+
+    def _load_package(self, data) -> Package:
+        package_data = self._build_package_data(data)
+        package = Package(service=data.codigo_servico_postagem.text, **package_data)
         return package
 
     def build_posting_card_status(self, response):
