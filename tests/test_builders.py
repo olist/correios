@@ -55,4 +55,4 @@ def test_load_package_fields(model_builder, post_info_data, expected_fields, pac
 
     package_data = model_builder._build_package_data(post_info)
 
-    assert tuple(package_data.keys()) == expected_fields
+    assert set(package_data.keys()) == set(expected_fields)
