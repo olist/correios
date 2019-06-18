@@ -635,6 +635,12 @@ TRACKING_STATUS = {
         "Entrega prevista para o próximo dia útil",
         "Acompanhar",
     ),
+    ("FC", 47): (
+        "shipped",
+        "Objeto será devolvido por solicitação do contratante/remetente",
+        "Em tratamento, aguarde.",
+        "Acompanhar",
+    ),
     ("IDC", 1): ("lost", "Objeto não localizado", "Houve indenização dos valores correspondentes", "Acompanhar"),
     ("LDI", 1): (
         "waiting_retrieval",
