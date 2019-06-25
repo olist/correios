@@ -14,7 +14,7 @@
 
 
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Union
 
 from ..utils import to_decimal, to_integer
 from .address import ReceiverAddress, SenderAddress, ZipAddress
@@ -111,7 +111,7 @@ class ModelBuilder:
         )
         return post_info
 
-    def build_receipt(self, data):
+    def build_receipt(self, data) -> Union[None, Receipt]:
         if data.status_processamento == Receipt.STATUS_UNPROCESSED:
             return None
 
