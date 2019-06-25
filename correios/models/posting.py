@@ -492,6 +492,9 @@ class Package:
 
 
 class Receipt:
+    STATUS_UNPROCESSED = 0
+    STATUS_PROCESSED = 1
+
     def __init__(self, number: Union[int, str], post_date: Union[str, date], value: Union[str, Decimal]) -> None:
         self.number = int(number)
 

@@ -111,7 +111,10 @@ class ModelBuilder:
         )
         return post_info
 
-    def build_receipt(self, data) -> Receipt:
+    def build_receipt(self, data):
+        if data.status_processamento == Receipt.STATUS_UNPROCESSED:
+            return None
+
         receipt = Receipt(
             number=data.numero_comprovante_postagem,
             post_date=data.data_postagem_sara.text,
