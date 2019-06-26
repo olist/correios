@@ -64,13 +64,14 @@ def test_build_receipt_when_status_processed(model_builder, post_info_data):
     receipt = model_builder.build_receipt(post_info)
     assert receipt is not None
     assert receipt.number == 155305650
-    assert receipt.real_value == '14.99'
-    assert receipt.real_post_date == '20190603'
+    assert receipt.real_value == "14.99"
+    assert receipt.real_post_date == "20190603"
 
 
-def test_build_receipt_when_status_unprocessed(model_builder, post_info_data):
+@pytest.mark.parametrize("status", ("", 0))
+def test_build_receipt_when_status_unprocessed(status, model_builder, post_info_data):
     post_info = fromstring(post_info_data)
-    post_info.status_processamento = 0
+    post_info.status_processamento = status
 
     receipt_data = model_builder.build_receipt(post_info)
     assert receipt_data is None
