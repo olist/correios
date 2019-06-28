@@ -14,7 +14,7 @@
 
 
 from datetime import datetime
-from typing import Dict
+from typing import Dict, Optional
 
 from ..utils import to_decimal, to_integer
 from .address import ReceiverAddress, SenderAddress, ZipAddress
@@ -111,7 +111,10 @@ class ModelBuilder:
         )
         return post_info
 
-    def build_receipt(self, data) -> Receipt:
+    def build_receipt(self, data) -> Optional[Receipt]:
+        if (data.status_processamento == Receipt.STATUS_UNPROCESSED or data.status_processamento == ""):
+            return None
+
         receipt = Receipt(
             number=data.numero_comprovante_postagem,
             post_date=data.data_postagem_sara.text,

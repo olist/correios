@@ -28,10 +28,10 @@ def post_info_data():
           <dimensao_comprimento>20.0</dimensao_comprimento>
           <dimensao_diametro>5.0</dimensao_diametro>
         </dimensao_objeto>
-        <data_postagem_sara></data_postagem_sara>
-        <status_processamento></status_processamento>
-        <numero_comprovante_postagem></numero_comprovante_postagem>
-        <valor_cobrado></valor_cobrado>
+        <data_postagem_sara>20190603</data_postagem_sara>
+        <status_processamento>1</status_processamento>
+        <numero_comprovante_postagem>155305650</numero_comprovante_postagem>
+        <valor_cobrado>14.99</valor_cobrado>
       </objeto_postal>
     """
 
@@ -56,3 +56,22 @@ def test_load_package_fields(model_builder, post_info_data, expected_fields, pac
     package_data = model_builder._build_package_data(post_info)
 
     assert set(package_data.keys()) == set(expected_fields)
+
+
+def test_build_receipt_when_status_processed(model_builder, post_info_data):
+    post_info = fromstring(post_info_data)
+
+    receipt = model_builder.build_receipt(post_info)
+    assert receipt is not None
+    assert receipt.number == 155305650
+    assert receipt.real_value == "14.99"
+    assert receipt.real_post_date == "20190603"
+
+
+@pytest.mark.parametrize("status", ("", 0))
+def test_build_receipt_when_status_unprocessed(status, model_builder, post_info_data):
+    post_info = fromstring(post_info_data)
+    post_info.status_processamento = status
+
+    receipt_data = model_builder.build_receipt(post_info)
+    assert receipt_data is None
