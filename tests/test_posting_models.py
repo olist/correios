@@ -241,10 +241,11 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert len(shipping_label.extra_services) == 1
 
 
+@pytest.mark.parametrize("complement,expected", (("15 • andar", "15 andar"), ("ˆônibus", " onibus")))
 def test_shipping_label_get_datamatrix_info_with_complement_display(
-    posting_card, sender_address, receiver_address, package
+    posting_card, sender_address, receiver_address, package, complement, expected
 ):
-    receiver_address.complement = "15 • andar"
+    receiver_address.complement = complement
     shipping_label = posting.ShippingLabel(
         posting_card=posting_card,
         sender=sender_address,
@@ -254,7 +255,7 @@ def test_shipping_label_get_datamatrix_info_with_complement_display(
         tracking_code="PD12345678 BR",
     )
     datamatrix = shipping_label.get_datamatrix_info()
-    assert "000000000000015andar" in datamatrix
+    assert expected in datamatrix
 
 
 @pytest.mark.parametrize("extra_service_vd", (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX))
