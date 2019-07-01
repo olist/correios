@@ -14,10 +14,10 @@
 
 
 import re
+import unicodedata
 import warnings
 from decimal import Decimal
 from typing import List, Tuple, Union
-import unicodedata
 
 from phonenumbers import NumberParseException, PhoneNumberFormat, format_number, parse
 
