@@ -14,6 +14,7 @@
 
 
 import re
+import unicodedata
 import warnings
 from decimal import Decimal
 from typing import List, Tuple, Union
@@ -280,7 +281,8 @@ class Address:
 
     @property
     def complement_safe_display(self) -> str:
-        return "".join(c for c in str(self.complement) if c.isalnum())
+        complement = unicodedata.normalize("NFKD", self.complement).encode("ascii", "ignore").decode()
+        return " ".join(complement.split())
 
     @property
     def zip_code_display(self) -> str:
