@@ -241,7 +241,10 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
     assert len(shipping_label.extra_services) == 1
 
 
-@pytest.mark.parametrize("complement,expected", (("15 • andar", "15 andar"), ("ˆônibus", "onibus")))
+@pytest.mark.parametrize(
+    "complement,expected",
+    (("15 • andar", "15 andar"), ("ˆônibus", "onibus"), ("many" + " " * 10 + "whitespaces", "many whitespaces")),
+)
 def test_shipping_label_get_datamatrix_info_with_complement_display(
     posting_card, sender_address, receiver_address, package, complement, expected
 ):
