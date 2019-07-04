@@ -504,11 +504,12 @@ class ShippingLabel:
     carrier_logo = os.path.join(DATADIR, "carrier_logo_bw.png")
     receiver_data_template = ("{receiver.label_name!s:>.50}<br/>"
                               "{receiver.label_address!s:>.95}<br/>"
-                              "<b>{receiver.zip_code_display}</b> {receiver.city}/{receiver.state}")
+                              "{receiver.city}/{receiver.state}<br/>"
+                              "<b>Cep: {receiver.zip_code_display}</b>")
 
     sender_data_template = ("<b>Remetente:</b> {sender.label_name!s:>.40}<br/>"
                             "{sender.label_address!s:>.95}<br/>"
-                            "<b>{sender.zip_code_display}</b> {sender.city}-{sender.state}")
+                            "<b>{sender.zip_code_display}</b> {sender.city}/{sender.state}")
 
     def __init__(self,
                  posting_card: PostingCard,
