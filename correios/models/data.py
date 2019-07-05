@@ -1227,6 +1227,12 @@ TRACKING_STATUS = {
         "Favor entrar em contato com os Correios.",
         "Acionar atendimento dos Correios.",
     ),
+    ("BDR", 75): (
+        "customs_control",
+        "Objeto apreendido por: POLICIA FEDERAL",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
     ("BDE", 45): (
         "shipped",
         "Objeto recebido na unidade de distribuição",
