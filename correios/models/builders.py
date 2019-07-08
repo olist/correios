@@ -112,7 +112,7 @@ class ModelBuilder:
         return post_info
 
     def build_receipt(self, data) -> Optional[Receipt]:
-        if (data.status_processamento == Receipt.STATUS_UNPROCESSED or data.status_processamento == ""):
+        if data.status_processamento != Receipt.STATUS_PROCESSED:
             return None
 
         receipt = Receipt(
