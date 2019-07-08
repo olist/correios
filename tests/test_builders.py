@@ -68,7 +68,7 @@ def test_build_receipt_when_status_processed(model_builder, post_info_data):
     assert receipt.real_post_date == "20190603"
 
 
-@pytest.mark.parametrize("status", ("", 0))
+@pytest.mark.parametrize("status", ("", 0, 2))
 def test_build_receipt_when_status_unprocessed(status, model_builder, post_info_data):
     post_info = fromstring(post_info_data)
     post_info.status_processamento = status
