@@ -14,7 +14,7 @@
 		<numero_diretoria>36</numero_diretoria>
 		<codigo_administrativo>12105872</codigo_administrativo>
 		<nome_remetente>
-			<![CDATA[Tatical Imports Com. Importação Ltda EPP]]>
+			<![CDATA[Tatical Imports Com. ImportaÃ§Ã£o Ltda EPP]]>
 		</nome_remetente>
 		<logradouro_remetente>
 			<![CDATA[Avenida Winston Churchill]]>
@@ -23,10 +23,10 @@
 			<![CDATA[2370]]>
 		</numero_remetente>
 		<complemento_remetente>
-			<![CDATA[sala 1205,12° andar]]>
+			<![CDATA[sala 1205,12Â° andar]]>
 		</complemento_remetente>
 		<bairro_remetente>
-			<![CDATA[Capão Raso]]>
+			<![CDATA[CapÃ£o Raso]]>
 		</bairro_remetente>
 		<cep_remetente>
 			<![CDATA[81150050]]>
@@ -56,7 +56,7 @@
 		<rt2/>
 		<destinatario>
 			<nome_destinatario>
-				<![CDATA[Caça e Pesca Guarany Ltda]]>
+				<![CDATA[CaÃ§a e Pesca Guarany Ltda]]>
 			</nome_destinatario>
 			<telefone_destinatario>
 				<![CDATA[6232339644]]>
@@ -68,7 +68,7 @@
 				<![CDATA[]]>
 			</email_destinatario>
 			<logradouro_destinatario>
-				<![CDATA[Avenida Anhangüera]]>
+				<![CDATA[Avenida AnhangÃ¼era]]>
 			</logradouro_destinatario>
 			<complemento_destinatario>
 				<![CDATA[Qd: 102 A Lt: 04]]>
@@ -82,7 +82,7 @@
 				<![CDATA[Setor Campinas]]>
 			</bairro_destinatario>
 			<cidade_destinatario>
-				<![CDATA[Goiânia]]>
+				<![CDATA[GoiÃ¢nia]]>
 			</cidade_destinatario>
 			<uf_destinatario>GO</uf_destinatario>
 			<cep_destinatario>
