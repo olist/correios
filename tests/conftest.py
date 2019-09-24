@@ -153,7 +153,14 @@ register(AddressFactory, "address")
 register(ReceiverAddressFactory, "receiver_address")
 register(SenderAddressFactory, "sender_address")
 
-_services = [data.SERVICE_PAC, data.SERVICE_SEDEX, data.SERVICE_SEDEX10, data.SERVICE_SEDEX12]
+_services = [
+    data.SERVICE_PAC,
+    data.SERVICE_PAC_INDUSTRIAL,
+    data.SERVICE_SEDEX,
+    data.SERVICE_SEDEX_INDUSTRIAL,
+    data.SERVICE_SEDEX10,
+    data.SERVICE_SEDEX12,
+]
 
 
 class PackageFactory(Factory):
