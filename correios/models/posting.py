@@ -549,7 +549,6 @@ class ShippingLabel:
         "Assinatura: __________________ Documento: _______________"
     )
     sender_header = "DESTINATÁRIO"
-    carrier_logo = str(get_resource_path("carrier_logo_bw.png"))
     receiver_data_template = (
         "{receiver.label_name!s:>.50}<br/>"
         "{receiver.label_address!s:>.95}<br/>"
@@ -582,6 +581,7 @@ class ShippingLabel:
         latitude: Optional[float] = 0.0,
         longitude: Optional[float] = 0.0,
         receipt: Optional[Receipt] = None,
+        carrier_logo: Optional[Union[str, Image.Image]] = None,
     ) -> None:
         if sender == receiver:
             raise exceptions.InvalidAddressesError("Sender and receiver cannot be the same")
@@ -589,8 +589,14 @@ class ShippingLabel:
         if logo is None:
             logo = str(get_resource_path("default_logo.png"))
 
+        if carrier_logo is None:
+            carrier_logo = str(get_resource_path("carrier_logo_bw.png"))
+
         if isinstance(logo, str):
             logo = Image.open(logo)
+
+        if isinstance(carrier_logo, str):
+            carrier_logo = Image.open(carrier_logo)
 
         self.posting_card = posting_card
         self.sender = sender
@@ -599,6 +605,7 @@ class ShippingLabel:
         self.tracking_code = TrackingCode.create(tracking_code)
         self.package = package
         self.logo = logo
+        self.carrier_logo = carrier_logo
         self.order = order
         self.invoice_number = invoice_number
         self.invoice_series = invoice_series
@@ -608,7 +615,6 @@ class ShippingLabel:
         self.text = text
         self.latitude = latitude
         self.longitude = longitude
-        self.carrier_logo = Image.open(self.carrier_logo)
 
         self.extra_services = self.service.default_extra_services[:]
         if extra_services:

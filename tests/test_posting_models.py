@@ -171,6 +171,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
         extra_services=[EXTRA_SERVICE_AR],
         tracking_code=tracking_code,
         logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
+        carrier_logo=os.path.join(FIXTURESDIR, "test_logo.jpg"),
         order="123",
         invoice_number="321",
         invoice_series="A1",
@@ -197,6 +198,7 @@ def test_basic_shipping_label(posting_card, sender_address, receiver_address, tr
 
     # noinspection PyUnresolvedReferences
     assert shipping_label.logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
+    assert shipping_label.carrier_logo.filename == os.path.join(FIXTURESDIR, "test_logo.jpg")
 
     assert shipping_label.order == "123"
     assert shipping_label.get_order() == "123"
