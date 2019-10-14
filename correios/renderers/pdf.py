@@ -385,7 +385,7 @@ class PostingReportPDFRenderer:
             row = (
                 str(shipping_label.tracking_code),
                 str(shipping_label.receiver.zip_code),
-                str(shipping_label.package.posting_weight),
+                str(shipping_label.package.weight),
                 self.yes if ExtraService.get(EXTRA_SERVICE_AR) in shipping_label else self.no,
                 self.yes if ExtraService.get(EXTRA_SERVICE_MP) in shipping_label else self.no,
                 self.yes if shipping_label.has_declared_value() else self.no,
