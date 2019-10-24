@@ -1522,19 +1522,19 @@ TRACKING_STATUS = {
     ),
     ("BDE", 68): (
         "waiting_retrieval",
-        "Objeto aguardando retirada em armário inteligente",
+        "Objeto entregue na Caixa de Correios Inteligente",
         "Estará disponível por até 3 dias, a partir de hoje",
         "Acompanhar",
     ),
     ("BDI", 68): (
         "waiting_retrieval",
-        "Objeto aguardando retirada em armário inteligente",
+        "Objeto entregue na Caixa de Correios Inteligente",
         "Estará disponível por até 3 dias, a partir de hoje",
         "Acompanhar",
     ),
     ("BDR", 68): (
         "waiting_retrieval",
-        "Objeto aguardando retirada em armário inteligente",
+        "Objeto entregue na Caixa de Correios Inteligente",
         "Estará disponível por até 3 dias, a partir de hoje",
         "Acompanhar",
     ),
@@ -1544,6 +1544,9 @@ TRACKING_STATUS = {
     ("BDE", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
     ("BDI", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
     ("BDR", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
+    ("BDE", 89): ("lost", "Localidade desconhecida no Brasil", "Objeto será devolvido ao remetente", "Acompanhar"),
+    ("BDI", 89): ("lost", "Localidade desconhecida no Brasil", "Objeto será devolvido ao remetente", "Acompanhar"),
+    ("BDR", 89): ("lost", "Localidade desconhecida no Brasil", "Objeto será devolvido ao remetente", "Acompanhar"),
     ("CMR", 1): ("shipped", "Conferido", "", "Acompanhar"),
 }
 
