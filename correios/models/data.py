@@ -919,6 +919,12 @@ TRACKING_STATUS = {
         "Endereço:",
         "Acompanhar. O interessado deverá buscar o objeto em uma Unidade dos Correios.",
     ),
+    ("LDI", 11): (
+        "waiting_retrieval",
+        "Objeto encaminhado para retirada no endereço indicado",
+        "Para retirá-lo, é preciso informar o código do objeto.",
+        "Acompanhar",
+    ),
     ("LDI", 14): (
         "waiting_retrieval",
         "Objeto aguardando retirada no endereço indicado",
