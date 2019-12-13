@@ -39,7 +39,7 @@ requirements = load_requirements("requirements.txt")
 
 setup(
     name="correios",
-    version="6.1.24",
+    version="6.1.25",
     url="https://github.com/osantana/correios",
     author="Osvaldo Santana Neto",
     author_email="correiospy@osantana.me",
