@@ -480,6 +480,28 @@ SERVICES = {
         'category': 'CARTA_REGISTRADA',
         'display_name': 'Carta Comercial',
     },
+    "04812": {
+        "id": 124899,
+        "description": "PAC CONTRATO - UO",
+        "category": "PAC",
+        "display_name": "PAC",
+        "max_weight": 30000,
+        "symbol": "standard",
+        "default_extra_services": [EXTRA_SERVICE_RR],
+        "min_declared_value": Decimal("19.50"),
+        "max_declared_value": Decimal("3000.00"),
+    },
+    "04316": {
+        "id": 124900,
+        "description": "SEDEX CONTRATO - UO",
+        "category": "SEDEX",
+        "max_weight": 30000,
+        "display_name": "SEDEX",
+        "symbol": "express",
+        "default_extra_services": [EXTRA_SERVICE_RR],
+        "min_declared_value": Decimal("19.50"),
+        "max_declared_value": Decimal("10000.00"),
+    },
 }  # type: Dict[str, dict]
 
 SERVICE_PAC = '04669'
@@ -487,6 +509,8 @@ SERVICE_SEDEX = '04162'
 SERVICE_SEDEX10 = '40215'
 SERVICE_SEDEX12 = '40169'
 SERVICE_E_SEDEX = '81019'
+SERVICE_PAC_INDUSTRIAL = "04812"
+SERVICE_SEDEX_INDUSTRIAL = "04316"
 
 INSURANCE_VALUE_THRESHOLD_PAC = Decimal("50.00")  # R$
 INSURANCE_VALUE_THRESHOLD_SEDEX = Decimal("75.00")  # R$

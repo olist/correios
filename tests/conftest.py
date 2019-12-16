@@ -159,6 +159,8 @@ _services = [
     data.SERVICE_SEDEX,
     data.SERVICE_SEDEX10,
     data.SERVICE_SEDEX12,
+    data.SERVICE_PAC_INDUSTRIAL,
+    data.SERVICE_SEDEX_INDUSTRIAL,
 ]
 
 
