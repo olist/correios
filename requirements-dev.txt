@@ -2,4 +2,4 @@
 bumpversion
 isort
 flake8
-mypy==0.730
+mypy
