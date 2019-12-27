@@ -95,12 +95,12 @@ class PostingListSerializer:
         extra_services = xml_utils.SubElement(item, "servico_adicional")
         for extra_service in shipping_label.extra_services:
             xml_utils.SubElement(
-                extra_services, "codigo_servico_adicional", text="{!s:>03}".format(extra_service.number)
+                extra_services, "codigo_servico_adicional", text="{:03d}".format(extra_service.number)
             )
         xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
 
         dimensions = xml_utils.SubElement(item, "dimensao_objeto")
-        xml_utils.SubElement(dimensions, "tipo_objeto", text="{!s:>03}".format(shipping_label.package.package_type))
+        xml_utils.SubElement(dimensions, "tipo_objeto", text="{:03d}".format(shipping_label.package.package_type))
         xml_utils.SubElement(dimensions, "dimensao_altura", text=str(shipping_label.package.height))
         xml_utils.SubElement(dimensions, "dimensao_largura", text=str(shipping_label.package.width))
         xml_utils.SubElement(dimensions, "dimensao_comprimento", text=str(shipping_label.package.length))
