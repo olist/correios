@@ -642,6 +642,12 @@ TRACKING_STATUS = {
         "Acompanhar",
     ),
     ("BLQ", 2): ("shipped", "Tentativa de suspensão da entrega", "Objeto em análise de destinação", "Acompanhar"),
+    ("BLQ", 11): (
+        "shipped",
+        "Solicitação de suspensão de entrega recebida",
+        "Solicitação realizada pelo contratante/remetente",
+        "Acompanhar",
+    ),
     ("CD", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
     ("CO", 1): ("shipped", "Objeto coletado", "", "Acompanhar"),
     ("CUN", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
