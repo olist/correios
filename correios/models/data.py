@@ -578,6 +578,20 @@ TRACKING_EVENT_TYPES = {
 
 TRACKING_STATUS = {
     ("ERROR", 0): ("error", "Objeto não encontrado", "", ""),  # custom status for "Not Found" error
+    ("BLQ", 1): (
+        "shipped",
+        "Entrega de objeto bloqueada a pedido do remetente",
+        "Objeto em análise de destinação",
+        "Acompanhar",
+    ),
+    ("BLQ", 2): ("shipped", "Tentativa de suspensão da entrega", "Objeto em análise de destinação", "Acompanhar"),
+    ("BLQ", 11): (
+        "shipped",
+        "Solicitação de suspensão de entrega recebida",
+        "Solicitação realizada pelo contratante/remetente",
+        "Acompanhar",
+    ),
+    ("BLQ", 21): ("shipped", "Solicitação de suspensão de entrega recebida", "", "Acompanhar"),
     ("BDE", 0): (
         "delivered",
         "Objeto entregue ao destinatário",
@@ -635,20 +649,6 @@ TRACKING_STATUS = {
         "Recebido por:",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
-    ("BLQ", 1): (
-        "shipped",
-        "Entrega de objeto bloqueada a pedido do remetente",
-        "Objeto em análise de destinação",
-        "Acompanhar",
-    ),
-    ("BLQ", 2): ("shipped", "Tentativa de suspensão da entrega", "Objeto em análise de destinação", "Acompanhar"),
-    ("BLQ", 11): (
-        "shipped",
-        "Solicitação de suspensão de entrega recebida",
-        "Solicitação realizada pelo contratante/remetente",
-        "Acompanhar",
-    ),
-    ("BLQ", 21): ("shipped", "Solicitação de suspensão de entrega recebida", "", "Acompanhar"),
     ("CD", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
     ("CO", 1): ("shipped", "Objeto coletado", "", "Acompanhar"),
     ("CUN", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
