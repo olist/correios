@@ -31,7 +31,7 @@ Update Local WSDL Files
 -----------------------
 
 Local WSDL files are used to increase performance on SOAP requests. Enventually
-you'll want to update them and withou having to update this lib.
+you'll want to update them without having to update this lib.
 
 If you want to maintain this files on a custom path you can pass the 'path'
 option with the custom path. Don't use relative paths.
@@ -55,5 +55,20 @@ Or you can use the method update_wsdl to do it.
 
    update_wsdl(path='/path/to/your/custom/wsdl/folder')
 
-That's it!
 
+Contributing
+------------
+
+Fork this repository, make changes and send us a pull request. We will review
+your changes and apply them. Before sending us your pull request please check
+if you wrote and ran tests:
+
+.. code-block::
+
+    $ make test
+
+Also, remember to update the WSDL files:
+
+.. code-block::
+
+    $ make update-wsdl
