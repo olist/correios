@@ -13,6 +13,10 @@
   <xs:element name="buscaClienteResponse" type="tns:buscaClienteResponse"/>
   <xs:element name="buscaContrato" type="tns:buscaContrato"/>
   <xs:element name="buscaContratoResponse" type="tns:buscaContratoResponse"/>
+  <xs:element name="buscaDataAtual" type="tns:buscaDataAtual"/>
+  <xs:element name="buscaDataAtualResponse" type="tns:buscaDataAtualResponse"/>
+  <xs:element name="buscaOpcoes" type="tns:buscaOpcoes"/>
+  <xs:element name="buscaOpcoesResponse" type="tns:buscaOpcoesResponse"/>
   <xs:element name="buscaPagamentoEntrega" type="tns:buscaPagamentoEntrega"/>
   <xs:element name="buscaPagamentoEntregaResponse" type="tns:buscaPagamentoEntregaResponse"/>
   <xs:element name="buscaServicos" type="tns:buscaServicos"/>
@@ -33,10 +37,6 @@
   <xs:element name="cancelarPedidoScolResponse" type="tns:cancelarPedidoScolResponse"/>
   <xs:element name="consultaCEP" type="tns:consultaCEP"/>
   <xs:element name="consultaCEPResponse" type="tns:consultaCEPResponse"/>
-  <xs:element name="consultaSRO" type="tns:consultaSRO"/>
-  <xs:element name="consultaSROResponse" type="tns:consultaSROResponse"/>
-  <xs:element name="consultarPedidosInformacao" type="tns:consultarPedidosInformacao"/>
-  <xs:element name="consultarPedidosInformacaoResponse" type="tns:consultarPedidosInformacaoResponse"/>
   <xs:element name="fechaPlp" type="tns:fechaPlp"/>
   <xs:element name="fechaPlpResponse" type="tns:fechaPlpResponse"/>
   <xs:element name="fechaPlpVariosServicos" type="tns:fechaPlpVariosServicos"/>
@@ -49,18 +49,20 @@
   <xs:element name="getStatusPLPResponse" type="tns:getStatusPLPResponse"/>
   <xs:element name="integrarUsuarioScol" type="tns:integrarUsuarioScol"/>
   <xs:element name="integrarUsuarioScolResponse" type="tns:integrarUsuarioScolResponse"/>
-  <xs:element name="obterAssuntosPI" type="tns:obterAssuntosPI"/>
-  <xs:element name="obterAssuntosPIResponse" type="tns:obterAssuntosPIResponse"/>
   <xs:element name="obterClienteAtualizacao" type="tns:obterClienteAtualizacao"/>
   <xs:element name="obterClienteAtualizacaoResponse" type="tns:obterClienteAtualizacaoResponse"/>
   <xs:element name="obterEmbalagemLRS" type="tns:obterEmbalagemLRS"/>
   <xs:element name="obterEmbalagemLRSResponse" type="tns:obterEmbalagemLRSResponse"/>
-  <xs:element name="obterMensagemRetornoPI" type="tns:obterMensagemRetornoPI"/>
-  <xs:element name="obterMensagemRetornoPIResponse" type="tns:obterMensagemRetornoPIResponse"/>
-  <xs:element name="obterMotivosPI" type="tns:obterMotivosPI"/>
-  <xs:element name="obterMotivosPIResponse" type="tns:obterMotivosPIResponse"/>
-  <xs:element name="registrarPedidosInformacao" type="tns:registrarPedidosInformacao"/>
-  <xs:element name="registrarPedidosInformacaoResponse" type="tns:registrarPedidosInformacaoResponse"/>
+  <xs:element name="obterMensagemParametrizada" type="tns:obterMensagemParametrizada"/>
+  <xs:element name="obterMensagemParametrizadaResponse" type="tns:obterMensagemParametrizadaResponse"/>
+  <xs:element name="pesquisarDimensoesServico" type="tns:pesquisarDimensoesServico"/>
+  <xs:element name="pesquisarDimensoesServicoResponse" type="tns:pesquisarDimensoesServicoResponse"/>
+  <xs:element name="pesquisarEmbalagensPorServico" type="tns:pesquisarEmbalagensPorServico"/>
+  <xs:element name="pesquisarEmbalagensPorServicoResponse" type="tns:pesquisarEmbalagensPorServicoResponse"/>
+  <xs:element name="pesquisarParametrosPorDescricao" type="tns:pesquisarParametrosPorDescricao"/>
+  <xs:element name="pesquisarParametrosPorDescricaoResponse" type="tns:pesquisarParametrosPorDescricaoResponse"/>
+  <xs:element name="pesquisarServicosAdicionais" type="tns:pesquisarServicosAdicionais"/>
+  <xs:element name="pesquisarServicosAdicionaisResponse" type="tns:pesquisarServicosAdicionaisResponse"/>
   <xs:element name="solicitaEtiquetas" type="tns:solicitaEtiquetas"/>
   <xs:element name="solicitaEtiquetasResponse" type="tns:solicitaEtiquetasResponse"/>
   <xs:element name="solicitaPLP" type="tns:solicitaPLP"/>
@@ -79,6 +81,8 @@
   <xs:element name="validarPostagemSimultaneaResponse" type="tns:validarPostagemSimultaneaResponse"/>
   <xs:element name="verificaDisponibilidadeServico" type="tns:verificaDisponibilidadeServico"/>
   <xs:element name="verificaDisponibilidadeServicoResponse" type="tns:verificaDisponibilidadeServicoResponse"/>
+  <xs:element name="verificaModalTransporte" type="tns:verificaModalTransporte"/>
+  <xs:element name="verificaModalTransporteResponse" type="tns:verificaModalTransporteResponse"/>
   <xs:complexType name="buscaServicosAdicionaisAtivos">
     <xs:sequence>
       <xs:element minOccurs="0" name="usuario" type="xs:string"/>
@@ -92,8 +96,11 @@
   </xs:complexType>
   <xs:complexType name="servicoAdicionalXML">
     <xs:sequence>
+      <xs:element minOccurs="0" name="categoria" type="xs:string"/>
       <xs:element minOccurs="0" name="codigo" type="xs:string"/>
       <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+      <xs:element minOccurs="0" name="maximoValorDeclarado" type="xs:double"/>
+      <xs:element minOccurs="0" name="minimoValorDeclarado" type="xs:double"/>
       <xs:element minOccurs="0" name="sigla" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
@@ -110,20 +117,6 @@
   <xs:complexType name="fechaPlpResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultaSRO">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaObjetos" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoConsulta" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoResultado" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuarioSro" type="xs:string"/>
-      <xs:element minOccurs="0" name="senhaSro" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultaSROResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="calculaTarifaServico">
@@ -183,6 +176,7 @@
       <xs:element minOccurs="0" name="objetoPostalPK" type="tns:objetoPostalPK"/>
       <xs:element minOccurs="0" name="plpNu" type="xs:long"/>
       <xs:element minOccurs="0" name="preListaPostagem" type="tns:preListaPostagem"/>
+      <xs:element minOccurs="0" name="restricaoAerea" type="tns:simNao"/>
       <xs:element minOccurs="0" name="statusBloqueio" type="xs:string"/>
       <xs:element minOccurs="0" name="statusEtiqueta" type="tns:statusObjetoPostal"/>
     </xs:sequence>
@@ -196,6 +190,7 @@
   <xs:complexType name="preListaPostagem">
     <xs:sequence>
       <xs:element minOccurs="0" name="cartaoPostagem" type="tns:cartaoPostagemERP"/>
+      <xs:element minOccurs="0" name="conteudoProibido" type="tns:simNao"/>
       <xs:element minOccurs="0" name="dataAtualizacaoCliente" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="dataAtualizacaoSara" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="dataFechamento" type="xs:dateTime"/>
@@ -327,10 +322,8 @@
       <xs:element minOccurs="0" name="bairro" type="xs:string"/>
       <xs:element minOccurs="0" name="cep" type="xs:string"/>
       <xs:element minOccurs="0" name="cidade" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
       <xs:element minOccurs="0" name="complemento2" type="xs:string"/>
       <xs:element minOccurs="0" name="end" type="xs:string"/>
-      <xs:element name="id" type="xs:long"/>
       <xs:element minOccurs="0" name="uf" type="xs:string"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="unidadesPostagem" nillable="true" type="tns:unidadePostagemERP"/>
     </xs:sequence>
@@ -356,11 +349,13 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="categoriaServico" type="tns:categoriaServico"/>
       <xs:element minOccurs="0" name="chancela" type="tns:chancelaMaster"/>
+      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
       <xs:element minOccurs="0" name="exigeDimensoes" type="xs:boolean"/>
       <xs:element minOccurs="0" name="exigeValorCobrar" type="xs:boolean"/>
       <xs:element name="imitm" type="xs:long"/>
       <xs:element minOccurs="0" name="pagamentoEntrega" type="xs:string"/>
       <xs:element minOccurs="0" name="remessaAgrupada" type="xs:string"/>
+      <xs:element minOccurs="0" name="restricao" type="tns:simNao"/>
       <xs:element name="servico" type="xs:long"/>
       <xs:element minOccurs="0" name="servicoERP" type="tns:servicoERP"/>
       <xs:element minOccurs="0" name="ssiCoCodigoPostal" type="xs:string"/>
@@ -368,15 +363,17 @@
   </xs:complexType>
   <xs:complexType name="chancelaMaster">
     <xs:sequence>
+      <xs:element minOccurs="0" name="ativo" type="tns:simNao"/>
       <xs:element minOccurs="0" name="chancela" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="dataAtualizacao" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="descricao" type="xs:string"/>
-      <xs:element name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="servicosSigep" nillable="true" type="tns:servicoSigep"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="servicoAdicionalERP">
     <xs:sequence>
+      <xs:element minOccurs="0" name="categoria" type="xs:string"/>
       <xs:element minOccurs="0" name="codigo" type="xs:string"/>
       <xs:element minOccurs="0" name="dataAtualizacao" type="xs:dateTime"/>
       <xs:element minOccurs="0" name="datajAtualizacao" type="xs:int"/>
@@ -384,6 +381,13 @@
       <xs:element minOccurs="0" name="horajAtualizacao" type="xs:int"/>
       <xs:element minOccurs="0" name="id" type="xs:int"/>
       <xs:element minOccurs="0" name="sigla" type="xs:string"/>
+      <xs:element minOccurs="0" name="valorDeclarado" type="tns:valorDeclarado"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valorDeclarado">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="maximo" type="xs:double"/>
+      <xs:element minOccurs="0" name="minimo" type="xs:double"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="vigenciaERP">
@@ -411,6 +415,32 @@
   <xs:complexType name="cancelarObjetoResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarParametrosPorDescricao">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="prefix" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarParametrosPorDescricaoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:dimensaoTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="dimensaoTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="altura" type="tns:medidaTO"/>
+      <xs:element minOccurs="0" name="comprimento" type="tns:medidaTO"/>
+      <xs:element minOccurs="0" name="diametro" type="tns:medidaTO"/>
+      <xs:element minOccurs="0" name="largura" type="tns:medidaTO"/>
+      <xs:element minOccurs="0" name="peso" type="tns:medidaTO"/>
+      <xs:element minOccurs="0" name="soma" type="tns:medidaTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="medidaTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="maximo" type="xs:decimal"/>
+      <xs:element minOccurs="0" name="minimo" type="xs:decimal"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="atualizaPagamentoNaEntrega">
@@ -448,7 +478,7 @@
   </xs:complexType>
   <xs:complexType name="verificaDisponibilidadeServicoResponse">
     <xs:sequence>
-      <xs:element name="return" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="fechaPlpVariosServicos">
@@ -493,115 +523,6 @@
       <xs:element minOccurs="0" name="tipo" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="registrarPedidosInformacao">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoRegistro"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="pedidoInformacaoRegistro">
-    <xs:complexContent>
-      <xs:extension base="tns:pedidoInformacao">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="cliente" type="tns:clienteFaleconosco"/>
-          <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
-          <xs:element minOccurs="0" name="conta" type="tns:conta"/>
-          <xs:element minOccurs="0" name="conteudoObjeto" type="xs:string"/>
-          <xs:element minOccurs="0" name="cpfCnpj" type="xs:string"/>
-          <xs:element minOccurs="0" name="destinatario" type="tns:destinatarioFaleConosco"/>
-          <xs:element minOccurs="0" name="embalagem" type="xs:string"/>
-          <xs:element minOccurs="0" name="motivo" type="xs:int"/>
-          <xs:element minOccurs="0" name="observacao" type="xs:string"/>
-          <xs:element minOccurs="0" name="postagem" type="tns:postagem"/>
-          <xs:element minOccurs="0" name="remetente" type="tns:remetenteFaleConosco"/>
-          <xs:element minOccurs="0" name="servico" type="xs:int"/>
-          <xs:element minOccurs="0" name="tipoDocumento" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType abstract="true" name="pedidoInformacao">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="clienteFaleconosco">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="numeroContrato" type="xs:string"/>
-      <xs:element minOccurs="0" name="possuiContrato" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="conta">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigoBanco" type="xs:string"/>
-      <xs:element minOccurs="0" name="nomeBanco" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroAgencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroConta" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="destinatarioFaleConosco">
-    <xs:complexContent>
-      <xs:extension base="tns:pessoaFaleconosco">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="pessoaFaleconosco">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="bairro" type="xs:string"/>
-      <xs:element minOccurs="0" name="cep" type="xs:string"/>
-      <xs:element minOccurs="0" name="cidade" type="xs:string"/>
-      <xs:element minOccurs="0" name="complemento" type="xs:string"/>
-      <xs:element minOccurs="0" name="ddd" type="xs:string"/>
-      <xs:element minOccurs="0" name="endereco" type="xs:string"/>
-      <xs:element minOccurs="0" name="nome" type="xs:string"/>
-      <xs:element minOccurs="0" name="numero" type="xs:string"/>
-      <xs:element minOccurs="0" name="pais" type="xs:string"/>
-      <xs:element minOccurs="0" name="telefone" type="xs:string"/>
-      <xs:element minOccurs="0" name="uf" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="postagem">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="agencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="avisoRecebimento" type="xs:string"/>
-      <xs:element minOccurs="0" name="data" type="xs:string"/>
-      <xs:element minOccurs="0" name="local" type="xs:string"/>
-      <xs:element minOccurs="0" name="valorDeclarado" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="remetenteFaleConosco">
-    <xs:complexContent>
-      <xs:extension base="tns:pessoaFaleconosco">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="email" type="xs:string"/>
-          <xs:element minOccurs="0" name="empresa" type="xs:string"/>
-          <xs:element minOccurs="0" name="fax" type="xs:string"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="registrarPedidosInformacaoResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="retorno">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigoPI" type="xs:long"/>
-      <xs:element minOccurs="0" name="codigoRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="codigoRetorno" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataPrazoResposta" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataResposta" type="xs:string"/>
-      <xs:element minOccurs="0" name="dataUltimaRecorrencia" type="xs:string"/>
-      <xs:element minOccurs="0" name="id" type="xs:long"/>
-      <xs:element minOccurs="0" name="mensagemRetorno" type="xs:string"/>
-      <xs:element minOccurs="0" name="resposta" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:complexType name="validaEtiquetaPLP">
     <xs:sequence>
       <xs:element minOccurs="0" name="numeroEtiqueta" type="xs:string"/>
@@ -613,27 +534,6 @@
   <xs:complexType name="validaEtiquetaPLPResponse">
     <xs:sequence>
       <xs:element name="return" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="consultarPedidosInformacao">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="pedidosInformacao" type="tns:pedidoInformacaoConsulta"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
-      <xs:element minOccurs="0" name="senha" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="pedidoInformacaoConsulta">
-    <xs:complexContent>
-      <xs:extension base="tns:pedidoInformacao">
-        <xs:sequence>
-          <xs:element minOccurs="0" name="numero" type="xs:long"/>
-        </xs:sequence>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:complexType name="consultarPedidosInformacaoResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:retorno"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="buscaServicosValorDeclarado">
@@ -669,18 +569,25 @@
       <xs:element minOccurs="0" name="return" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="obterMensagemRetornoPI">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterMensagemRetornoPIResponse">
+  <xs:complexType name="pesquisarDimensoesServico">
     <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:mensagemRetornoPIMaster"/>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="embalagem" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="mensagemRetornoPIMaster">
+  <xs:complexType name="pesquisarDimensoesServicoResponse">
     <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
-      <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
+      <xs:element minOccurs="0" name="return" type="tns:dimensaoTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarEmbalagensPorServico">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarEmbalagensPorServicoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tipoEmbalagem"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="atualizaRemessaAgrupada">
@@ -717,6 +624,28 @@
   <xs:complexType name="getStatusCartaoPostagemResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:statusCartao"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verificaModalTransporte">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigoServico" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepOrigem" type="xs:string"/>
+      <xs:element minOccurs="0" name="cepDestino" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verificaModalTransporteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaDataAtual">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="buscaDataAtualResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:dateTime"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="buscaTarifaVale">
@@ -846,20 +775,6 @@
       <xs:element minOccurs="0" name="return" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="obterMotivosPI">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterMotivosPIResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:motivoPIMaster"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="motivoPIMaster">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
-      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:complexType name="getStatusPLP">
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="arg0" type="tns:objetoPostal"/>
@@ -869,6 +784,24 @@
   <xs:complexType name="getStatusPLPResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:statusPlp"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarServicosAdicionais">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pesquisarServicosAdicionaisResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:servicoAdicionalTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="servicoAdicionalTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="categoria" type="xs:string"/>
+      <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+      <xs:element minOccurs="0" name="sigla" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="buscaServicosXServicosAdicionais">
@@ -939,21 +872,6 @@
   <xs:complexType name="buscaContratoResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:contratoERP"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obterAssuntosPI">
-    <xs:sequence/>
-  </xs:complexType>
-  <xs:complexType name="obterAssuntosPIResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:assuntoPIMaster"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="assuntoPIMaster">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="codigo" type="xs:int"/>
-      <xs:element minOccurs="0" name="descricao" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipo" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="solicitaEtiquetas">
@@ -1076,6 +994,36 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:servicoERP"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="obterMensagemParametrizada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:short"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obterMensagemParametrizadaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:mensagemParametrizadaTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="mensagemParametrizadaTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipo" type="tns:tipoMensagem"/>
+      <xs:element minOccurs="0" name="titulo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaOpcoes">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="listaObjetos" type="xs:string"/>
+      <xs:element minOccurs="0" name="tipoResultado" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="senha" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buscaOpcoesResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:simpleType name="statusGerente">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Ativo"/>
@@ -1099,10 +1047,15 @@
       <xs:enumeration value="SEM_CATEGORIA"/>
       <xs:enumeration value="PAC"/>
       <xs:enumeration value="SEDEX"/>
-      <xs:enumeration value="CARTA_REGISTRADA"/>
-      <xs:enumeration value="SERVICO_COM_RESTRICAO"/>
+      <xs:enumeration value="CARTA"/>
+      <xs:enumeration value="GRANDES_FORMATOS"/>
       <xs:enumeration value="REVERSO"/>
-      <xs:enumeration value="CARTA_CTR"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="simNao">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="S"/>
+      <xs:enumeration value="N"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="statusPlp">
@@ -1118,6 +1071,13 @@
       <xs:enumeration value="Postado"/>
       <xs:enumeration value="Cancelado"/>
       <xs:enumeration value="Estorno"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tipoEmbalagem">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DE"/>
+      <xs:enumeration value="PD"/>
+      <xs:enumeration value="RL"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="statusCartao">
@@ -1144,6 +1104,13 @@
       <xs:enumeration value="ENCAMINHADO_PARA_REFUGO"/>
       <xs:enumeration value="REINTEGRADO_E_DEVOLVIDO_AO_REMETENTE"/>
       <xs:enumeration value="DESBLOQUEADO"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tipoMensagem">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="A"/>
+      <xs:enumeration value="E"/>
+      <xs:enumeration value="S"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:element name="SQLException" type="tns:SQLException"/>
@@ -1178,12 +1145,8 @@
     <wsdl:part element="tns:fechaPlp" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="consultaSRO">
-    <wsdl:part element="tns:consultaSRO" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obterMotivosPIResponse">
-    <wsdl:part element="tns:obterMotivosPIResponse" name="parameters">
+  <wsdl:message name="pesquisarDimensoesServicoResponse">
+    <wsdl:part element="tns:pesquisarDimensoesServicoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="VerificaSeTodosObjetosCancelados">
@@ -1192,6 +1155,10 @@
   </wsdl:message>
   <wsdl:message name="obterClienteAtualizacaoResponse">
     <wsdl:part element="tns:obterClienteAtualizacaoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obterMensagemParametrizadaResponse">
+    <wsdl:part element="tns:obterMensagemParametrizadaResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="buscaClienteResponse">
@@ -1246,8 +1213,8 @@
     <wsdl:part element="tns:obterEmbalagemLRSResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="consultarPedidosInformacao">
-    <wsdl:part element="tns:consultarPedidosInformacao" name="parameters">
+  <wsdl:message name="verificaModalTransporteResponse">
+    <wsdl:part element="tns:verificaModalTransporteResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="SigepClienteException">
@@ -1266,12 +1233,16 @@
     <wsdl:part element="tns:consultaCEP" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="fechaPlpVariosServicosResponse">
-    <wsdl:part element="tns:fechaPlpVariosServicosResponse" name="parameters">
+  <wsdl:message name="pesquisarDimensoesServico">
+    <wsdl:part element="tns:pesquisarDimensoesServico" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obterAssuntosPIResponse">
-    <wsdl:part element="tns:obterAssuntosPIResponse" name="parameters">
+  <wsdl:message name="buscaOpcoesResponse">
+    <wsdl:part element="tns:buscaOpcoesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="fechaPlpVariosServicosResponse">
+    <wsdl:part element="tns:fechaPlpVariosServicosResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStatusCartaoPostagem">
@@ -1282,10 +1253,6 @@
     <wsdl:part element="tns:calculaTarifaServicoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="consultarPedidosInformacaoResponse">
-    <wsdl:part element="tns:consultarPedidosInformacaoResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="cancelarPedidoScolResponse">
     <wsdl:part element="tns:cancelarPedidoScolResponse" name="parameters">
     </wsdl:part>
@@ -1294,16 +1261,16 @@
     <wsdl:part element="tns:atualizaRemessaAgrupadaResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="buscaDataAtual">
+    <wsdl:part element="tns:buscaDataAtual" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="buscaTarifaVale">
     <wsdl:part element="tns:buscaTarifaVale" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="validarPostagemSimultanea">
     <wsdl:part element="tns:validarPostagemSimultanea" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obterMotivosPI">
-    <wsdl:part element="tns:obterMotivosPI" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getStatusPLP">
@@ -1358,8 +1325,16 @@
     <wsdl:part element="tns:buscaServicos" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="pesquisarEmbalagensPorServicoResponse">
+    <wsdl:part element="tns:pesquisarEmbalagensPorServicoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getStatusPLPResponse">
     <wsdl:part element="tns:getStatusPLPResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pesquisarServicosAdicionaisResponse">
+    <wsdl:part element="tns:pesquisarServicosAdicionaisResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="calculaTarifaServico">
@@ -1370,12 +1345,12 @@
     <wsdl:part element="tns:validaPlp" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="consultaSROResponse">
-    <wsdl:part element="tns:consultaSROResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="cancelarObjeto">
     <wsdl:part element="tns:cancelarObjeto" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pesquisarParametrosPorDescricao">
+    <wsdl:part element="tns:pesquisarParametrosPorDescricao" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="atualizaPagamentoNaEntrega">
@@ -1388,10 +1363,6 @@
   </wsdl:message>
   <wsdl:message name="verificaDisponibilidadeServicoResponse">
     <wsdl:part element="tns:verificaDisponibilidadeServicoResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="registrarPedidosInformacao">
-    <wsdl:part element="tns:registrarPedidosInformacao" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="validaEtiquetaPLPResponse">
@@ -1410,12 +1381,12 @@
     <wsdl:part element="tns:cancelarObjetoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="registrarPedidosInformacaoResponse">
-    <wsdl:part element="tns:registrarPedidosInformacaoResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="atualizaPagamentoNaEntregaResponse">
     <wsdl:part element="tns:atualizaPagamentoNaEntregaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pesquisarParametrosPorDescricaoResponse">
+    <wsdl:part element="tns:pesquisarParametrosPorDescricaoResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="buscaServicosXServicosAdicionaisResponse">
@@ -1450,12 +1421,12 @@
     <wsdl:part element="tns:integrarUsuarioScol" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obterMensagemRetornoPI">
-    <wsdl:part element="tns:obterMensagemRetornoPI" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="integrarUsuarioScolResponse">
     <wsdl:part element="tns:integrarUsuarioScolResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pesquisarEmbalagensPorServico">
+    <wsdl:part element="tns:pesquisarEmbalagensPorServico" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="consultaCEPResponse">
@@ -1478,12 +1449,20 @@
     <wsdl:part element="tns:ErroMontagemRelatorio" name="ErroMontagemRelatorio">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="buscaServicosXServicosAdicionais">
-    <wsdl:part element="tns:buscaServicosXServicosAdicionais" name="parameters">
+  <wsdl:message name="verificaModalTransporte">
+    <wsdl:part element="tns:verificaModalTransporte" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obterAssuntosPI">
-    <wsdl:part element="tns:obterAssuntosPI" name="parameters">
+  <wsdl:message name="buscaDataAtualResponse">
+    <wsdl:part element="tns:buscaDataAtualResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="pesquisarServicosAdicionais">
+    <wsdl:part element="tns:pesquisarServicosAdicionais" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaServicosXServicosAdicionais">
+    <wsdl:part element="tns:buscaServicosXServicosAdicionais" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="buscaServicosResponse">
@@ -1494,12 +1473,16 @@
     <wsdl:part element="tns:validarPostagemReversa" name="parameters">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obterMensagemRetornoPIResponse">
-    <wsdl:part element="tns:obterMensagemRetornoPIResponse" name="parameters">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="solicitarPostagemScol">
     <wsdl:part element="tns:solicitarPostagemScol" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obterMensagemParametrizada">
+    <wsdl:part element="tns:obterMensagemParametrizada" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buscaOpcoes">
+    <wsdl:part element="tns:buscaOpcoes" name="parameters">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="AtendeCliente">
@@ -1520,14 +1503,6 @@
     </wsdl:output>
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="consultaSRO">
-      <wsdl:input message="tns:consultaSRO" name="consultaSRO">
-    </wsdl:input>
-      <wsdl:output message="tns:consultaSROResponse" name="consultaSROResponse">
-    </wsdl:output>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
@@ -1572,6 +1547,12 @@
     </wsdl:fault>
       <wsdl:fault message="tns:Exception" name="Exception">
     </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarParametrosPorDescricao">
+      <wsdl:input message="tns:pesquisarParametrosPorDescricao" name="pesquisarParametrosPorDescricao">
+    </wsdl:input>
+      <wsdl:output message="tns:pesquisarParametrosPorDescricaoResponse" name="pesquisarParametrosPorDescricaoResponse">
+    </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="atualizaPagamentoNaEntrega">
       <wsdl:input message="tns:atualizaPagamentoNaEntrega" name="atualizaPagamentoNaEntrega">
@@ -1631,30 +1612,10 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="registrarPedidosInformacao">
-      <wsdl:input message="tns:registrarPedidosInformacao" name="registrarPedidosInformacao">
-    </wsdl:input>
-      <wsdl:output message="tns:registrarPedidosInformacaoResponse" name="registrarPedidosInformacaoResponse">
-    </wsdl:output>
-      <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
-    </wsdl:fault>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="validaEtiquetaPLP">
       <wsdl:input message="tns:validaEtiquetaPLP" name="validaEtiquetaPLP">
     </wsdl:input>
       <wsdl:output message="tns:validaEtiquetaPLPResponse" name="validaEtiquetaPLPResponse">
-    </wsdl:output>
-      <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
-    </wsdl:fault>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="consultarPedidosInformacao">
-      <wsdl:input message="tns:consultarPedidosInformacao" name="consultarPedidosInformacao">
-    </wsdl:input>
-      <wsdl:output message="tns:consultarPedidosInformacaoResponse" name="consultarPedidosInformacaoResponse">
     </wsdl:output>
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
@@ -1691,13 +1652,17 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="obterMensagemRetornoPI">
-      <wsdl:input message="tns:obterMensagemRetornoPI" name="obterMensagemRetornoPI">
+    <wsdl:operation name="pesquisarDimensoesServico">
+      <wsdl:input message="tns:pesquisarDimensoesServico" name="pesquisarDimensoesServico">
     </wsdl:input>
-      <wsdl:output message="tns:obterMensagemRetornoPIResponse" name="obterMensagemRetornoPIResponse">
+      <wsdl:output message="tns:pesquisarDimensoesServicoResponse" name="pesquisarDimensoesServicoResponse">
     </wsdl:output>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarEmbalagensPorServico">
+      <wsdl:input message="tns:pesquisarEmbalagensPorServico" name="pesquisarEmbalagensPorServico">
+    </wsdl:input>
+      <wsdl:output message="tns:pesquisarEmbalagensPorServicoResponse" name="pesquisarEmbalagensPorServicoResponse">
+    </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="atualizaRemessaAgrupada">
       <wsdl:input message="tns:atualizaRemessaAgrupada" name="atualizaRemessaAgrupada">
@@ -1729,6 +1694,22 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="verificaModalTransporte">
+      <wsdl:input message="tns:verificaModalTransporte" name="verificaModalTransporte">
+    </wsdl:input>
+      <wsdl:output message="tns:verificaModalTransporteResponse" name="verificaModalTransporteResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaDataAtual">
+      <wsdl:input message="tns:buscaDataAtual" name="buscaDataAtual">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaDataAtualResponse" name="buscaDataAtualResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="buscaTarifaVale">
       <wsdl:input message="tns:buscaTarifaVale" name="buscaTarifaVale">
     </wsdl:input>
@@ -1751,14 +1732,6 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="obterMotivosPI">
-      <wsdl:input message="tns:obterMotivosPI" name="obterMotivosPI">
-    </wsdl:input>
-      <wsdl:output message="tns:obterMotivosPIResponse" name="obterMotivosPIResponse">
-    </wsdl:output>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="getStatusPLP">
       <wsdl:input message="tns:getStatusPLP" name="getStatusPLP">
     </wsdl:input>
@@ -1766,6 +1739,12 @@
     </wsdl:output>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarServicosAdicionais">
+      <wsdl:input message="tns:pesquisarServicosAdicionais" name="pesquisarServicosAdicionais">
+    </wsdl:input>
+      <wsdl:output message="tns:pesquisarServicosAdicionaisResponse" name="pesquisarServicosAdicionaisResponse">
+    </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="buscaServicosXServicosAdicionais">
       <wsdl:input message="tns:buscaServicosXServicosAdicionais" name="buscaServicosXServicosAdicionais">
@@ -1804,14 +1783,6 @@
     </wsdl:output>
       <wsdl:fault message="tns:AutenticacaoException" name="AutenticacaoException">
     </wsdl:fault>
-      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
-    </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="obterAssuntosPI">
-      <wsdl:input message="tns:obterAssuntosPI" name="obterAssuntosPI">
-    </wsdl:input>
-      <wsdl:output message="tns:obterAssuntosPIResponse" name="obterAssuntosPIResponse">
-    </wsdl:output>
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
@@ -1887,6 +1858,20 @@
       <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="obterMensagemParametrizada">
+      <wsdl:input message="tns:obterMensagemParametrizada" name="obterMensagemParametrizada">
+    </wsdl:input>
+      <wsdl:output message="tns:obterMensagemParametrizadaResponse" name="obterMensagemParametrizadaResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buscaOpcoes">
+      <wsdl:input message="tns:buscaOpcoes" name="buscaOpcoes">
+    </wsdl:input>
+      <wsdl:output message="tns:buscaOpcoesResponse" name="buscaOpcoesResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SigepClienteException" name="SigepClienteException">
+    </wsdl:fault>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="AtendeClienteServiceSoapBinding" type="tns:AtendeCliente">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
@@ -1916,18 +1901,6 @@
       <wsdl:fault name="AutenticacaoException">
         <soap:fault name="AutenticacaoException" use="literal"/>
       </wsdl:fault>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="consultaSRO">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="consultaSRO">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="consultaSROResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
@@ -1994,6 +1967,15 @@
       <wsdl:fault name="Exception">
         <soap:fault name="Exception" use="literal"/>
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarParametrosPorDescricao">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="pesquisarParametrosPorDescricao">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pesquisarParametrosPorDescricaoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="atualizaPagamentoNaEntrega">
       <soap:operation soapAction="" style="document"/>
@@ -2082,42 +2064,12 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="registrarPedidosInformacao">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="registrarPedidosInformacao">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="registrarPedidosInformacaoResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AutenticacaoException">
-        <soap:fault name="AutenticacaoException" use="literal"/>
-      </wsdl:fault>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="validaEtiquetaPLP">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="validaEtiquetaPLP">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="validaEtiquetaPLPResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="AutenticacaoException">
-        <soap:fault name="AutenticacaoException" use="literal"/>
-      </wsdl:fault>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="consultarPedidosInformacao">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="consultarPedidosInformacao">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="consultarPedidosInformacaoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="AutenticacaoException">
@@ -2172,17 +2124,23 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="obterMensagemRetornoPI">
+    <wsdl:operation name="pesquisarDimensoesServico">
       <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="obterMensagemRetornoPI">
+      <wsdl:input name="pesquisarDimensoesServico">
         <soap:body use="literal"/>
       </wsdl:input>
-      <wsdl:output name="obterMensagemRetornoPIResponse">
+      <wsdl:output name="pesquisarDimensoesServicoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarEmbalagensPorServico">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="pesquisarEmbalagensPorServico">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pesquisarEmbalagensPorServicoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="atualizaRemessaAgrupada">
       <soap:operation soapAction="" style="document"/>
@@ -2229,6 +2187,30 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="verificaModalTransporte">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="verificaModalTransporte">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="verificaModalTransporteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AutenticacaoException">
+        <soap:fault name="AutenticacaoException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="buscaDataAtual">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaDataAtual">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaDataAtualResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="buscaTarifaVale">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="buscaTarifaVale">
@@ -2262,18 +2244,6 @@
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="obterMotivosPI">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="obterMotivosPI">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="obterMotivosPIResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="getStatusPLP">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="getStatusPLP">
@@ -2285,6 +2255,15 @@
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="pesquisarServicosAdicionais">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="pesquisarServicosAdicionais">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="pesquisarServicosAdicionaisResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="buscaServicosXServicosAdicionais">
       <soap:operation soapAction="" style="document"/>
@@ -2342,18 +2321,6 @@
       <wsdl:fault name="AutenticacaoException">
         <soap:fault name="AutenticacaoException" use="literal"/>
       </wsdl:fault>
-      <wsdl:fault name="SigepClienteException">
-        <soap:fault name="SigepClienteException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="obterAssuntosPI">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="obterAssuntosPI">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="obterAssuntosPIResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
@@ -2462,6 +2429,27 @@
       <wsdl:fault name="AutenticacaoException">
         <soap:fault name="AutenticacaoException" use="literal"/>
       </wsdl:fault>
+      <wsdl:fault name="SigepClienteException">
+        <soap:fault name="SigepClienteException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obterMensagemParametrizada">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obterMensagemParametrizada">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obterMensagemParametrizadaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buscaOpcoes">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="buscaOpcoes">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="buscaOpcoesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
       <wsdl:fault name="SigepClienteException">
         <soap:fault name="SigepClienteException" use="literal"/>
       </wsdl:fault>
