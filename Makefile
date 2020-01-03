@@ -42,4 +42,4 @@ cov-test: clean lint  ## Run coverage tests
 	pytest -x --cov=correios/ --cov-report=term-missing --cov-report=html:htmlcov
 
 update-wsdl:  ## Update wsdl files
-	@python correios/update_wsdl.py
+	@python -m correios.update_wsdl

@@ -93,13 +93,13 @@ class ModelBuilder:
 
     def build_zip_address(self, zip_address_data):
         zip_address = ZipAddress(
-            id=zip_address_data.id,
+            id=0,
             zip_code=zip_address_data.cep,
             state=zip_address_data.uf,
             city=zip_address_data.cidade,
             district=zip_address_data.bairro,
             address=zip_address_data.end,
-            complements=[zip_address_data.complemento, zip_address_data.complemento2],
+            complements=[zip_address_data.complemento2],
         )
         return zip_address
 

@@ -1,35 +1,55 @@
 interactions:
 - request:
-    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:ns1="http://cliente.bean.master.sigep.bsb.correios.com.br/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:consultaCEP><cep>70002900</cep></ns1:consultaCEP></ns0:Body></SOAP-ENV:Envelope>
+    body: '<?xml version=''1.0'' encoding=''utf-8''?>
+
+      <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Body><ns0:consultaCEP
+      xmlns:ns0="http://cliente.bean.master.sigep.bsb.correios.com.br/"><cep>70002900</cep></ns0:consultaCEP></soap-env:Body></soap-env:Envelope>'
     headers:
-      Accept: ['*/*']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['403']
-      Content-Type: [text/xml; charset=utf-8]
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '288'
+      Content-Type:
+      - text/xml; charset=utf-8
       SOAPAction:
-      - !!binary |
-        IiI=
-      User-Agent: [python-requests/2.10.0]
+      - '""'
+      User-Agent:
+      - Zeep/3.4.0 (www.python-zeep.org)
     method: POST
     uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA3VRW04DMQy8StQDxMv+IFYmUhfKZ8XjBNnEtJGySZRkERyKU3AxHGhR94Of2DMj
-        z1gOlqjTsAtv5GMi8T77UIbG3W6OtaYBoJgjzbpIlhovYz5Aa4BOQ7BR+OMyRvuhMJR+MDGUxVd9
-        t3t8ppIYna1Z/XM23lGoJCfSQXJEpSyLO1CSU5mkiTmTi4WbWU65pWSqSw4KJ+1yjmpbtNjHXAnh
-        xKChpK67rutvug6hITTOaktqzLp8fXqnmf5lkI2Tp5l34ElYoQvQrzWGFKx6GffiadE2a3ElRh9N
-        FFuEpqCzirP5xeVV3T8gcEE47w7/3IeViyPC6lvUN7yWohymAQAA
+        H4sIAAAAAAAAA3WQTU4DMQyFrxL1AMnQDWJkInVKWVb8nCCTMW2kTBzZGQSH4hRcjARaRBes4vc9
+        5fkHhFzud+kVI2VUb3NM0jd2uzqWkntjxB9xdqKr1bgmPphWGDx9MisL3ykDTe8Wkqx7T0mWWNx2
+        9/CEkqs6R1f3N9nHgKmgHtElXVsUZC3hgFmPMmpPzBhIajHrkVsXxrJwsjC6wEx2I07tiQuCORHw
+        mO1113Xrm64D0xT4MLkJ7cBOPj9icBX/EKjBOeJcZ6C1rfhCYprs87BXj4ub2KkrNUTypDZgmgPL
+        i727B1MfMOexzD+rV+fPfczFxe0X0XC7ooEBAAA=
     headers:
-      Connection: [Keep-Alive]
-      Content-Encoding: [gzip]
-      Content-Length: ['267']
-      Content-Type: [text/xml;charset=UTF-8]
-      Date: ['Tue, 21 Jun 2016 04:17:46 GMT']
-      Keep-Alive: ['timeout=5, max=100']
-      Vary: ['Accept-Encoding,User-Agent']
-    status: {code: 200, message: OK}
+      Connection:
+      - close
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '257'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Thu, 02 Jan 2020 18:21:20 GMT
+      Server:
+      - Apache/2.4.25 (Debian)
+      Set-Cookie:
+      - jboss_homo-%3FINTERNO%3Fpool_jboss_homo_443=NFBBKIMA; Expires=Thu, 02-Jan-2020
+        18:41:19 GMT; Path=/
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
 version: 1

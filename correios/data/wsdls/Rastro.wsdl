@@ -5,20 +5,20 @@
       <xsd:import namespace="http://resource.webservice.correios.com.br/" schemaLocation="Rastro_schema1.xsd"/>
     </xsd:schema>
   </types>
-  <message name="buscaEventosResponse">
-    <part name="parameters" element="tns:buscaEventosResponse">
-    </part>
-  </message>
-  <message name="buscaEventos">
-    <part name="parameters" element="tns:buscaEventos">
-    </part>
-  </message>
   <message name="buscaEventosListaResponse">
     <part name="parameters" element="tns:buscaEventosListaResponse">
     </part>
   </message>
   <message name="buscaEventosLista">
     <part name="parameters" element="tns:buscaEventosLista">
+    </part>
+  </message>
+  <message name="buscaEventosResponse">
+    <part name="parameters" element="tns:buscaEventosResponse">
+    </part>
+  </message>
+  <message name="buscaEventos">
+    <part name="parameters" element="tns:buscaEventos">
     </part>
   </message>
   <portType name="Service">

@@ -163,7 +163,7 @@ class Correios:
             str(from_zip_code),
             str(to_zip_code),
         )
-        return result
+        return result == "0#"
 
     def get_posting_card_status(self, posting_card: PostingCard) -> bool:
         result = self._auth_call("getStatusCartaoPostagem", posting_card.number)

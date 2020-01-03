@@ -1,36 +1,56 @@
 interactions:
 - request:
-    body: <?xml version="1.0" encoding="UTF-8"?><SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:ns1="http://cliente.bean.master.sigep.bsb.correios.com.br/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
-      xmlns:ns0="http://schemas.xmlsoap.org/soap/envelope/"><SOAP-ENV:Header/><ns0:Body><ns1:verificaDisponibilidadeServico><codAdministrativo>88888888</codAdministrativo><numeroServico>40215</numeroServico><cepOrigem>82940150</cepOrigem><cepDestino>01310000</cepDestino><usuario>sigep</usuario><senha>XXXXXX</senha></ns1:verificaDisponibilidadeServico></ns0:Body></SOAP-ENV:Envelope>
+    body: '<?xml version=''1.0'' encoding=''utf-8''?>
+
+      <soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/"><soap-env:Body><ns0:verificaDisponibilidadeServico
+      xmlns:ns0="http://cliente.bean.master.sigep.bsb.correios.com.br/"><codAdministrativo>17000190</codAdministrativo><numeroServico>40215</numeroServico><cepOrigem>82940150</cepOrigem><cepDestino>01310000</cepDestino><usuario>teste</usuario><senha>****</senha></ns0:verificaDisponibilidadeServico></soap-env:Body></soap-env:Envelope>'
     headers:
-      Accept: ['*/*']
-      Accept-Encoding: ['gzip, deflate']
-      Connection: [keep-alive]
-      Content-Length: ['614']
-      Content-Type: [text/xml; charset=utf-8]
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '499'
+      Content-Type:
+      - text/xml; charset=utf-8
       SOAPAction:
-      - !!binary |
-        IiI=
-      User-Agent: [python-requests/2.10.0]
+      - '""'
+      User-Agent:
+      - Zeep/3.4.0 (www.python-zeep.org)
     method: POST
     uri: https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAA42QwQ3CMAxFV0EdwJE4ViEHBAvABElqWktpEtlpBduToILgxs3+9vf7spZkc3+O
-        K4aUcXefQ5S+aYduKiX3SomfcLYCddR0SDyqVijcTKoz+nXlmIaH0VH2/YpMN/L2RJJTJEeBBjvg
-        FXklny7YVHnTquED84EwFgSHNkKlFmQQGjGDEwc+MSMlqcUMjhuYsSwcTeEFtdoarf7PUJe/squf
-        b5gnqSsoBh0BAAA=
+        H4sIAAAAAAAAA42QQQ4CIQxFr2J0D8YlwVkYvYCeAJg604ShpMWJ3l4wo9Gdu5/f/r6fWiGXzSnN
+        ECnD6j7FJKZ5+/VYSjZaSxhhcqLqqPmKeNBNaFhCet3Z15UD9Y/OJtmZGRivGNwRJVNCjxF718MF
+        eMZAZ2iuvGk18IGFiJAKKA8uqUotwEpwgKy8eBWIGZCkikl5bmCGcuPUbTdWL9Lq/xvU5a/m+ucX
+        3RNtC1MfGwEAAA==
     headers:
-      Connection: [Keep-Alive]
-      Content-Encoding: [gzip]
-      Content-Length: ['182']
-      Content-Type: [text/xml;charset=UTF-8]
-      Date: ['Tue, 21 Jun 2016 04:17:47 GMT']
-      Keep-Alive: ['timeout=5, max=100']
-      Set-Cookie: [JSESSIONID=nauZRmha+14H2YZDHzO3VTje.87ce37da-a934-3ec7-b3ca-869e2306cbff;
-          Path=/SigepMasterJPA; Secure]
-      Vary: ['Accept-Encoding,User-Agent']
-    status: {code: 200, message: OK}
+      Connection:
+      - close
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '181'
+      Content-Type:
+      - text/xml;charset=UTF-8
+      Date:
+      - Thu, 02 Jan 2020 18:22:03 GMT
+      Server:
+      - Apache/2.4.25 (Debian)
+      Set-Cookie:
+      - JSESSIONID=dOpmxUoL16H6aeIUnufbp9hZ.87ce37da-a934-3ec7-b3ca-869e2306cbff;
+        Path=/SigepMasterJPA; Secure
+      - jboss_homo-%3FINTERNO%3Fpool_jboss_homo_443=NFBBKIMA; Expires=Thu, 02-Jan-2020
+        18:42:03 GMT; Path=/
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+    status:
+      code: 200
+      message: OK
 version: 1
