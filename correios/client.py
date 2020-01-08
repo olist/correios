@@ -207,7 +207,7 @@ class Correios:
             if str(exc).startswith("A PLP não será fechada"):
                 message = "Unable to close PLP. Tracking codes {} are already assigned to another PLP"
                 message = message.format(tracking_codes)
-                raise ClosePostingListError(message)
+                raise ClosePostingListError(message) from exc
             raise
 
         posting_list.close_with_id(id_)
