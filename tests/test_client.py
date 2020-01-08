@@ -23,6 +23,7 @@ from zeep.exceptions import Fault
 from correios.exceptions import (
     AuthenticationError,
     CanceledPostingCardError,
+    ClientError,
     ClosePostingListError,
     ConnectTimeoutError,
     NonexistentPostingCardError,
@@ -279,13 +280,18 @@ def test_close_posting_list(client, posting_card, posting_list, shipping_label):
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @mock.patch("zeep.proxy.OperationProxy.__call__")
 def test_client_close_posting_list_error(mock_soap_client, client, posting_card, posting_list, shipping_label):
-    mock_soap_client.side_effect = Fault(
-        "A PLP não será fechada , o(s) objeto(s) [PP40233163BR] já estão " "vinculados em outra PLP!"
+    original_exception = Fault(
+        "A PLP não será fechada , o(s) objeto(s) [PP40233163BR] já estão vinculados em outra PLP!"
     )
+    mock_soap_client.side_effect = original_exception
     shipping_label.posting_card = posting_card
     posting_list.add_shipping_label(shipping_label)
-    with pytest.raises(ClosePostingListError):
+
+    with pytest.raises(ClosePostingListError) as exc:
         client.close_posting_list(posting_list, posting_card)
+
+    assert isinstance(exc.value.__cause__, ClientError)
+    assert str(exc.value.__cause__) == original_exception.message
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
