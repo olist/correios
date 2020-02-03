@@ -284,10 +284,33 @@ def test_fail_get_unknown_service():
 
 @pytest.mark.parametrize(
     "number,extra_service_code",
-    ((1, "AR"), (2, "MP"), (25, "RR"), (19, "VD"), (64, "VD"), (ExtraService.get(EXTRA_SERVICE_AR), "AR")),
+    (
+        (1, "AR"),
+        (2, "MP"),
+        (25, "RR"),
+        (19, "VD"),
+        (64, "VD"),
+        (65, "VD"),
+        (ExtraService.get(EXTRA_SERVICE_AR), "AR")
+    ),
 )
 def test_extra_service_getter(number, extra_service_code):
     assert ExtraService.get(number).code == extra_service_code
+
+
+@pytest.mark.parametrize(
+    "number,code,description,is_declared_value",
+    (
+        (19, "VD", "Valor Declarado (Encomendas)", True),
+        (64, "VD", "Valor Declarado (Encomendas)", True),
+        (65, "VD", "Valor Declarado (Encomendas)", True),
+        (1, "AR", "Aviso de Recebimento", False),
+        (25, "RR", "Registro Nacional", False),
+    )
+)
+def test_extra_service_is_declared_value(number, code, description, is_declared_value):
+    extra_service = ExtraService(number, code, description)
+    assert extra_service.is_declared_value() == is_declared_value
 
 
 def test_basic_regional_direction():

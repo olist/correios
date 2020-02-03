@@ -93,11 +93,14 @@ class PostingListSerializer:
         xml_utils.SubElement(national, "valor_a_cobrar", text=str(shipping_label.billing).replace(".", ","))
 
         extra_services = xml_utils.SubElement(item, "servico_adicional")
+        declared_value = "000,00"
         for extra_service in shipping_label.extra_services:
             xml_utils.SubElement(
                 extra_services, "codigo_servico_adicional", text="{:03d}".format(extra_service.number)
             )
-        xml_utils.SubElement(extra_services, "valor_declarado", text=str(shipping_label.value).replace(".", ","))
+            if extra_service.is_declared_value():
+                declared_value = str(shipping_label.value).replace(".", ",")
+        xml_utils.SubElement(extra_services, "valor_declarado", text=declared_value)
 
         dimensions = xml_utils.SubElement(item, "dimensao_objeto")
         xml_utils.SubElement(dimensions, "tipo_objeto", text="{:03d}".format(shipping_label.package.package_type))
