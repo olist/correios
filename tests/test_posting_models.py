@@ -289,7 +289,7 @@ def test_shipping_label_with_min_declared_value_pac(posting_card, sender_address
         value=Decimal("0"),
         extra_services=[EXTRA_SERVICE_VD_PAC],
     )
-    assert shipping_label.value == Decimal("19.50")
+    assert shipping_label.value == Decimal("20.50")
 
 
 def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_address, receiver_address, package):
@@ -304,7 +304,7 @@ def test_shipping_label_with_min_declared_value_sedex(posting_card, sender_addre
         value=Decimal("0"),
         extra_services=[EXTRA_SERVICE_VD_SEDEX],
     )
-    assert shipping_label.value == Decimal("19.50")
+    assert shipping_label.value == Decimal("20.50")
 
 
 def test_posted_shipping_label(posting_card, sender_address, receiver_address, package, receipt):
