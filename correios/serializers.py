@@ -98,7 +98,7 @@ class PostingListSerializer:
             xml_utils.SubElement(
                 extra_services, "codigo_servico_adicional", text="{:03d}".format(extra_service.number)
             )
-            if extra_service.number in {19, 64, 65}:
+            if extra_service.is_declared_value():
                 declared_value = str(shipping_label.value).replace(".", ",")
         xml_utils.SubElement(extra_services, "valor_declarado", text=declared_value)
 
