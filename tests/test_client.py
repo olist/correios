@@ -36,6 +36,7 @@ from correios.models.data import (
     EXTRA_SERVICE_AR,
     EXTRA_SERVICE_MP,
     EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_PAC_MINI,
     EXTRA_SERVICE_VD_SEDEX,
     FREIGHT_ERROR_FINAL_ZIPCODE_RESTRICTED,
     FREIGHT_ERROR_INITIAL_AND_FINAL_ZIPCODE_RESTRICTED,
@@ -393,6 +394,7 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
     "extra_service_vd,code",
     [
         (EXTRA_SERVICE_VD_PAC, b"064"),
+        (EXTRA_SERVICE_VD_PAC_MINI, b"065"),
         (EXTRA_SERVICE_VD_SEDEX, b"019")
     ]
 )
