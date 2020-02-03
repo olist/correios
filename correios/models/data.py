@@ -279,7 +279,7 @@ SERVICES = {
         "display_name": "SEDEX 10",
         "symbol": "premium",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "81019": {
@@ -290,7 +290,7 @@ SERVICES = {
         "display_name": "E-SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "41068": {
@@ -301,7 +301,7 @@ SERVICES = {
         "max_weight": 30000,
         "symbol": "standard",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("3000.00"),
     },
     "04669": {
@@ -312,7 +312,7 @@ SERVICES = {
         "max_weight": 30000,
         "symbol": "standard",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("3000.00"),
     },
     "40444": {
@@ -323,7 +323,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40436": {
@@ -334,7 +334,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40096": {
@@ -345,7 +345,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "04162": {
@@ -356,7 +356,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40380": {
@@ -367,7 +367,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40010": {
@@ -378,7 +378,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "41211": {
@@ -389,7 +389,7 @@ SERVICES = {
         "max_weight": 30000,
         "symbol": "standard",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("3000.00"),
     },
     "40630": {
@@ -400,7 +400,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "04316": {
@@ -411,7 +411,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40916": {
@@ -422,7 +422,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40908": {
@@ -433,7 +433,7 @@ SERVICES = {
         "display_name": "SEDEX",
         "symbol": "express",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "41300": {
@@ -444,7 +444,7 @@ SERVICES = {
         "display_name": "PAC",
         "symbol": "standard",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("3000.00"),
     },
     "04812": {
@@ -455,7 +455,7 @@ SERVICES = {
         "max_weight": 30000,
         "symbol": "standard",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("3000.00"),
     },
     "40169": {
@@ -466,7 +466,7 @@ SERVICES = {
         "display_name": "SEDEX 12",
         "symbol": "premium",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "40290": {
@@ -477,7 +477,7 @@ SERVICES = {
         "display_name": "SEDEX Hoje",
         "symbol": "premium",
         "default_extra_services": [EXTRA_SERVICE_RR],
-        "min_declared_value": Decimal("19.50"),
+        "min_declared_value": Decimal("20.50"),
         "max_declared_value": Decimal("10000.00"),
     },
     "10154": {
@@ -514,8 +514,8 @@ SERVICE_SEDEX10 = "40215"
 SERVICE_SEDEX12 = "40169"
 SERVICE_E_SEDEX = "81019"
 
-INSURANCE_VALUE_THRESHOLD_PAC = Decimal("19.50")  # R$
-INSURANCE_VALUE_THRESHOLD_SEDEX = Decimal("19.50")  # R$
+INSURANCE_VALUE_THRESHOLD_PAC = Decimal("20.50")  # R$
+INSURANCE_VALUE_THRESHOLD_SEDEX = Decimal("20.50")  # R$
 INSURANCE_PERCENTUAL_COST = Decimal("0.01")  # 1%
 
 REGIONAL_DIRECTIONS = {
