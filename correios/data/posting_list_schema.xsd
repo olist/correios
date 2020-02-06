@@ -100,14 +100,14 @@
 	<xs:element name="telefone_remetente">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="20"/>
+				<xs:maxLength value="12"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="telefone_destinatario">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="24"/>
+				<xs:maxLength value="12"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -211,14 +211,14 @@
 	<xs:element name="numero_remetente">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="18"/>
+				<xs:maxLength value="5"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="numero_nota_fiscal">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="8"/>
+				<xs:maxLength value="7"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -232,7 +232,7 @@
 	<xs:element name="numero_end_destinatario">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="18"/>
+				<xs:maxLength value="5"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -274,7 +274,7 @@
 	<xs:element name="numero_contrato">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="20"/>
+				<xs:maxLength value="10"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -303,7 +303,7 @@
 	<xs:element name="natureza_nota_fiscal">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="20"/>
+				<xs:maxLength value="0"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -517,7 +517,7 @@
 	<xs:element name="codigo_administrativo">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="9"/>
+				<xs:maxLength value="8"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -538,14 +538,14 @@
 	<xs:element name="cep_remetente">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="20"/>
+				<xs:maxLength value="8"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
 	<xs:element name="cep_destinatario">
 		<xs:simpleType>
 			<xs:restriction base="xs:string">
-				<xs:maxLength value="20"/>
+				<xs:maxLength value="8"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
