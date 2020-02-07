@@ -391,12 +391,31 @@ def test_posting_list_serialization_with_crazy_utf8_character(posting_list, ship
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
 @pytest.mark.parametrize(
-    "extra_service_vd,code",
+    "field, value, max_length",
     [
-        (EXTRA_SERVICE_VD_PAC, b"064"),
-        (EXTRA_SERVICE_VD_PAC_MINI, b"065"),
-        (EXTRA_SERVICE_VD_SEDEX, b"019")
-    ]
+        ("complement", "Supermercado Manuel Rede Suprema", 30),
+        ("street", "Travessa do Paralelepípedo de Santo Antonio da Cruz", 50),
+    ],
+)
+def test_posting_list_serialization_max_length(field, value, max_length, posting_list, shipping_label):
+
+    assert len(value) > max_length
+
+    setattr(shipping_label.receiver, field, value)
+    posting_list.add_shipping_label(shipping_label)
+    serializer = PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+
+    assert value.encode("ISO-8859-1") not in xml
+    assert value[:max_length].encode("ISO-8859-1") in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
+@pytest.mark.parametrize(
+    "extra_service_vd,code",
+    [(EXTRA_SERVICE_VD_PAC, b"064"), (EXTRA_SERVICE_VD_PAC_MINI, b"065"), (EXTRA_SERVICE_VD_SEDEX, b"019")],
 )
 def test_declared_value(extra_service_vd, code, posting_list, shipping_label):
     shipping_label.extra_services.append(ExtraService.get(extra_service_vd))

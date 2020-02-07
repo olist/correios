@@ -74,8 +74,8 @@ class PostingListSerializer:
         xml_utils.SubElement(address, "telefone_destinatario", cdata=receiver.phone.short)
         xml_utils.SubElement(address, "celular_destinatario", cdata=receiver.cellphone.short)
         xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
-        xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
-        xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
+        xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street)[:50])
+        xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement)[:30])
         xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number))
 
         national = xml_utils.SubElement(item, "nacional")
@@ -95,9 +95,7 @@ class PostingListSerializer:
         extra_services = xml_utils.SubElement(item, "servico_adicional")
         declared_value = "000,00"
         for extra_service in shipping_label.extra_services:
-            xml_utils.SubElement(
-                extra_services, "codigo_servico_adicional", text="{:03d}".format(extra_service.number)
-            )
+            xml_utils.SubElement(extra_services, "codigo_servico_adicional", text="{:03d}".format(extra_service.number))
             if extra_service.is_declared_value():
                 declared_value = str(shipping_label.value).replace(".", ",")
         xml_utils.SubElement(extra_services, "valor_declarado", text=declared_value)
