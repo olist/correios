@@ -14,6 +14,7 @@
 
 
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 import pytest
 from PIL.Image import Image
@@ -26,7 +27,14 @@ from correios.exceptions import (
     MaximumDeclaredValueError,
     MinimumDeclaredValueError,
 )
-from correios.models.data import EXTRA_SERVICE_AR, SERVICE_PAC, SERVICE_SEDEX
+from correios.models.data import (
+    EXTRA_SERVICE_AR,
+    EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_PAC_MINI,
+    EXTRA_SERVICE_VD_SEDEX,
+    SERVICE_PAC,
+    SERVICE_SEDEX,
+)
 from correios.models.user import (
     Contract,
     ExtraService,
@@ -242,6 +250,13 @@ def test_fail_invalid_declared_value_in_sedex():
 
     with pytest.raises(MinimumDeclaredValueError):
         service.validate_declared_value(service.min_declared_value - 1)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI])
+def test_fail_invalid_insurance_declared_value(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    with pytest.raises(InvalidExtraServiceError):
+        service.validate_insurance_declared_value(Decimal("0.00"), insurance_code)
 
 
 def test_fail_invalid_declared_value_in_pac():

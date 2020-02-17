@@ -165,6 +165,17 @@ class Service:
         other = Service.get(other)
         return (self.id, self.code) == (other.id, other.code)
 
+    def validate_insurance_declared_value(self, value: Union[Decimal, float], insurance_code) -> bool:
+        services_need_value_gt_zero = [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI]
+        if value == 0 and insurance_code in services_need_value_gt_zero:
+            msg = f"Value can be zero for this insurance_code : {insurance_code}"
+            raise InvalidExtraServiceError(msg)
+
+        if insurance_code not in services_need_value_gt_zero and value > 0:
+            msg = f"Value can not be greater than zero for this insurance_code : {insurance_code}"
+            raise InvalidExtraServiceError(msg)
+        return True
+
     def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
         if value > self.max_declared_value:
             raise MaximumDeclaredValueError(
