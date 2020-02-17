@@ -93,6 +93,10 @@ class InvalidExtraServiceError(ModelError):
     pass
 
 
+class InvalidServiceDeclaredValue(ModelError):
+    pass
+
+
 class PostingListError(ModelError):
     pass
 
