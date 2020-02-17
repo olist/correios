@@ -23,12 +23,15 @@ from correios.exceptions import (
     InvalidExtraServiceError,
     InvalidFederalTaxNumberError,
     InvalidRegionalDirectionError,
+    InvalidServiceDeclaredValue,
     InvalidUserContractError,
     MaximumDeclaredValueError,
     MinimumDeclaredValueError,
 )
 from correios.models.data import (
     EXTRA_SERVICE_AR,
+    EXTRA_SERVICE_MP,
+    EXTRA_SERVICE_RR,
     EXTRA_SERVICE_VD_PAC,
     EXTRA_SERVICE_VD_PAC_MINI,
     EXTRA_SERVICE_VD_SEDEX,
@@ -255,8 +258,27 @@ def test_fail_invalid_declared_value_in_sedex():
 @pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI])
 def test_fail_invalid_insurance_declared_value(insurance_code):
     service = Service.get(SERVICE_PAC)
-    with pytest.raises(InvalidExtraServiceError):
+    with pytest.raises(InvalidServiceDeclaredValue):
         service.validate_insurance_declared_value(Decimal("0.00"), insurance_code)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI])
+def test_valid_insurance_declared_value(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    assert service.validate_insurance_declared_value(Decimal("10.00"), insurance_code) is True
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, EXTRA_SERVICE_MP])
+def test_fail_invalid_insurance_code(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    with pytest.raises(InvalidServiceDeclaredValue):
+        service.validate_insurance_declared_value(Decimal("10.00"), insurance_code)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, EXTRA_SERVICE_MP])
+def test_valid_insurance_code(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    assert service.validate_insurance_declared_value(Decimal("0.00"), insurance_code) is True
 
 
 def test_fail_invalid_declared_value_in_pac():
