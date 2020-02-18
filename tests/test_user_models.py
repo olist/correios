@@ -14,6 +14,7 @@
 
 
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 import pytest
 from PIL.Image import Image
@@ -22,11 +23,21 @@ from correios.exceptions import (
     InvalidExtraServiceError,
     InvalidFederalTaxNumberError,
     InvalidRegionalDirectionError,
+    InvalidServiceDeclaredValue,
     InvalidUserContractError,
     MaximumDeclaredValueError,
     MinimumDeclaredValueError,
 )
-from correios.models.data import EXTRA_SERVICE_AR, SERVICE_PAC, SERVICE_SEDEX
+from correios.models.data import (
+    EXTRA_SERVICE_AR,
+    EXTRA_SERVICE_MP,
+    EXTRA_SERVICE_RR,
+    EXTRA_SERVICE_VD_PAC,
+    EXTRA_SERVICE_VD_PAC_MINI,
+    EXTRA_SERVICE_VD_SEDEX,
+    SERVICE_PAC,
+    SERVICE_SEDEX,
+)
 from correios.models.user import (
     Contract,
     ExtraService,
@@ -242,6 +253,32 @@ def test_fail_invalid_declared_value_in_sedex():
 
     with pytest.raises(MinimumDeclaredValueError):
         service.validate_declared_value(service.min_declared_value - 1)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI])
+def test_fail_invalid_insurance_declared_value(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    with pytest.raises(InvalidServiceDeclaredValue):
+        service.validate_insurance_declared_value(Decimal("0.00"), insurance_code)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI])
+def test_valid_insurance_declared_value(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    assert service.validate_insurance_declared_value(Decimal("10.00"), insurance_code) is True
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, EXTRA_SERVICE_MP])
+def test_fail_invalid_insurance_code(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    with pytest.raises(InvalidServiceDeclaredValue):
+        service.validate_insurance_declared_value(Decimal("10.00"), insurance_code)
+
+
+@pytest.mark.parametrize("insurance_code", [EXTRA_SERVICE_RR, EXTRA_SERVICE_AR, EXTRA_SERVICE_MP])
+def test_valid_insurance_code(insurance_code):
+    service = Service.get(SERVICE_PAC)
+    assert service.validate_insurance_declared_value(Decimal("0.00"), insurance_code) is True
 
 
 def test_fail_invalid_declared_value_in_pac():

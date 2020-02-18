@@ -23,6 +23,7 @@ from correios.exceptions import (
     InvalidExtraServiceError,
     InvalidFederalTaxNumberError,
     InvalidRegionalDirectionError,
+    InvalidServiceDeclaredValue,
     InvalidUserContractError,
     MaximumDeclaredValueError,
     MinimumDeclaredValueError,
@@ -164,6 +165,16 @@ class Service:
     def __eq__(self, other):
         other = Service.get(other)
         return (self.id, self.code) == (other.id, other.code)
+
+    def validate_insurance_declared_value(self, value: Union[Decimal, float], insurance_code: int) -> bool:
+        services_need_value_gt_zero = [EXTRA_SERVICE_VD_SEDEX, EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_PAC_MINI]
+        if value == 0 and insurance_code in services_need_value_gt_zero:
+            msg = "Value cannot be zero for this insurance code : {}".format(insurance_code)
+            raise InvalidServiceDeclaredValue(msg)
+        if insurance_code not in services_need_value_gt_zero and value > 0:
+            msg = "Value cannot be greater than zero for this insurance code : {}".format(insurance_code)
+            raise InvalidServiceDeclaredValue(msg)
+        return True
 
     def validate_declared_value(self, value: Union[Decimal, float]) -> bool:
         if value > self.max_declared_value:
