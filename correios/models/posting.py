@@ -452,6 +452,9 @@ class Package:
 
 class Receipt:
 
+    STATUS_UNPROCESSED = 0
+    STATUS_PROCESSED = 1
+
     def __init__(
         self,
         number: Union[int, str],
