@@ -260,7 +260,7 @@ class Correios:
             str(from_zip),
             str(to_zip),
             package.weight / KG,
-            package.package_type,
+            package.freight_package_type,
             package.length,
             package.height,
             package.width,
