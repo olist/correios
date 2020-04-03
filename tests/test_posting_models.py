@@ -634,6 +634,7 @@ def test_basic_not_found_tracking_event():
         ("BDE", 0),
         ("BDI", 0),
         ("BDR", 0),
+        ("BDR", 70),
         ("BLQ", 1),
         ("CD", 0),
         ("CMT", 0),
