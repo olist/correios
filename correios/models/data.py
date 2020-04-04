@@ -600,6 +600,12 @@ TRACKING_STATUS = {
         "Recebido por:",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
+    ("BDE", 70): (
+        "delivered",
+        "Objeto entregue ao destinatário",
+        "Recebido por:",
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
+    ),
     ("BDI", 0): (
         "delivered",
         "Objeto entregue ao destinatário",
@@ -677,6 +683,12 @@ TRACKING_STATUS = {
     ("FC", 47): (
         "shipped",
         "Objeto será devolvido por solicitação do contratante/remetente",
+        "Em tratamento, aguarde.",
+        "Acompanhar",
+    ),
+    ("FC", 29): (
+        "shipped",
+        "Objeto encaminhado para apreensão",
         "Em tratamento, aguarde.",
         "Acompanhar",
     ),
