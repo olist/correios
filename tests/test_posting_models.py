@@ -632,6 +632,7 @@ def test_basic_not_found_tracking_event():
     "status_type,status_number",
     [
         ("BDE", 0),
+        ("BDE", 70),
         ("BDI", 0),
         ("BDR", 0),
         ("BDR", 70),
@@ -643,6 +644,7 @@ def test_basic_not_found_tracking_event():
         ("DO", 0),
         ("EST", 1),
         ("FC", 1),
+        ("FC", 29),
         ("IDC", 1),
         ("LDI", 0),
         ("LDE", 0),
