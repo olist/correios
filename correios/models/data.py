@@ -612,6 +612,12 @@ TRACKING_STATUS = {
         "Recebido por:",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
+    ("BDR", 70): (
+        "delivered",
+        "Objeto entregue ao destinatário",
+        "Recebido por:",
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
+    ),
     ("CAR", 1): ("shipped", "Conferido", "Recebido na unidade de destino", "Acompanhar"),
     ("CD", 0): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
     ("CMT", 0): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
