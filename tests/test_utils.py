@@ -18,7 +18,15 @@ from unittest import mock
 
 import pytest
 
-from correios.utils import RangeSet, capitalize_phrase, get_resource_path, rreplace, to_decimal, to_integer
+from correios.utils import (
+    RangeSet,
+    capitalize_phrase,
+    get_resource_path,
+    rreplace,
+    sanitize_phrase,
+    to_decimal,
+    to_integer,
+)
 
 phrase = "FOo bAr BAZ qux"
 
@@ -124,3 +132,11 @@ def test_should_use_pkg_resources_to_get_wsdl_files(mock_resource):
 
     mock_resource.assert_called_with("correios", "data/fake")
     assert str(path) == "/"
+
+
+@pytest.mark.parametrize(
+    "phrase, expected_phrase",
+    (("lord &%>º<of #the!$ rings", "lord of the rings"), ("bilbo!@#$º><%& bolseiro", "bilbo bolseiro"),),
+)
+def test_sanitize_phrase(phrase, expected_phrase):
+    assert sanitize_phrase(phrase) == expected_phrase

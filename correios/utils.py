@@ -104,3 +104,7 @@ def get_resource_path(path) -> Path:
     resource_package = "correios"
     resource_path = os.path.join("data", path)
     return Path(pkg_resources.resource_filename(resource_package, resource_path))
+
+
+def sanitize_phrase(phrase: str) -> str:
+    return re.sub("[!@#$º><%&]", "", phrase)
