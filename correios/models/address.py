@@ -23,7 +23,7 @@ from phonenumbers import NumberParseException, PhoneNumberFormat, format_number,
 
 from correios.exceptions import InvalidStateError, InvalidZipCodeError
 from correios.models.data import ZIP_CODE_MAP, ZIP_CODES
-from correios.utils import capitalize_phrase, rreplace
+from correios.utils import capitalize_phrase, rreplace, sanitize_phrase
 
 ZIP_CODE_LENGTH = 8
 STATE_LENGTH = 2
@@ -280,8 +280,12 @@ class Address:
         self.longitude = longitude
 
     @property
+    def label_complement(self) -> str:
+        return sanitize_phrase(self.complement)
+
+    @property
     def complement_safe_display(self) -> str:
-        complement = unicodedata.normalize("NFKD", self.complement).encode("ascii", "ignore").decode()
+        complement = unicodedata.normalize("NFKD", self.label_complement).encode("ascii", "ignore").decode()
         return " ".join(complement.split())
 
     @property
@@ -292,7 +296,7 @@ class Address:
     def basic_address(self) -> str:
         number = self.number
         if self.complement:
-            number = "{} - {}".format(self.number, self.complement)
+            number = "{} - {}".format(self.number, self.label_complement)
 
         if self.neighborhood:
             return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
@@ -311,7 +315,7 @@ class Address:
 
     @property
     def label_name(self) -> str:
-        return capitalize_phrase(self.name)
+        return capitalize_phrase(sanitize_phrase(self.name))
 
     @property
     def display_address(self) -> Tuple[str, str]:
@@ -330,6 +334,10 @@ class Address:
     @property
     def zip_complement(self) -> str:
         return self.filtered_number or "0"
+
+    @property
+    def label_city(self) -> str:
+        return sanitize_phrase(self.city)
 
 
 class ReceiverAddress(Address):

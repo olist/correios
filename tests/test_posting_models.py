@@ -243,7 +243,12 @@ def test_basic_default_shipping_label(posting_card, sender_address, receiver_add
 
 @pytest.mark.parametrize(
     "complement,expected",
-    (("15 • andar", "15 andar"), ("ˆônibus", "onibus"), ("many" + " " * 10 + "whitespaces", "many whitespaces")),
+    (
+        ("15 • andar", "15 andar"),
+        ("ˆônibus", "onibus"),
+        ("many" + " " * 10 + "whitespaces", "many whitespaces"),
+        ("rua& dos bobos", "rua dos bobos"),
+    ),
 )
 def test_shipping_label_get_datamatrix_info_with_complement_display(
     posting_card, sender_address, receiver_address, package, complement, expected
@@ -259,6 +264,57 @@ def test_shipping_label_get_datamatrix_info_with_complement_display(
     )
     datamatrix = shipping_label.get_datamatrix_info()
     assert expected in datamatrix
+
+
+@pytest.mark.parametrize(
+    "city,expected_city", (("Américo $$@@Brasiliense", "Américo Brasiliense"), ("São%& Paulo", "São Paulo"),),
+)
+def test_shipping_label_city_sanitized(posting_card, sender_address, receiver_address, package, city, expected_city):
+    receiver_address.city = city
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=4162,
+        package=package,
+        tracking_code="PD12345678 BR",
+    )
+    assert expected_city == shipping_label.receiver.label_city
+
+
+@pytest.mark.parametrize(
+    "name,expected_name", (("John $$@@Doe", "John Doe"), ("Dr.%& Who", "Dr. Who"),),
+)
+def test_shipping_label_name_sanitized(posting_card, sender_address, receiver_address, package, name, expected_name):
+    receiver_address.name = name
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=4162,
+        package=package,
+        tracking_code="PD12345678 BR",
+    )
+    assert expected_name == shipping_label.receiver.label_name
+
+
+@pytest.mark.parametrize(
+    "complement,expected_complement",
+    (("Rua $$@@dos bobos", "Rua dos bobos"), ("Avenida!@#$º><%& Dr. Carlos", "Avenida Dr. Carlos"),),
+)
+def test_shipping_label_complement_sanitized(
+    posting_card, sender_address, receiver_address, package, complement, expected_complement
+):
+    receiver_address.complement = complement
+    shipping_label = posting.ShippingLabel(
+        posting_card=posting_card,
+        sender=sender_address,
+        receiver=receiver_address,
+        service=4162,
+        package=package,
+        tracking_code="PD12345678 BR",
+    )
+    assert expected_complement == shipping_label.receiver.label_complement
 
 
 @pytest.mark.parametrize("extra_service_vd", (EXTRA_SERVICE_VD_PAC, EXTRA_SERVICE_VD_SEDEX))
