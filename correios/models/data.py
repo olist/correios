@@ -1562,15 +1562,33 @@ TRACKING_STATUS = {
     ("BDE", 69): ("shipped_delayed", "Objeto com atraso na entrega", "", "Acompanhar"),
     ("BDI", 69): ("shipped_delayed", "Objeto com atraso na entrega", "", "Acompanhar"),
     ("BDR", 69): ("shipped_delayed", "Objeto com atraso na entrega", "", "Acompanhar"),
+    ("BDE", 70): (
+        "delivered",
+        "Objeto entregue ao destinatário",
+        "Recebido por:",
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
+    ),
     ("BDR", 70): (
         "delivered",
         "Objeto entregue ao destinatário",
         "Recebido por:",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
+    ("BDE", 71): (
+        "customs_control",
+        "Objeto apreendido por: ANVISA/VIGILANCIA SANITARIA",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
     ("BDR", 71): (
         "customs_control",
         "Objeto apreendido por: ANVISA/VIGILANCIA SANITARIA",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
+    ("BDE", 72): (
+        "customs_control",
+        "Objeto apreendido por: BOMBEIROS",
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
@@ -1580,9 +1598,21 @@ TRACKING_STATUS = {
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
+    ("BDE", 73): (
+        "customs_control",
+        "Objeto apreendido por: EXERCITO",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
     ("BDR", 73): (
         "customs_control",
         "Objeto apreendido por: EXERCITO",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
+    ("BDE", 74): (
+        "customs_control",
+        "Objeto apreendido por: IBAMA",
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
@@ -1592,9 +1622,21 @@ TRACKING_STATUS = {
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
+    ("BDE", 75): (
+        "customs_control",
+        "Objeto apreendido por: POLICIA FEDERAL",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
     ("BDR", 75): (
         "customs_control",
         "Objeto apreendido por: POLICIA FEDERAL",
+        "O objeto está em poder da autoridade competente",
+        "Acionar atendimento dos Correios.",
+    ),
+    ("BDE", 76): (
+        "customs_control",
+        "Objeto apreendido por: POLICIA CIVIL/MILITAR",
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
@@ -1604,10 +1646,16 @@ TRACKING_STATUS = {
         "O objeto está em poder da autoridade competente",
         "Acionar atendimento dos Correios.",
     ),
+    ("BDE", 79): (
+        "delivered",
+        "Objeto entregue ao contratante",
+        "Contingência COVID-19",
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
+    ),
     ("BDR", 79): (
         "delivered",
-        "Postagem Inexistente",
-        "",
+        "Objeto entregue ao contratante",
+        "Contingência COVID-19",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
     ),
     ("BDE", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
