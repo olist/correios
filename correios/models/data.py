@@ -1652,6 +1652,12 @@ TRACKING_STATUS = {
         "Contingência COVID-19",
         "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
     ),
+    ("BDI", 79): (
+        "delivered",
+        "Objeto entregue ao contratante",
+        "Contingência COVID-19",
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
+    ),
     ("BDR", 79): (
         "delivered",
         "Objeto entregue ao contratante",
