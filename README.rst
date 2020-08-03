@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Folist%2Fcorreios.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Folist%2Fcorreios?ref=badge_shield)
+
 correios
 ========
 
@@ -72,3 +74,7 @@ Also, remember to update the WSDL files:
 .. code-block::
 
     $ make update-wsdl
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Folist%2Fcorreios.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Folist%2Fcorreios?ref=badge_large)
