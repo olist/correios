@@ -680,12 +680,7 @@ TRACKING_STATUS = {
         "Em tratamento, aguarde.",
         "Acompanhar",
     ),
-    ("FC", 29): (
-        "shipped",
-        "Objeto encaminhado para apreensão",
-        "Em tratamento, aguarde.",
-        "Acompanhar",
-    ),
+    ("FC", 29): ("shipped", "Objeto encaminhado para apreensão", "Em tratamento, aguarde.", "Acompanhar",),
     ("IDC", 1): ("lost", "Objeto não localizado", "Houve indenização dos valores correspondentes", "Acompanhar"),
     ("LDI", 1): (
         "waiting_retrieval",
@@ -1650,19 +1645,19 @@ TRACKING_STATUS = {
         "delivered",
         "Objeto entregue ao contratante",
         "Contingência COVID-19",
-        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
     ("BDI", 79): (
         "delivered",
         "Objeto entregue ao contratante",
         "Contingência COVID-19",
-        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
     ("BDR", 79): (
         "delivered",
         "Objeto entregue ao contratante",
         "Contingência COVID-19",
-        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento."
+        "Finalizar a entrega. Não é mais necessário prosseguir com o acompanhamento.",
     ),
     ("BDE", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
     ("BDI", 80): ("lost", "Objeto extraviado", "", "Acionar a CAC dos Correios"),
