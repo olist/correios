@@ -401,8 +401,8 @@
 	<xs:element name="dimensao_altura">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
-				<xs:minInclusive value="2"/>
-				<xs:maxInclusive value="105"/>
+				<xs:minInclusive value="1"/>
+				<xs:maxInclusive value="100"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -410,8 +410,8 @@
 	<xs:element name="dimensao_largura">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
-				<xs:minInclusive value="11"/>
-				<xs:maxInclusive value="105"/>
+				<xs:minInclusive value="10"/>
+				<xs:maxInclusive value="100"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -419,8 +419,8 @@
 	<xs:element name="dimensao_comprimento">
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
-				<xs:minInclusive value="16"/>
-				<xs:maxInclusive value="105"/>
+				<xs:minInclusive value="15"/>
+				<xs:maxInclusive value="100"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
@@ -429,7 +429,7 @@
 		<xs:simpleType>
 			<xs:restriction base="xs:int">
 				<xs:minInclusive value="0"/>
-				<xs:maxInclusive value="105"/>
+				<xs:maxInclusive value="100"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>

@@ -392,13 +392,13 @@ def test_package_posting_weight_calculation(weight, width, height, length, posti
         (posting.Package.TYPE_ENVELOPE, 0, 0, 0, 1, exceptions.InvalidPackageDimensionsError),
         (posting.Package.TYPE_ENVELOPE, 1, 1, 1, 1, exceptions.InvalidPackageDimensionsError),
         (posting.Package.TYPE_BOX, 11, 2, 16, 1, exceptions.InvalidPackageDimensionsError),  # invalid diameter
-        (posting.Package.TYPE_BOX, 110, 2, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max width=105
+        (posting.Package.TYPE_BOX, 110, 2, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max width=100
         (posting.Package.TYPE_BOX, 11, 110, 16, 0, exceptions.InvalidMaxPackageDimensionsError),  # max height=110
         (posting.Package.TYPE_BOX, 11, 2, 110, 0, exceptions.InvalidMaxPackageDimensionsError),  # max length=110
-        (posting.Package.TYPE_BOX, 105, 105, 105, 0, exceptions.InvalidMaxPackageDimensionsError),  # sum > 200
+        (posting.Package.TYPE_BOX, 100, 100, 100, 0, exceptions.InvalidMaxPackageDimensionsError),  # sum > 200
         (posting.Package.TYPE_CYLINDER, 1, 0, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid width
         (posting.Package.TYPE_CYLINDER, 0, 1, 18, 16, exceptions.InvalidPackageDimensionsError),  # invalid height
-        (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=105
+        (posting.Package.TYPE_CYLINDER, 0, 0, 110, 16, exceptions.InvalidMaxPackageDimensionsError),  # max length=100
         (posting.Package.TYPE_CYLINDER, 0, 0, 18, 110, exceptions.InvalidMaxPackageDimensionsError),  # max diameter=91
         (
             posting.Package.TYPE_CYLINDER,
