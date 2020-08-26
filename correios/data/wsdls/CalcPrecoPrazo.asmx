@@ -370,6 +370,24 @@
           <s:element minOccurs="0" maxOccurs="1" name="versaoAtual" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="calcPrazoNovo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="nCdServico" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sCepOrigem" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sCepDestino" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="sDtCalculo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strVerificaRestricao" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="calcPrazoNovoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="calcPrazoNovoResult" type="tns:cResultado" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="cResultado" type="tns:cResultado" />
       <s:element name="cResultadoObjeto" type="tns:cResultadoObjeto" />
       <s:element name="cResultadoServicos" type="tns:cResultadoServicos" />
@@ -460,6 +478,12 @@
   </wsdl:message>
   <wsdl:message name="getVersaoSoapOut">
     <wsdl:part name="parameters" element="tns:getVersaoResponse" />
+  </wsdl:message>
+  <wsdl:message name="calcPrazoNovoSoapIn">
+    <wsdl:part name="parameters" element="tns:calcPrazoNovo" />
+  </wsdl:message>
+  <wsdl:message name="calcPrazoNovoSoapOut">
+    <wsdl:part name="parameters" element="tns:calcPrazoNovoResponse" />
   </wsdl:message>
   <wsdl:message name="CalcPrecoPrazoHttpGetIn">
     <wsdl:part name="nCdEmpresa" type="s:string" />
@@ -619,6 +643,16 @@
   <wsdl:message name="getVersaoHttpGetOut">
     <wsdl:part name="Body" element="tns:versao" />
   </wsdl:message>
+  <wsdl:message name="calcPrazoNovoHttpGetIn">
+    <wsdl:part name="nCdServico" type="s:string" />
+    <wsdl:part name="sCepOrigem" type="s:string" />
+    <wsdl:part name="sCepDestino" type="s:string" />
+    <wsdl:part name="sDtCalculo" type="s:string" />
+    <wsdl:part name="strVerificaRestricao" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="calcPrazoNovoHttpGetOut">
+    <wsdl:part name="Body" element="tns:cResultado" />
+  </wsdl:message>
   <wsdl:message name="CalcPrecoPrazoHttpPostIn">
     <wsdl:part name="nCdEmpresa" type="s:string" />
     <wsdl:part name="sDsSenha" type="s:string" />
@@ -777,6 +811,16 @@
   <wsdl:message name="getVersaoHttpPostOut">
     <wsdl:part name="Body" element="tns:versao" />
   </wsdl:message>
+  <wsdl:message name="calcPrazoNovoHttpPostIn">
+    <wsdl:part name="nCdServico" type="s:string" />
+    <wsdl:part name="sCepOrigem" type="s:string" />
+    <wsdl:part name="sCepDestino" type="s:string" />
+    <wsdl:part name="sDtCalculo" type="s:string" />
+    <wsdl:part name="strVerificaRestricao" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="calcPrazoNovoHttpPostOut">
+    <wsdl:part name="Body" element="tns:cResultado" />
+  </wsdl:message>
   <wsdl:portType name="CalcPrecoPrazoWSSoap">
     <wsdl:operation name="CalcPrecoPrazo">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula o preço e o prazo com a data atual</wsdl:documentation>
@@ -847,6 +891,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retorna a versão atual do componente</wsdl:documentation>
       <wsdl:input message="tns:getVersaoSoapIn" />
       <wsdl:output message="tns:getVersaoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula o prazo usando nova procedure</wsdl:documentation>
+      <wsdl:input message="tns:calcPrazoNovoSoapIn" />
+      <wsdl:output message="tns:calcPrazoNovoSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="CalcPrecoPrazoWSHttpGet">
@@ -920,6 +969,11 @@
       <wsdl:input message="tns:getVersaoHttpGetIn" />
       <wsdl:output message="tns:getVersaoHttpGetOut" />
     </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula o prazo usando nova procedure</wsdl:documentation>
+      <wsdl:input message="tns:calcPrazoNovoHttpGetIn" />
+      <wsdl:output message="tns:calcPrazoNovoHttpGetOut" />
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:portType name="CalcPrecoPrazoWSHttpPost">
     <wsdl:operation name="CalcPrecoPrazo">
@@ -991,6 +1045,11 @@
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retorna a versão atual do componente</wsdl:documentation>
       <wsdl:input message="tns:getVersaoHttpPostIn" />
       <wsdl:output message="tns:getVersaoHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Calcula o prazo usando nova procedure</wsdl:documentation>
+      <wsdl:input message="tns:calcPrazoNovoHttpPostIn" />
+      <wsdl:output message="tns:calcPrazoNovoHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CalcPrecoPrazoWSSoap" type="tns:CalcPrecoPrazoWSSoap">
@@ -1114,6 +1173,15 @@
     </wsdl:operation>
     <wsdl:operation name="getVersao">
       <soap:operation soapAction="http://tempuri.org/getVersao" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <soap:operation soapAction="http://tempuri.org/calcPrazoNovo" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1250,6 +1318,15 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <soap12:operation soapAction="http://tempuri.org/calcPrazoNovo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:binding name="CalcPrecoPrazoWSHttpGet" type="tns:CalcPrecoPrazoWSHttpGet">
     <http:binding verb="GET" />
@@ -1372,6 +1449,15 @@
     </wsdl:operation>
     <wsdl:operation name="getVersao">
       <http:operation location="/getVersao" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <http:operation location="/calcPrazoNovo" />
       <wsdl:input>
         <http:urlEncoded />
       </wsdl:input>
@@ -1508,19 +1594,28 @@
         <mime:mimeXml part="Body" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="calcPrazoNovo">
+      <http:operation location="/calcPrazoNovo" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="CalcPrecoPrazoWS">
     <wsdl:port name="CalcPrecoPrazoWSSoap" binding="tns:CalcPrecoPrazoWSSoap">
-      <soap:address location="http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx" />
+      <soap:address location="http://ws.correios.com.br:8084/calculador/CalcPrecoPrazo.asmx" />
     </wsdl:port>
     <wsdl:port name="CalcPrecoPrazoWSSoap12" binding="tns:CalcPrecoPrazoWSSoap12">
-      <soap12:address location="http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx" />
+      <soap12:address location="http://ws.correios.com.br:8084/calculador/CalcPrecoPrazo.asmx" />
     </wsdl:port>
     <wsdl:port name="CalcPrecoPrazoWSHttpGet" binding="tns:CalcPrecoPrazoWSHttpGet">
-      <http:address location="http://ws.correios.com.br:8080/calculador/CalcPrecoPrazo.asmx" />
+      <http:address location="http://ws.correios.com.br:8084/calculador/CalcPrecoPrazo.asmx" />
     </wsdl:port>
     <wsdl:port name="CalcPrecoPrazoWSHttpPost" binding="tns:CalcPrecoPrazoWSHttpPost">
-      <http:address location="http://ws.correios.com.br:8080/calculador/CalcPrecoPrazo.asmx" />
+      <http:address location="http://ws.correios.com.br:8084/calculador/CalcPrecoPrazo.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
