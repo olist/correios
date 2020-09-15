@@ -659,6 +659,8 @@ TRACKING_STATUS = {
     ),
     ("CD", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
     ("CO", 1): ("shipped", "Objeto coletado", "", "Acompanhar"),
+    ("CO", 3): ("shipped", "Objeto coletado", "", "Acompanhar"),
+    ("CO", 6): ("shipped", "Segunda tentativa de coleta", "", "Acompanhar"),
     ("CUN", 1): ("shipped", "Objeto recebido na Unidade dos Correios", "", "Acompanhar"),
     ("DO", 1): ("shipped", "Objeto encaminhado para", "<nome da cidade>", "Acompanhar"),
     ("EST", 1): ("ignore_last_entry", "Favor desconsiderar a informação anterior", "", "Acompanhar"),
