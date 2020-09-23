@@ -13,6 +13,10 @@ correios
    :target: https://codecov.io/gh/olist/correios
    :alt: Latest coverage status
 
+.. image:: https://app.fossa.com/api/projects/git%2Bgithub.com%2Folist%2Fcorreios.svg?type=shield
+    :target: https://app.fossa.com/projects/git%2Bgithub.com%2Folist%2Fcorreios?ref=badge_shield
+    :alt: FOSSA Status
+
 A client library for Brazilian Correios APIs (SIGEP and SRO) and services.
 
 
