@@ -10,5 +10,4 @@ force_grid_wrap = 0
 use_parentheses = true
 include_trailing_comma = true
 atomic = true
-not_skip = "__init__.py"
 default_section = "THIRDPARTY"

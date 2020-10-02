@@ -25,7 +25,7 @@ flake:
 	flake8 --max-line-length=120 correios tests
 
 isort:  ## Check imports
-	isort --check --diff -tc -rc correios tests
+	isort --check --diff correios tests
 
 fix-imports:  ## Fix imports
 	isort -rc .
