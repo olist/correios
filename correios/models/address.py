@@ -284,13 +284,21 @@ class Address:
 
     @property
     def basic_address(self) -> str:
-        number = self.number
+        number = ""
+
+        if self.number:
+            number = ", {}".format(self.number)
+
         if self.complement:
-            number = "{} - {}".format(self.number, self.complement)
+            number = "{} - {}".format(number, self.complement)
 
         if self.neighborhood:
-            return capitalize_phrase("{}, {}, {}".format(self.street, number, self.neighborhood))
-        return capitalize_phrase("{}, {}".format(self.street, number))
+            return capitalize_phrase("{}{}, {}".format(self.street, number, self.neighborhood))
+
+        if number:
+            return capitalize_phrase("{}{}".format(self.street, number))
+
+        return capitalize_phrase("{}".format(self.street))
 
     @property
     def label_address(self) -> str:
@@ -321,7 +329,9 @@ class Address:
 
     @property
     def number(self) -> str:
-        return self.filtered_number or "S/N"
+        number = self.filtered_number or "S/N"
+
+        return number.replace('*', '')
 
     @property
     def zip_complement(self) -> str:
