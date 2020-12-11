@@ -313,7 +313,11 @@ class Address:
 
     @property
     def filtered_number(self) -> str:
-        return "".join(d for d in self.raw_number if d.isdigit())
+        return "".join(
+            d
+            for d in self.raw_number
+            if d.isdigit() or d == '*'
+        )
 
     @property
     def number(self) -> str:

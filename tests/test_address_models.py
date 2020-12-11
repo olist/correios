@@ -388,6 +388,7 @@ def test_basic_address_with_neighborhood_without_complement():
     ('km 5', '5', '5', '5'),
     ('s/n', '', 'S/N', '0'),
     ('S/N', '', 'S/N', '0'),
+    ('*', '*', '*', '*'),
 ))
 def test_address_number_handling(raw, filtered, number, zip_complement):
     address = Address(
