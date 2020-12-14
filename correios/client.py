@@ -452,7 +452,7 @@ class PostingListSerializer:
         xml_utils.SubElement(address, "email_destinatario", cdata=str(receiver.email))
         xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
         xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
-        xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number))
+        xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number) or 'S/n')
 
         national = xml_utils.SubElement(item, "nacional")
         xml_utils.SubElement(national, "bairro_destinatario", cdata=str(receiver.neighborhood))

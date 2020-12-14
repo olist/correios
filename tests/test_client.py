@@ -349,6 +349,17 @@ def test_declared_value_sedex(posting_list, shipping_label_sedex):
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
+def test_sn_informed_on_receiver_number(posting_list, shipping_label):
+    shipping_label.receiver.raw_number = ''
+    posting_list.add_shipping_label(shipping_label)
+    serializer = correios.PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+    assert b"<numero_end_destinatario>S/N</numero_end_destinatario>" in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_fail_empty_posting_list_serialization(posting_list):
     serializer = correios.PostingListSerializer()
     with pytest.raises(PostingListSerializerError):
