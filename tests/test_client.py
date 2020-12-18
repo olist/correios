@@ -360,6 +360,17 @@ def test_sn_informed_on_receiver_number(posting_list, shipping_label):
 
 
 @pytest.mark.skipif(not correios, reason="API Client support disabled")
+def test_sn_informed_on_sender_number(posting_list, shipping_label):
+    shipping_label.sender.raw_number = ''
+    posting_list.add_shipping_label(shipping_label)
+    serializer = correios.PostingListSerializer()
+    document = serializer.get_document(posting_list)
+    serializer.validate(document)
+    xml = serializer.get_xml(document)
+    assert b"<numero_remetente><![CDATA[S/N]]></numero_remetente>" in xml
+
+
+@pytest.mark.skipif(not correios, reason="API Client support disabled")
 def test_fail_empty_posting_list_serialization(posting_list):
     serializer = correios.PostingListSerializer()
     with pytest.raises(PostingListSerializerError):

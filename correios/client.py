@@ -421,17 +421,17 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "numero_contrato", text=str(contract.number))
         xml_utils.SubElement(sender_info, "numero_diretoria", text=str(contract.regional_direction_number))
         xml_utils.SubElement(sender_info, "codigo_administrativo", text=str(posting_card.administrative_code))
-        xml_utils.SubElement(sender_info, "nome_remetente", cdata=sender.name)
-        xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=sender.street)
-        xml_utils.SubElement(sender_info, "numero_remetente", cdata=sender.number)
-        xml_utils.SubElement(sender_info, "complemento_remetente", cdata=sender.complement)
-        xml_utils.SubElement(sender_info, "bairro_remetente", cdata=sender.neighborhood)
+        xml_utils.SubElement(sender_info, "nome_remetente", cdata=str(sender.name))
+        xml_utils.SubElement(sender_info, "logradouro_remetente", cdata=str(sender.street))
+        xml_utils.SubElement(sender_info, "numero_remetente", cdata=str(sender.number) or 'S/n')
+        xml_utils.SubElement(sender_info, "complemento_remetente", cdata=str(sender.complement))
+        xml_utils.SubElement(sender_info, "bairro_remetente", cdata=str(sender.neighborhood))
         xml_utils.SubElement(sender_info, "cep_remetente", cdata=str(sender.zip_code))
         xml_utils.SubElement(sender_info, "cidade_remetente", cdata=str(sender.city)[:30])
         xml_utils.SubElement(sender_info, "uf_remetente", cdata=str(sender.state))
         xml_utils.SubElement(sender_info, "telefone_remetente", cdata=sender.phone.short)
         xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
-        xml_utils.SubElement(sender_info, "email_remetente", cdata=sender.email)
+        xml_utils.SubElement(sender_info, "email_remetente", cdata=str(sender.email))
         return sender_info
 
     def _get_shipping_label_element(self, shipping_label: ShippingLabel):
