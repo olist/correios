@@ -463,3 +463,30 @@ def test_custom_address_label_address_long_street_name(address_class):
     assert 'Vila' in address.label_address
     assert '1234' in address.label_address
     assert 'Ap 01' in address.label_address
+
+
+@pytest.mark.parametrize(
+    'street, number, complement, result', [
+        ('Rua Tiradentes, 199', '*', 'Ap 01', 'Rua Tiradentes, 199 - Ap 01'),
+        ('Rua Saudade', '222', 'Bloco C', 'Rua Saudade, 222 - Bloco C'),
+        ('Rua Guanabara, 111', '*', '', 'Rua Guanabara, 111')
+    ]
+)
+def test_should_remove_asterisk_from_display_address(
+    street,
+    number,
+    complement,
+    result
+):
+    address = Address(
+        name="Maria Moras",
+        street=street,
+        number=number,
+        city="Botelhos",
+        state="MG",
+        zip_code="37720-000",
+        neighborhood="Posto do Loyola",
+        complement=complement
+    )
+
+    assert address.display_address[0] == result

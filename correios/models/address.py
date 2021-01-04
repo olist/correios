@@ -315,7 +315,16 @@ class Address:
 
     @property
     def display_address(self) -> Tuple[str, str]:
-        address = "{}, {} - {}".format(self.street, self.raw_number, self.complement)
+        number = ""
+        complement = ""
+
+        if self.number:
+            number = ", {}".format(self.number)
+
+        if self.complement:
+            complement = " - {}".format(self.complement)
+
+        address = "{}{}{}".format(self.street, number, complement)
         city = "{} / {} - {}".format(self.city, self.state, self.zip_code.display())
         return address.strip(), city.strip()
 
