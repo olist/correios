@@ -245,6 +245,7 @@ class Address:
                  email: str = "",
                  latitude: Union[Decimal, str] = "0.0",
                  longitude: Union[Decimal, str] = "0.0",
+                 cpf_cnpj: str = "",
                  ) -> None:
         self.name = name
         self.street = street
@@ -253,6 +254,7 @@ class Address:
         self.neighborhood = neighborhood
         self.email = email
         self.raw_number = str(number)
+        self.cpf_cnpj = cpf_cnpj
 
         if not isinstance(state, State):
             state = State(state)
