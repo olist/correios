@@ -432,6 +432,7 @@ class PostingListSerializer:
         xml_utils.SubElement(sender_info, "telefone_remetente", cdata=sender.phone.short)
         xml_utils.SubElement(sender_info, "fax_remetente", cdata="")
         xml_utils.SubElement(sender_info, "email_remetente", cdata=str(sender.email))
+        xml_utils.SubElement(sender_info, "cpf_cnpj_remetente", cdata=str(sender.cpf_cnpj))
         return sender_info
 
     def _get_shipping_label_element(self, shipping_label: ShippingLabel):
@@ -453,6 +454,7 @@ class PostingListSerializer:
         xml_utils.SubElement(address, "logradouro_destinatario", cdata=str(receiver.street))
         xml_utils.SubElement(address, "complemento_destinatario", cdata=str(receiver.complement))
         xml_utils.SubElement(address, "numero_end_destinatario", text=str(receiver.number) or 'S/n')
+        xml_utils.SubElement(address, "cpf_cnpj_destinatario", cdata=str(receiver.cpf_cnpj))
 
         national = xml_utils.SubElement(item, "nacional")
         xml_utils.SubElement(national, "bairro_destinatario", cdata=str(receiver.neighborhood))
