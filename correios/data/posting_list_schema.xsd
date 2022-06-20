@@ -166,6 +166,7 @@
 				<xs:element ref="telefone_remetente"/>
 				<xs:element ref="fax_remetente"/>
 				<xs:element ref="email_remetente"/>
+				<xs:element ref="cpf_cnpj_remetente"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -378,6 +379,20 @@
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:element>
+	<xs:element name="cpf_cnpj_remetente">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="cpf_cnpj_destinatario">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="50"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
 	<xs:element name="dimensao_objeto">
 		<xs:complexType>
 			<xs:sequence>
@@ -444,6 +459,7 @@
 				<xs:element ref="logradouro_destinatario"/>
 				<xs:element ref="complemento_destinatario"/>
 				<xs:element ref="numero_end_destinatario"/>
+				<xs:element ref="cpf_cnpj_destinatario"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
