@@ -7,12 +7,12 @@ from .vcr import replace_auth, vcr
 
 @pytest.fixture
 def username():
-    return "cuca"
+    return "paula"
 
 
 @pytest.fixture
 def password():
-    return "beludo"
+    return "vadão"
 
 
 @pytest.fixture
