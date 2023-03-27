@@ -721,3 +721,7 @@ class Correios:
 
         response = self.freight.CalcPrazo(str(service), str(from_zip), str(to_zip))
         return response.cServico[0].PrazoEntrega
+
+    def cancel_object(self, posting_card_number: Union[int, str], tracking_code: str) -> User:
+        posting_card_number = str(posting_card_number)
+        self._auth_call("cancelarObjeto", posting_card_number, tracking_code)
